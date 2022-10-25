@@ -1,0 +1,48 @@
+.container-sigin-data{
+    margin-top: 25px;
+    position: relative;
+    border-bottom:  2px solid var(--alternative-color); 
+}
+
+.container-sigin-data input{
+     width: 100%;
+     padding: 0 5px;
+     height: 40px;
+     font-size: 16px;
+     border: none;
+     background: none;
+     outline: none;
+}
+
+.container-sigin-data label {
+    position: absolute;
+    top:50%;
+    left: 5px;
+    color: var(--alternative-color);
+    transform: translateY(-50%);
+    font-size: 16px;
+    pointer-events: none;
+    transition: .5s;
+    font-weight: bold;
+}
+
+.container-sigin-data span::before{
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: var(--alternative-color);
+}
+
+.container-sigin-data input:focus ~ label,
+.container-sigin-data input:valid ~ label{
+    top:-5px;
+    color: var(--alternative-color);
+}
+
+.container-sigin-data input:focus ~ span::before,
+.container-sigin-data input:valid ~ span::before{
+    width: 100%;
+}

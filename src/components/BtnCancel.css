@@ -1,0 +1,21 @@
+/* PARA BOTON DE BUSCAR*/
+.btn_cancel{
+    margin: 2%;
+    background: var(--cancel-color);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color:#fff;
+    font-weight: normal;
+    border-radius: 5px;
+    font-size: 18px;
+    width: 20%;
+    height: 45px;
+    transition: .2s;
+    position: absolute;
+    right: 25%;
+}
+.btn_cancel:hover{
+    background: var(--cancel-hover-color);
+    transition: .2s;
+}

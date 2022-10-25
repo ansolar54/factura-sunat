@@ -1,0 +1,21 @@
+/* PARA BOTON DE BUSCAR*/
+.btn_save{
+    margin: 2%;
+    background: var(--primary-color);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color:#fff;
+    font-weight: normal;
+    border-radius: 5px;
+    font-size: 18px;
+    width: 20%;
+    height: 45px;
+    transition: .2s;
+    position: absolute;
+    right: 2%;
+}
+.btn_save:hover{
+    background: var(--alternative-color );
+    transition: .2s;
+}

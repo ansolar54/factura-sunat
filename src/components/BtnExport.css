@@ -1,0 +1,23 @@
+/* PARA BOTON DE BUSCAR*/
+.btn_export{
+    padding: 10px;
+    background: var(--primary-color);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color:#fff;
+    font-weight: bold;
+    border-radius: 5px;
+    font-size: 15px;
+    width: 100%;
+    transition: .2s;
+    /* margin-top: 20px; */
+}
+.btn_export:hover{
+    background: var(--alternative-color );
+    transition: .2s;
+}
+.btn_export:disabled{
+    background: rgb(146, 146, 146);
+    cursor: auto;
+}

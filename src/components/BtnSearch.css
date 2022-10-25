@@ -1,0 +1,38 @@
+/* PARA BOTON DE BUSCAR*/
+.btn_search{
+    padding: 10px;
+    background: var(--primary-color);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color:#fff;
+    font-weight: bold;
+    border-radius: 5px;
+    font-size: 15px;
+    width: 100%;
+    transition: .2s;
+    /* margin-top: 20px; */
+}
+.btn_search:hover{
+    background: var(--alternative-color );
+    transition: .2s;
+}
+
+.btn_search_filter{
+    padding: 5px;
+    background: var(--primary-color);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color:#fff;
+    font-weight: bold;
+    border-radius: 5px;
+    font-size: 15px;
+    width: 100%;
+    transition: .2s;
+    /* margin-top: 20px; */
+}
+.btn_search_filter:hover{
+    /* background: var(--alternative-color ); */
+    transition: .2s;
+}

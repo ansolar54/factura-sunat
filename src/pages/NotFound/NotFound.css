@@ -1,0 +1,24 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+h1{
+    font-weight: bold;
+    font-size: 50px;
+}
+button {
+    padding: 10px;
+    background: var(--primary-color);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color:#fff;
+    border-radius: 5px;
+    font-size: 15px;
+    transition: .2s;
+    margin-top: 20px;
+}

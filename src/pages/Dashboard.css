@@ -1,0 +1,36 @@
+.dasboard-grid{
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 6px 17px 0 rgb(3 38 56 / 46%);
+    border-radius: 5px;
+    padding-top:25px;
+    padding-bottom:25px;
+    background: var(--primary-color);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+.container-dashboard{
+    padding: 25px;
+  margin-left: 340px;
+  margin-right: 40px;
+  margin-top: 40px;
+  box-shadow: 0 6px 17px 0 rgb(3 38 56 / 46%);
+  border-radius: 5px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(400px,1fr));
+  grid-template-rows: repeat(auto,1fr); 
+  grid-gap: 20px;
+}
+
+.dasboard-grid a {
+  text-decoration: none;
+  color:#fff;
+}
+
+.row-fila {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}

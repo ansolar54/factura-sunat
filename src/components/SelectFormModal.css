@@ -1,0 +1,10 @@
+.selectModal{
+    outline: none;
+    background:#ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    padding:5px 3%;
+    /* text-transform: uppercase; */
+    width: 96%;
+    height: 40px;
+}
