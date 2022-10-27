@@ -92,10 +92,10 @@ const ModalEditRol = ({ShowMdEditRol, setShowMdEditRol, MdItemEdit}) => {
             {
                 ShowMdEditRol ? (
                     <div className='container-modal-background' onClick={closeModal} ref={modalRef} >
-                        <div className='modal-wrapper modal-wrapper' >
+                        <div className='modal-wrapper modal-wrapper-role' >
                             <div className='modal-header'>
                                 <div className='modal-title'>
-                                    <h2>EDITAR ROL</h2>
+                                    <h5>Editar Rol</h5>
                                 </div>
                                 <div className='close-modal-button' onClick={()=>setShowMdEditRol(prev => !prev)}>
                                     <i className="fas fa-times"></i> 

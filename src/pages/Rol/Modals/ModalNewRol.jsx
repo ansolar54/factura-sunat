@@ -96,10 +96,10 @@ const ModalNewRol = ({showMdRol, setShowMdRol}) => {
                 showMdRol ? (
                     
                     <div className='container-modal-background' onClick={closeModal} ref={modalRef} >
-                        <div className='modal-wrapper modal-wrapper' >
+                        <div className='modal-wrapper modal-wrapper-role' >
                             <div className='modal-header'>
                                 <div className='modal-title'>
-                                    <h2>NUEVO ROL</h2>
+                                    <h5>Nuevo Rol</h5>
                                 </div>
                                 <div className='close-modal-button' onClick={()=>setShowMdRol(prev => !prev)}>
                                     <i className="fas fa-times"></i> 
@@ -111,7 +111,7 @@ const ModalNewRol = ({showMdRol, setShowMdRol}) => {
                                 </div>
                                 <div className="row-md">
                                     <div className="col-md col-md-12">
-                                        <label htmlFor="">Nombres:</label>
+                                        <label htmlFor="">Nombre:</label>
                                         <InputFormMd attribute={{type:'text', name:'name', value:Name, className:'inputModal', disabled:false, cheched:false}} handleChange={handleChange}></InputFormMd>
                                         <span className="errorInput">{Messages.msgName}</span>
                                     </div>

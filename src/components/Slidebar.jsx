@@ -10,6 +10,7 @@ import logo_farmex from "../assets/logo-farmex-white.png";
 const Slidebar = () => {
   //CARGA DE SPINNER
   const [spinner, setspinner] = useState(false);
+  // const [rol, setRol] = useState(1);
   const [roladmin, setroladmin] = useState(false);
   const [consultapedido, setconsultapedido] = useState(false);
   const [informacioncliente, setinformacioncliente] = useState(false);
@@ -29,9 +30,9 @@ const Slidebar = () => {
       case "icon-close-02":
         document.getElementById("subcat-02").classList.toggle("show-collapse");
         break;
-      // case "icon-close-03":
-      //     document.getElementById("subcat-03").classList.toggle("show-collapse");
-      //     break;
+      case "icon-close-03":
+        document.getElementById("subcat-03").classList.toggle("show-collapse");
+        break;
       default:
         break;
     }
@@ -63,9 +64,11 @@ const Slidebar = () => {
         setnameuser(jwt(localStorage.getItem("_token")).username);
         // rol 1 -- adminsitrador
         // rol 2 -- supervisor
+        // rol 4 -- gerente
         if (result.data[0].id_role == 1) {
           setroladmin(true);
         }
+        // setRol(result.data[0].id_role);
         let model_sap = {
           IsUsuario: result.data[0].username,
         };
@@ -189,6 +192,7 @@ const Slidebar = () => {
             </label>
           )}
         </div>
+
         {roladmin && (
           <div className="slidebar-categories">
             <div
@@ -206,6 +210,10 @@ const Slidebar = () => {
                   <Link to="users">Usuarios</Link>
                 </li>
                 <li className="slidebar-categories-child">
+                  <i className="far fa-address-card"></i>
+                  <Link to="roles">Roles</Link>
+                </li>
+                <li className="slidebar-categories-child">
                   <i className="fas fa-newspaper"></i>
                   <Link to="auditoria">Auditoría</Link>
                 </li>
@@ -218,6 +226,7 @@ const Slidebar = () => {
           </div>
         )}
 
+        {/* REPORTES */}
         <div className="slidebar-categories">
           <div
             className="slidebar-categories-header"
@@ -254,17 +263,65 @@ const Slidebar = () => {
                   <Link to="informacion_cliente">Información del Cliente</Link>
                 </li>
               )}
-              
+
               {deudacliente && (
                 <li className="slidebar-categories-child">
                   <i className="fas fa-digital-tachograph"></i>
                   <Link to="estado_cuenta">Estado de Cuenta</Link>
                 </li>
               )}
-              
             </ul>
           </div>
         </div>
+
+        {/* CAMBIO PRECIO */}
+        <div className="slidebar-categories">
+          <div
+            className="slidebar-categories-header"
+            onClick={() => HandleCategory("icon-close-03")}
+          >
+            <i className="fas fa-box-open"></i>
+            <a>Cambio precio</a>
+            <i className="fas fa-angle-down slider-down-icon"></i>
+          </div>
+          <div className="slidebar-subcategories" id="subcat-03">
+            {spinner && <Spinner />}
+            <ul>
+              {consultapedido && (
+                <li className="slidebar-categories-child">
+                  <i className="fas fa-search"></i>
+                  <Link to="generar_solicitud">Generar solicitud</Link>
+                </li>
+              )}
+              {/* {consultastock && (
+                <li className="slidebar-categories-child">
+                  <i className="fas fa-pencil-alt"></i>
+                  <Link to="consulta_stock">Mis solicitudes</Link>
+                </li>
+              )}
+              {reportepromociones && (
+                <li className="slidebar-categories-child">
+                  <i className="fas fa-list-alt"></i>
+                  <Link to="promociones">Solicitudes</Link>
+                </li>
+              )}
+              {informacioncliente && (
+                <li className="slidebar-categories-child">
+                  <i className="fas fa-id-card"></i>
+                  <Link to="informacion_cliente">Mis aprobaciones</Link>
+                </li>
+              )}
+
+              {deudacliente && (
+                <li className="slidebar-categories-child">
+                  <i className="fas fa-digital-tachograph"></i>
+                  <Link to="estado_cuenta">Reporte solicitudes</Link>
+                </li>
+              )} */}
+            </ul>
+          </div>
+        </div>
+
         {/* <div className="slidebar-categories">
           <div
             className="slidebar-categories-header"
@@ -287,7 +344,12 @@ const Slidebar = () => {
         <div className="slidebar-categories">
           <li className="slidebar-categories-child">
             <i className="fas fa-link"></i>
-            <a href="https://my350505.crm.ondemand.com/sap/ap/ui/clogin?saml2=disabled&app.component=%2fSAP_UI_CT%2fMain%2froot.uiccwoc&rootWindow=X&redirectUrl=%2fsap%2fpublic%2fbyd%2fruntime&supressAutoLogon=true#" target="_blank">Acceso a NEXO</a>
+            <a
+              href="https://my350505.crm.ondemand.com/sap/ap/ui/clogin?saml2=disabled&app.component=%2fSAP_UI_CT%2fMain%2froot.uiccwoc&rootWindow=X&redirectUrl=%2fsap%2fpublic%2fbyd%2fruntime&supressAutoLogon=true#"
+              target="_blank"
+            >
+              Acceso a NEXO
+            </a>
           </li>
         </div>
 

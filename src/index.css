@@ -273,6 +273,10 @@ input[type='radio']:checked:after {
   width: 30%;
   height: 70%;
 }
+.modal-wrapper-role{
+  width: 30%;
+  height: 40%;
+}
 
 .modal-wrapper-paginate{
   width: 20%;

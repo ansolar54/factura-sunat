@@ -10,6 +10,7 @@ import {
   import jwt from "jwt-decode";
 import logo_farmex from '../assets/logo-farmex.png';
 import { RegistrarAuditoria } from '../Services/ServiceAuditoria';
+import { ConsultarTipoCambio } from '../Services/ServiceTipoCambio';
 
 const SignIn = () => {
     
@@ -57,6 +58,10 @@ const SignIn = () => {
                     //REGISTRO DE AUDITORÍA
                     RegistrarAuditoria({id_user:Number(jwt(localStorage.getItem("_token")).nameid), id_event:5});
                     // window.location.pathname("/dashboard");
+
+                    // OBTENIENDO TIPO DE CAMBIO DE SAP
+                    getTipoCambio();
+
                 }else{
                     setmessagesignin(result.message);
                 }
@@ -69,6 +74,14 @@ const SignIn = () => {
         }
     }
 
+    const getTipoCambio = () => {
+        ConsultarTipoCambio().then((result) => {
+            // console.log('tipo cambio ', result.eTipoCambioField)
+            localStorage.setItem("_tipoCambio",result.eTipoCambioField)
+            // console.log('storage ', localStorage.getItem("_tipoCambio"))
+        })
+    }
+    
     return(
         <div className="container-signin">
             <img src={logo_farmex} alt=""/>

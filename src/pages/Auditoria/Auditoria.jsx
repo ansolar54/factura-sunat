@@ -8,6 +8,7 @@ import { ConsultarAuditoria } from "../../Services/ServiceAuditoria";
 import { ConsultarEventos } from "../../Services/ServiceEvent";
 import "./Auditoria.css";
 import ExcelSheet from "react-data-export/dist/ExcelPlugin/elements/ExcelSheet";
+import { getRoleState } from "../../Services/ServiceRol";
 
 const Auditoria = () => {
   //FILTRO
@@ -29,6 +30,8 @@ const Auditoria = () => {
   const [valuepagination, setvaluepagination] = useState(false);
   //LISTA DE EVENTOS
   const [eventos, setEventos] = useState([]);
+  //LISTA DE ROLES
+  const [roles, setRoles] = useState([]);
   //para check de cabecera
   const [stateChecboxHeader, setstateChecboxHeader] = useState(false);
   //ALMACENA CHECKBOX MARCADOS INDIVIDUALMENTE PARA COMPARARLOS POR PAGINA BUSCADA Y MARCARLOS CON CHECK
@@ -86,7 +89,14 @@ const Auditoria = () => {
   useEffect(() => {
     listarAuditoria(0, "", 0, "", 1,0,0);
     listarEventos();
+    listarRoles();
   }, []);
+
+  const listarRoles = () => {
+    getRoleState().then((res) => {
+      setRoles(res.data);
+    });
+  }
 
   const listarEventos = () => {
     exportar();
@@ -406,12 +416,23 @@ const Auditoria = () => {
               onChange={(e) => handleChange(e)}
             />
           </div>
-          <div className="input-box col-md-2">
+          {/* <div className="input-box col-md-2">
             <label className="label-input">Rol</label>
             <select name="id_rol" onChange={(e) => handleChange(e)}>
               <option value="0">TODOS</option>
               <option value="1">ADMINISTRADOR</option>
               <option value="2">COMERCIAL</option>
+            </select>
+          </div> */}
+          <div className="input-box col-md-2">
+            <label className="label-input">Rol</label>
+            <select name="id_rol" onChange={(e) => handleChange(e)}>
+              <option value="0">TODOS</option>
+              {roles.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
             </select>
           </div>
           <div className="input-box col-md-2">

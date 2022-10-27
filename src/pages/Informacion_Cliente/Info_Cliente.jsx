@@ -1646,7 +1646,7 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
               <div className="title-section">
                 <div>
                   <label> Reportes / Información del Cliente </label>
-                  <label> Tipo cambio : 4.10 </label>
+                  <label> Tipo cambio : <label style={{color: '#03BF68'}}>{localStorage.getItem("_tipoCambio")}</label> </label>
                 </div>
                 <hr />
               </div>

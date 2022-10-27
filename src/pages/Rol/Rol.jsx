@@ -35,6 +35,9 @@ const Rol = () => {
     const [ShowEditRol, setShowEditRol] = useState(false)
     const [ShowAsignarAcciones, setShowAsignarAcciones] = useState(false)
 
+    // let page_indicator = 1;
+    const [pageIndicator, setPageIndicator] = useState(1)
+
     useEffect(()=>{
         listar(1)
     },[ShowRol, ShowEditRol]);
@@ -58,22 +61,25 @@ const Rol = () => {
 
     // seleccionar pagina
     function changePage(pageNumber) {
+        setPageIndicator(pageNumber);
         listar(pageNumber);
     };
     // siguiente pagina
     function prevPage(value){
+        setPageIndicator(value -1);
         listar(value-1);
     }
     //pagina anterior
     function nextPage(value){
+        setPageIndicator(value + 1);
         listar(value+1);
     }
 
     const cambiarEstado = (Id, Estado) => {
         let request = {state: Estado==1?0:1 }
         updateStateRol(request, Id).then((result) => {
-            console.log(result)
-            listar(1)
+            console.log(pageIndicator)
+            listar(pageIndicator)
         })
     }
 
@@ -85,6 +91,15 @@ const Rol = () => {
         getRol(Id).then((result) => {
             setItemEdit(result.data[0])
             setShowEditRol(prev => !prev);
+        })
+    }
+
+    const eliminar = (id) => {
+        let request = {
+            state: 0
+        }
+        updateStateRol(request, id).then((result) => {
+            console.log(result);
         })
     }
 
@@ -104,6 +119,15 @@ const Rol = () => {
                 ))
             })
         })
+    }
+
+    //formateo de la fecha
+    function formatDate(value) {
+        var datePart = value.match(/\d+/g),
+        year = datePart[0],
+        month = datePart[1],
+        day = datePart[2];
+        return day + "-" + month + "-" + year ;
     }
 
     return(
@@ -134,11 +158,11 @@ const Rol = () => {
                     <table className="content-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>ROL</th>
-                                <th>F. CREACION</th>
-                                <th>ESTADO</th>
-                                <th>ACCION</th>
+                                <th style={{textAlign:"left"}}>ID</th>
+                                <th style={{textAlign:"left"}}>ROL</th>
+                                <th style={{textAlign:"left"}}>F. CREACION</th>
+                                <th style={{textAlign:"left"}}>ESTADO</th>
+                                <th style={{textAlign:"left"}}>ACCION</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -147,7 +171,7 @@ const Rol = () => {
                                     <tr key={key} >
                                         <th>{item.id}</th>
                                         <td>{item.name}</td>
-                                        <td>{item.created_at}</td>
+                                        <td>{formatDate(item.created_at)}</td>
                                         {item.state == 1 ? 
                                         <td>
                                             <label className="switch">
@@ -165,7 +189,8 @@ const Rol = () => {
                                         }
                                         <td>
                                             <i style={{cursor:'pointer'}} title="Editar rol" className="fas fa-edit" onClick={()=>editar(item.id)}></i>
-                                            <i style={{cursor:'pointer', marginLeft:'10px'}} title="Asignar acciones" className="fas fa-bacon" onClick={()=>asignarAcciones(item.id)}></i>
+                                            {/* <i style={{ cursor: "pointer", margin: "2px" }} title="Eliminar rol"  className="fas fa-trash-alt" onClick={() => eliminar(item.id)}></i> */}
+                                            {/* <i style={{cursor:'pointer', marginLeft:'10px'}} title="Asignar acciones" className="fas fa-bacon" onClick={()=>asignarAcciones(item.id)}></i> */}
                                         </td>
                                     </tr>
                                 ))

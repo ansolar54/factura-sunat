@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Switch,useHistory } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  useHistory,
+} from "react-router-dom";
 
 import "./App.css";
 import Slidebar from "./components/Slidebar";
@@ -19,39 +24,44 @@ import jwt from "jwt-decode";
 import { getUser } from "./Services/ServiceUser";
 import Promociones from "./pages/Promociones/Promociones";
 import { ActualizarPasswordStatus } from "./Services/ServiceConfiguracion";
-
+import Rol from "./pages/Rol/Rol";
+import GenerarSolicitud from "./pages/Cambio_Precio/GenerarSolicitud";
 
 const App = () => {
   const history = useHistory();
   //para el cambio de contraseña
   const [show_status_password, setshow_status_password] = useState(false);
   useEffect(() => {
-    console.log("APP JS")
+    console.log("APP JS");
     try {
-      var model={
-        id:"1"
-      }
-      ActualizarPasswordStatus(model,jwt(localStorage.getItem("_token")).nameid).then((res)=>{
-        if(res.indicator == 1){
+      var model = {
+        id: "1",
+      };
+      ActualizarPasswordStatus(
+        model,
+        jwt(localStorage.getItem("_token")).nameid
+      ).then((res) => {
+        if (res.indicator == 1) {
           //valida para el nuevo cambio de contraseña
-          getUser(jwt(localStorage.getItem("_token")).nameid).then((result) => {
-            console.log("Estado de password es:",result.data[0].status_password)
-            if (result.data[0].status_password === "1") {
-              setshow_status_password(true);
-            } else {
-              setshow_status_password(false);
-            }
-          }).catch(err=>console.log("ocurrio un error: ",err));
+          getUser(jwt(localStorage.getItem("_token")).nameid)
+            .then((result) => {
+              console.log(
+                "Estado de password es:",
+                result.data[0].status_password
+              );
+              if (result.data[0].status_password === "1") {
+                setshow_status_password(true);
+              } else {
+                setshow_status_password(false);
+              }
+            })
+            .catch((err) => console.log("ocurrio un error: ", err));
         }
-          
-      })
-
-      
+      });
     } catch (error) {
       // history.push("/signin");
       localStorage.clear();
     }
-
   }, [history]);
   return (
     <React.Fragment>
@@ -78,20 +88,24 @@ const App = () => {
                 <Slidebar />
                 <Usuario />
               </Route>
+              <Route exact strict path="/roles" component={Rol}>
+                <Slidebar />
+                <Rol />
+              </Route>
               <Route exact strict path="/auditoria" component={Auditoria}>
                 <Slidebar />
                 <Auditoria />
               </Route>
-              <Route exact strict path="/configuracion" component={Configuracion}>
-                <Slidebar />
-                <Configuracion />
-              </Route>
               <Route
                 exact
                 strict
-                path="/consulta_pedido"
-                component={Consulta}
+                path="/configuracion"
+                component={Configuracion}
               >
+                <Slidebar />
+                <Configuracion />
+              </Route>
+              <Route exact strict path="/consulta_pedido" component={Consulta}>
                 <Slidebar />
                 <Consulta />
               </Route>
@@ -122,18 +136,21 @@ const App = () => {
                 <Slidebar />
                 <Deuda_Cliente />
               </Route>
-              <Route
-                exact
-                strict
-                path="/promociones"
-                component={Promociones}
-              >
+              <Route exact strict path="/promociones" component={Promociones}>
                 <Slidebar />
                 <Promociones />
               </Route>
+              {/* MODULO: cambio precio */}
               <Route
-              path="*"
+                exact
+                strict
+                path="/generar_solicitud"
+                component={GenerarSolicitud}
               >
+                <Slidebar />
+                <GenerarSolicitud />
+              </Route>
+              <Route path="*">
                 <NotFound />
               </Route>
             </Switch>

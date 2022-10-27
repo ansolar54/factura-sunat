@@ -1263,7 +1263,7 @@ const Consulta = () => {
               <div className="title-section">
                 <div>
                   <label> Reportes / Consulta de Stock </label>
-                  <label> Tipo cambio : 4.10 </label>
+                  <label> Tipo cambio : <label style={{color: '#03BF68'}}>{localStorage.getItem("_tipoCambio")}</label> </label>
                 </div>
                 <hr />
               </div>
