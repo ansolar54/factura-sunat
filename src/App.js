@@ -26,6 +26,8 @@ import Promociones from "./pages/Promociones/Promociones";
 import { ActualizarPasswordStatus } from "./Services/ServiceConfiguracion";
 import Rol from "./pages/Rol/Rol";
 import GenerarSolicitud from "./pages/Cambio_Precio/GenerarSolicitud";
+import MisSolicitudes from "./pages/Cambio_Precio/MisSolicitudes";
+import MisAprobaciones from "./pages/Cambio_Precio/MisAprobaciones";
 
 const App = () => {
   const history = useHistory();
@@ -149,6 +151,24 @@ const App = () => {
               >
                 <Slidebar />
                 <GenerarSolicitud />
+              </Route>
+              <Route
+                exact
+                strict
+                path="/mis_solicitudes"
+                component={MisSolicitudes}
+              >
+                <Slidebar />
+                <MisSolicitudes />
+              </Route>
+              <Route
+                exact
+                strict
+                path="/mis_aprobaciones"
+                component={MisAprobaciones}
+              >
+                <Slidebar />
+                <MisAprobaciones />
               </Route>
               <Route path="*">
                 <NotFound />

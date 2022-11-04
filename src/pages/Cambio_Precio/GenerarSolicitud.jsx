@@ -7,21 +7,27 @@ import ModalEditMaterial from "./Modals/ModalEditMaterial";
 import McOrgVentas from "./Modals/McOrgVentas";
 import McCliente from "./Modals/McCliente";
 import Dialog from "./Dialog";
+import toast, { Toaster } from "react-hot-toast";
+import jwt from "jwt-decode";
+import { GuardarSolicitud } from "../../Services/ServiceCambioPrecio";
 
 const GenerarSolicitud = () => {
   const [showModalMaterial, setShowModalMaterial] = useState(false);
   const [showModalEditMaterial, setShowModalEditMaterial] = useState(false);
   const [idMaterial, setIdMaterial] = useState();
 
+  // DATA MATERIAL
+  const [dataMaterial, setDataMaterial] = useState([]);
+
   // ORG VENTAS
-  const [orgVentasValue, setOrgVentasValue] = useState("AGRO");
+  const [orgVentasValue, setOrgVentasValue] = useState(""); // IsVkorg
   const [orgVentas, setOrgVentas] = useState([
     { Sign: "I", Option: "EQ", Low: "", High: "" },
   ]);
   const [showOrgVentas, setShowOrgVentas] = useState(false);
 
   // CLIENTE
-  const [IsCliente, setIsCliente] = useState("");
+  const [IsCliente, setIsCliente] = useState(""); // IsKunnr
   const [showMcCliente, setShowMcCliente] = useState(false);
 
   const openAddMaterial = () => {
@@ -80,16 +86,147 @@ const GenerarSolicitud = () => {
 
   // ---------------------
 
+  const formatFecha = (fecha) => {
+    let newDate = "";
+    if (fecha != null || fecha != undefined || fecha != "") {
+      newDate = fecha.split("-");
+    }
+    return newDate[2] + "-" + newDate[1] + "-" + newDate[0];
+  };
+
+  const enviarSolicitud = () => {
+    // MAPEO DE CAMPOS DE ARREGLO MATERIAL
+    if (dataMaterial.length == 0) {
+      toast.error("No existen materiales", {
+        position: "top-center",
+        autoClose: 1000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        },
+      });
+    } else {
+      let data_detail = [];
+      for (let i = 0; i < dataMaterial.length; i++) {
+        const element = dataMaterial[i];
+        console.log(Number(element.prec_sug.replaceAll(",", "")));
+        let model_detail = {
+          material: element.cod_mat,
+          currency: element.moneda,
+          actual_price:
+            typeof element.prec_act == "number"
+              ? element.prec_act
+              : Number(element.prec_act.replaceAll(",", "")),
+          suggested_price:
+            typeof element.prec_sug == "number"
+              ? element.prec_sug
+              : Number(element.prec_sug.replaceAll(",", "")),
+          start_date: element.fec_ini,
+          end_date: element.fec_fin,
+          lower_limit:
+            typeof element.lim_inf == "number"
+              ? element.lim_inf
+              : Number(element.lim_inf.replaceAll(",", "")),
+          upper_limit:
+            typeof element.lim_sup == "number"
+              ? element.lim_sup
+              : Number(element.lim_sup.replaceAll(",", "")),
+        };
+        data_detail.push(model_detail);
+      }
+      let model = {
+        sales_org: orgVentasValue,
+        client: IsCliente,
+        id_user: Number(jwt(localStorage.getItem("_token")).nameid),
+        detail: data_detail,
+      };
+      console.log(model);
+      GuardarSolicitud(model).then((result) => {
+        console.log(result);
+        if (result.indicator == 1) {
+          setDataMaterial([]);
+          setOrgVentasValue("");
+          setIsCliente("");
+          toast.success(result.message, {
+            position: "top-center",
+            autoClose: 1000,
+            style: {
+              backgroundColor: "#212121",
+              color: "#fff",
+            },
+          });
+        } else {
+          toast.error("No se pudo enviar la solicitud.", {
+            position: "top-center",
+            autoClose: 1000,
+            style: {
+              backgroundColor: "#212121",
+              color: "#fff",
+            },
+          });
+        }
+      });
+    }
+  };
+
+  function handleChange(name, value) {
+    // console.log(value);
+    switch (name) {
+      case "org_ventas":
+        setOrgVentasValue(value);
+        break;
+      default:
+        setIsCliente(value);
+        break;
+    }
+  }
+
+  function convertDecimal(num) {
+    // return num.toFixed(Math.max(((num+'').split(".")[1]||"").length, 2));
+    if (num == null || num == "" || num == "0") {
+      return "0.00";
+    } else {
+      if (num.toString().split(".").length == 2) {
+        // console.log( num.toString().split(".")[0].replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") + "."+num.toString().split(".")[1]);
+        return (
+          num
+            .toString()
+            .split(".")[0]
+            .replace(/\D/g, "")
+            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") +
+          "." +
+          // num.toString().split(".")[1].padStart(2, "0")
+          num.toString().split(".")[1].padEnd(2, "0")
+        );
+      } else {
+        // console.log( num.toString().split(".")[0].replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") + ".00");
+        return (
+          num
+            .toString()
+            .split(".")[0]
+            .replace(/\D/g, "")
+            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") + ".00"
+        );
+      }
+    }
+  }
+
   return (
     <React.Fragment>
       <div className="container-view">
+        <Toaster />
+
         <ModalAddMaterial
           showModalMaterial={showModalMaterial}
           setShowModalMaterial={setShowModalMaterial}
+          dataMaterial={dataMaterial}
+          orgVentas={orgVentasValue}
+          cliente={IsCliente}
         />
         <ModalEditMaterial
           showModalEditMaterial={showModalEditMaterial}
           setShowModalEditMaterial={setShowModalEditMaterial}
+          dataMaterial={dataMaterial}
           idMaterial={idMaterial}
         />
         <McOrgVentas
@@ -127,7 +264,7 @@ const GenerarSolicitud = () => {
                     matchcode: true,
                     maxlength: 4,
                   }}
-                  handleChange={""}
+                  handleChange={handleChange}
                   onClick={() => openMcOrgVentas()}
                 />
               </div>
@@ -144,13 +281,12 @@ const GenerarSolicitud = () => {
                   attribute={{
                     name: "cliente",
                     type: "text",
-                    value: "1005141",
+                    value: IsCliente,
                     disabled: false,
                     checked: false,
                     matchcode: true,
-                    maxlength: 4,
                   }}
-                  handleChange={""}
+                  handleChange={handleChange}
                   onClick={() => openMcCliente()}
                 />
               </div>
@@ -167,7 +303,7 @@ const GenerarSolicitud = () => {
           >
             <BtnAddMaterial
               attribute={{
-                name: "Agregar Material",
+                name: "Agregar material",
                 classNamebtn: "btn_material",
               }}
               onClick={() => openAddMaterial()}
@@ -191,33 +327,33 @@ const GenerarSolicitud = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {/* {dataAuditoria.length >= 1
-                    ? dataAuditoria.map((item, key) => ( */}
-                  <tr key={1}>
-                    <th>1001061</th>
-                    <th>CIPERMEX SUPER 10 EC X 1 L</th>
-                    <th>USD</th>
-                    <th>45.00</th>
-                    <th>50.00</th>
-                    <th>27-10-2022</th>
-                    <th>27-10-2030</th>
-                    <th>
-                      <i
-                        style={{ cursor: "pointer", margin: "2px" }}
-                        title="Editar material"
-                        className="fas fa-edit"
-                        onClick={() => openEditMaterial(1)}
-                      ></i>
-                      <i
-                        style={{ cursor: "pointer", margin: "2px" }}
-                        title="Eliminar material"
-                        className="fas fa-trash-alt"
-                        onClick={() => handleDelete(1)}
-                      ></i>
-                    </th>
-                  </tr>
-                  {/* ))
-                    : null} */}
+                  {dataMaterial.length >= 1
+                    ? dataMaterial.map((item, key) => (
+                        <tr key={item.cod_mat}>
+                          <th>{item.cod_mat}</th>
+                          <th>{item.name_mat}</th>
+                          <th>{item.moneda}</th>
+                          <th>{convertDecimal(item.prec_act)}</th>
+                          <th>{convertDecimal(item.prec_sug)}</th>
+                          <th>{formatFecha(item.fec_ini)}</th>
+                          <th>{formatFecha(item.fec_fin)}</th>
+                          <th>
+                            <i
+                              style={{ cursor: "pointer", margin: "2px" }}
+                              title="Editar material"
+                              className="fas fa-edit"
+                              onClick={() => openEditMaterial(item.cod_mat)}
+                            ></i>
+                            <i
+                              style={{ cursor: "pointer", margin: "2px" }}
+                              title="Eliminar material"
+                              className="fas fa-trash-alt"
+                              onClick={() => handleDelete(1)}
+                            ></i>
+                          </th>
+                        </tr>
+                      ))
+                    : null}
                 </tbody>
               </table>
               {/* {spinner==false && dataAuditoria.length == 0 ? (
@@ -237,6 +373,15 @@ const GenerarSolicitud = () => {
             </div>
           </div>
         </section>
+        <div className="btn-enviar-solicitud">
+          <BtnAddMaterial
+            attribute={{
+              name: "Enviar solicitud",
+              classNamebtn: "btn_material",
+            }}
+            onClick={() => enviarSolicitud()}
+          />
+        </div>
         {dialog.isLoading && (
           <Dialog
             //Update

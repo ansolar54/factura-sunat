@@ -20,3 +20,27 @@
     flex-direction: row;
     justify-content: space-between;
 }
+
+.btn-enviar-solicitud {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-form1 select{
+    outline: none;
+    background:#ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    width: 100%;
+    padding: 7px 8px;
+}
+
+.input-box1 {
+    margin: 5px;
+    width: 190px;
+}
+.input-box2 {
+    margin: 5px;
+    width: 300px;
+}

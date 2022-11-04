@@ -289,35 +289,22 @@ const Slidebar = () => {
             <ul>
               {consultapedido && (
                 <li className="slidebar-categories-child">
-                  <i className="fas fa-search"></i>
+                  <i className="fa fa-book"></i>
                   <Link to="generar_solicitud">Generar solicitud</Link>
                 </li>
               )}
-              {/* {consultastock && (
+              {consultapedido && (
                 <li className="slidebar-categories-child">
-                  <i className="fas fa-pencil-alt"></i>
-                  <Link to="consulta_stock">Mis solicitudes</Link>
+                  <i className="fa fa-credit-card"></i>
+                  <Link to="mis_solicitudes">Mis solicitudes</Link>
                 </li>
               )}
-              {reportepromociones && (
+              {consultapedido && (
                 <li className="slidebar-categories-child">
-                  <i className="fas fa-list-alt"></i>
-                  <Link to="promociones">Solicitudes</Link>
+                  <i className="fa fa-fax"></i>
+                  <Link to="mis_aprobaciones">Mis aprobaciones</Link>
                 </li>
               )}
-              {informacioncliente && (
-                <li className="slidebar-categories-child">
-                  <i className="fas fa-id-card"></i>
-                  <Link to="informacion_cliente">Mis aprobaciones</Link>
-                </li>
-              )}
-
-              {deudacliente && (
-                <li className="slidebar-categories-child">
-                  <i className="fas fa-digital-tachograph"></i>
-                  <Link to="estado_cuenta">Reporte solicitudes</Link>
-                </li>
-              )} */}
             </ul>
           </div>
         </div>

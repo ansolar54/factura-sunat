@@ -229,10 +229,10 @@ const Consulta = () => {
   const modalRef = useRef();
 
   const [ItemsNumberDates, setItemsNumberDates] = useState([
-    {id:10, name:10},
-    {id:20, name:20},
-    {id:50, name:50},
-    {id:100, name:100}
+    { id: 10, name: 10 },
+    { id: 20, name: 20 },
+    { id: 50, name: 50 },
+    { id: 100, name: 100 },
   ]);
 
   //PARA ACCESO A RUTA
@@ -331,9 +331,12 @@ const Consulta = () => {
           setindicadorruta(true);
         }
       });
-    } 
+    }
     //REGISTRO DE AUDITORÍA
-    RegistrarAuditoria({id_user:Number(jwt(localStorage.getItem("_token")).nameid), id_event:1});
+    RegistrarAuditoria({
+      id_user: Number(jwt(localStorage.getItem("_token")).nameid),
+      id_event: 1,
+    });
   }, []);
 
   //useeffect modal rangos documento comercial
@@ -379,7 +382,6 @@ const Consulta = () => {
         break;
     }
   }, [ind_rang]);
-
 
   function clearColumnsIcon(num_col) {
     switch (num_col) {
@@ -482,17 +484,17 @@ const Consulta = () => {
         setcol_8(0);
         setcol_10(0);
         break;
-        case 9:
-          setcol_1(0);
-          setcol_2(0);
-          setcol_3(0);
-          setcol_4(0);
-          setcol_5(0);
-          setcol_6(0);
-          setcol_7(0);
-          setcol_8(0);
-          setcol_9(0);
-          break;
+      case 9:
+        setcol_1(0);
+        setcol_2(0);
+        setcol_3(0);
+        setcol_4(0);
+        setcol_5(0);
+        setcol_6(0);
+        setcol_7(0);
+        setcol_8(0);
+        setcol_9(0);
+        break;
       default:
         break;
     }
@@ -509,31 +511,27 @@ const Consulta = () => {
           setcol_1(col_1 + 1);
           setIsCampo("VBELN");
           setIsOrden("0");
-          if(indicadorfiltro == true) {
-            buscar_filtro_fila(1,"VBELN", "0");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "VBELN", "0");
           } else {
             Search(1, 0, "VBELN", "0");
           }
-          
-          
         } else if (col_1 === 1) {
           setcol_1(col_1 + 1);
           setIsCampo("VBELN");
           setIsOrden("1");
-          if(indicadorfiltro == true) {
-            buscar_filtro_fila(1,"VBELN", "1");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "VBELN", "1");
           } else {
             Search(1, 0, "VBELN", "1");
           }
-          
-          
         } else {
           setcol_1(0);
           // Search(1, 0, "", "");
           setIsCampo("");
           setIsOrden("");
-          if(indicadorfiltro == true) {
-            buscar_filtro_fila(1,"", "");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "", "");
           } else {
             Search(1, 0, "", "");
           }
@@ -546,8 +544,8 @@ const Consulta = () => {
           // Search(1, 0, "VKORG", "0");
           setIsCampo("VKORG");
           setIsOrden("0");
-          if(indicadorfiltro == true) {
-            buscar_filtro_fila(1,"VKORG", "0");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "VKORG", "0");
           } else {
             Search(1, 0, "VKORG", "0");
           }
@@ -556,8 +554,8 @@ const Consulta = () => {
           // Search(1, 0, "VKORG", "1");
           setIsCampo("VKORG");
           setIsOrden("1");
-          if(indicadorfiltro == true) {
-            buscar_filtro_fila(1,"VKORG", "1");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "VKORG", "1");
           } else {
             Search(1, 0, "VKORG", "1");
           }
@@ -566,8 +564,8 @@ const Consulta = () => {
           // Search(1, 0, "", "");
           setIsCampo("");
           setIsOrden("");
-          if(indicadorfiltro == true) {
-            buscar_filtro_fila(1,"", "");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "", "");
           } else {
             Search(1, 0, "", "");
           }
@@ -580,8 +578,8 @@ const Consulta = () => {
           // Search(1, 0, "ERDAT", "0");
           setIsCampo("ERDAT");
           setIsOrden("0");
-          if(indicadorfiltro == true) {
-            buscar_filtro_fila(1,"ERDAT", "1");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "ERDAT", "1");
           } else {
             Search(1, 0, "ERDAT", "0");
           }
@@ -590,8 +588,8 @@ const Consulta = () => {
           // Search(1, 0, "ERDAT", "1");
           setIsCampo("ERDAT");
           setIsOrden("1");
-          if(indicadorfiltro == true) {
-            buscar_filtro_fila(1,"ERDAT", "1");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "ERDAT", "1");
           } else {
             Search(1, 0, "ERDAT", "1");
           }
@@ -600,8 +598,8 @@ const Consulta = () => {
           // Search(1, 0, "", "");
           setIsCampo("");
           setIsOrden("");
-          if(indicadorfiltro == true) {
-            buscar_filtro_fila(1,"","");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "", "");
           } else {
             Search(1, 0, "", "");
           }
@@ -614,8 +612,8 @@ const Consulta = () => {
           // Search(1, 0, "KUNNR", "0");
           setIsCampo("KUNNR");
           setIsOrden("0");
-          if(indicadorfiltro == true) {
-            buscar_filtro_fila(1,"KUNNR", "0");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "KUNNR", "0");
           } else {
             Search(1, 0, "KUNNR", "0");
           }
@@ -624,8 +622,8 @@ const Consulta = () => {
           // Search(1, 0, "KUNNR", "1");
           setIsCampo("KUNNR");
           setIsOrden("1");
-          if(indicadorfiltro == true) {
-            buscar_filtro_fila(1,"KUNNR", "1");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "KUNNR", "1");
           } else {
             Search(1, 0, "KUNNR", "1");
           }
@@ -634,8 +632,8 @@ const Consulta = () => {
           // Search(1, 0, "", "");
           setIsCampo("");
           setIsOrden("");
-          if(indicadorfiltro == true) {
-            buscar_filtro_fila(1,"", "");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "", "");
           } else {
             Search(1, 0, "", "");
           }
@@ -648,19 +646,18 @@ const Consulta = () => {
           // Search(1, 0, "NAME1", "0");
           setIsCampo("NAME1");
           setIsOrden("0");
-          if(indicadorfiltro == true) {
-            buscar_filtro_fila(1,"NAME1", "0");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "NAME1", "0");
           } else {
             Search(1, 0, "NAME1", "0");
           }
-
         } else if (col_5 === 1) {
           setcol_5(col_5 + 1);
           // Search(1, 0, "NAME1", "1");
           setIsCampo("NAME1");
           setIsOrden("1");
           if (indicadorfiltro == true) {
-            buscar_filtro_fila(1,"NAME1", "1");
+            buscar_filtro_fila(1, "NAME1", "1");
           } else {
             Search(1, 0, "NAME1", "1");
           }
@@ -670,7 +667,7 @@ const Consulta = () => {
           setIsCampo("");
           setIsOrden("");
           if (indicadorfiltro == true) {
-            buscar_filtro_fila(1,"", "");
+            buscar_filtro_fila(1, "", "");
           } else {
             Search(1, 0, "", "");
           }
@@ -684,7 +681,7 @@ const Consulta = () => {
           setIsCampo("NETWR");
           setIsOrden("0");
           if (indicadorfiltro == true) {
-            buscar_filtro_fila(1,"NETWR", "0");
+            buscar_filtro_fila(1, "NETWR", "0");
           } else {
             Search(1, 0, "NETWR", "0");
           }
@@ -693,8 +690,8 @@ const Consulta = () => {
           // Search(1, 0, "NETWR", "1");
           setIsCampo("NETWR");
           setIsOrden("1");
-          if(indicadorfiltro == true) {
-            buscar_filtro_fila(1,"NETWR", "1");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "NETWR", "1");
           } else {
             Search(1, 0, "NETWR", "1");
           }
@@ -703,8 +700,8 @@ const Consulta = () => {
           // Search(1, 0, "", "");
           setIsCampo("");
           setIsOrden("");
-          if(indicadorfiltro == true) {
-            buscar_filtro_fila(1,"", "");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "", "");
           } else {
             Search(1, 0, "", "");
           }
@@ -717,8 +714,8 @@ const Consulta = () => {
           // Search(1, 0, "WAERK", "0");
           setIsCampo("WAERK");
           setIsOrden("0");
-          if(indicadorfiltro == true) {
-            buscar_filtro_fila(1,"WAERK", "0");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "WAERK", "0");
           } else {
             Search(1, 0, "WAERK", "0");
           }
@@ -727,8 +724,8 @@ const Consulta = () => {
           // Search(1, 0, "WAERK", "1");
           setIsCampo("WAERK");
           setIsOrden("1");
-          if(indicadorfiltro == true) {
-            buscar_filtro_fila(1,"WAERK", "1");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "WAERK", "1");
           } else {
             Search(1, 0, "WAERK", "1");
           }
@@ -737,8 +734,8 @@ const Consulta = () => {
           // Search(1, 0, "", "");
           setIsCampo("");
           setIsOrden("");
-          if(indicadorfiltro == true) {
-            buscar_filtro_fila(1,"", "");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "", "");
           } else {
             Search(1, 0, "", "");
           }
@@ -751,7 +748,7 @@ const Consulta = () => {
           // Search(1, 0, "TEXT1", "0");
           setIsCampo("TEXT1");
           setIsOrden("0");
-          if(indicadorfiltro == true) {
+          if (indicadorfiltro == true) {
             buscar_filtro_fila(1, "TEXT1", "0");
           } else {
             Search(1, 0, "TEXT1", "0");
@@ -761,7 +758,7 @@ const Consulta = () => {
           // Search(1, 0, "TEXT1", "1");
           setIsCampo("TEXT1");
           setIsOrden("1");
-          if(indicadorfiltro == true) {
+          if (indicadorfiltro == true) {
             buscar_filtro_fila(1, "TEXT1", "1");
           } else {
             Search(1, 0, "TEXT1", "1");
@@ -771,7 +768,7 @@ const Consulta = () => {
           // Search(1, 0, "", "");
           setIsCampo("");
           setIsOrden("");
-          if(indicadorfiltro == true) {
+          if (indicadorfiltro == true) {
             buscar_filtro_fila(1, "", "");
           } else {
             Search(1, 0, "", "");
@@ -785,7 +782,7 @@ const Consulta = () => {
           // Search(1, 0, "STATUS", "0");
           setIsCampo("STATUS");
           setIsOrden("0");
-          if(indicadorfiltro == true) {
+          if (indicadorfiltro == true) {
             buscar_filtro_fila(1, "STATUS", "0");
           } else {
             Search(1, 0, "STATUS", "0");
@@ -795,7 +792,7 @@ const Consulta = () => {
           // Search(1, 0, "STATUS", "1");
           setIsCampo("STATUS");
           setIsOrden("1");
-          if(indicadorfiltro == true) {
+          if (indicadorfiltro == true) {
             buscar_filtro_fila(1, "STATUS", "1");
           } else {
             Search(1, 0, "STATUS", "1");
@@ -805,47 +802,47 @@ const Consulta = () => {
           // Search(1, 0, "", "");
           setIsCampo("");
           setIsOrden("");
-          if(indicadorfiltro == true) {
+          if (indicadorfiltro == true) {
             buscar_filtro_fila(1, "", "");
           } else {
             Search(1, 0, "", "");
           }
         }
         break;
-        case 10:
-          clearColumnsIcon(10);
-          if (col_10 === 0) {
-            setcol_10(col_10 + 1);
-            // Search(1, 0, "STATUS", "0");
-            setIsCampo("BEZEI");
-            setIsOrden("0");
-            if(indicadorfiltro == true) {
-              buscar_filtro_fila(1, "BEZEI", "0");
-            } else {
-              Search(1, 0, "BEZEI", "0");
-            }
-          } else if (col_10 === 1) {
-            setcol_10(col_10 + 1);
-            // Search(1, 0, "STATUS", "1");
-            setIsCampo("BEZEI");
-            setIsOrden("1");
-            if(indicadorfiltro == true) {
-              buscar_filtro_fila(1, "BEZEI", "1");
-            } else {
-              Search(1, 0, "BEZEI", "1");
-            }
+      case 10:
+        clearColumnsIcon(10);
+        if (col_10 === 0) {
+          setcol_10(col_10 + 1);
+          // Search(1, 0, "STATUS", "0");
+          setIsCampo("BEZEI");
+          setIsOrden("0");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "BEZEI", "0");
           } else {
-            setcol_10(0);
-            // Search(1, 0, "", "");
-            setIsCampo("");
-            setIsOrden("");
-            if(indicadorfiltro == true) {
-              buscar_filtro_fila(1, "", "");
-            } else {
-              Search(1, 0, "", "");
-            }
+            Search(1, 0, "BEZEI", "0");
           }
-          break;
+        } else if (col_10 === 1) {
+          setcol_10(col_10 + 1);
+          // Search(1, 0, "STATUS", "1");
+          setIsCampo("BEZEI");
+          setIsOrden("1");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "BEZEI", "1");
+          } else {
+            Search(1, 0, "BEZEI", "1");
+          }
+        } else {
+          setcol_10(0);
+          // Search(1, 0, "", "");
+          setIsCampo("");
+          setIsOrden("");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "", "");
+          } else {
+            Search(1, 0, "", "");
+          }
+        }
+        break;
       default:
         break;
     }
@@ -894,7 +891,6 @@ const Consulta = () => {
     if (mostrar_filtro_fila == true) {
       settext_btn_filtro("Filtrar");
       setmostrar_filtro_fila(false);
-      
     } else {
       settext_btn_filtro("Borrar filtros");
       setmostrar_filtro_fila(true);
@@ -965,7 +961,7 @@ const Consulta = () => {
 
   // Funcion Rangos cliente
   function RangosCliente() {
-    console.log("rangos cliente")
+    console.log("rangos cliente");
     if (rangos_cliente.length === 1) {
       if (
         rangos_cliente[0].Low.trim() === "" &&
@@ -1093,7 +1089,7 @@ const Consulta = () => {
     }
   }
 
-  function clear_icons_colum(){
+  function clear_icons_colum() {
     setcol_1(0);
     setcol_2(0);
     setcol_3(0);
@@ -1108,12 +1104,12 @@ const Consulta = () => {
   //BUSQUEDAA DE POPUP NUMERO DE DATOS
   async function Search_02(page, ind, IsCampo, IsOrden, numdatos) {
     setTotalData(0);
-    if(page==1){
+    if (page == 1) {
       setind_pagina(1);
-    }else{
+    } else {
       setind_pagina(0);
     }
-    if(IsCampo==="" && IsOrden===""){
+    if (IsCampo === "" && IsOrden === "") {
       clear_icons_colum();
     }
     settext_btn_filtro("Filtrar");
@@ -1147,12 +1143,9 @@ const Consulta = () => {
         // document.getElementById("checkbox-consultapedido-head").disabled=false;
         setresponse_consulta_pedido(
           result.itConsultaPedidosField.map((d) => {
-            
-            
-
             return {
               select: false,
-              bezeiField : d.bezeiField,
+              bezeiField: d.bezeiField,
               bstdkField: d.bstdkField,
               erdatField: d.erdatField,
               kunnrField: d.kunnrField,
@@ -1168,8 +1161,6 @@ const Consulta = () => {
             };
           })
         );
-       
-        
 
         setTotalData(result.esRegtotField);
         setspinner(false);
@@ -1182,12 +1173,9 @@ const Consulta = () => {
         if (stateChecboxHeader === true) {
           setresponse_consulta_pedido(
             result.itConsultaPedidosField.map((d) => {
-              
-              
-
               return {
                 select: true,
-                bezeiField : d.bezeiField,
+                bezeiField: d.bezeiField,
                 bstdkField: d.bstdkField,
                 erdatField: d.erdatField,
                 kunnrField: d.kunnrField,
@@ -1204,8 +1192,6 @@ const Consulta = () => {
             })
           );
 
-          
-
           for (let i = 0; i < result.itConsultaPedidosField.length; i++) {
             document.getElementById(
               "checkbox-body-" + result.itConsultaPedidosField[i].vbelnField
@@ -1216,7 +1202,7 @@ const Consulta = () => {
             result.itConsultaPedidosField.map((d) => {
               return {
                 select: false,
-                bezeiField : d.bezeiField,
+                bezeiField: d.bezeiField,
                 bstdkField: d.bstdkField,
                 erdatField: d.erdatField,
                 kunnrField: d.kunnrField,
@@ -1262,16 +1248,15 @@ const Consulta = () => {
     }
   }
 
-
   //BÚSQUEDA
   async function Search(page, ind, IsCampo, IsOrden) {
     setTotalData(0);
-    if(page==1){
+    if (page == 1) {
       setind_pagina(1);
-    }else{
+    } else {
       setind_pagina(0);
     }
-    if(IsCampo==="" && IsOrden===""){
+    if (IsCampo === "" && IsOrden === "") {
       clear_icons_colum();
     }
     settext_btn_filtro("Filtrar");
@@ -1305,12 +1290,9 @@ const Consulta = () => {
         // document.getElementById("checkbox-consultapedido-head").disabled=false;
         setresponse_consulta_pedido(
           result.itConsultaPedidosField.map((d) => {
-            
-            
-
             return {
               select: false,
-              bezeiField : d.bezeiField,
+              bezeiField: d.bezeiField,
               bstdkField: d.bstdkField,
               erdatField: d.erdatField,
               kunnrField: d.kunnrField,
@@ -1326,8 +1308,6 @@ const Consulta = () => {
             };
           })
         );
-       
-        
 
         setTotalData(result.esRegtotField);
         setspinner(false);
@@ -1340,12 +1320,9 @@ const Consulta = () => {
         if (stateChecboxHeader === true) {
           setresponse_consulta_pedido(
             result.itConsultaPedidosField.map((d) => {
-              
-              
-
               return {
                 select: true,
-                bezeiField : d.bezeiField,
+                bezeiField: d.bezeiField,
                 bstdkField: d.bstdkField,
                 erdatField: d.erdatField,
                 kunnrField: d.kunnrField,
@@ -1362,8 +1339,6 @@ const Consulta = () => {
             })
           );
 
-          
-
           for (let i = 0; i < result.itConsultaPedidosField.length; i++) {
             document.getElementById(
               "checkbox-body-" + result.itConsultaPedidosField[i].vbelnField
@@ -1374,7 +1349,7 @@ const Consulta = () => {
             result.itConsultaPedidosField.map((d) => {
               return {
                 select: false,
-                bezeiField : d.bezeiField,
+                bezeiField: d.bezeiField,
                 bstdkField: d.bstdkField,
                 erdatField: d.erdatField,
                 kunnrField: d.kunnrField,
@@ -1457,7 +1432,6 @@ const Consulta = () => {
       ItVbeln: RangosDocuComercial(),
       ItVkbur: RangosOficinaVentas(),
       ItVkorg: RangosOrganizacionVentas(),
-      
     };
 
     if (
@@ -1602,8 +1576,8 @@ const Consulta = () => {
       //documento comercial
       case "id_role":
         setIsRegxpag(value);
-        Search_02(1, 0, "", "",value);
-        setshowModalPagina ((prev) => !prev)
+        Search_02(1, 0, "", "", value);
+        setshowModalPagina((prev) => !prev);
         break;
       case "num_datos_pagina":
         setDatosxpagina(value);
@@ -2143,11 +2117,10 @@ const Consulta = () => {
   function changePage(pageNumber) {
     setresponse_consulta_pedido([]);
     if (indicadorfiltro == false) {
-     
       Search(pageNumber, 1, IsCampo, IsOrden);
-    } else {     
+    } else {
       setpageNumber(pageNumber);
-      buscar_filtro_fila(pageNumber,IsCampo, IsOrden);
+      buscar_filtro_fila(pageNumber, IsCampo, IsOrden);
       // SearchFiltro();
     }
   }
@@ -2160,7 +2133,7 @@ const Consulta = () => {
     } else {
       setmodel_filtro({ ...model_filtro, IsNpag: value - 1 });
       // SearchFiltro();
-      buscar_filtro_fila(value - 1,IsCampo, IsOrden)
+      buscar_filtro_fila(value - 1, IsCampo, IsOrden);
     }
   }
   //pagina anterior
@@ -2172,7 +2145,7 @@ const Consulta = () => {
     } else {
       setmodel_filtro({ ...model_filtro, IsNpag: value + 1 });
       // SearchFiltro();
-      buscar_filtro_fila(value + 1,IsCampo, IsOrden)
+      buscar_filtro_fila(value + 1, IsCampo, IsOrden);
     }
   }
   //ver detalle de pedido
@@ -2267,33 +2240,17 @@ const Consulta = () => {
 
   //Limpiar Campos
   function Clear() {
-    setrangos_ofi_ventas([
-      { Sign: "I", Option: "EQ", Low: "", High: "" },
-    ]);
-    setrangos_cliente([
-      { Sign: "I", Option: "EQ", Low: "", High: "" },
-    ])
-    setrangos_comercial([
-      { Sign: "I", Option: "EQ", Low: "", High: "" },
-    ])
-    setrangos_creado_el([
-      { Sign: "I", Option: "EQ", Low: "", High: "" },
-    ])
-    setrangos_creado_por([
-      { Sign: "I", Option: "EQ", Low: "", High: "" },
-    ])
-    setrangos_doccomercial([
-      { Sign: "I", Option: "EQ", Low: "", High: "" },
-    ])
-    setrangos_material([
-      { Sign: "I", Option: "EQ", Low: "", High: "" },
-    ])
-    setrangos_org_ventas([
-      { Sign: "I", Option: "EQ", Low: "", High: "" },
-    ])
+    setrangos_ofi_ventas([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
+    setrangos_cliente([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
+    setrangos_comercial([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
+    setrangos_creado_el([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
+    setrangos_creado_por([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
+    setrangos_doccomercial([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
+    setrangos_material([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
+    setrangos_org_ventas([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
 
     setvaluepagination(false);
-    setresponse_consulta_pedido([])
+    setresponse_consulta_pedido([]);
     handleChange("docu_comercial", "");
     setdocu_comercial_desde("");
     setdocu_comercial_hasta("");
@@ -2335,7 +2292,7 @@ const Consulta = () => {
           "checkbox-body-" + response_consulta_pedido[i].vbelnField
         ).checked = true;
         arraycheckbox_export[0].data = [];
-        
+
         // arraycheckbox_export[0].data.push(
         //   [
         //     {
@@ -2501,14 +2458,14 @@ const Consulta = () => {
     setf_statusField("");
     setf_bezeiField("");
   }
-  function buscar_filtro_fila(pageNumber,IsCampo,IsOrden) {
+  function buscar_filtro_fila(pageNumber, IsCampo, IsOrden) {
     setTotalData(0);
-    if(pageNumber==1){
+    if (pageNumber == 1) {
       setind_pagina(1);
-    }else{
+    } else {
       setind_pagina(0);
     }
-    if(IsCampo==="" && IsOrden===""){
+    if (IsCampo === "" && IsOrden === "") {
       clear_icons_colum();
     }
     settext_btn_filtro("Filtrar");
@@ -2550,43 +2507,45 @@ const Consulta = () => {
     arraycheckbox_export[0].data = [];
     setresponse_consulta_pedido([]);
     setspinner(true);
-    ConsPedidoFiltro(model).then((result) => {
-      setspinner(false);
-      setresponse_consulta_pedido(
-        result.itConsultaPedidosField.map((d) => {
-          return {
-            select: false,
-            bezeiField: d.bezeiField,
-            bstdkField: d.bstdkField,
-            erdatField: d.erdatField,
-            kunnrField: d.kunnrField,
-            motivoField: d.motivoField,
-            name1Field: d.name1Field,
-            netwrField: d.netwrField,
-            statusField: d.statusField,
-            text1Field: d.text1Field,
-            vbelnField: d.vbelnField,
-            vkorgField: d.vkorgField,
-            waerkField: d.waerkField,
-            ztermField: d.ztermField,
-          };
-        })
-      );
-      setTotalData(result.esRegtotField);
-    }).catch((error)=>{
-      console.log(error)
-    });
+    ConsPedidoFiltro(model)
+      .then((result) => {
+        setspinner(false);
+        setresponse_consulta_pedido(
+          result.itConsultaPedidosField.map((d) => {
+            return {
+              select: false,
+              bezeiField: d.bezeiField,
+              bstdkField: d.bstdkField,
+              erdatField: d.erdatField,
+              kunnrField: d.kunnrField,
+              motivoField: d.motivoField,
+              name1Field: d.name1Field,
+              netwrField: d.netwrField,
+              statusField: d.statusField,
+              text1Field: d.text1Field,
+              vbelnField: d.vbelnField,
+              vkorgField: d.vkorgField,
+              waerkField: d.waerkField,
+              ztermField: d.ztermField,
+            };
+          })
+        );
+        setTotalData(result.esRegtotField);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   function buscar_filtro_enter(event) {
     var keycode = event.keyCode;
     if (keycode == "13") {
-      buscar_filtro_fila(1,"","");
+      buscar_filtro_fila(1, "", "");
     }
   }
 
   function buscar_filtro_icono_btn() {
-    buscar_filtro_fila(1,"","");
+    buscar_filtro_fila(1, "", "");
   }
 
   const closeModal = (e) => {
@@ -2598,32 +2557,30 @@ const Consulta = () => {
 
   function openDatosPagina() {
     // showModalPagina == true
-    setshowModalPagina ((prev) => !prev);
-
+    setshowModalPagina((prev) => !prev);
   }
 
-  function SaveNumberPage(){
+  function SaveNumberPage() {
     console.log(ItemsNumberDates);
     setIsRegxpag(datosxpagina);
-    setshowModalPagina ((prev) => !prev)
+    setshowModalPagina((prev) => !prev);
   }
 
   return (
     <React.Fragment>
-      {
-        showModalPagina ? (
-          <React.Fragment>
-            <div
-              className="container-modal-background"
-              onClick={closeModal}
-              ref={modalRef}
-            >
-              <div className="modal-wrapper modal-wrapper-paginate p-5">
-                    <div className="col-sm-12 d-flex align-items-center">
-                      <label>Número de datos por página</label>
-                    </div>
-                    <div className="col-sm-12">
-                      {/* <InputForm
+      {showModalPagina ? (
+        <React.Fragment>
+          <div
+            className="container-modal-background"
+            onClick={closeModal}
+            ref={modalRef}
+          >
+            <div className="modal-wrapper modal-wrapper-paginate p-5">
+              <div className="col-sm-12 d-flex align-items-center">
+                <label>Número de datos por página</label>
+              </div>
+              <div className="col-sm-12">
+                {/* <InputForm
                         attribute={{
                           name: "num_datos_pagina",
                           type: "number",
@@ -2635,9 +2592,13 @@ const Consulta = () => {
                         }}
                         handleChange={handleChange}
                       /> */}
-                      <SelectFormMd attribute={{name:'id_role', disabled:false, default:0}} values={ItemsNumberDates} handleChange={handleChange}></SelectFormMd>
-                    </div>
-                    {/* <div className="col-sm-12 col-md-12 p-1">
+                <SelectFormMd
+                  attribute={{ name: "id_role", disabled: false, default: 0 }}
+                  values={ItemsNumberDates}
+                  handleChange={handleChange}
+                ></SelectFormMd>
+              </div>
+              {/* <div className="col-sm-12 col-md-12 p-1">
                       <BtnSearch
                         attribute={{
                           name: "Guardar",
@@ -2646,17 +2607,19 @@ const Consulta = () => {
                         onClick={() => SaveNumberPage()}
                       />
                     </div> */}
-                    <div
-                      className="close-modal-button"
-                      onClick={() => {setshowModalPagina ((prev) => !prev); setDatosxpagina(IsRegxpag);}}
-                    >
-                      <i className="fas fa-times"></i>
-                    </div>
+              <div
+                className="close-modal-button"
+                onClick={() => {
+                  setshowModalPagina((prev) => !prev);
+                  setDatosxpagina(IsRegxpag);
+                }}
+              >
+                <i className="fas fa-times"></i>
               </div>
             </div>
-          </React.Fragment>
-        ):null
-      }
+          </div>
+        </React.Fragment>
+      ) : null}
       {show_status_password ? (
         <ChangeStatusPassword
           setshow_status_password={setshow_status_password}
@@ -2790,7 +2753,13 @@ const Consulta = () => {
               <div className="title-section">
                 <div>
                   <label> Reportes / Consulta de Pedidos </label>
-                  <label> Tipo cambio : <label style={{color: '#03BF68'}}>{localStorage.getItem("_tipoCambio")}</label> </label>
+                  <label>
+                    {" "}
+                    Tipo cambio :{" "}
+                    <label style={{ color: "#03BF68" }}>
+                      {localStorage.getItem("_tipoCambio")}
+                    </label>{" "}
+                  </label>
                 </div>
                 <hr />
               </div>
@@ -2808,7 +2777,7 @@ const Consulta = () => {
                         disabled: false,
                         checked: false,
                         matchcode: false,
-                        maxlength:10
+                        maxlength: 10,
                       }}
                       handleChange={handleChange}
                     />
@@ -2822,7 +2791,7 @@ const Consulta = () => {
                         disabled: false,
                         checked: false,
                         matchcode: false,
-                        maxlength:10
+                        maxlength: 10,
                       }}
                       handleChange={handleChange}
                     />
@@ -2846,7 +2815,7 @@ const Consulta = () => {
                         disabled: false,
                         checked: false,
                         matchcode: true,
-                        maxlength:4
+                        maxlength: 4,
                       }}
                       handleChange={handleChange}
                       onClick={() => mc_ofi_ventas_desde()}
@@ -2861,7 +2830,7 @@ const Consulta = () => {
                         disabled: false,
                         checked: false,
                         matchcode: true,
-                        maxlength:4
+                        maxlength: 4,
                       }}
                       handleChange={handleChange}
                       onClick={() => mc_ofi_ventas_hasta()}
@@ -2922,7 +2891,7 @@ const Consulta = () => {
                         disabled: false,
                         checked: false,
                         matchcode: true,
-                        maxlength:18
+                        maxlength: 18,
                       }}
                       handleChange={handleChange}
                       onClick={() => mc_material_desde()}
@@ -2937,7 +2906,7 @@ const Consulta = () => {
                         disabled: false,
                         checked: false,
                         matchcode: true,
-                        maxlength:18
+                        maxlength: 18,
                       }}
                       handleChange={handleChange}
                       onClick={() => mc_material_hasta()}
@@ -2962,7 +2931,7 @@ const Consulta = () => {
                         disabled: false,
                         checked: false,
                         matchcode: true,
-                        maxlength:4
+                        maxlength: 4,
                       }}
                       handleChange={handleChange}
                       onClick={() => mc_org_ventas_desde()}
@@ -2977,7 +2946,7 @@ const Consulta = () => {
                         disabled: false,
                         checked: false,
                         matchcode: true,
-                        maxlength:4
+                        maxlength: 4,
                       }}
                       handleChange={handleChange}
                       onClick={() => mc_org_ventas_hasta()}
@@ -3002,7 +2971,7 @@ const Consulta = () => {
                         disabled: false,
                         checked: false,
                         matchcode: true,
-                        maxlength:10
+                        maxlength: 10,
                       }}
                       handleChange={handleChange}
                       onClick={() => mc_cliente_desde()}
@@ -3017,7 +2986,7 @@ const Consulta = () => {
                         disabled: false,
                         checked: false,
                         matchcode: true,
-                        maxlength:10
+                        maxlength: 10,
                       }}
                       handleChange={handleChange}
                       onClick={() => mc_cliente_hasta()}
@@ -3042,7 +3011,7 @@ const Consulta = () => {
                         disabled: true,
                         checked: false,
                         matchcode: true,
-                        maxlength:6
+                        maxlength: 6,
                       }}
                       handleChange={handleChange}
                       onClick={() => mc_comercial_desde()}
@@ -3057,7 +3026,7 @@ const Consulta = () => {
                         disabled: true,
                         checked: false,
                         matchcode: true,
-                        maxlength:6
+                        maxlength: 6,
                       }}
                       handleChange={handleChange}
                       onClick={() => mc_comercial_hasta()}
@@ -3069,7 +3038,6 @@ const Consulta = () => {
                       onClick={ChangeBusquedaMult_Comercial}
                     ></i>
                   </div>
-
                 </div>
               </section>
               <section>
@@ -3152,28 +3120,32 @@ const Consulta = () => {
                       <thead>
                         <tr>
                           <th>
-                          <input
-                            type="checkbox"
-                            onClick={(e)=>{onClickHeaderCheckbox(e)}}/>
+                            <input
+                              type="checkbox"
+                              onClick={(e) => {
+                                onClickHeaderCheckbox(e);
+                              }}
+                            />
                           </th>
-                          <th>N° Pedido |{" "}
-                          {col_1 === 0 ? (
+                          <th>
+                            N° Pedido |{" "}
+                            {col_1 === 0 ? (
                               <i
-                              className="fas fa-arrows-alt-v"
+                                className="fas fa-arrows-alt-v"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(1)}
                               ></i>
                             ) : null}
                             {col_1 === 1 ? (
                               <i
-                              className="fas fa-sort-amount-up"
+                                className="fas fa-sort-amount-up"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(1)}
                               ></i>
                             ) : null}
                             {col_1 === 2 ? (
                               <i
-                              className="fas fa-sort-amount-down-alt"
+                                className="fas fa-sort-amount-down-alt"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(1)}
                               ></i>
@@ -3202,185 +3174,193 @@ const Consulta = () => {
                               ></i>
                             ) : null}
                           </th> */}
-                          <th>Org. Ventas. |{" "}
-                          {col_2 === 0 ? (
+                          <th>
+                            Org. Ventas. |{" "}
+                            {col_2 === 0 ? (
                               <i
-                              className="fas fa-arrows-alt-v"
+                                className="fas fa-arrows-alt-v"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(2)}
                               ></i>
                             ) : null}
                             {col_2 === 1 ? (
                               <i
-                              className="fas fa-sort-amount-up"
+                                className="fas fa-sort-amount-up"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(2)}
                               ></i>
                             ) : null}
                             {col_2 === 2 ? (
                               <i
-                              className="fas fa-sort-amount-down-alt"
+                                className="fas fa-sort-amount-down-alt"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(2)}
                               ></i>
                             ) : null}
                           </th>
-                          <th>Creado el |{" "}
-                          {col_3 === 0 ? (
+                          <th>
+                            Creado el |{" "}
+                            {col_3 === 0 ? (
                               <i
-                              className="fas fa-arrows-alt-v"
+                                className="fas fa-arrows-alt-v"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(3)}
                               ></i>
                             ) : null}
                             {col_3 === 1 ? (
                               <i
-                              className="fas fa-sort-amount-up"
+                                className="fas fa-sort-amount-up"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(3)}
                               ></i>
                             ) : null}
                             {col_3 === 2 ? (
                               <i
-                              className="fas fa-sort-amount-down-alt"
+                                className="fas fa-sort-amount-down-alt"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(3)}
                               ></i>
                             ) : null}
                           </th>
-                          <th>Cod. Cliente |{" "}
-                          {col_4 === 0 ? (
+                          <th>
+                            Cod. Cliente |{" "}
+                            {col_4 === 0 ? (
                               <i
-                              className="fas fa-arrows-alt-v"
+                                className="fas fa-arrows-alt-v"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(4)}
                               ></i>
                             ) : null}
                             {col_4 === 1 ? (
                               <i
-                              className="fas fa-sort-amount-up"
+                                className="fas fa-sort-amount-up"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(4)}
                               ></i>
                             ) : null}
                             {col_4 === 2 ? (
                               <i
-                              className="fas fa-sort-amount-down-alt"
+                                className="fas fa-sort-amount-down-alt"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(4)}
                               ></i>
                             ) : null}
                           </th>
-                          <th style={{textAlign:'center'}}>Nombre Cliente |{" "}
-                          {col_5 === 0 ? (
+                          <th style={{ textAlign: "center" }}>
+                            Nombre Cliente |{" "}
+                            {col_5 === 0 ? (
                               <i
-                              className="fas fa-arrows-alt-v"
+                                className="fas fa-arrows-alt-v"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(5)}
                               ></i>
                             ) : null}
                             {col_5 === 1 ? (
                               <i
-                              className="fas fa-sort-amount-up"
+                                className="fas fa-sort-amount-up"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(5)}
                               ></i>
                             ) : null}
                             {col_5 === 2 ? (
                               <i
-                              className="fas fa-sort-amount-down-alt"
+                                className="fas fa-sort-amount-down-alt"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(5)}
                               ></i>
                             ) : null}
                           </th>
-                          <th style={{textAlign:'end'}}>Valor Neto |{" "}
-                          {col_6 === 0 ? (
+                          <th style={{ textAlign: "end" }}>
+                            Valor Neto |{" "}
+                            {col_6 === 0 ? (
                               <i
-                              className="fas fa-arrows-alt-v"
+                                className="fas fa-arrows-alt-v"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(6)}
                               ></i>
                             ) : null}
                             {col_6 === 1 ? (
                               <i
-                              className="fas fa-sort-amount-up"
+                                className="fas fa-sort-amount-up"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(6)}
                               ></i>
                             ) : null}
                             {col_6 === 2 ? (
                               <i
-                              className="fas fa-sort-amount-down-alt"
+                                className="fas fa-sort-amount-down-alt"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(6)}
                               ></i>
                             ) : null}
                           </th>
-                          <th>Moneda |{" "}
-                          {col_7 === 0 ? (
+                          <th>
+                            Moneda |{" "}
+                            {col_7 === 0 ? (
                               <i
-                              className="fas fa-arrows-alt-v"
+                                className="fas fa-arrows-alt-v"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(7)}
                               ></i>
                             ) : null}
                             {col_7 === 1 ? (
                               <i
-                              className="fas fa-sort-amount-up"
+                                className="fas fa-sort-amount-up"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(7)}
                               ></i>
                             ) : null}
                             {col_7 === 2 ? (
                               <i
-                              className="fas fa-sort-amount-down-alt"
+                                className="fas fa-sort-amount-down-alt"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(7)}
                               ></i>
                             ) : null}
                           </th>
-                          <th>Condición de Pago |{" "}
-                          {col_8 === 0 ? (
+                          <th>
+                            Condición de Pago |{" "}
+                            {col_8 === 0 ? (
                               <i
-                              className="fas fa-arrows-alt-v"
+                                className="fas fa-arrows-alt-v"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(8)}
                               ></i>
                             ) : null}
                             {col_8 === 1 ? (
                               <i
-                              className="fas fa-sort-amount-up"
+                                className="fas fa-sort-amount-up"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(8)}
                               ></i>
                             ) : null}
                             {col_8 === 2 ? (
                               <i
-                              className="fas fa-sort-amount-down-alt"
+                                className="fas fa-sort-amount-down-alt"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(8)}
                               ></i>
                             ) : null}
                           </th>
-                          <th>Est. Operac. |{" "}
-                          {col_9 === 0 ? (
+                          <th>
+                            Est. Operac. |{" "}
+                            {col_9 === 0 ? (
                               <i
-                              className="fas fa-arrows-alt-v"
+                                className="fas fa-arrows-alt-v"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(9)}
                               ></i>
                             ) : null}
                             {col_9 === 1 ? (
                               <i
-                              className="fas fa-sort-amount-up"
+                                className="fas fa-sort-amount-up"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(9)}
                               ></i>
                             ) : null}
                             {col_9 === 2 ? (
                               <i
-                              className="fas fa-sort-amount-down-alt"
+                                className="fas fa-sort-amount-down-alt"
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleChangeColumna(9)}
                               ></i>
@@ -3563,9 +3543,9 @@ const Consulta = () => {
                                             ) {
                                               d.select = e.target.checked;
                                               if (e.target.checked == true) {
-
-                                                if(stateChecboxHeader == true){
-
+                                                if (
+                                                  stateChecboxHeader == true
+                                                ) {
                                                   // DataSet[0].data
 
                                                   // setDataSet([
@@ -3588,40 +3568,86 @@ const Consulta = () => {
                                                   //     { value: d.statusField, style: { font: { sz: "14" } } },
                                                   //     { value: d.motivoField, style: { font: { sz: "14" } } },
                                                   //   ]
-                                                          
-                                                        
-                                                     
-                                                    
+
                                                   // ]);
                                                   DataSet[0].data.push([
-                                                          { value: d.vbelnField, style: { font: { sz: "14" } } },
-                                                          // { value: d.bezeiField, style: { font: { sz: "14" } } },
-                                                        { value: d.vkorgField, style: { font: { sz: "14" } } },
-                                                        {
-                                                          value: formatDate(d.erdatField),
-                                                          style: { font: { sz: "14" } },
-                                                        },
-                                                        { value: d.kunnrField, style: { font: { sz: "14" } } },
-                                                        { value: d.name1Field, style: { font: { sz: "14" } } },
-                                                        {
-                                                          value: convertDecimal(d.netwrField, 2),
-                                                          style: { font: { sz: "14" } },
-                                                        },
-                                                        { value: d.waerkField, style: { font: { sz: "14" } } },
-                                                        { value: d.text1Field, style: { font: { sz: "14" } } },
-                                                        { value: d.statusField, style: { font: { sz: "14" } } },
-                                                        { value: d.motivoField, style: { font: { sz: "14" } } },
-                                                  ])
-                                                  console.log(DataSet)
-                                                }else{
+                                                    {
+                                                      value: d.vbelnField,
+                                                      style: {
+                                                        font: { sz: "14" },
+                                                      },
+                                                    },
+                                                    // { value: d.bezeiField, style: { font: { sz: "14" } } },
+                                                    {
+                                                      value: d.vkorgField,
+                                                      style: {
+                                                        font: { sz: "14" },
+                                                      },
+                                                    },
+                                                    {
+                                                      value: formatDate(
+                                                        d.erdatField
+                                                      ),
+                                                      style: {
+                                                        font: { sz: "14" },
+                                                      },
+                                                    },
+                                                    {
+                                                      value: d.kunnrField,
+                                                      style: {
+                                                        font: { sz: "14" },
+                                                      },
+                                                    },
+                                                    {
+                                                      value: d.name1Field,
+                                                      style: {
+                                                        font: { sz: "14" },
+                                                      },
+                                                    },
+                                                    {
+                                                      value: convertDecimal(
+                                                        d.netwrField,
+                                                        2
+                                                      ),
+                                                      style: {
+                                                        font: { sz: "14" },
+                                                      },
+                                                    },
+                                                    {
+                                                      value: d.waerkField,
+                                                      style: {
+                                                        font: { sz: "14" },
+                                                      },
+                                                    },
+                                                    {
+                                                      value: d.text1Field,
+                                                      style: {
+                                                        font: { sz: "14" },
+                                                      },
+                                                    },
+                                                    {
+                                                      value: d.statusField,
+                                                      style: {
+                                                        font: { sz: "14" },
+                                                      },
+                                                    },
+                                                    {
+                                                      value: d.motivoField,
+                                                      style: {
+                                                        font: { sz: "14" },
+                                                      },
+                                                    },
+                                                  ]);
+                                                  console.log(DataSet);
+                                                } else {
                                                   setarraycheckbox([
                                                     ...arraycheckbox,
-                                                    { vbelnField: d.vbelnField },
+                                                    {
+                                                      vbelnField: d.vbelnField,
+                                                    },
                                                   ]);
                                                   ordenamiento(d);
                                                 }
-
-                                                
                                               } else if (
                                                 e.target.checked == false
                                               ) {
@@ -3629,13 +3655,12 @@ const Consulta = () => {
                                                 // setDataSet([{columns:[], data:[]}]);
                                                 // // console.log(arraycheckbox_export)
                                                 // console.log(arraycheckbox)
-                                                
+
                                                 for (
                                                   let i = 0;
                                                   i < arraycheckbox.length;
                                                   i++
                                                 ) {
-                                                  
                                                   if (
                                                     d.vbelnField ==
                                                     arraycheckbox[i].vbelnField
@@ -3645,25 +3670,35 @@ const Consulta = () => {
                                                       i,
                                                       1
                                                     );
-                                                    
-                                                  }else{
+                                                  } else {
                                                     setarraycheckbox([
                                                       ...arraycheckbox,
-                                                      { vbelnField: arraycheckbox[i].vbelnField },
+                                                      {
+                                                        vbelnField:
+                                                          arraycheckbox[i]
+                                                            .vbelnField,
+                                                      },
                                                     ]);
                                                     ordenamiento(d);
                                                     // console.log(arraycheckbox)
                                                   }
                                                 }
-                                                for(let y= 0; y < DataSet[0].data.length;y++){
-                                                  
+                                                for (
+                                                  let y = 0;
+                                                  y < DataSet[0].data.length;
+                                                  y++
+                                                ) {
                                                   if (
                                                     d.vbelnField ==
                                                     DataSet[0].data[y][0].value
                                                   ) {
-                                                  //  console.log(DataSet[0].data[y])
-                                                    arraycheckbox_export[0].data = [];
-                                                    DataSet[0].data.splice(y,1);
+                                                    //  console.log(DataSet[0].data[y])
+                                                    arraycheckbox_export[0].data =
+                                                      [];
+                                                    DataSet[0].data.splice(
+                                                      y,
+                                                      1
+                                                    );
                                                   }
                                                   // console.log(DataSet);
                                                   // console.log(arraycheckbox_export[0].data)
@@ -3706,7 +3741,7 @@ const Consulta = () => {
                                   <th style={{ textAlign: "center" }}>
                                     {response.waerkField}
                                   </th>
-                                  <th 
+                                  <th
                                     style={{ textAlign: "left" }}
                                     align={"left"}
                                   >
