@@ -9,7 +9,10 @@ import McCliente from "./Modals/McCliente";
 import Dialog from "./Dialog";
 import toast, { Toaster } from "react-hot-toast";
 import jwt from "jwt-decode";
-import { GuardarSolicitud } from "../../Services/ServiceCambioPrecio";
+import {
+  EnviarCorreo,
+  GuardarSolicitud,
+} from "../../Services/ServiceCambioPrecio";
 
 const GenerarSolicitud = () => {
   const [showModalMaterial, setShowModalMaterial] = useState(false);
@@ -20,7 +23,8 @@ const GenerarSolicitud = () => {
   const [dataMaterial, setDataMaterial] = useState([]);
 
   // ORG VENTAS
-  const [orgVentasValue, setOrgVentasValue] = useState(""); // IsVkorg
+  const [orgVentasValue, setOrgVentasValue] = useState("AGRO"); // IsVkorg
+  const [orgVentasName, setOrgVentasName] = useState("");
   const [orgVentas, setOrgVentas] = useState([
     { Sign: "I", Option: "EQ", Low: "", High: "" },
   ]);
@@ -28,6 +32,7 @@ const GenerarSolicitud = () => {
 
   // CLIENTE
   const [IsCliente, setIsCliente] = useState(""); // IsKunnr
+  const [isClientName, setIsClientName] = useState("");
   const [showMcCliente, setShowMcCliente] = useState(false);
 
   const openAddMaterial = () => {
@@ -77,7 +82,10 @@ const GenerarSolicitud = () => {
     console.log(choose);
     if (choose) {
       // SE PASA A ELIMINAR REGISTRO
-      //   setProducts(products.filter((p) => p.id !== idProductRef.current));
+      // setProducts(products.filter((p) => p.id !== idProductRef.current));
+      setDataMaterial(
+        dataMaterial.filter((p) => p.cod_mat !== idProductRef.current)
+      );
       handleDialog("", false);
     } else {
       handleDialog("", false);
@@ -112,6 +120,7 @@ const GenerarSolicitud = () => {
         console.log(Number(element.prec_sug.replaceAll(",", "")));
         let model_detail = {
           material: element.cod_mat,
+          material_name: element.name_mat,
           currency: element.moneda,
           actual_price:
             typeof element.prec_act == "number"
@@ -137,6 +146,7 @@ const GenerarSolicitud = () => {
       let model = {
         sales_org: orgVentasValue,
         client: IsCliente,
+        client_name: isClientName,
         id_user: Number(jwt(localStorage.getItem("_token")).nameid),
         detail: data_detail,
       };
@@ -145,8 +155,22 @@ const GenerarSolicitud = () => {
         console.log(result);
         if (result.indicator == 1) {
           setDataMaterial([]);
-          setOrgVentasValue("");
+          setOrgVentasValue("AGRO");
+          setOrgVentasName("");
           setIsCliente("");
+          setIsClientName("");
+          // ENVIAR SOLICITUD PARA APROBACION POR CORREO
+          let model_correo = {
+            cliente: IsCliente + " - " + isClientName,
+            vendedor: jwt(localStorage.getItem("_token")).vendedor,
+            correo: "james.virgo30@gmail.com", // correo de usuario en sesion: jwt(localStorage.getItem("_token")).email
+          };
+
+          EnviarCorreo(model_correo).then((result) => {
+            console.log(result);
+          });
+
+          // ----------------------------------------
           toast.success(result.message, {
             position: "top-center",
             autoClose: 1000,
@@ -235,12 +259,14 @@ const GenerarSolicitud = () => {
           setOrgVentasValue={setOrgVentasValue}
           setShowOrgVentas={setShowOrgVentas}
           showOrgVentas={showOrgVentas}
+          setOrgVentasName={setOrgVentasName}
         />
         <McCliente
           IsCliente={IsCliente}
           setIsCliente={setIsCliente}
           setShowMcCliente={setShowMcCliente}
           showMcCliente={showMcCliente}
+          setIsClientName={setIsClientName}
         />
 
         <div className="title-section">
@@ -269,7 +295,7 @@ const GenerarSolicitud = () => {
                 />
               </div>
               <div className="align-items-center">
-                <label>Descripción de organización de ventas.</label>
+                <label>{orgVentasValue != "" ? orgVentasName : ""}</label>
               </div>
             </div>
             <div>
@@ -291,7 +317,7 @@ const GenerarSolicitud = () => {
                 />
               </div>
               <div className="align-items-center">
-                <label>Descripción de cliente.</label>
+                <label>{isClientName != "" ? isClientName : ""}</label>
               </div>
             </div>
           </div>
@@ -333,8 +359,12 @@ const GenerarSolicitud = () => {
                           <th>{item.cod_mat}</th>
                           <th>{item.name_mat}</th>
                           <th>{item.moneda}</th>
-                          <th>{convertDecimal(item.prec_act)}</th>
-                          <th>{convertDecimal(item.prec_sug)}</th>
+                          <th style={{ textAlign: "center" }}>
+                            {convertDecimal(item.prec_act)}
+                          </th>
+                          <th style={{ textAlign: "center" }}>
+                            {convertDecimal(item.prec_sug)}
+                          </th>
                           <th>{formatFecha(item.fec_ini)}</th>
                           <th>{formatFecha(item.fec_fin)}</th>
                           <th>
@@ -348,7 +378,7 @@ const GenerarSolicitud = () => {
                               style={{ cursor: "pointer", margin: "2px" }}
                               title="Eliminar material"
                               className="fas fa-trash-alt"
-                              onClick={() => handleDelete(1)}
+                              onClick={() => handleDelete(item.cod_mat)}
                             ></i>
                           </th>
                         </tr>

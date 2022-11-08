@@ -8,6 +8,7 @@ const McOrgVentas = ({
   setOrgVentas,
   orgVentasValue,
   setOrgVentasValue,
+  setOrgVentasName,
 }) => {
   const [ViewInfo, setViewInfo] = useState(false);
   const [responseOrgVentas, setresponseOrgVentas] = useState({
@@ -45,8 +46,9 @@ const McOrgVentas = ({
     return () => document.removeEventListener("keydown", keyPress);
   }, [keyPress]);
 
-  function clickcelda(vkorgField) {
-    setOrgVentasValue(vkorgField);
+  function clickcelda(param) {
+    setOrgVentasValue(param.vkorgField);
+    setOrgVentasName(param.vtextField);
     setShowOrgVentas((prev) => !prev);
   }
 
@@ -76,7 +78,7 @@ const McOrgVentas = ({
                             (response, key) => (
                               <tr
                                 key={key}
-                                onClick={() => clickcelda(response.vkorgField)}
+                                onClick={() => clickcelda(response)}
                               >
                                 <th>{response.vkorgField}</th>
                                 <th>{response.vtextField}</th>

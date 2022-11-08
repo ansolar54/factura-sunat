@@ -1,13 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BtnSearch from "../../components/BtnSearch";
 import InputForm from "../../components/InputForm";
 import McCliente from "./Modals/McCliente";
 import McOrgVentas from "./Modals/McOrgVentas";
 import "./CambioPrecio.css";
+import { ListadoSolicitudes } from "../../Services/ServiceCambioPrecio";
+import Spinner from "../../components/Spinner";
+import Pagination from "../../components/Pagination";
+import ModalDetailSolicitud from "./Modals/ModalDetailSolicitud";
 
 const MisSolicitudes = () => {
   // ORG VENTAS
-  const [orgVentasValue, setOrgVentasValue] = useState("AGRO");
+  const [orgVentasValue, setOrgVentasValue] = useState("");
+  const [orgVentasName, setOrgVentasName] = useState("");
   const [orgVentas, setOrgVentas] = useState([
     { Sign: "I", Option: "EQ", Low: "", High: "" },
   ]);
@@ -15,7 +20,33 @@ const MisSolicitudes = () => {
 
   // CLIENTE
   const [IsCliente, setIsCliente] = useState("");
+  const [isClientName, setIsClientName] = useState("");
   const [showMcCliente, setShowMcCliente] = useState(false);
+
+  // MODAL DETAIL
+  const [showModalDetail, setShowModalDetail] = useState(false);
+  const [idSolicitud, setIdSolicitud] = useState();
+
+  // FILTRO ESTADO COMBO: 1=APROBADO, 2=PENDIENTE, 3=RECHAZADO
+  const [state, setState] = useState("");
+
+  // PAGINATION
+  const [limit, setLimit] = useState(5);
+  const [offset, setOffset] = useState(1);
+
+  // SOLICITUDES OBJECT
+  const [solicitudes, setSolicitudes] = useState([]);
+
+  //CARGA DE SPINNER
+  const [spinner, setspinner] = useState(false);
+  //ACTIVAR SECCION DE PAGINADO
+  const [valuepagination, setvaluepagination] = useState(false);
+  //NUMERO TOTAL DE DATOS
+  const [TotalData, setTotalData] = useState();
+
+  useEffect(() => {
+    obtenerSolicitudes(1);
+  }, []);
 
   const openMcOrgVentas = () => {
     setShowOrgVentas((prev) => !prev);
@@ -23,6 +54,87 @@ const MisSolicitudes = () => {
 
   const openMcCliente = () => {
     setShowMcCliente((prev) => !prev);
+  };
+
+  const obtenerSolicitudes = (page) => {
+    setspinner(true);
+    ListadoSolicitudes(orgVentasValue, IsCliente, state, limit, page).then(
+      (result) => {
+        // console.log(result);
+        setSolicitudes(result.data);
+        setTotalData(result.totalItems);
+        setspinner(false);
+        setvaluepagination(true);
+      }
+    );
+  };
+
+  const selectedFiltro = (e) => {
+    // console.log(typeof e.target.value);
+    if (e.target.value == "0") {
+      // console.log("zero");
+      setState("");
+    } else {
+      // console.log(e.target.value);
+      setState(e.target.value);
+    }
+  };
+
+  const formatFecha = (fecha) => {
+    let newDate = "";
+    if (fecha != null || fecha != undefined || fecha != "") {
+      newDate = fecha.split("-");
+    }
+    return newDate[2] + "-" + newDate[1] + "-" + newDate[0];
+  };
+
+  const extraeFecha = (fecha) => {
+    if (fecha.includes("T")) {
+      let parts = fecha.split("T");
+      return formatFecha(parts[0]);
+    } else {
+      return formatFecha(fecha);
+    }
+  };
+
+  const validateState = (state) => {
+    if (state == "1") {
+      return "APROBADO";
+    } else if (state == "2") {
+      return "PENDIENTE";
+    } else {
+      return "RECHAZADO";
+    }
+  };
+
+  function handleChange(name, value) {
+    // console.log(value);
+    switch (name) {
+      case "org_ventas":
+        setOrgVentasValue(value);
+        break;
+      default:
+        setIsCliente(value);
+        break;
+    }
+  }
+
+  // PAGINATION
+  const changePage = (pageNumber) => {
+    obtenerSolicitudes(pageNumber);
+  };
+  // siguiente pagina
+  const prevPage = (value) => {
+    obtenerSolicitudes(value - 1);
+  };
+  //pagina anterior
+  const nextPage = (value) => {
+    obtenerSolicitudes(value + 1);
+  };
+
+  const openDetalle = (id) => {
+    setIdSolicitud(id);
+    setShowModalDetail((prev) => !prev);
   };
 
   return (
@@ -34,12 +146,20 @@ const MisSolicitudes = () => {
           setOrgVentasValue={setOrgVentasValue}
           setShowOrgVentas={setShowOrgVentas}
           showOrgVentas={showOrgVentas}
+          setOrgVentasName={setOrgVentasName}
         />
         <McCliente
           IsCliente={IsCliente}
           setIsCliente={setIsCliente}
           setShowMcCliente={setShowMcCliente}
           showMcCliente={showMcCliente}
+          setIsClientName={setIsClientName}
+        />
+        <ModalDetailSolicitud
+          showModalDetail={showModalDetail}
+          setShowModalDetail={setShowModalDetail}
+          idSolicitud={idSolicitud}
+          extraeFecha={extraeFecha}
         />
 
         <div className="title-section">
@@ -64,12 +184,12 @@ const MisSolicitudes = () => {
                     matchcode: true,
                     maxlength: 4,
                   }}
-                  handleChange={""}
+                  handleChange={handleChange}
                   onClick={() => openMcOrgVentas()}
                 />
               </div>
               <div className="align-items-center">
-                <label>Descripción de organización de ventas.</label>
+                <label>{orgVentasValue != "" ? orgVentasName : ""}</label>
               </div>
             </div>
             <div>
@@ -81,18 +201,18 @@ const MisSolicitudes = () => {
                   attribute={{
                     name: "cliente",
                     type: "text",
-                    value: "1005141",
+                    value: IsCliente,
                     disabled: false,
                     checked: false,
                     matchcode: true,
                     maxlength: 4,
                   }}
-                  handleChange={""}
+                  handleChange={handleChange}
                   onClick={() => openMcCliente()}
                 />
               </div>
               <div className="align-items-center">
-                <label>Descripción de cliente.</label>
+                <label>{isClientName != "" ? isClientName : ""}</label>
               </div>
             </div>
             <div>
@@ -100,7 +220,7 @@ const MisSolicitudes = () => {
                 <label>Filtro : </label>
               </div>
               <div className="input-box1">
-                <select name="id_rol" onChange={(e) => {}}>
+                <select name="id_state" onChange={(e) => selectedFiltro(e)}>
                   <option value="0">Seleccione...</option>
                   <option value="1">Aprobadas</option>
                   <option value="2">Pendientes</option>
@@ -125,7 +245,7 @@ const MisSolicitudes = () => {
                 name: "Buscar",
                 classNamebtn: "btn_search",
               }}
-              onClick={() => {}}
+              onClick={() => obtenerSolicitudes(1)}
             />
           </div>
         </div>
@@ -145,50 +265,65 @@ const MisSolicitudes = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {/* {dataAuditoria.length >= 1
-                    ? dataAuditoria.map((item, key) => ( */}
-                  <tr key={1}>
-                    <th>1010</th>
-                    <th>31-10-2022</th>
-                    <th>PENDIENTE</th>
-                    <th>AXELERA</th>
-                    <th>AGRO</th>
-                    <th>
-                      <i
-                        style={{ cursor: "pointer", margin: "2px" }}
-                        title="Editar material"
-                        className="fas fa-edit"
-                        onClick={() => {}}
-                      ></i>
-                      <i
-                        style={{ cursor: "pointer", margin: "2px" }}
-                        title="Eliminar material"
-                        className="fas fa-trash-alt"
-                        onClick={() => {}}
-                      ></i>
-                    </th>
-                  </tr>
-                  {/* ))
-                    : null} */}
+                  {solicitudes.length >= 1
+                    ? solicitudes.map((item, key) => (
+                        <tr key={item.id}>
+                          <th>{item.id}</th>
+                          <th>{extraeFecha(item.created_at)}</th>
+                          <th>{validateState(item.state)}</th>
+                          <th>{item.client_name}</th>
+                          <th>{item.sales_org}</th>
+                          <th>
+                            {item.state == "2" && (
+                              <>
+                                <i
+                                  style={{ cursor: "pointer", margin: "2px" }}
+                                  title="Ver detalle"
+                                  className="fas fa-edit"
+                                  onClick={() => openDetalle(item.id)}
+                                ></i>
+                                <i
+                                  style={{ cursor: "pointer", margin: "2px" }}
+                                  title="Eliminar solicitud"
+                                  className="fas fa-trash-alt"
+                                  onClick={() => {}}
+                                ></i>
+                              </>
+                            )}
+                          </th>
+                        </tr>
+                      ))
+                    : null}
                 </tbody>
               </table>
-              {/* {spinner==false && dataAuditoria.length == 0 ? (
-                    <div
-                      style={{
-                        margin: "10px",
-                        textAlign: "center",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      No se encontraron resultados.
-                    </div>
-                  ) : null}
-              {spinner && <Spinner />} */}
+              {spinner == false && solicitudes.length == 0 ? (
+                <div
+                  style={{
+                    margin: "10px",
+                    textAlign: "center",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  No se encontraron resultados.
+                </div>
+              ) : null}
+              {spinner && <Spinner />}
             </div>
           </div>
         </section>
+        <div>
+          {valuepagination && (
+            <Pagination
+              postsPerPage={limit}
+              totalPosts={TotalData}
+              changePage={changePage}
+              prevPage={prevPage}
+              nextPage={nextPage}
+            />
+          )}
+        </div>
       </div>
       ;
     </React.Fragment>

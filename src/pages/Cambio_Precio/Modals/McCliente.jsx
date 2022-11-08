@@ -1,16 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
 import InputForm from "../../../components/InputForm";
-import { McDeuCliCliente } from "../../../Services/ServiceCliente";
 import BtnSearch from "../../../components/BtnSearch";
 import Pagination from "../../../components/Pagination";
 import Spinner from "../../../components/Spinner";
 import jwt from "jwt-decode";
+import { MatchCliente } from "../../../Services/ServiceCambioPrecio";
 
 const McCliente = ({
   showMcCliente,
   setShowMcCliente,
   IsCliente,
   setIsCliente,
+  setIsClientName,
 }) => {
   const [IsName1, setIsName1] = useState("");
   const [IsStcd1, setIsStcd1] = useState("");
@@ -50,7 +51,7 @@ const McCliente = ({
       IsStcd1: IsStcd1,
       IsUser: jwt(localStorage.getItem("_token")).username,
     };
-    McDeuCliCliente(model).then((result) => {
+    MatchCliente(model).then((result) => {
       setTotalData(result.esRegtotField);
       setresponsemcdeucli_cliente(result);
       setspinner(false);
@@ -121,8 +122,9 @@ const McCliente = ({
     Search(value + 1);
   }
 
-  function clickcelda(value) {
-    setIsCliente(value);
+  function clickcelda(item) {
+    setIsCliente(item.kunnrField);
+    setIsClientName(item.name1Field);
     setShowMcCliente((prev) => !prev);
   }
 
@@ -221,17 +223,14 @@ const McCliente = ({
 
                     {/* <th>Canal distrib.</th> */}
                     {/* <th>Sector</th> */}
-                    <th>USD Línea Cred. Disp</th>
+                    {/* <th>USD Línea Cred. Disp</th> */}
                     {/* <th>Tiene Doc. Vencidos</th> */}
                   </tr>
                 </thead>
                 <tbody>
                   {responsemcdeucli_cliente.etClientesField.map(
                     (response, key) => (
-                      <tr
-                        key={key}
-                        onClick={() => clickcelda(response.kunnrField)}
-                      >
+                      <tr key={key} onClick={() => clickcelda(response)}>
                         <th style={{ textAlign: "center" }}>
                           {response.kunnrField}
                         </th>
@@ -246,9 +245,9 @@ const McCliente = ({
                         </th>
                         {/* <th style={{textAlign:'center'}} align={"center"}>{response.vtwegField}</th> */}
                         {/* <th style={{textAlign:'center'}} align={"center"}>{response.spartField}</th> */}
-                        <th style={{ textAlign: "center" }}>
+                        {/* <th style={{ textAlign: "center" }}>
                           {convertDecimal(response.klimkField)}
-                        </th>
+                        </th> */}
                         {/* <th style={{textAlign:'left'}} align={"left"}>{response.docValField}</th> */}
                       </tr>
                     )
