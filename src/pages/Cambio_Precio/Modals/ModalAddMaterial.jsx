@@ -4,6 +4,7 @@ import BtnSave from "../../../components/BtnSave";
 import InputForm from "../../../components/InputForm";
 import McMaterial from "./McMaterial";
 import toast, { Toaster } from "react-hot-toast";
+import { AprobMargen } from "../../../Services/ServiceCambioPrecio";
 
 const ModalAddMaterial = ({
   showModalMaterial,
@@ -14,10 +15,13 @@ const ModalAddMaterial = ({
 }) => {
   const [showMcMaterial, setShowMcMaterial] = useState(false);
 
+  const [activateButton, setActivateButton] = useState(false);
+
   // DATA MATERIAL
   const [material, setMaterial] = useState({
     cod_mat: "",
     name_mat: "",
+    centro: "",
     moneda: "",
     prec_act: 0.0,
     prec_sug: 0.0,
@@ -25,6 +29,7 @@ const ModalAddMaterial = ({
     fec_fin: "",
     lim_inf: 0.0,
     lim_sup: 0.0,
+    margen: 0.0,
   });
 
   const modalRef = useRef();
@@ -47,6 +52,7 @@ const ModalAddMaterial = ({
     setMaterial({
       cod_mat: "",
       name_mat: "",
+      centro: "",
       moneda: "",
       prec_act: 0.0,
       prec_sug: 0.0,
@@ -54,6 +60,7 @@ const ModalAddMaterial = ({
       fec_fin: "",
       lim_inf: 0.0,
       lim_sup: 0.0,
+      margen: 0.0,
     });
     document.addEventListener("keydown", keyPress);
     return () => document.removeEventListener("keydown", keyPress);
@@ -61,6 +68,28 @@ const ModalAddMaterial = ({
 
   const cancelar = () => {
     setShowModalMaterial(false);
+  };
+
+  const calcularMargen = () => {
+    let model = {
+      itAprobmargen: [
+        {
+          Matnr: material.cod_mat,
+          Werks: material.centro,
+          PreSuge: material.prec_sug,
+          Margen: 0.0,
+        },
+      ],
+    };
+
+    AprobMargen(model).then((result) => {
+      // console.log("MARGEN", result.etAprobmargenField[0].margenField);
+      setMaterial((prevState) => ({
+        ...prevState,
+        margen: result.etAprobmargenField[0].margenField,
+      }));
+      setActivateButton(false);
+    });
   };
 
   const guardar = () => {
@@ -75,10 +104,19 @@ const ModalAddMaterial = ({
         },
       });
     } else {
+      // obtener margen
+      // calcularMargen();
+      // -------------------
+      console.log(material);
       dataMaterial.push(material);
+      setActivateButton(false);
+      // dataMaterial = [...dataMaterial];
+      // console.log(dataMaterial);
       setShowModalMaterial(false);
     }
   };
+
+  // console.log(material);
 
   function handleChange(name, value) {
     // console.log(name, " : ", value);
@@ -100,6 +138,7 @@ const ModalAddMaterial = ({
           ...prevState,
           prec_sug: value,
         }));
+        setActivateButton(true); // activar boton calcular margen
         break;
       case "limite_inferior":
         setMaterial((prevState) => ({
@@ -314,6 +353,18 @@ const ModalAddMaterial = ({
                   />
                 </div>
               </div>
+              {activateButton && (
+                <div className="row-md">
+                  <BtnSave
+                    attribute={{
+                      name: "btnCalcular",
+                      value: "Calcular margen",
+                      classNamebtn: "btn_search",
+                    }}
+                    onClick={() => calcularMargen()}
+                  />
+                </div>
+              )}
             </div>
             <div className="modal-footer">
               <BtnCancel

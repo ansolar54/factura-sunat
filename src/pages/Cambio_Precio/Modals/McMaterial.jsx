@@ -6,7 +6,10 @@ import { ConsStockMaterial } from "../../../Services/ServiceMaterial";
 import jwt from "jwt-decode";
 import Spinner from "../../../components/Spinner";
 import Pagination from "../../../components/Pagination";
-import { MatchMaterial } from "../../../Services/ServiceCambioPrecio";
+import {
+  DetalleMaterialSAP,
+  MatchMaterial,
+} from "../../../Services/ServiceCambioPrecio";
 
 const McMaterial = ({
   showMcMaterial,
@@ -17,7 +20,7 @@ const McMaterial = ({
 }) => {
   const [IsRegxpag] = useState(15); // cantidad de datos por página
   const [CodProductoMat, setCodProductoMat] = useState("");
-  // const [NomProductoMat, setNomProductoMat] = useState("");
+  const [NomProductoMat, setNomProductoMat] = useState("");
 
   const [ViewInfo, setViewInfo] = useState(false);
   const [responseMaterial, setresponseMaterial] = useState({
@@ -57,7 +60,7 @@ const McMaterial = ({
     if (showMcMaterial == true) {
       // setOrgVentasValue("");
       setCodProductoMat("");
-      // setNomProductoMat("");
+      setNomProductoMat("");
     }
   }, [showMcMaterial]);
 
@@ -75,23 +78,32 @@ const McMaterial = ({
   function searchMaterial(nro_pag) {
     setresponseMaterial({ etMaterialesField: [] });
     setspinner(true);
-    // let model_material = {
-    //   IsNpag: nro_pag,
-    //   IsRegxpag: IsRegxpag,
-    //   IsNameProduct: NomProductoMat,
-    //   IsOrgventas: orgVentasValue,
-    //   IsProduct: CodProductoMat,
-    //   IsUser: jwt(localStorage.getItem("_token")).username,
-    // };
+    let model_material = {
+      IsNpag: nro_pag,
+      IsRegxpag: IsRegxpag,
+      IsNameMatnr: NomProductoMat,
+      IsVkorg: orgVentas,
+      IsMatnr: CodProductoMat,
+      IsUser: jwt(localStorage.getItem("_token")).username,
+    };
+    console.log(model_material);
+    MatchMaterial(model_material).then((result) => {
+      // console.log(result);
+      setresponseMaterial(result);
+      setTotalData(result.esRegtotField);
+      setViewInfo(true);
+      setspinner(false);
+      setvaluepagination(true);
+    });
+  }
 
-    // ConsStockMaterial(model_material).then((result) => {
-    //   // console.log(result);
-    //   setresponseMaterial(result);
-    //   setTotalData(result.esRegtotField);
-    //   setViewInfo(true);
-    //   setspinner(false);
-    //   setvaluepagination(true);
-    // });
+  function Clear() {
+    // setOrgVentasValue("");
+    setCodProductoMat("");
+    setNomProductoMat("");
+  }
+
+  function clickcelda(material) {
     let model = {
       IsKunnr: cliente,
       IsVkorg: orgVentas,
@@ -104,32 +116,24 @@ const McMaterial = ({
         },
       ],
     };
-    MatchMaterial(model).then((result) => {
+    console.log(model);
+    DetalleMaterialSAP(model).then((result) => {
       console.log(result);
-      setresponseMaterial(result);
-      setspinner(false);
+      setMaterial((prevState) => ({
+        ...prevState,
+        cod_mat: Number(material.matnrField).toString(),
+        name_mat: material.maktxField,
+        centro: material.werksField,
+        moneda: result.etMaterialesField[0].konwaField,
+        prec_act: result.etMaterialesField[0].kbetrField,
+        fec_ini: result.etMaterialesField[0].databField,
+        fec_fin: result.etMaterialesField[0].datbiField,
+        lim_inf: result.etMaterialesField[0].kbetrField - 3,
+        lim_sup: 999999.99,
+        margen: 0.0,
+      }));
+      setShowMcMaterial((prev) => !prev);
     });
-  }
-
-  function Clear() {
-    // setOrgVentasValue("");
-    setCodProductoMat("");
-    // setNomProductoMat("");
-  }
-
-  function clickcelda(material) {
-    setMaterial((prevState) => ({
-      ...prevState,
-      cod_mat: Number(material.matnrField).toString(),
-      name_mat: material.maktxField,
-      moneda: material.konwaField,
-      prec_act: material.kbetrField,
-      fec_ini: material.databField,
-      fec_fin: material.datbiField,
-      lim_inf: material.kbetrField - 3,
-      lim_sup: 999999.99,
-    }));
-    setShowMcMaterial((prev) => !prev);
   }
 
   // seleccionar pagina
@@ -154,7 +158,7 @@ const McMaterial = ({
         setCodProductoMat(value);
         break;
       case "nomProductoMat":
-        // setNomProductoMat(value);
+        setNomProductoMat(value);
         break;
       default:
         break;
@@ -218,7 +222,7 @@ const McMaterial = ({
                 />
               </div>
 
-              {/* <div className="col-sm-4 d-flex align-items-center">
+              <div className="col-sm-4 d-flex align-items-center">
                 <label>Nombre Producto</label>
               </div>
               <div className="col-sm-8">
@@ -234,7 +238,7 @@ const McMaterial = ({
                   }}
                   handleChange={handleChange}
                 />
-              </div> */}
+              </div>
             </section>
             <section>
               <div style={{ margin: "10px" }}>

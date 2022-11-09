@@ -140,6 +140,10 @@ const GenerarSolicitud = () => {
             typeof element.lim_sup == "number"
               ? element.lim_sup
               : Number(element.lim_sup.replaceAll(",", "")),
+          margin:
+            typeof element.margen == "number"
+              ? element.margen
+              : Number(element.margen.replaceAll(",", "")),
         };
         data_detail.push(model_detail);
       }

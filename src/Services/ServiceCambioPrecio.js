@@ -102,9 +102,9 @@ export function EnviarCorreo(req) {
 // ---------------------
 
 // SERVICIOS SAP
-export function MatchMaterial(req) {
+export function DetalleMaterialSAP(req) {
   const base = process.env.REACT_APP_BASE_URL_SAP;
-  let BaseUrl = base + "MatchMaterial/CambioPrecio_McMaterial";
+  let BaseUrl = base + "DetMaterial/CambioPrecio_DetMaterial";
 
   return new Promise((resolve, reject) => {
     fetch(BaseUrl, {
@@ -128,6 +128,52 @@ export function MatchMaterial(req) {
 export function MatchCliente(req) {
   const base = process.env.REACT_APP_BASE_URL_SAP;
   let BaseUrl = base + "MatchCliente/CambioPrecio_McCliente";
+
+  return new Promise((resolve, reject) => {
+    fetch(BaseUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(req),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        resolve(responseJson);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
+export function MatchMaterial(req) {
+  const base = process.env.REACT_APP_BASE_URL_SAP;
+  let BaseUrl = base + "MatchMaterial/CambioPrecio_McMaterial";
+
+  return new Promise((resolve, reject) => {
+    fetch(BaseUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(req),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        resolve(responseJson);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
+export function AprobMargen(req) {
+  const base = process.env.REACT_APP_BASE_URL_SAP;
+  let BaseUrl = base + "AprobMargen/CambioPrecio_AprovMargen";
 
   return new Promise((resolve, reject) => {
     fetch(BaseUrl, {
