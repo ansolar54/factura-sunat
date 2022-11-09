@@ -25,9 +25,9 @@ import { getUser } from "./Services/ServiceUser";
 import Promociones from "./pages/Promociones/Promociones";
 import { ActualizarPasswordStatus } from "./Services/ServiceConfiguracion";
 import Rol from "./pages/Rol/Rol";
-import GenerarSolicitud from "./pages/Cambio_Precio/GenerarSolicitud";
-import MisSolicitudes from "./pages/Cambio_Precio/MisSolicitudes";
-import MisAprobaciones from "./pages/Cambio_Precio/MisAprobaciones";
+import GenerarSolicitud from "./pages/Cambio_Precio/Generar_Solicitud/GenerarSolicitud";
+import MisSolicitudes from "./pages/Cambio_Precio/Mis_Solicitudes/MisSolicitudes";
+import MisAprobaciones from "./pages/Cambio_Precio/Mis_Aprobaciones/MisAprobaciones";
 
 const App = () => {
   const history = useHistory();

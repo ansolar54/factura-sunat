@@ -1,13 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import InputForm from "../../../components/InputForm";
-import Spinner from "../../../components/Spinner";
-import { GetDetalleSolicitud } from "../../../Services/ServiceCambioPrecio";
+import InputForm from "../../../../components/InputForm";
+import Spinner from "../../../../components/Spinner";
+import { GetDetalleSolicitud } from "../../../../Services/ServiceCambioPrecio";
+import ModalEditMaterial from "./ModalEditMaterial";
 
 const ModalDetailSolicitud = ({
   showModalDetail,
   setShowModalDetail,
   idSolicitud,
   extraeFecha,
+  stateSolicitud,
 }) => {
   const modalRef = useRef();
   const closeModal = (e) => {
@@ -42,6 +44,23 @@ const ModalDetailSolicitud = ({
 
   const [ViewInfo, setViewInfo] = useState(false);
 
+  const [showModalEditMaterial, setShowModalEditMaterial] = useState(false);
+  const [material, setMaterial] = useState({
+    actual_price: 0.0,
+    currency: "",
+    end_date: "",
+    id: 0,
+    id_request: 0,
+    lower_limit: 0.0,
+    margin: 0.0,
+    material: "",
+    material_name: "",
+    start_date: "",
+    suggested_price: 0.0,
+    upper_limit: 0.0,
+    center: "",
+  });
+
   function convertDecimal(num) {
     // return num.toFixed(Math.max(((num+'').split(".")[1]||"").length, 2));
     if (num == null || num == "" || num == "0") {
@@ -72,6 +91,12 @@ const ModalDetailSolicitud = ({
     }
   }
 
+  const openEditMaterial = (item) => {
+    // console.log(item);
+    setMaterial(item);
+    setShowModalEditMaterial((prev) => !prev);
+  };
+
   return (
     <>
       {showModalDetail ? (
@@ -80,6 +105,12 @@ const ModalDetailSolicitud = ({
           onClick={closeModal}
           ref={modalRef}
         >
+          <ModalEditMaterial
+            showModalEditMaterial={showModalEditMaterial}
+            setShowModalEditMaterial={setShowModalEditMaterial}
+            dataMaterial={material}
+            setDetalle={setDetalle}
+          />
           <div className="modal-wrapper modal-wrapper-sm">
             {/* <div className="modal-header">
               <div className="modal-title">
@@ -108,12 +139,21 @@ const ModalDetailSolicitud = ({
                       <table className="content-table ">
                         <thead>
                           <tr>
-                            <th>Código</th>
-                            <th>Material</th>
-                            <th>Precio actual</th>
-                            <th>Precio sugerido</th>
-                            <th>Fecha inicio</th>
-                            <th>Fecha fin</th>
+                            <th style={{ textAlign: "center" }}>CODIGO</th>
+                            <th style={{ textAlign: "center" }}>MATERIAL</th>
+                            <th style={{ textAlign: "center" }}>
+                              PRECIO ACTUAL
+                            </th>
+                            <th style={{ textAlign: "center" }}>
+                              PRECIO SUGERIDO
+                            </th>
+                            <th style={{ textAlign: "center" }}>
+                              FECHA INICIO
+                            </th>
+                            <th style={{ textAlign: "center" }}>FECHA FIN</th>
+                            {stateSolicitud == "2" && (
+                              <th style={{ textAlign: "center" }}>ACCION</th>
+                            )}
                           </tr>
                         </thead>
                         <tbody>
@@ -122,16 +162,44 @@ const ModalDetailSolicitud = ({
                               key={key}
                               // onClick={() => clickcelda(response)}
                             >
-                              <th>{response.material}</th>
-                              <th>{response.material_name}</th>
                               <th style={{ textAlign: "center" }}>
+                                {response.material}
+                              </th>
+                              <th>{response.material_name}</th>
+                              <th style={{ textAlign: "right" }}>
                                 {convertDecimal(response.actual_price)}
                               </th>
-                              <th style={{ textAlign: "center" }}>
+                              <th style={{ textAlign: "right" }}>
                                 {convertDecimal(response.suggested_price)}
                               </th>
-                              <th>{extraeFecha(response.start_date)}</th>
-                              <th>{extraeFecha(response.end_date)}</th>
+                              <th style={{ textAlign: "center" }}>
+                                {extraeFecha(response.start_date)}
+                              </th>
+                              <th style={{ textAlign: "center" }}>
+                                {extraeFecha(response.end_date)}
+                              </th>
+                              {stateSolicitud == "2" && (
+                                <th style={{ textAlign: "center" }}>
+                                  <i
+                                    style={{
+                                      cursor: "pointer",
+                                      margin: "2px",
+                                    }}
+                                    title="Editar material"
+                                    className="fas fa-edit"
+                                    onClick={() => openEditMaterial(response)}
+                                  ></i>
+                                  {/* <i
+                                    style={{
+                                      cursor: "pointer",
+                                      margin: "2px",
+                                    }}
+                                    title="Eliminar material"
+                                    className="fas fa-trash-alt"
+                                    onClick={() => {}}
+                                  ></i> */}
+                                </th>
+                              )}
                             </tr>
                           ))}
                         </tbody>

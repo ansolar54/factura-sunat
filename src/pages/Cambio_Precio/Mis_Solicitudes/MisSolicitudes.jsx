@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import BtnSearch from "../../components/BtnSearch";
-import InputForm from "../../components/InputForm";
-import McCliente from "./Modals/McCliente";
-import McOrgVentas from "./Modals/McOrgVentas";
-import "./CambioPrecio.css";
-import { ListadoSolicitudes } from "../../Services/ServiceCambioPrecio";
-import Spinner from "../../components/Spinner";
-import Pagination from "../../components/Pagination";
+import BtnSearch from "../../../components/BtnSearch";
+import InputForm from "../../../components/InputForm";
+import McCliente from "../Modals_General/McCliente";
+import McOrgVentas from "../Modals_General/McOrgVentas";
+import "./MisSolicitudes.css";
+import { ListadoSolicitudes } from "../../../Services/ServiceCambioPrecio";
+import Spinner from "../../../components/Spinner";
+import Pagination from "../../../components/Pagination";
 import ModalDetailSolicitud from "./Modals/ModalDetailSolicitud";
 
 const MisSolicitudes = () => {
@@ -26,6 +26,7 @@ const MisSolicitudes = () => {
   // MODAL DETAIL
   const [showModalDetail, setShowModalDetail] = useState(false);
   const [idSolicitud, setIdSolicitud] = useState();
+  const [stateSolicitud, setStateSolicitud] = useState();
 
   // FILTRO ESTADO COMBO: 1=APROBADO, 2=PENDIENTE, 3=RECHAZADO
   const [state, setState] = useState("");
@@ -132,8 +133,9 @@ const MisSolicitudes = () => {
     obtenerSolicitudes(value + 1);
   };
 
-  const openDetalle = (id) => {
-    setIdSolicitud(id);
+  const openDetalle = (item) => {
+    setIdSolicitud(item.id);
+    setStateSolicitud(item.state);
     setShowModalDetail((prev) => !prev);
   };
 
@@ -160,6 +162,7 @@ const MisSolicitudes = () => {
           setShowModalDetail={setShowModalDetail}
           idSolicitud={idSolicitud}
           extraeFecha={extraeFecha}
+          stateSolicitud={stateSolicitud}
         />
 
         <div className="title-section">
@@ -256,31 +259,49 @@ const MisSolicitudes = () => {
               <table className="content-table">
                 <thead>
                   <tr>
-                    <th style={{ textAlign: "left" }}>N° SOLICITUD</th>
-                    <th style={{ textAlign: "left" }}>FECHA REGISTRO</th>
-                    <th style={{ textAlign: "left" }}>ESTADO</th>
-                    <th style={{ textAlign: "left" }}>CLIENTE</th>
-                    <th style={{ textAlign: "left" }}>ORG. VENTAS</th>
-                    <th style={{ textAlign: "left" }}>ACCION</th>
+                    <th style={{ textAlign: "center" }}>N° SOLICITUD</th>
+                    <th style={{ textAlign: "center" }}>FECHA REGISTRO</th>
+                    <th style={{ textAlign: "center" }}>ESTADO</th>
+                    <th style={{ textAlign: "center" }}>CLIENTE</th>
+                    <th style={{ textAlign: "center" }}>ORG. VENTAS</th>
+                    <th style={{ textAlign: "center" }}>ACCION</th>
                   </tr>
                 </thead>
                 <tbody>
                   {solicitudes.length >= 1
                     ? solicitudes.map((item, key) => (
                         <tr key={item.id}>
-                          <th>{item.id}</th>
-                          <th>{extraeFecha(item.created_at)}</th>
-                          <th>{validateState(item.state)}</th>
-                          <th>{item.client_name}</th>
-                          <th>{item.sales_org}</th>
-                          <th>
-                            {item.state == "2" && (
+                          <th style={{ textAlign: "center" }}>{item.id}</th>
+                          <th style={{ textAlign: "center" }}>
+                            {extraeFecha(item.created_at)}
+                          </th>
+                          <th style={{ textAlign: "center" }}>
+                            {validateState(item.state)}
+                          </th>
+                          <th style={{ textAlign: "center" }}>
+                            {item.client_name}
+                          </th>
+                          <th style={{ textAlign: "center" }}>
+                            {item.sales_org}
+                          </th>
+                          <th
+                            style={{
+                              textAlign: "center",
+                            }}
+                          >
+                            <i
+                              style={{ cursor: "pointer", margin: "2px" }}
+                              title="Ver detalle"
+                              className="fa fa-bars"
+                              onClick={() => openDetalle(item)}
+                            ></i>
+                            {/* {item.state == "2" && (
                               <>
                                 <i
                                   style={{ cursor: "pointer", margin: "2px" }}
-                                  title="Ver detalle"
+                                  title="Editar solicitud"
                                   className="fas fa-edit"
-                                  onClick={() => openDetalle(item.id)}
+                                  onClick={() => {}}
                                 ></i>
                                 <i
                                   style={{ cursor: "pointer", margin: "2px" }}
@@ -289,7 +310,7 @@ const MisSolicitudes = () => {
                                   onClick={() => {}}
                                 ></i>
                               </>
-                            )}
+                            )} */}
                           </th>
                         </tr>
                       ))

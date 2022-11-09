@@ -1,18 +1,18 @@
 import React, { useRef, useState } from "react";
-import InputForm from "../../components/InputForm";
-import "./CambioPrecio.css";
-import BtnAddMaterial from "../../components/BtnAddMaterial";
+import InputForm from "../../../components/InputForm";
+import "./GenerarSolicitud.css";
+import BtnAddMaterial from "../../../components/BtnAddMaterial";
 import ModalAddMaterial from "./Modals/ModalAddMaterial";
 import ModalEditMaterial from "./Modals/ModalEditMaterial";
-import McOrgVentas from "./Modals/McOrgVentas";
-import McCliente from "./Modals/McCliente";
-import Dialog from "./Dialog";
+import McOrgVentas from "../Modals_General/McOrgVentas";
+import McCliente from "../Modals_General/McCliente";
+import Dialog from "../Dialog";
 import toast, { Toaster } from "react-hot-toast";
 import jwt from "jwt-decode";
 import {
   EnviarCorreo,
   GuardarSolicitud,
-} from "../../Services/ServiceCambioPrecio";
+} from "../../../Services/ServiceCambioPrecio";
 
 const GenerarSolicitud = () => {
   const [showModalMaterial, setShowModalMaterial] = useState(false);
@@ -144,6 +144,7 @@ const GenerarSolicitud = () => {
             typeof element.margen == "number"
               ? element.margen
               : Number(element.margen.replaceAll(",", "")),
+          center: element.centro,
         };
         data_detail.push(model_detail);
       }

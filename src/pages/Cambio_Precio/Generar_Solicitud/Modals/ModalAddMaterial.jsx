@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import BtnCancel from "../../../components/BtnCancel";
-import BtnSave from "../../../components/BtnSave";
-import InputForm from "../../../components/InputForm";
-import McMaterial from "./McMaterial";
+import BtnCancel from "../../../../components/BtnCancel";
+import BtnSave from "../../../../components/BtnSave";
+import InputForm from "../../../../components/InputForm";
+import McMaterial from "../../Modals_General/McMaterial";
 import toast, { Toaster } from "react-hot-toast";
-import { AprobMargen } from "../../../Services/ServiceCambioPrecio";
+import { AprobMargen } from "../../../../Services/ServiceCambioPrecio";
 
 const ModalAddMaterial = ({
   showModalMaterial,
