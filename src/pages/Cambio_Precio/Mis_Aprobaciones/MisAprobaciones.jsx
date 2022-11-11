@@ -3,6 +3,8 @@ import BtnSearch from "../../../components/BtnSearch";
 import Pagination from "../../../components/Pagination";
 import Spinner from "../../../components/Spinner";
 import {
+  AprobSolicitud,
+  GetDetalleSolicitud,
   ListadoSolicitudes,
   ListadoSolicitudesForAprob,
   ModificarStateRequest,
@@ -109,23 +111,68 @@ const MisAprobaciones = () => {
     obtenerSolicitudes(value + 1);
   };
 
-  const updateStateRequest = (state, id) => {
+  const formatoFechaForAprob = (fecha) => {
+    let parts = fecha.split("T");
+    let newDate = parts[0].split("-");
+    return newDate[0] + newDate[1] + newDate[2];
+  };
+
+  const updateStateRequest = (state, item) => {
+    // console.log(item);
     let model = {
-      id: id,
+      id: item.id,
       state: state.toString(),
     };
 
     ModificarStateRequest(model).then((result) => {
       // console.log(result);
-      toast.success(result.message, {
-        position: "top-center",
-        autoClose: 1000,
-        style: {
-          backgroundColor: "#212121",
-          color: "#fff",
-        },
-      });
-      obtenerSolicitudes(offset);
+
+      if (result.indicator == 1) {
+        GetDetalleSolicitud(item.id).then((result) => {
+          // console.log(result);
+
+          if (result.indicator == 1) {
+            let itMatAprob = [];
+            for (let i = 0; i < result.data.length; i++) {
+              const element = result.data[i];
+              // console.log(element);
+              let matAprob = {
+                Matnr: element.material,
+                Maktx: element.material_name,
+                Kbetr: element.suggested_price,
+                Konwa: element.currency,
+                Kpein: element.base_amount,
+                Kmein: element.measure_unit,
+                Datab: formatoFechaForAprob(element.start_date), // yyyymmdd - formatear
+                Datbi: formatoFechaForAprob(element.end_date), // yyyymmdd - formatear
+                Mxwrt: element.lower_limit,
+                Gkwrt: element.upper_limit,
+              };
+              itMatAprob.push(matAprob);
+            }
+
+            let model_aprob = {
+              IsKunnr: item.client,
+              IsVkorg: item.sales_org,
+              ItMatAprobacion: itMatAprob,
+            };
+            console.log(model_aprob);
+            AprobSolicitud(model_aprob).then((result) => {
+              if (result.etMsgReturnField[0].successField == "X") {
+                toast.success("Solicitud aprobada correctamente.", {
+                  position: "top-center",
+                  autoClose: 1000,
+                  style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                  },
+                });
+                obtenerSolicitudes(offset);
+              }
+            });
+          }
+        });
+      }
     });
   };
 
@@ -276,13 +323,13 @@ const MisAprobaciones = () => {
                                   style={{ cursor: "pointer", margin: "2px" }}
                                   title="Aprobar solicitud"
                                   className="fa fa-check-circle"
-                                  onClick={() => updateStateRequest(1, item.id)}
+                                  onClick={() => updateStateRequest(1, item)}
                                 ></i>
                                 <i
                                   style={{ cursor: "pointer", margin: "2px" }}
                                   title="Rechazar solicitud"
                                   className="fa fa-minus-circle"
-                                  onClick={() => updateStateRequest(3, item.id)}
+                                  onClick={() => updateStateRequest(3, item)}
                                 ></i>
                               </>
                             )}

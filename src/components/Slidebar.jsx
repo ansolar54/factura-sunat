@@ -294,7 +294,7 @@ const Slidebar = () => {
           <div className="slidebar-subcategories" id="subcat-03">
             {spinner && <Spinner />}
             <ul>
-              {!isGerente ? (
+              {isGerente ? (
                 <li className="slidebar-categories-child">
                   <i className="fa fa-fax"></i>
                   <Link to="mis_aprobaciones">Mis aprobaciones</Link>
