@@ -4,10 +4,14 @@ import InputForm from "../../../components/InputForm";
 import McCliente from "../Modals_General/McCliente";
 import McOrgVentas from "../Modals_General/McOrgVentas";
 import "./MisSolicitudes.css";
-import { ListadoSolicitudes } from "../../../Services/ServiceCambioPrecio";
+import {
+  ListadoSolicitudes,
+  ModificarStateRequest,
+} from "../../../Services/ServiceCambioPrecio";
 import Spinner from "../../../components/Spinner";
 import Pagination from "../../../components/Pagination";
 import ModalDetailSolicitud from "./Modals/ModalDetailSolicitud";
+import toast, { Toaster } from "react-hot-toast";
 
 const MisSolicitudes = () => {
   // ORG VENTAS
@@ -103,8 +107,10 @@ const MisSolicitudes = () => {
       return "APROBADO";
     } else if (state == "2") {
       return "PENDIENTE";
-    } else {
+    } else if (state == "3") {
       return "RECHAZADO";
+    } else {
+      return "ANULADO";
     }
   };
 
@@ -122,14 +128,17 @@ const MisSolicitudes = () => {
 
   // PAGINATION
   const changePage = (pageNumber) => {
+    setOffset(pageNumber);
     obtenerSolicitudes(pageNumber);
   };
   // siguiente pagina
   const prevPage = (value) => {
+    setOffset(value - 1);
     obtenerSolicitudes(value - 1);
   };
   //pagina anterior
   const nextPage = (value) => {
+    setOffset(value + 1);
     obtenerSolicitudes(value + 1);
   };
 
@@ -139,9 +148,30 @@ const MisSolicitudes = () => {
     setShowModalDetail((prev) => !prev);
   };
 
+  const anularSolicitud = (state, id) => {
+    let model = {
+      id: id,
+      state: state.toString(),
+    };
+
+    ModificarStateRequest(model).then((result) => {
+      // console.log(result);
+      toast.success(result.message, {
+        position: "top-center",
+        autoClose: 1000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        },
+      });
+      obtenerSolicitudes(offset);
+    });
+  };
+
   return (
     <React.Fragment>
       <div className="container-view">
+        <Toaster />
         <McOrgVentas
           orgVentasValue={orgVentasValue}
           setOrgVentas={setOrgVentas}
@@ -224,10 +254,11 @@ const MisSolicitudes = () => {
               </div>
               <div className="input-box1">
                 <select name="id_state" onChange={(e) => selectedFiltro(e)}>
-                  <option value="0">Seleccione...</option>
-                  <option value="1">Aprobadas</option>
-                  <option value="2">Pendientes</option>
-                  <option value="3">Rechazadas</option>
+                  <option value="0">TODOS</option>
+                  <option value="1">APROBADO</option>
+                  <option value="2">PENDIENTE</option>
+                  <option value="3">RECHAZADO</option>
+                  <option value="4">ANULADO</option>
                   {/* {roles.map((item) => (
                     <option key={item.id} value={item.id}>
                       {item.name}
@@ -275,7 +306,12 @@ const MisSolicitudes = () => {
                           <th style={{ textAlign: "center" }}>
                             {extraeFecha(item.created_at)}
                           </th>
-                          <th style={{ textAlign: "center" }}>
+                          <th
+                            style={{
+                              textAlign: "center",
+                              color: item.state == "4" ? "red" : "",
+                            }}
+                          >
                             {validateState(item.state)}
                           </th>
                           <th style={{ textAlign: "center" }}>
@@ -295,22 +331,22 @@ const MisSolicitudes = () => {
                               className="fa fa-bars"
                               onClick={() => openDetalle(item)}
                             ></i>
-                            {/* {item.state == "2" && (
+                            {item.state == "2" && (
                               <>
-                                <i
+                                {/* <i
                                   style={{ cursor: "pointer", margin: "2px" }}
                                   title="Editar solicitud"
                                   className="fas fa-edit"
                                   onClick={() => {}}
-                                ></i>
+                                ></i> */}
                                 <i
                                   style={{ cursor: "pointer", margin: "2px" }}
-                                  title="Eliminar solicitud"
+                                  title="Anular solicitud"
                                   className="fas fa-trash-alt"
-                                  onClick={() => {}}
+                                  onClick={() => anularSolicitud(4, item.id)}
                                 ></i>
                               </>
-                            )} */}
+                            )}
                           </th>
                         </tr>
                       ))

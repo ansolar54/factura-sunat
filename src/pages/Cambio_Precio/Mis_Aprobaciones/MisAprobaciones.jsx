@@ -2,7 +2,15 @@ import React, { useEffect, useState } from "react";
 import BtnSearch from "../../../components/BtnSearch";
 import Pagination from "../../../components/Pagination";
 import Spinner from "../../../components/Spinner";
-import { ListadoSolicitudes } from "../../../Services/ServiceCambioPrecio";
+import {
+  ListadoSolicitudes,
+  ListadoSolicitudesForAprob,
+  ModificarStateRequest,
+} from "../../../Services/ServiceCambioPrecio";
+import toast, { Toaster } from "react-hot-toast";
+import { getDistinctUser, getUsers } from "../../../Services/ServiceUser";
+import jwtDecode from "jwt-decode";
+import ModalDetailSolicitud from "./Modals/ModalDetailSolicitud";
 
 const MisAprobaciones = () => {
   // PAGINATION
@@ -22,13 +30,32 @@ const MisAprobaciones = () => {
   // FILTRO ESTADO COMBO: 1=APROBADO, 2=PENDIENTE, 3=RECHAZADO
   const [state, setState] = useState("");
 
+  // USERS
+  const [users, setUsers] = useState([]);
+  const [idUser, setIdUser] = useState(0);
+
+  // MODAL DETAIL
+  const [showModalDetail, setShowModalDetail] = useState(false);
+  const [idSolicitud, setIdSolicitud] = useState();
+  const [stateSolicitud, setStateSolicitud] = useState();
+
   useEffect(() => {
     obtenerSolicitudes(1);
+    getUsers();
   }, []);
+
+  const getUsers = () => {
+    getDistinctUser(jwtDecode(localStorage.getItem("_token")).nameid).then(
+      (result) => {
+        // console.log(result);
+        setUsers(result.data);
+      }
+    );
+  };
 
   const obtenerSolicitudes = (page) => {
     setspinner(true);
-    ListadoSolicitudes("", "", state, limit, page).then((result) => {
+    ListadoSolicitudesForAprob(idUser, state, limit, page).then((result) => {
       // console.log(result);
       setSolicitudes(result.data);
       setTotalData(result.totalItems);
@@ -45,17 +72,6 @@ const MisAprobaciones = () => {
     return newDate[2] + "-" + newDate[1] + "-" + newDate[0];
   };
 
-  const selectedFiltro = (e) => {
-    // console.log(typeof e.target.value);
-    if (e.target.value == "0") {
-      // console.log("zero");
-      setState("");
-    } else {
-      // console.log(e.target.value);
-      setState(e.target.value);
-    }
-  };
-
   const extraeFecha = (fecha) => {
     if (fecha.includes("T")) {
       let parts = fecha.split("T");
@@ -70,27 +86,87 @@ const MisAprobaciones = () => {
       return "APROBADO";
     } else if (state == "2") {
       return "PENDIENTE";
-    } else {
+    } else if (state == "3") {
       return "RECHAZADO";
+    } else {
+      return "ANULADO";
     }
   };
 
   // PAGINATION
   const changePage = (pageNumber) => {
+    setOffset(pageNumber);
     obtenerSolicitudes(pageNumber);
   };
   // siguiente pagina
   const prevPage = (value) => {
+    setOffset(value - 1);
     obtenerSolicitudes(value - 1);
   };
   //pagina anterior
   const nextPage = (value) => {
+    setOffset(value + 1);
     obtenerSolicitudes(value + 1);
+  };
+
+  const updateStateRequest = (state, id) => {
+    let model = {
+      id: id,
+      state: state.toString(),
+    };
+
+    ModificarStateRequest(model).then((result) => {
+      // console.log(result);
+      toast.success(result.message, {
+        position: "top-center",
+        autoClose: 1000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        },
+      });
+      obtenerSolicitudes(offset);
+    });
+  };
+
+  const selectedItem = (e) => {
+    // console.log(e.target.name, " - ", e.target.value);
+    if (e.target.name == "id_user") {
+      if (e.target.value == "0") {
+        // console.log("zero");
+        setIdUser(0);
+      } else {
+        // console.log(e.target.value);
+        setIdUser(e.target.value);
+      }
+    } else {
+      if (e.target.value == "0") {
+        // console.log("zero");
+        setState("");
+      } else {
+        // console.log(e.target.value);
+        setState(e.target.value);
+      }
+    }
+  };
+
+  const openDetalle = (item) => {
+    setIdSolicitud(item.id);
+    setStateSolicitud(item.state);
+    setShowModalDetail((prev) => !prev);
   };
 
   return (
     <React.Fragment>
       <div className="container-view">
+        <Toaster />
+        <ModalDetailSolicitud
+          showModalDetail={showModalDetail}
+          setShowModalDetail={setShowModalDetail}
+          idSolicitud={idSolicitud}
+          extraeFecha={extraeFecha}
+          stateSolicitud={stateSolicitud}
+        />
         <div className="title-section">
           <label> Mis Aprobaciones </label>
           <hr />
@@ -102,11 +178,12 @@ const MisAprobaciones = () => {
                 <label>Filtro : </label>
               </div>
               <div className="input-box1">
-                <select name="id_state" onChange={(e) => selectedFiltro(e)}>
-                  <option value="0">Seleccione...</option>
-                  <option value="1">Aprobadas</option>
-                  <option value="2">Pendientes</option>
-                  <option value="3">Rechazadas</option>
+                <select name="id_state" onChange={(e) => selectedItem(e)}>
+                  <option value="0">TODOS</option>
+                  <option value="1">APROBADO</option>
+                  <option value="2">PENDIENTE</option>
+                  <option value="3">RECHAZADO</option>
+                  <option value="4">ANULADO</option>
                   {/* {roles.map((item) => (
                     <option key={item.id} value={item.id}>
                       {item.name}
@@ -120,16 +197,13 @@ const MisAprobaciones = () => {
                 <label>Usuario : </label>
               </div>
               <div className="input-box2">
-                <select name="id_user" onChange={(e) => {}}>
+                <select name="id_user" onChange={(e) => selectedItem(e)}>
                   <option value="0">Seleccione...</option>
-                  <option value="1">Axelera</option>
-                  <option value="2">Elvis Segura</option>
-                  <option value="3">Miguel Carrasco</option>
-                  {/* {roles.map((item) => (
+                  {users.map((item) => (
                     <option key={item.id} value={item.id}>
-                      {item.name}
+                      {item.name + " " + item.ape_pat + " " + item.ape_mat}
                     </option>
-                  ))} */}
+                  ))}
                 </select>
               </div>
             </div>
@@ -171,7 +245,12 @@ const MisAprobaciones = () => {
                           <th style={{ textAlign: "center" }}>
                             {extraeFecha(item.created_at)}
                           </th>
-                          <th style={{ textAlign: "center" }}>
+                          <th
+                            style={{
+                              textAlign: "center",
+                              color: item.state == "4" ? "red" : "",
+                            }}
+                          >
                             {validateState(item.state)}
                           </th>
                           <th style={{ textAlign: "center" }}>
@@ -189,7 +268,7 @@ const MisAprobaciones = () => {
                               style={{ cursor: "pointer", margin: "2px" }}
                               title="Ver detalle"
                               className="fa fa-bars"
-                              onClick={() => {}}
+                              onClick={() => openDetalle(item)}
                             ></i>
                             {item.state == "2" && (
                               <>
@@ -197,13 +276,13 @@ const MisAprobaciones = () => {
                                   style={{ cursor: "pointer", margin: "2px" }}
                                   title="Aprobar solicitud"
                                   className="fa fa-check-circle"
-                                  onClick={() => {}}
+                                  onClick={() => updateStateRequest(1, item.id)}
                                 ></i>
                                 <i
                                   style={{ cursor: "pointer", margin: "2px" }}
                                   title="Rechazar solicitud"
                                   className="fa fa-minus-circle"
-                                  onClick={() => {}}
+                                  onClick={() => updateStateRequest(3, item.id)}
                                 ></i>
                               </>
                             )}

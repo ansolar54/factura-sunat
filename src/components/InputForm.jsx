@@ -14,6 +14,7 @@ const InputForm = ({ attribute, handleChange, onClick }) => {
         checked={attribute.checked}
         maxLength={attribute.maxlength}
         onChange={(e) => handleChange(e.target.name, e.target.value)}
+        min={attribute.min}
       />
       {
         attribute.matchcode && (

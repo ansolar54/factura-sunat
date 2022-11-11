@@ -22,6 +22,8 @@ const Slidebar = () => {
   const [estado_switch, setestado_switch] = useState(1);
   const [nameuser, setnameuser] = useState("");
 
+  const [isGerente, setIsGerente] = useState(false);
+
   function HandleCategory(id_html) {
     switch (id_html) {
       case "icon-close-01":
@@ -68,11 +70,16 @@ const Slidebar = () => {
         if (result.data[0].id_role == 1) {
           setroladmin(true);
         }
+
+        if (result.data[0].id_role == 4) {
+          setIsGerente(true);
+        }
         // setRol(result.data[0].id_role);
         let model_sap = {
           IsUsuario: result.data[0].username,
         };
         ValidarUsuarioSAP(model_sap).then((result_sap) => {
+          // console.log(result_sap);
           for (
             let index = 0;
             index < result_sap.etValidaViewField.length;
@@ -287,23 +294,23 @@ const Slidebar = () => {
           <div className="slidebar-subcategories" id="subcat-03">
             {spinner && <Spinner />}
             <ul>
-              {consultapedido && (
-                <li className="slidebar-categories-child">
-                  <i className="fa fa-book"></i>
-                  <Link to="generar_solicitud">Generar solicitud</Link>
-                </li>
-              )}
-              {consultapedido && (
-                <li className="slidebar-categories-child">
-                  <i className="fa fa-credit-card"></i>
-                  <Link to="mis_solicitudes">Mis solicitudes</Link>
-                </li>
-              )}
-              {consultapedido && (
+              {!isGerente ? (
                 <li className="slidebar-categories-child">
                   <i className="fa fa-fax"></i>
                   <Link to="mis_aprobaciones">Mis aprobaciones</Link>
                 </li>
+              ) : (
+                <>
+                  <li className="slidebar-categories-child">
+                    <i className="fa fa-book"></i>
+                    <Link to="generar_solicitud">Generar solicitud</Link>
+                  </li>
+
+                  <li className="slidebar-categories-child">
+                    <i className="fa fa-credit-card"></i>
+                    <Link to="mis_solicitudes">Mis solicitudes</Link>
+                  </li>
+                </>
               )}
             </ul>
           </div>

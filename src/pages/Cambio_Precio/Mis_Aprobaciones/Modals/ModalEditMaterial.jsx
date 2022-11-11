@@ -307,7 +307,7 @@ const ModalEditMaterial = ({
                         name: "precio_sugerido",
                         type: "text",
                         value: convertDecimal(material.suggested_price),
-                        disabled: false,
+                        disabled: true,
                         checked: false,
                       }}
                       handleChange={handleChange}
@@ -326,7 +326,7 @@ const ModalEditMaterial = ({
                         name: "limite_inferior",
                         type: "text",
                         value: convertDecimal(material.lower_limit),
-                        disabled: false,
+                        disabled: true,
                         checked: false,
                       }}
                       handleChange={handleChange}

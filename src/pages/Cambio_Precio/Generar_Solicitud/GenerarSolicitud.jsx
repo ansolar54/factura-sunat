@@ -95,11 +95,30 @@ const GenerarSolicitud = () => {
   // ---------------------
 
   const formatFecha = (fecha) => {
+    // console.log(fecha);
     let newDate = "";
     if (fecha != null || fecha != undefined || fecha != "") {
-      newDate = fecha.split("-");
+      if (fecha.length == 10) {
+        newDate = fecha.split("-");
+        return newDate[2] + "-" + newDate[1] + "-" + newDate[0];
+      } else {
+        return (
+          fecha.substr(6, 2) +
+          "-" +
+          fecha.substr(4, 2) +
+          "-" +
+          fecha.substr(0, 4)
+        );
+      }
     }
-    return newDate[2] + "-" + newDate[1] + "-" + newDate[0];
+  };
+
+  const formatFechaMysql = (fecha) => {
+    if (fecha != null || fecha != undefined || fecha != "") {
+      return (
+        fecha.substr(0, 4) + "-" + fecha.substr(4, 2) + "-" + fecha.substr(6, 2)
+      );
+    }
   };
 
   const enviarSolicitud = () => {
@@ -130,7 +149,7 @@ const GenerarSolicitud = () => {
             typeof element.prec_sug == "number"
               ? element.prec_sug
               : Number(element.prec_sug.replaceAll(",", "")),
-          start_date: element.fec_ini,
+          start_date: formatFechaMysql(element.fec_ini),
           end_date: element.fec_fin,
           lower_limit:
             typeof element.lim_inf == "number"
@@ -145,6 +164,11 @@ const GenerarSolicitud = () => {
               ? element.margen
               : Number(element.margen.replaceAll(",", "")),
           center: element.centro,
+          measure_unit: element.uni_med,
+          base_amount:
+            typeof element.cant_base == "number"
+              ? element.cant_base
+              : Number(element.cant_base.replaceAll(",", "")),
         };
         data_detail.push(model_detail);
       }

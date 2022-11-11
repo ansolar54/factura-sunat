@@ -128,9 +128,11 @@ const McMaterial = ({
         prec_act: result.etMaterialesField[0].kbetrField,
         fec_ini: result.etMaterialesField[0].databField,
         fec_fin: result.etMaterialesField[0].datbiField,
-        lim_inf: result.etMaterialesField[0].kbetrField - 3,
-        lim_sup: 999999.99,
+        lim_inf: 0.0,
+        lim_sup: 999999999.99,
         margen: 0.0,
+        uni_med: material.meinsField,
+        cant_base: result.etMaterialesField[0].kpeinField,
       }));
       setShowMcMaterial((prev) => !prev);
     });

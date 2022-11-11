@@ -153,6 +153,7 @@ const ModalDetailSolicitud = ({
                             <th style={{ textAlign: "center" }}>
                               LIMITE SUPERIOR
                             </th>
+                            <th style={{ textAlign: "center" }}>MARGEN</th>
                             <th style={{ textAlign: "center" }}>
                               FECHA INICIO
                             </th>
@@ -183,6 +184,9 @@ const ModalDetailSolicitud = ({
                               </th>
                               <th style={{ textAlign: "right" }}>
                                 {convertDecimal(response.upper_limit)}
+                              </th>
+                              <th style={{ textAlign: "right" }}>
+                                {convertDecimal(response.margin)}
                               </th>
                               <th style={{ textAlign: "center" }}>
                                 {extraeFecha(response.start_date)}

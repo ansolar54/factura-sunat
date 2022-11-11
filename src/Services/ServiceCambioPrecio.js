@@ -122,6 +122,60 @@ export function ModificarRequestDetail(req) {
       });
   });
 }
+
+export function ModificarStateRequest(req) {
+  const base = process.env.REACT_APP_BASE_URL;
+  let BaseUrl = base + "request/update_state_request";
+
+  return new Promise((resolve, reject) => {
+    fetch(BaseUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(req),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        resolve(responseJson);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
+export function ListadoSolicitudesForAprob(id_user, state, limit, offset) {
+  const base = process.env.REACT_APP_BASE_URL;
+  let BaseUrl =
+    base +
+    "request/all_for_aprob?id_user=" +
+    id_user +
+    "&state=" +
+    state +
+    "&limit=" +
+    limit +
+    "&offset=" +
+    offset;
+
+  return new Promise((resolve, reject) => {
+    fetch(BaseUrl, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        resolve(responseJson);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
 // ---------------------
 
 // SERVICIOS SAP

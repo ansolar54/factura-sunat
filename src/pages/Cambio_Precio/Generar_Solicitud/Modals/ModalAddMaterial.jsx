@@ -61,6 +61,8 @@ const ModalAddMaterial = ({
       lim_inf: 0.0,
       lim_sup: 0.0,
       margen: 0.0,
+      uni_med: "",
+      cant_base: 0.0,
     });
     document.addEventListener("keydown", keyPress);
     return () => document.removeEventListener("keydown", keyPress);
@@ -94,15 +96,18 @@ const ModalAddMaterial = ({
 
   const guardar = () => {
     // console.log("pre_sug ", material.prec_sug, " limit ", material.lim_inf);
-    if (material.prec_sug >= material.lim_inf) {
-      toast.error("Precio sugerido debe ser inferior a " + material.lim_inf, {
-        position: "top-center",
-        autoClose: 5000,
-        style: {
-          backgroundColor: "#212121",
-          color: "#fff",
-        },
-      });
+    if (material.prec_sug <= material.lim_inf) {
+      toast.error(
+        "Precio sugerido debe ser mayor o igual a " + material.lim_inf,
+        {
+          position: "top-center",
+          autoClose: 5000,
+          style: {
+            backgroundColor: "#212121",
+            color: "#fff",
+          },
+        }
+      );
     } else {
       // obtener margen
       // calcularMargen();
@@ -119,7 +124,7 @@ const ModalAddMaterial = ({
   // console.log(material);
 
   function handleChange(name, value) {
-    // console.log(name, " : ", value);
+    console.log(name, " : ", value);
     switch (name) {
       case "material":
         setMaterial((prevState) => ({
@@ -196,6 +201,23 @@ const ModalAddMaterial = ({
       }
     }
   }
+
+  const formatFecha = (fecha) => {
+    // console.log(fecha);
+    if (fecha != null || fecha != undefined || fecha != "") {
+      if (fecha.length == 10) {
+        return fecha;
+      } else {
+        return (
+          fecha.substr(0, 4) +
+          "-" +
+          fecha.substr(4, 2) +
+          "-" +
+          fecha.substr(6, 2)
+        );
+      }
+    }
+  };
 
   return (
     <>
@@ -326,7 +348,7 @@ const ModalAddMaterial = ({
                     attribute={{
                       name: "fecha_inicio",
                       type: "date",
-                      value: material.fec_ini,
+                      value: formatFecha(material.fec_ini),
                       disabled: true,
                       checked: false,
                     }}
@@ -344,9 +366,10 @@ const ModalAddMaterial = ({
                     attribute={{
                       name: "fecha_fin",
                       type: "date",
-                      value: material.fec_fin,
+                      value: formatFecha(material.fec_fin),
                       disabled: false,
                       checked: false,
+                      min: formatFecha(material.fec_ini),
                     }}
                     handleChange={handleChange}
                     onClick={() => {}}
