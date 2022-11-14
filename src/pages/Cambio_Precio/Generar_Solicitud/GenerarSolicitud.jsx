@@ -13,6 +13,8 @@ import {
   EnviarCorreo,
   GuardarSolicitud,
 } from "../../../Services/ServiceCambioPrecio";
+import { getMailGerents } from "../../../Services/ServiceUser";
+import Spinner from "../../../components/Spinner";
 
 const GenerarSolicitud = () => {
   const [showModalMaterial, setShowModalMaterial] = useState(false);
@@ -34,6 +36,9 @@ const GenerarSolicitud = () => {
   const [IsCliente, setIsCliente] = useState(""); // IsKunnr
   const [isClientName, setIsClientName] = useState("");
   const [showMcCliente, setShowMcCliente] = useState(false);
+
+  //CARGA DE SPINNER
+  const [spinner, setspinner] = useState(false);
 
   const openAddMaterial = () => {
     setShowModalMaterial((prev) => !prev);
@@ -114,15 +119,25 @@ const GenerarSolicitud = () => {
   };
 
   const formatFechaMysql = (fecha) => {
+    console.log(fecha);
     if (fecha != null || fecha != undefined || fecha != "") {
-      return (
-        fecha.substr(0, 4) + "-" + fecha.substr(4, 2) + "-" + fecha.substr(6, 2)
-      );
+      if (fecha.length == 8) {
+        return (
+          fecha.substr(0, 4) +
+          "-" +
+          fecha.substr(4, 2) +
+          "-" +
+          fecha.substr(6, 2)
+        );
+      } else {
+        return fecha;
+      }
     }
   };
 
   const enviarSolicitud = () => {
     // MAPEO DE CAMPOS DE ARREGLO MATERIAL
+    setspinner(true);
     if (dataMaterial.length == 0) {
       toast.error("No existen materiales", {
         position: "top-center",
@@ -132,6 +147,7 @@ const GenerarSolicitud = () => {
           color: "#fff",
         },
       });
+      setspinner(false);
     } else {
       let data_detail = [];
       for (let i = 0; i < dataMaterial.length; i++) {
@@ -150,7 +166,7 @@ const GenerarSolicitud = () => {
               ? element.prec_sug
               : Number(element.prec_sug.replaceAll(",", "")),
           start_date: formatFechaMysql(element.fec_ini),
-          end_date: element.fec_fin,
+          end_date: formatFechaMysql(element.fec_fin),
           lower_limit:
             typeof element.lim_inf == "number"
               ? element.lim_inf
@@ -172,51 +188,78 @@ const GenerarSolicitud = () => {
         };
         data_detail.push(model_detail);
       }
-      let model = {
-        sales_org: orgVentasValue,
-        client: IsCliente,
-        client_name: isClientName,
-        id_user: Number(jwt(localStorage.getItem("_token")).nameid),
-        detail: data_detail,
-      };
-      console.log(model);
-      GuardarSolicitud(model).then((result) => {
+      let correos = [];
+      getMailGerents(orgVentasValue).then((result) => {
         console.log(result);
-        if (result.indicator == 1) {
-          setDataMaterial([]);
-          setOrgVentasValue("AGRO");
-          setOrgVentasName("");
-          setIsCliente("");
-          setIsClientName("");
-          // ENVIAR SOLICITUD PARA APROBACION POR CORREO
-          let model_correo = {
-            cliente: IsCliente + " - " + isClientName,
-            vendedor: jwt(localStorage.getItem("_token")).vendedor,
-            correo: "james.virgo30@gmail.com", // correo de usuario en sesion: jwt(localStorage.getItem("_token")).email
+        if (result.data.length > 0) {
+          correos = result.data; // se pasa lista de correo de gerentes
+          let model = {
+            sales_org: orgVentasValue,
+            client: IsCliente,
+            client_name: isClientName,
+            id_user: Number(jwt(localStorage.getItem("_token")).nameid),
+            detail: data_detail,
           };
-
-          EnviarCorreo(model_correo).then((result) => {
+          console.log(model);
+          GuardarSolicitud(model).then((result) => {
             console.log(result);
-          });
+            if (result.indicator == 1) {
+              setDataMaterial([]);
+              setOrgVentasValue("AGRO");
+              setOrgVentasName("");
+              setIsCliente("");
+              setIsClientName("");
 
-          // ----------------------------------------
-          toast.success(result.message, {
-            position: "top-center",
-            autoClose: 1000,
-            style: {
-              backgroundColor: "#212121",
-              color: "#fff",
-            },
+              // ENVIAR SOLICITUD PARA APROBACION POR CORREO
+              let model_correo = {
+                cliente: IsCliente + " - " + isClientName,
+                vendedor: jwt(localStorage.getItem("_token")).vendedor,
+                correos: correos,
+              };
+              // console.log(model_correo);
+              EnviarCorreo(model_correo).then((result) => {
+                console.log(result);
+                if (result.indicator == 1) {
+                  toast.success("Solicitud creada correctamente.", {
+                    position: "top-center",
+                    autoClose: 1000,
+                    style: {
+                      backgroundColor: "#212121",
+                      color: "#fff",
+                    },
+                  });
+                  setspinner(false);
+                } else {
+                  setspinner(false);
+                }
+              });
+
+              // ----------------------------------------
+            } else {
+              toast.error("No se pudo enviar la solicitud.", {
+                position: "top-center",
+                autoClose: 1000,
+                style: {
+                  backgroundColor: "#212121",
+                  color: "#fff",
+                },
+              });
+              setspinner(false);
+            }
           });
         } else {
-          toast.error("No se pudo enviar la solicitud.", {
-            position: "top-center",
-            autoClose: 1000,
-            style: {
-              backgroundColor: "#212121",
-              color: "#fff",
-            },
-          });
+          toast.error(
+            "No existen gerentes para la org. de ventas: ." + orgVentasValue,
+            {
+              position: "top-center",
+              autoClose: 5000,
+              style: {
+                backgroundColor: "#212121",
+                color: "#fff",
+              },
+            }
+          );
+          setspinner(false);
         }
       });
     }
@@ -415,20 +458,20 @@ const GenerarSolicitud = () => {
                     : null}
                 </tbody>
               </table>
-              {/* {spinner==false && dataAuditoria.length == 0 ? (
-                    <div
-                      style={{
-                        margin: "10px",
-                        textAlign: "center",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      No se encontraron resultados.
-                    </div>
-                  ) : null}
-              {spinner && <Spinner />} */}
+              {spinner == false && dataMaterial.length == 0 ? (
+                <div
+                  style={{
+                    margin: "10px",
+                    textAlign: "center",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  No se encontraron resultados.
+                </div>
+              ) : null}
+              {spinner && <Spinner />}
             </div>
           </div>
         </section>

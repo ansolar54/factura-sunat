@@ -207,3 +207,26 @@ export function getDistinctUser(id) {
       });
   });
 }
+
+// @JR
+export function getMailGerents(sales_org) {
+  const base = process.env.REACT_APP_BASE_URL;
+  let BaseUrl = base + "user/gerents?sales_org=" + sales_org;
+
+  return new Promise((resolve, reject) => {
+    fetch(BaseUrl, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        resolve(responseJson);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}

@@ -176,6 +176,29 @@ export function ListadoSolicitudesForAprob(id_user, state, limit, offset) {
       });
   });
 }
+
+export function EnviarCorreoAprob(req) {
+  const base = process.env.REACT_APP_BASE_URL;
+  let BaseUrl = base + "request/enviar_correo_aprob";
+
+  return new Promise((resolve, reject) => {
+    fetch(BaseUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(req),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        resolve(responseJson);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
 // ---------------------
 
 // SERVICIOS SAP
