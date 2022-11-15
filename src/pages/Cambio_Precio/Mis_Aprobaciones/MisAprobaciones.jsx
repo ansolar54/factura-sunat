@@ -174,9 +174,9 @@ const MisAprobaciones = () => {
                 IsVkorg: item.sales_org,
                 ItMatAprobacion: itMatAprob,
               };
-              // console.log(model_aprob);
+              console.log(model_aprob);
               AprobSolicitud(model_aprob).then((result) => {
-                // console.log(result);
+                console.log(result);
                 if (result.etMsgReturnField[0].successField == "X") {
                   // let email_solicitante = "";
                   // obteniendo correo de solicitante
@@ -218,6 +218,15 @@ const MisAprobaciones = () => {
                     }
                   });
                   // -------------------------
+                } else {
+                  toast.success(result.etMsgReturnField[0].messageField, {
+                    position: "top-center",
+                    autoClose: 1000,
+                    style: {
+                      backgroundColor: "#212121",
+                      color: "#fff",
+                    },
+                  });
                 }
               });
             } else {

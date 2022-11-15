@@ -9,6 +9,7 @@ import {
   GetDetalleSolicitud,
   ModificarRequestDetail,
 } from "../../../../Services/ServiceCambioPrecio";
+import Spinner from "../../../../components/Spinner";
 
 const ModalEditMaterial = ({
   showModalEditMaterial,
@@ -21,6 +22,10 @@ const ModalEditMaterial = ({
   const [showMcMaterial, setShowMcMaterial] = useState(false);
 
   const [activateButton, setActivateButton] = useState(false);
+
+  const [spinner, setspinner] = useState(false);
+
+  const [indicator, setIndicator] = useState(false);
 
   // DATA MATERIAL
   const [material, setMaterial] = useState({
@@ -56,6 +61,45 @@ const ModalEditMaterial = ({
   );
 
   useEffect(() => {
+    // console.log("cambio", material);
+    if (indicator) {
+      let model = {
+        id: material.id,
+        suggested_price:
+          typeof material.suggested_price == "number"
+            ? material.suggested_price
+            : Number(material.suggested_price.replaceAll(",", "")),
+        lower_limit:
+          typeof material.lower_limit == "number"
+            ? material.lower_limit
+            : Number(material.lower_limit.replaceAll(",", "")),
+        upper_limit:
+          typeof material.upper_limit == "number"
+            ? material.upper_limit
+            : Number(material.upper_limit.replaceAll(",", "")),
+        end_date: material.end_date,
+        margin:
+          typeof material.margin == "number"
+            ? material.margin
+            : Number(material.margin.replaceAll(",", "")),
+      };
+      console.log(model);
+      // llamado a servicio parar modificar request detail
+      ModificarRequestDetail(model).then((result) => {
+        console.log(result);
+        GetDetalleSolicitud(dataMaterial.id_request).then((result) => {
+          console.log(result);
+          setDetalle(result);
+          // setViewInfo(true);
+        });
+      });
+
+      setShowModalEditMaterial(false);
+      setIndicator(false);
+    }
+  }, [indicator]);
+
+  useEffect(() => {
     // loadDataFromControls();
     setMaterial(dataMaterial);
     // console.log(dataMaterial.id_request);
@@ -77,6 +121,7 @@ const ModalEditMaterial = ({
   };
 
   const calcularMargen = () => {
+    setspinner(true);
     let model = {
       itAprobmargen: [
         {
@@ -94,44 +139,15 @@ const ModalEditMaterial = ({
         ...prevState,
         margin: result.etAprobmargenField[0].margenField,
       }));
-      setActivateButton(false);
+      // setActivateButton(false);
+      setspinner(false);
+      setIndicator(true);
     });
   };
 
   const guardar = () => {
     // console.log("guardar");
-    let model = {
-      id: material.id,
-      suggested_price:
-        typeof material.suggested_price == "number"
-          ? material.suggested_price
-          : Number(material.suggested_price.replaceAll(",", "")),
-      lower_limit:
-        typeof material.lower_limit == "number"
-          ? material.lower_limit
-          : Number(material.lower_limit.replaceAll(",", "")),
-      upper_limit:
-        typeof material.upper_limit == "number"
-          ? material.upper_limit
-          : Number(material.upper_limit.replaceAll(",", "")),
-      end_date: material.end_date,
-      margin:
-        typeof material.margin == "number"
-          ? material.margin
-          : Number(material.margin.replaceAll(",", "")),
-    };
-    console.log(model);
-    // llamado a servicio parar modificar request detail
-    ModificarRequestDetail(model).then((result) => {
-      console.log(result);
-      GetDetalleSolicitud(dataMaterial.id_request).then((result) => {
-        console.log(result);
-        setDetalle(result);
-        // setViewInfo(true);
-      });
-    });
-
-    setShowModalEditMaterial(false);
+    calcularMargen();
   };
 
   function handleChange(name, value) {
@@ -154,7 +170,7 @@ const ModalEditMaterial = ({
           ...prevState,
           suggested_price: value,
         }));
-        setActivateButton(true);
+        // setActivateButton(true);
         break;
       case "limite_inferior":
         setMaterial((prevState) => ({
@@ -175,7 +191,7 @@ const ModalEditMaterial = ({
         }));
         break;
       default:
-        console.log(name, " : ", value);
+        // console.log(name, " : ", value);
         setMaterial((prevState) => ({
           ...prevState,
           end_date: value,
@@ -225,7 +241,7 @@ const ModalEditMaterial = ({
   };
 
   const extraeFecha = (fecha) => {
-    console.log(fecha);
+    // console.log(fecha);
     if (fecha.includes("T")) {
       let parts = fecha.split("T");
       return parts[0];
@@ -326,14 +342,14 @@ const ModalEditMaterial = ({
                         name: "limite_inferior",
                         type: "text",
                         value: convertDecimal(material.lower_limit),
-                        disabled: false,
+                        disabled: true,
                         checked: false,
                       }}
                       handleChange={handleChange}
                     />
                   </div>
                 </div>
-                <div className="col-md col-md-6">
+                {/* <div className="col-md col-md-6">
                   <div>
                     <label>Límite superior : </label>
                   </div>
@@ -343,6 +359,23 @@ const ModalEditMaterial = ({
                         name: "limite_superior",
                         type: "text",
                         value: convertDecimal(material.upper_limit),
+                        disabled: true,
+                        checked: false,
+                      }}
+                      handleChange={handleChange}
+                    />
+                  </div>
+                </div> */}
+                <div className="col-md col-md-6">
+                  <div>
+                    <label>Moneda : </label>
+                  </div>
+                  <div>
+                    <InputForm
+                      attribute={{
+                        name: "moneda",
+                        type: "text",
+                        value: material.currency,
                         disabled: true,
                         checked: false,
                       }}
@@ -388,6 +421,7 @@ const ModalEditMaterial = ({
                   />
                 </div>
               </div>
+              {spinner && <Spinner />}
               {activateButton && (
                 <div className="row-md">
                   <BtnSave

@@ -104,6 +104,7 @@ const McMaterial = ({
   }
 
   function clickcelda(material) {
+    setspinner(true);
     let model = {
       IsKunnr: cliente,
       IsVkorg: orgVentas,
@@ -128,12 +129,13 @@ const McMaterial = ({
         prec_act: result.etMaterialesField[0].kbetrField,
         fec_ini: result.etMaterialesField[0].databField,
         fec_fin: result.etMaterialesField[0].datbiField,
-        lim_inf: 0.0,
+        lim_inf: result.etMaterialesField[0].kbetrField - 1,
         lim_sup: 999999999.99,
         margen: 0.0,
         uni_med: material.meinsField,
         cant_base: result.etMaterialesField[0].kpeinField,
       }));
+      setspinner(false);
       setShowMcMaterial((prev) => !prev);
     });
   }
@@ -265,6 +267,7 @@ const McMaterial = ({
                   <thead>
                     <tr>
                       <th>Cod. Producto</th>
+                      <th>Centro</th>
                       <th>Nombre de Producto</th>
                     </tr>
                   </thead>
@@ -278,6 +281,9 @@ const McMaterial = ({
                       >
                         <th style={{ textAlign: "center" }}>
                           {Number(response.matnrField)}
+                        </th>
+                        <th style={{ textAlign: "center" }}>
+                          {response.werksField}
                         </th>
                         <th style={{ textAlign: "center" }}>
                           {response.maktxField}

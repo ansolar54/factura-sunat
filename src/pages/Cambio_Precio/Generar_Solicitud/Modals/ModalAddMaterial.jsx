@@ -5,6 +5,7 @@ import InputForm from "../../../../components/InputForm";
 import McMaterial from "../../Modals_General/McMaterial";
 import toast, { Toaster } from "react-hot-toast";
 import { AprobMargen } from "../../../../Services/ServiceCambioPrecio";
+import Spinner from "../../../../components/Spinner";
 
 const ModalAddMaterial = ({
   showModalMaterial,
@@ -16,6 +17,10 @@ const ModalAddMaterial = ({
   const [showMcMaterial, setShowMcMaterial] = useState(false);
 
   const [activateButton, setActivateButton] = useState(false);
+
+  const [spinner, setspinner] = useState(false);
+
+  const [indicator, setIndicator] = useState(false);
 
   // DATA MATERIAL
   const [material, setMaterial] = useState({
@@ -35,6 +40,7 @@ const ModalAddMaterial = ({
   const modalRef = useRef();
   const closeModal = (e) => {
     if (modalRef.current === e.target) {
+      limpiarControles();
       setShowModalMaterial(false);
     }
   };
@@ -49,6 +55,21 @@ const ModalAddMaterial = ({
   );
 
   useEffect(() => {
+    // console.log("cambio", material);
+    if (indicator) {
+      dataMaterial.push(material);
+      setShowModalMaterial(false);
+      limpiarControles();
+      setIndicator(false);
+    }
+  }, [indicator]);
+
+  useEffect(() => {
+    document.addEventListener("keydown", keyPress);
+    return () => document.removeEventListener("keydown", keyPress);
+  }, [keyPress]);
+
+  const limpiarControles = () => {
     setMaterial({
       cod_mat: "",
       name_mat: "",
@@ -64,15 +85,20 @@ const ModalAddMaterial = ({
       uni_med: "",
       cant_base: 0.0,
     });
-    document.addEventListener("keydown", keyPress);
-    return () => document.removeEventListener("keydown", keyPress);
-  }, [keyPress]);
+  };
+
+  const closeModalButton = () => {
+    limpiarControles();
+    setShowModalMaterial((prev) => !prev);
+  };
 
   const cancelar = () => {
+    limpiarControles();
     setShowModalMaterial(false);
   };
 
   const calcularMargen = () => {
+    setspinner(true);
     let model = {
       itAprobmargen: [
         {
@@ -85,46 +111,49 @@ const ModalAddMaterial = ({
     };
 
     AprobMargen(model).then((result) => {
-      // console.log("MARGEN", result.etAprobmargenField[0].margenField);
-      setMaterial((prevState) => ({
-        ...prevState,
+      console.log("MARGEN", result.etAprobmargenField[0].margenField);
+      // setMaterial((prevState) => ({
+      //   ...prevState,
+      //   margen: result.etAprobmargenField[0].margenField,
+      // }));
+
+      setMaterial({
+        ...material,
         margen: result.etAprobmargenField[0].margenField,
-      }));
-      setActivateButton(false);
+      });
+      // setActivateButton(false);
+      setspinner(false);
+      setIndicator(true);
     });
   };
 
+  // console.log(material);
+
   const guardar = () => {
     // console.log("pre_sug ", material.prec_sug, " limit ", material.lim_inf);
-    if (material.prec_sug <= material.lim_inf) {
-      toast.error(
-        "Precio sugerido debe ser mayor o igual a " + material.lim_inf,
-        {
-          position: "top-center",
-          autoClose: 5000,
-          style: {
-            backgroundColor: "#212121",
-            color: "#fff",
-          },
-        }
-      );
+    if (material.prec_sug > material.lim_inf) {
+      toast.error("Precio sugerido debe ser menor a " + material.lim_inf, {
+        position: "top-center",
+        autoClose: 5000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        },
+      });
     } else {
       // obtener margen
-      // calcularMargen();
+      calcularMargen();
       // -------------------
-      console.log(material);
-      dataMaterial.push(material);
-      setActivateButton(false);
+      // setActivateButton(false);
       // dataMaterial = [...dataMaterial];
       // console.log(dataMaterial);
-      setShowModalMaterial(false);
     }
   };
 
   // console.log(material);
 
   function handleChange(name, value) {
-    console.log(name, " : ", value);
+    // console.log(name, " : ", value);
     switch (name) {
       case "material":
         setMaterial((prevState) => ({
@@ -143,7 +172,7 @@ const ModalAddMaterial = ({
           ...prevState,
           prec_sug: value,
         }));
-        setActivateButton(true); // activar boton calcular margen
+        // setActivateButton(true); // activar boton calcular margen
         break;
       case "limite_inferior":
         setMaterial((prevState) => ({
@@ -242,7 +271,7 @@ const ModalAddMaterial = ({
               </div>
               <div
                 className="close-modal-button"
-                onClick={() => setShowModalMaterial((prev) => !prev)}
+                onClick={() => closeModalButton()}
               >
                 <i className="fas fa-times"></i>
               </div>
@@ -314,14 +343,14 @@ const ModalAddMaterial = ({
                         name: "limite_inferior",
                         type: "text",
                         value: convertDecimal(material.lim_inf),
-                        disabled: false,
+                        disabled: true,
                         checked: false,
                       }}
                       handleChange={handleChange}
                     />
                   </div>
                 </div>
-                <div className="col-md col-md-6">
+                {/* <div className="col-md col-md-6">
                   <div>
                     <label>Límite superior : </label>
                   </div>
@@ -332,6 +361,23 @@ const ModalAddMaterial = ({
                         type: "text",
                         value: convertDecimal(material.lim_sup),
                         disabled: false,
+                        checked: false,
+                      }}
+                      handleChange={handleChange}
+                    />
+                  </div>
+                </div> */}
+                <div className="col-md col-md-6">
+                  <div>
+                    <label>Moneda : </label>
+                  </div>
+                  <div>
+                    <InputForm
+                      attribute={{
+                        name: "moneda",
+                        type: "text",
+                        value: material.moneda,
+                        disabled: true,
                         checked: false,
                       }}
                       handleChange={handleChange}
@@ -376,6 +422,7 @@ const ModalAddMaterial = ({
                   />
                 </div>
               </div>
+              {spinner && <Spinner />}
               {activateButton && (
                 <div className="row-md">
                   <BtnSave

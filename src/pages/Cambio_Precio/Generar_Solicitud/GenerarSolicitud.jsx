@@ -204,12 +204,6 @@ const GenerarSolicitud = () => {
           GuardarSolicitud(model).then((result) => {
             console.log(result);
             if (result.indicator == 1) {
-              setDataMaterial([]);
-              setOrgVentasValue("AGRO");
-              setOrgVentasName("");
-              setIsCliente("");
-              setIsClientName("");
-
               // ENVIAR SOLICITUD PARA APROBACION POR CORREO
               let model_correo = {
                 cliente: IsCliente + " - " + isClientName,
@@ -228,6 +222,11 @@ const GenerarSolicitud = () => {
                       color: "#fff",
                     },
                   });
+                  setDataMaterial([]);
+                  setOrgVentasValue("AGRO");
+                  setOrgVentasName("");
+                  setIsCliente("");
+                  setIsClientName("");
                   setspinner(false);
                 } else {
                   setspinner(false);

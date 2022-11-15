@@ -5,6 +5,7 @@ import InputForm from "../../../../components/InputForm";
 import McMaterial from "../../Modals_General/McMaterial";
 import toast, { Toaster } from "react-hot-toast";
 import { AprobMargen } from "../../../../Services/ServiceCambioPrecio";
+import Spinner from "../../../../components/Spinner";
 
 const ModalEditMaterial = ({
   showModalEditMaterial,
@@ -17,6 +18,10 @@ const ModalEditMaterial = ({
   const [showMcMaterial, setShowMcMaterial] = useState(false);
 
   const [activateButton, setActivateButton] = useState(false);
+
+  const [spinner, setspinner] = useState(false);
+
+  const [indicator, setIndicator] = useState(false);
 
   // DATA MATERIAL
   const [material, setMaterial] = useState({
@@ -52,6 +57,25 @@ const ModalEditMaterial = ({
   );
 
   useEffect(() => {
+    // console.log("cambio", material);
+    if (indicator) {
+      for (let i = 0; i < dataMaterial.length; i++) {
+        const element = dataMaterial[i];
+        if (element.cod_mat == idMaterial) {
+          element.prec_sug = material.prec_sug;
+          element.lim_inf = material.lim_inf;
+          element.lim_sup = material.lim_sup;
+          element.fec_fin = material.fec_fin;
+          element.margen = material.margen;
+        }
+      }
+      // setActivateButton(false);
+      setShowModalEditMaterial(false);
+      setIndicator(false);
+    }
+  }, [indicator]);
+
+  useEffect(() => {
     loadDataFromControls();
     document.addEventListener("keydown", keyPress);
     return () => document.removeEventListener("keydown", keyPress);
@@ -71,6 +95,7 @@ const ModalEditMaterial = ({
   };
 
   const calcularMargen = () => {
+    setspinner(true);
     let model = {
       itAprobmargen: [
         {
@@ -88,37 +113,25 @@ const ModalEditMaterial = ({
         ...prevState,
         margen: result.etAprobmargenField[0].margenField,
       }));
-      setActivateButton(false);
+      // setActivateButton(false);
+      setspinner(false);
+      setIndicator(true);
     });
   };
 
   const guardar = () => {
     // console.log("guardar");
-    if (material.prec_sug <= material.lim_inf) {
-      toast.error(
-        "Precio sugerido debe ser mayor o igual a " + material.lim_inf,
-        {
-          position: "top-center",
-          autoClose: 5000,
-          style: {
-            backgroundColor: "#212121",
-            color: "#fff",
-          },
-        }
-      );
+    if (material.prec_sug > material.lim_inf) {
+      toast.error("Precio sugerido debe ser menor a " + material.lim_inf, {
+        position: "top-center",
+        autoClose: 5000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        },
+      });
     } else {
-      for (let i = 0; i < dataMaterial.length; i++) {
-        const element = dataMaterial[i];
-        if (element.cod_mat == idMaterial) {
-          element.prec_sug = material.prec_sug;
-          element.lim_inf = material.lim_inf;
-          element.lim_sup = material.lim_sup;
-          element.fec_fin = material.fec_fin;
-          element.margen = material.margen;
-        }
-      }
-      setActivateButton(false);
-      setShowModalEditMaterial(false);
+      calcularMargen();
     }
   };
 
@@ -142,7 +155,7 @@ const ModalEditMaterial = ({
           ...prevState,
           prec_sug: value,
         }));
-        setActivateButton(true);
+        // setActivateButton(true);
         break;
       case "limite_inferior":
         setMaterial((prevState) => ({
@@ -310,14 +323,14 @@ const ModalEditMaterial = ({
                         name: "limite_inferior",
                         type: "text",
                         value: convertDecimal(material.lim_inf),
-                        disabled: false,
+                        disabled: true,
                         checked: false,
                       }}
                       handleChange={handleChange}
                     />
                   </div>
                 </div>
-                <div className="col-md col-md-6">
+                {/* <div className="col-md col-md-6">
                   <div>
                     <label>Límite superior : </label>
                   </div>
@@ -328,6 +341,23 @@ const ModalEditMaterial = ({
                         type: "text",
                         value: convertDecimal(material.lim_sup),
                         disabled: false,
+                        checked: false,
+                      }}
+                      handleChange={handleChange}
+                    />
+                  </div>
+                </div> */}
+                <div className="col-md col-md-6">
+                  <div>
+                    <label>Moneda : </label>
+                  </div>
+                  <div>
+                    <InputForm
+                      attribute={{
+                        name: "moneda",
+                        type: "text",
+                        value: material.moneda,
+                        disabled: true,
                         checked: false,
                       }}
                       handleChange={handleChange}
@@ -372,6 +402,7 @@ const ModalEditMaterial = ({
                   />
                 </div>
               </div>
+              {spinner && <Spinner />}
               {activateButton && (
                 <div className="row-md">
                   <BtnSave

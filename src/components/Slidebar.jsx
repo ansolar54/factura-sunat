@@ -234,52 +234,56 @@ const Slidebar = () => {
         )}
 
         {/* REPORTES */}
-        <div className="slidebar-categories">
-          <div
-            className="slidebar-categories-header"
-            onClick={() => HandleCategory("icon-close-02")}
-          >
-            <i className="fas fa-box-open"></i>
-            <a>Reportes</a>
-            <i className="fas fa-angle-down slider-down-icon"></i>
-          </div>
-          <div className="slidebar-subcategories" id="subcat-02">
-            {spinner && <Spinner />}
-            <ul>
-              {consultapedido && (
-                <li className="slidebar-categories-child">
-                  <i className="fas fa-search"></i>
-                  <Link to="consulta_pedido">Consulta de Pedidos</Link>
-                </li>
-              )}
-              {consultastock && (
-                <li className="slidebar-categories-child">
-                  <i className="fas fa-pencil-alt"></i>
-                  <Link to="consulta_stock">Consulta de Stock</Link>
-                </li>
-              )}
-              {reportepromociones && (
-                <li className="slidebar-categories-child">
-                  <i className="fas fa-list-alt"></i>
-                  <Link to="promociones">Promociones</Link>
-                </li>
-              )}
-              {informacioncliente && (
-                <li className="slidebar-categories-child">
-                  <i className="fas fa-id-card"></i>
-                  <Link to="informacion_cliente">Información del Cliente</Link>
-                </li>
-              )}
+        {!isGerente && (
+          <div className="slidebar-categories">
+            <div
+              className="slidebar-categories-header"
+              onClick={() => HandleCategory("icon-close-02")}
+            >
+              <i className="fas fa-box-open"></i>
+              <a>Reportes</a>
+              <i className="fas fa-angle-down slider-down-icon"></i>
+            </div>
+            <div className="slidebar-subcategories" id="subcat-02">
+              {spinner && <Spinner />}
+              <ul>
+                {consultapedido && (
+                  <li className="slidebar-categories-child">
+                    <i className="fas fa-search"></i>
+                    <Link to="consulta_pedido">Consulta de Pedidos</Link>
+                  </li>
+                )}
+                {consultastock && (
+                  <li className="slidebar-categories-child">
+                    <i className="fas fa-pencil-alt"></i>
+                    <Link to="consulta_stock">Consulta de Stock</Link>
+                  </li>
+                )}
+                {reportepromociones && (
+                  <li className="slidebar-categories-child">
+                    <i className="fas fa-list-alt"></i>
+                    <Link to="promociones">Promociones</Link>
+                  </li>
+                )}
+                {informacioncliente && (
+                  <li className="slidebar-categories-child">
+                    <i className="fas fa-id-card"></i>
+                    <Link to="informacion_cliente">
+                      Información del Cliente
+                    </Link>
+                  </li>
+                )}
 
-              {deudacliente && (
-                <li className="slidebar-categories-child">
-                  <i className="fas fa-digital-tachograph"></i>
-                  <Link to="estado_cuenta">Estado de Cuenta</Link>
-                </li>
-              )}
-            </ul>
+                {deudacliente && (
+                  <li className="slidebar-categories-child">
+                    <i className="fas fa-digital-tachograph"></i>
+                    <Link to="estado_cuenta">Estado de Cuenta</Link>
+                  </li>
+                )}
+              </ul>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* CAMBIO PRECIO */}
         <div className="slidebar-categories">
