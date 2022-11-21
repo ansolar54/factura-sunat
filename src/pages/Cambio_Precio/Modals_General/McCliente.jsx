@@ -12,6 +12,8 @@ const McCliente = ({
   IsCliente,
   setIsCliente,
   setIsClientName,
+  orgVentasValue,
+  setCanalDistValue,
 }) => {
   const [IsName1, setIsName1] = useState("");
   const [IsStcd1, setIsStcd1] = useState("");
@@ -40,6 +42,7 @@ const McCliente = ({
       setTotalData();
     }
   }, [showMcCliente]);
+
   function Search(nro_pag) {
     setspinner(true);
     setresponsemcdeucli_cliente({ etClientesField: [] });
@@ -50,7 +53,9 @@ const McCliente = ({
       IsRegxpag: IsRegxpag,
       IsStcd1: IsStcd1,
       IsUser: jwt(localStorage.getItem("_token")).username,
+      IsVkorg: orgVentasValue,
     };
+    console.log(model);
     MatchCliente(model).then((result) => {
       setTotalData(result.esRegtotField);
       setresponsemcdeucli_cliente(result);
@@ -123,8 +128,10 @@ const McCliente = ({
   }
 
   function clickcelda(item) {
+    console.log(item);
     setIsCliente(item.kunnrField);
     setIsClientName(item.name1Field);
+    setCanalDistValue(item.vtwegField);
     setShowMcCliente((prev) => !prev);
   }
 

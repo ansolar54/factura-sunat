@@ -13,6 +13,7 @@ const ModalAddMaterial = ({
   dataMaterial,
   orgVentas,
   cliente,
+  canalDistValue,
 }) => {
   const [showMcMaterial, setShowMcMaterial] = useState(false);
 
@@ -263,6 +264,7 @@ const ModalAddMaterial = ({
             setMaterial={setMaterial}
             orgVentas={orgVentas}
             cliente={cliente}
+            canalDistValue={canalDistValue}
           />
           <div className="modal-wrapper modal-wrapper-sm">
             <div className="modal-header">

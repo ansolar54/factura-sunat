@@ -37,6 +37,9 @@ const GenerarSolicitud = () => {
   const [isClientName, setIsClientName] = useState("");
   const [showMcCliente, setShowMcCliente] = useState(false);
 
+  // PARA OBTENER CANAL DE DIST. DE MATCH CLIENTE
+  const [canalDistValue, setCanalDistValue] = useState("");
+
   //CARGA DE SPINNER
   const [spinner, setspinner] = useState(false);
 
@@ -207,7 +210,7 @@ const GenerarSolicitud = () => {
               // ENVIAR SOLICITUD PARA APROBACION POR CORREO
               let model_correo = {
                 cliente: IsCliente + " - " + isClientName,
-                vendedor: jwt(localStorage.getItem("_token")).vendedor,
+                vendedor: jwt(localStorage.getItem("_token")).user,
                 correos: correos,
               };
               // console.log(model_correo);
@@ -317,6 +320,7 @@ const GenerarSolicitud = () => {
           dataMaterial={dataMaterial}
           orgVentas={orgVentasValue}
           cliente={IsCliente}
+          canalDistValue={canalDistValue}
         />
         <ModalEditMaterial
           showModalEditMaterial={showModalEditMaterial}
@@ -338,6 +342,8 @@ const GenerarSolicitud = () => {
           setShowMcCliente={setShowMcCliente}
           showMcCliente={showMcCliente}
           setIsClientName={setIsClientName}
+          orgVentasValue={orgVentasValue}
+          setCanalDistValue={setCanalDistValue}
         />
 
         <div className="title-section">

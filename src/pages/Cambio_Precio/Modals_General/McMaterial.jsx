@@ -17,6 +17,7 @@ const McMaterial = ({
   setMaterial,
   orgVentas,
   cliente,
+  canalDistValue,
 }) => {
   const [IsRegxpag] = useState(15); // cantidad de datos por página
   const [CodProductoMat, setCodProductoMat] = useState("");
@@ -108,6 +109,7 @@ const McMaterial = ({
     let model = {
       IsKunnr: cliente,
       IsVkorg: orgVentas,
+      IsVtweg: canalDistValue,
       ItMatnr: [
         {
           Sign: "I",
@@ -129,8 +131,8 @@ const McMaterial = ({
         prec_act: result.etMaterialesField[0].kbetrField,
         fec_ini: result.etMaterialesField[0].databField,
         fec_fin: result.etMaterialesField[0].datbiField,
-        lim_inf: result.etMaterialesField[0].kbetrField - 1,
-        lim_sup: 999999999.99,
+        lim_inf: result.etMaterialesField[0].mxwrtField,
+        lim_sup: result.etMaterialesField[0].gkwrtField,
         margen: 0.0,
         uni_med: material.meinsField,
         cant_base: result.etMaterialesField[0].kpeinField,
@@ -267,7 +269,7 @@ const McMaterial = ({
                   <thead>
                     <tr>
                       <th>Cod. Producto</th>
-                      <th>Centro</th>
+                      {/* <th>Centro</th> */}
                       <th>Nombre de Producto</th>
                     </tr>
                   </thead>
@@ -282,9 +284,9 @@ const McMaterial = ({
                         <th style={{ textAlign: "center" }}>
                           {Number(response.matnrField)}
                         </th>
-                        <th style={{ textAlign: "center" }}>
+                        {/* <th style={{ textAlign: "center" }}>
                           {response.werksField}
-                        </th>
+                        </th> */}
                         <th style={{ textAlign: "center" }}>
                           {response.maktxField}
                         </th>

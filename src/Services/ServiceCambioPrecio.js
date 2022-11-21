@@ -22,11 +22,20 @@ export function GuardarSolicitud(req) {
   });
 }
 
-export function ListadoSolicitudes(sales_org, client, state, limit, offset) {
+export function ListadoSolicitudes(
+  id_user,
+  sales_org,
+  client,
+  state,
+  limit,
+  offset
+) {
   const base = process.env.REACT_APP_BASE_URL;
   let BaseUrl =
     base +
-    "request/all?sales_org=" +
+    "request/all?id_user=" +
+    id_user +
+    "&sales_org=" +
     sales_org +
     "&client=" +
     client +
@@ -146,7 +155,13 @@ export function ModificarStateRequest(req) {
   });
 }
 
-export function ListadoSolicitudesForAprob(id_user, state, limit, offset) {
+export function ListadoSolicitudesForAprob(
+  id_user,
+  state,
+  sales_org,
+  limit,
+  offset
+) {
   const base = process.env.REACT_APP_BASE_URL;
   let BaseUrl =
     base +
@@ -154,6 +169,8 @@ export function ListadoSolicitudesForAprob(id_user, state, limit, offset) {
     id_user +
     "&state=" +
     state +
+    "&sales_org=" +
+    sales_org +
     "&limit=" +
     limit +
     "&offset=" +
@@ -189,6 +206,28 @@ export function EnviarCorreoAprob(req) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(req),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        resolve(responseJson);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
+export function GetSolicitud(id) {
+  const base = process.env.REACT_APP_BASE_URL;
+  let BaseUrl = base + "request/get_request?id_request=" + id;
+
+  return new Promise((resolve, reject) => {
+    fetch(BaseUrl, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
     })
       .then((response) => response.json())
       .then((responseJson) => {

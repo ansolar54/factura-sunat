@@ -7,11 +7,15 @@ import "./MisSolicitudes.css";
 import {
   ListadoSolicitudes,
   ModificarStateRequest,
+  GetDetalleSolicitud,
+  EnviarCorreoAprob,
 } from "../../../Services/ServiceCambioPrecio";
 import Spinner from "../../../components/Spinner";
 import Pagination from "../../../components/Pagination";
 import ModalDetailSolicitud from "./Modals/ModalDetailSolicitud";
 import toast, { Toaster } from "react-hot-toast";
+import jwt from "jwt-decode";
+import { getMailGerents } from "../../../Services/ServiceUser";
 
 const MisSolicitudes = () => {
   // ORG VENTAS
@@ -49,6 +53,9 @@ const MisSolicitudes = () => {
   //NUMERO TOTAL DE DATOS
   const [TotalData, setTotalData] = useState();
 
+  // PARA OBTENER CANAL DE DIST. DE MATCH CLIENTE
+  const [canalDistValue, setCanalDistValue] = useState("");
+
   useEffect(() => {
     obtenerSolicitudes(1);
   }, []);
@@ -63,15 +70,20 @@ const MisSolicitudes = () => {
 
   const obtenerSolicitudes = (page) => {
     setspinner(true);
-    ListadoSolicitudes(orgVentasValue, IsCliente, state, limit, page).then(
-      (result) => {
-        // console.log(result);
-        setSolicitudes(result.data);
-        setTotalData(result.totalItems);
-        setspinner(false);
-        setvaluepagination(true);
-      }
-    );
+    ListadoSolicitudes(
+      jwt(localStorage.getItem("_token")).nameid,
+      orgVentasValue,
+      IsCliente,
+      state,
+      limit,
+      page
+    ).then((result) => {
+      // console.log(result);
+      setSolicitudes(result.data);
+      setTotalData(result.totalItems);
+      setspinner(false);
+      setvaluepagination(true);
+    });
   };
 
   const selectedFiltro = (e) => {
@@ -148,23 +160,117 @@ const MisSolicitudes = () => {
     setShowModalDetail((prev) => !prev);
   };
 
-  const anularSolicitud = (state, id) => {
+  const formatFechaForCorreo = (fecha) => {
+    let parts = fecha.split("-");
+    return parts[2] + "-" + parts[1] + "-" + parts[0];
+  };
+
+  function convertDecimal(num) {
+    // return num.toFixed(Math.max(((num+'').split(".")[1]||"").length, 2));
+    if (num == null || num == "" || num == "0") {
+      return "0.00";
+    } else {
+      if (num.toString().split(".").length == 2) {
+        // console.log( num.toString().split(".")[0].replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") + "."+num.toString().split(".")[1]);
+        return (
+          num
+            .toString()
+            .split(".")[0]
+            .replace(/\D/g, "")
+            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") +
+          "." +
+          // num.toString().split(".")[1].padStart(2, "0")
+          num.toString().split(".")[1].padEnd(2, "0")
+        );
+      } else {
+        // console.log( num.toString().split(".")[0].replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") + ".00");
+        return (
+          num
+            .toString()
+            .split(".")[0]
+            .replace(/\D/g, "")
+            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") + ".00"
+        );
+      }
+    }
+  }
+
+  const anularSolicitud = (state, item) => {
     let model = {
-      id: id,
+      id: item.id,
       state: state.toString(),
     };
-
+    setspinner(true);
     ModificarStateRequest(model).then((result) => {
       // console.log(result);
-      toast.success(result.message, {
-        position: "top-center",
-        autoClose: 1000,
-        style: {
-          backgroundColor: "#212121",
-          color: "#fff",
-        },
-      });
-      obtenerSolicitudes(offset);
+
+      if (result.indicator == 1) {
+        GetDetalleSolicitud(item.id).then((result) => {
+          if (result.indicator == 1) {
+            let detalleCorreo = []; // para llenar tabla detalle de correo de aprobacion
+            for (let i = 0; i < result.data.length; i++) {
+              const element = result.data[i];
+              // console.log(element);
+
+              // mapeamos los campos para detalle de correo
+              let detalle = {
+                producto: element.material_name,
+                moneda: element.currency,
+                precio: convertDecimal(element.suggested_price.toString()),
+                fec_ini: formatFechaForCorreo(element.start_date.split("T")[0]),
+                fec_fin: formatFechaForCorreo(element.end_date.split("T")[0]),
+              };
+
+              detalleCorreo.push(detalle);
+            }
+
+            // obteniendo correos de gerentes por org_ventas
+            let correos = [];
+            getMailGerents(item.sales_org).then((result) => {
+              if (result.data.length > 0) {
+                correos = result.data; // se pasa lista de correo de gerentes
+
+                // notificacion de correo - llamado a servicio
+                let model_email_aprob = {
+                  state: state, // para identificar aprobacion o rechazo de solicitud en backend
+                  cliente: item.client_name,
+                  aprobador: jwt(localStorage.getItem("_token")).user, // se obtiene nombre de usuario de token vendedor = aprobador
+                  correos: correos,
+                  detalle: detalleCorreo,
+                };
+                console.log("model_correo", model_email_aprob);
+                EnviarCorreoAprob(model_email_aprob).then((result) => {
+                  console.log(result);
+                  if (result.indicator == 1) {
+                    toast.success("Solicitud anulada correctamente.", {
+                      position: "top-center",
+                      autoClose: 1000,
+                      style: {
+                        backgroundColor: "#212121",
+                        color: "#fff",
+                      },
+                    });
+                    obtenerSolicitudes(offset);
+                    setspinner(false);
+                  } else {
+                    setspinner(false);
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+
+      // toast.success(result.message, {
+      //   position: "top-center",
+      //   autoClose: 1000,
+      //   style: {
+      //     backgroundColor: "#212121",
+      //     color: "#fff",
+      //   },
+      // });
+      // obtenerSolicitudes(offset);
     });
   };
 
@@ -186,6 +292,8 @@ const MisSolicitudes = () => {
           setShowMcCliente={setShowMcCliente}
           showMcCliente={showMcCliente}
           setIsClientName={setIsClientName}
+          orgVentasValue={orgVentasValue}
+          setCanalDistValue={setCanalDistValue}
         />
         <ModalDetailSolicitud
           showModalDetail={showModalDetail}
@@ -343,7 +451,7 @@ const MisSolicitudes = () => {
                                   style={{ cursor: "pointer", margin: "2px" }}
                                   title="Anular solicitud"
                                   className="fas fa-trash-alt"
-                                  onClick={() => anularSolicitud(4, item.id)}
+                                  onClick={() => anularSolicitud(4, item)}
                                 ></i>
                               </>
                             )}

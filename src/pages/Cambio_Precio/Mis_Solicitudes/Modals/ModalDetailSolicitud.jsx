@@ -34,7 +34,7 @@ const ModalDetailSolicitud = ({
       setViewInfo(false);
       GetDetalleSolicitud(idSolicitud).then((result) => {
         console.log(result);
-        setDetalle(result);
+        setDetalle(result.data);
         setViewInfo(true);
       });
     }
@@ -163,7 +163,7 @@ const ModalDetailSolicitud = ({
                           </tr>
                         </thead>
                         <tbody>
-                          {detalle.data.map((response, key) => (
+                          {detalle.map((response, key) => (
                             <tr
                               key={key}
                               // onClick={() => clickcelda(response)}

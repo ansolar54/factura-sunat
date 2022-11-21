@@ -63,7 +63,13 @@ const MisAprobaciones = () => {
 
   const obtenerSolicitudes = (page) => {
     setspinner(true);
-    ListadoSolicitudesForAprob(idUser, state, limit, page).then((result) => {
+    ListadoSolicitudesForAprob(
+      idUser,
+      state,
+      jwt(localStorage.getItem("_token")).sales_org,
+      limit,
+      page
+    ).then((result) => {
       // console.log(result);
       setSolicitudes(result.data);
       setTotalData(result.totalItems);
@@ -123,6 +129,41 @@ const MisAprobaciones = () => {
     return newDate[0] + newDate[1] + newDate[2];
   };
 
+  const formatFechaForCorreo = (fecha) => {
+    let parts = fecha.split("-");
+    return parts[2] + "-" + parts[1] + "-" + parts[0];
+  };
+
+  function convertDecimal(num) {
+    // return num.toFixed(Math.max(((num+'').split(".")[1]||"").length, 2));
+    if (num == null || num == "" || num == "0") {
+      return "0.00";
+    } else {
+      if (num.toString().split(".").length == 2) {
+        // console.log( num.toString().split(".")[0].replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") + "."+num.toString().split(".")[1]);
+        return (
+          num
+            .toString()
+            .split(".")[0]
+            .replace(/\D/g, "")
+            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") +
+          "." +
+          // num.toString().split(".")[1].padStart(2, "0")
+          num.toString().split(".")[1].padEnd(2, "0")
+        );
+      } else {
+        // console.log( num.toString().split(".")[0].replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") + ".00");
+        return (
+          num
+            .toString()
+            .split(".")[0]
+            .replace(/\D/g, "")
+            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") + ".00"
+        );
+      }
+    }
+  }
+
   const updateStateRequest = (state, item) => {
     // console.log(item);
     let model = {
@@ -146,13 +187,13 @@ const MisAprobaciones = () => {
               let matAprob = {
                 Matnr: element.material,
                 Maktx: element.material_name,
-                Kbetr: element.suggested_price,
+                Kbetr: element.actual_price, // reemplazo de suggested_price
                 Konwa: element.currency,
                 Kpein: element.base_amount,
                 Kmein: element.measure_unit,
                 Datab: formatoFechaForAprob(element.start_date), // yyyymmdd - formatear
                 Datbi: formatoFechaForAprob(element.end_date), // yyyymmdd - formatear
-                Mxwrt: element.lower_limit,
+                Mxwrt: element.suggested_price, // reeplazo de lower_limit
                 Gkwrt: element.upper_limit,
               };
               itMatAprob.push(matAprob);
@@ -160,9 +201,10 @@ const MisAprobaciones = () => {
               // mapeamos los campos para detalle de correo
               let detalle = {
                 producto: element.material_name,
-                precio: element.suggested_price.toString(),
-                fec_ini: element.start_date.split("T")[0],
-                fec_fin: element.end_date.split("T")[0],
+                moneda: element.currency,
+                precio: convertDecimal(element.suggested_price.toString()),
+                fec_ini: formatFechaForCorreo(element.start_date.split("T")[0]),
+                fec_fin: formatFechaForCorreo(element.end_date.split("T")[0]),
               };
 
               detalleCorreo.push(detalle);
@@ -189,7 +231,7 @@ const MisAprobaciones = () => {
                       let model_email_aprob = {
                         state: state, // para identificar aprobacion o rechazo de solicitud en backend
                         cliente: item.client_name,
-                        aprobador: jwt(localStorage.getItem("_token")).vendedor, // se obtiene nombre de usuario de token vendedor = aprobador
+                        aprobador: jwt(localStorage.getItem("_token")).user, // se obtiene nombre de usuario de token vendedor = aprobador
                         correos: [
                           {
                             email: result.data[0].email,
@@ -197,7 +239,7 @@ const MisAprobaciones = () => {
                         ],
                         detalle: detalleCorreo,
                       };
-                      console.log(model_email_aprob);
+                      console.log("model_correo", model_email_aprob);
                       EnviarCorreoAprob(model_email_aprob).then((result) => {
                         console.log(result);
                         if (result.indicator == 1) {
@@ -238,7 +280,7 @@ const MisAprobaciones = () => {
                   let model_email_aprob = {
                     state: state, // para identificar aprobacion o rechazo de solicitud en backend
                     cliente: item.client_name,
-                    aprobador: jwt(localStorage.getItem("_token")).vendedor, // se obtiene nombre de usuario de token vendedor = aprobador
+                    aprobador: jwt(localStorage.getItem("_token")).user, // se obtiene nombre de usuario de token vendedor = aprobador
                     correos: [
                       {
                         email: result.data[0].email,
