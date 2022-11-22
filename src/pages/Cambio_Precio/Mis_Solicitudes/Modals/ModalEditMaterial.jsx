@@ -10,6 +10,7 @@ import {
   GetDetalleSolicitud,
   GetSolicitud,
   ModificarRequestDetail,
+  UsuarioNotifi,
 } from "../../../../Services/ServiceCambioPrecio";
 import Spinner from "../../../../components/Spinner";
 import { getUser } from "../../../../Services/ServiceUser";
@@ -20,8 +21,10 @@ const ModalEditMaterial = ({
   setShowModalEditMaterial,
   dataMaterial,
   setDetalle,
+  orgVentas,
 }) => {
   // console.log("MATERIAL", dataMaterial);
+  console.log(orgVentas);
 
   const [showMcMaterial, setShowMcMaterial] = useState(false);
 
@@ -118,25 +121,36 @@ const ModalEditMaterial = ({
           GetSolicitud(dataMaterial.id_request).then((result) => {
             if (result.indicator == 1) {
               let client = result.data[0].client_name;
-              console.log(result.data[0].id_user);
-              getUser(result.data[0].id_user).then((result) => {
-                if (result.indicator == 1) {
+              // console.log(result.data[0].id_user);
+              let model_usua_notifi = {
+                IsNotif: "1",
+                IsUser: "",
+                IsVkbur: "",
+                IsVkorg: orgVentas,
+              };
+              let correos = [];
+              UsuarioNotifi(model_usua_notifi).then((result) => {
+                if (result.etListusuariosField.length > 0) {
+                  for (let i = 0; i < result.etListusuariosField.length; i++) {
+                    const element = result.etListusuariosField[i];
+                    let mails = {
+                      email: element.correoField,
+                    };
+                    correos.push(mails); // se pasa lista de correo de gerentes
+                  }
+
                   let model_email_aprob = {
                     state: 0, // para identificar aprobacion o rechazo de solicitud en backend
                     cliente: client,
                     aprobador: jwt(localStorage.getItem("_token")).user, // se obtiene nombre de usuario de token vendedor = aprobador
-                    correos: [
-                      {
-                        email: result.data[0].email,
-                      },
-                    ],
+                    correos: correos,
                     detalle: detalle_mat,
                   };
                   console.log(model_email_aprob);
                   EnviarCorreoAprob(model_email_aprob).then((result) => {
                     console.log(result);
                     if (result.indicator == 1) {
-                      toast.success("Solicitud aprobada correctamente.", {
+                      toast.success("Solicitud modificada correctamente.", {
                         position: "top-center",
                         autoClose: 1000,
                         style: {

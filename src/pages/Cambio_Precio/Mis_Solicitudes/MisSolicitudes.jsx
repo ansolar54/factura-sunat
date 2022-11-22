@@ -9,6 +9,7 @@ import {
   ModificarStateRequest,
   GetDetalleSolicitud,
   EnviarCorreoAprob,
+  UsuarioNotifi,
 } from "../../../Services/ServiceCambioPrecio";
 import Spinner from "../../../components/Spinner";
 import Pagination from "../../../components/Pagination";
@@ -25,6 +26,9 @@ const MisSolicitudes = () => {
     { Sign: "I", Option: "EQ", Low: "", High: "" },
   ]);
   const [showOrgVentas, setShowOrgVentas] = useState(false);
+
+  // ORG VENTAS FOR MODAL EDIT MATERIAL
+  const [orgVentasForModal, setOrgVentasForModal] = useState("");
 
   // CLIENTE
   const [IsCliente, setIsCliente] = useState("");
@@ -155,6 +159,8 @@ const MisSolicitudes = () => {
   };
 
   const openDetalle = (item) => {
+    // console.log(item);
+    setOrgVentasForModal(item.sales_org);
     setIdSolicitud(item.id);
     setStateSolicitud(item.state);
     setShowModalDetail((prev) => !prev);
@@ -225,10 +231,23 @@ const MisSolicitudes = () => {
             }
 
             // obteniendo correos de gerentes por org_ventas
+            let model_usua_notifi = {
+              IsNotif: "1",
+              IsUser: "",
+              IsVkbur: "",
+              IsVkorg: item.sales_org,
+            };
             let correos = [];
-            getMailGerents(item.sales_org).then((result) => {
-              if (result.data.length > 0) {
-                correos = result.data; // se pasa lista de correo de gerentes
+            UsuarioNotifi(model_usua_notifi).then((result) => {
+              if (result.etListusuariosField.length > 0) {
+                for (let i = 0; i < result.etListusuariosField.length; i++) {
+                  const element = result.etListusuariosField[i];
+                  let mails = {
+                    email: element.correoField,
+                  };
+                  correos.push(mails); // se pasa lista de correo de gerentes
+                }
+                // correos = result.data; // se pasa lista de correo de gerentes
 
                 // notificacion de correo - llamado a servicio
                 let model_email_aprob = {
@@ -301,6 +320,7 @@ const MisSolicitudes = () => {
           idSolicitud={idSolicitud}
           extraeFecha={extraeFecha}
           stateSolicitud={stateSolicitud}
+          orgVentas={orgVentasForModal}
         />
 
         <div className="title-section">

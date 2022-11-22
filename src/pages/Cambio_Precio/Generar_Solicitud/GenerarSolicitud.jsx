@@ -12,6 +12,7 @@ import jwt from "jwt-decode";
 import {
   EnviarCorreo,
   GuardarSolicitud,
+  UsuarioNotifi,
 } from "../../../Services/ServiceCambioPrecio";
 import { getMailGerents } from "../../../Services/ServiceUser";
 import Spinner from "../../../components/Spinner";
@@ -39,6 +40,8 @@ const GenerarSolicitud = () => {
 
   // PARA OBTENER CANAL DE DIST. DE MATCH CLIENTE
   const [canalDistValue, setCanalDistValue] = useState("");
+  // OBTENER OFICINA DE VENTAS PARA REGISTRAR EN TB_REQUEST
+  const [ofiVentas, setOfiVentas] = useState("");
 
   //CARGA DE SPINNER
   const [spinner, setspinner] = useState(false);
@@ -191,16 +194,34 @@ const GenerarSolicitud = () => {
         };
         data_detail.push(model_detail);
       }
+
+      // console.log(data_detail);
+
+      let model_usua_notifi = {
+        IsNotif: "1",
+        IsUser: "",
+        IsVkbur: "",
+        IsVkorg: orgVentasValue,
+      };
       let correos = [];
-      getMailGerents(orgVentasValue).then((result) => {
-        console.log(result);
-        if (result.data.length > 0) {
-          correos = result.data; // se pasa lista de correo de gerentes
+      UsuarioNotifi(model_usua_notifi).then((result) => {
+        console.log("SAP", result.etListusuariosField.length);
+        if (result.etListusuariosField.length > 0) {
+          for (let i = 0; i < result.etListusuariosField.length; i++) {
+            const element = result.etListusuariosField[i];
+            let mails = {
+              email: element.correoField,
+            };
+            correos.push(mails); // se pasa lista de correo de gerentes
+          }
+
+          // correos = result.data; // se pasa lista de correo de gerentes
           let model = {
             sales_org: orgVentasValue,
             client: IsCliente,
             client_name: isClientName,
             id_user: Number(jwt(localStorage.getItem("_token")).nameid),
+            sales_ofi: ofiVentas,
             detail: data_detail,
           };
           console.log(model);
@@ -209,7 +230,7 @@ const GenerarSolicitud = () => {
             if (result.indicator == 1) {
               // ENVIAR SOLICITUD PARA APROBACION POR CORREO
               let model_correo = {
-                cliente: IsCliente + " - " + isClientName,
+                cliente: isClientName,
                 vendedor: jwt(localStorage.getItem("_token")).user,
                 correos: correos,
               };
@@ -344,6 +365,7 @@ const GenerarSolicitud = () => {
           setIsClientName={setIsClientName}
           orgVentasValue={orgVentasValue}
           setCanalDistValue={setCanalDistValue}
+          setOfiVentas={setOfiVentas}
         />
 
         <div className="title-section">

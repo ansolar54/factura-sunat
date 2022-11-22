@@ -10,6 +10,7 @@ const ModalDetailSolicitud = ({
   idSolicitud,
   extraeFecha,
   stateSolicitud,
+  orgVentas,
 }) => {
   const modalRef = useRef();
   const closeModal = (e) => {
@@ -110,6 +111,7 @@ const ModalDetailSolicitud = ({
             setShowModalEditMaterial={setShowModalEditMaterial}
             dataMaterial={material}
             setDetalle={setDetalle}
+            orgVentas={orgVentas}
           />
           <div className="modal-wrapper modal-wrapper-bg">
             {/* <div className="modal-header">

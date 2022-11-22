@@ -14,6 +14,7 @@ const McCliente = ({
   setIsClientName,
   orgVentasValue,
   setCanalDistValue,
+  setOfiVentas,
 }) => {
   const [IsName1, setIsName1] = useState("");
   const [IsStcd1, setIsStcd1] = useState("");
@@ -132,6 +133,7 @@ const McCliente = ({
     setIsCliente(item.kunnrField);
     setIsClientName(item.name1Field);
     setCanalDistValue(item.vtwegField);
+    setOfiVentas(item.vkburField);
     setShowMcCliente((prev) => !prev);
   }
 

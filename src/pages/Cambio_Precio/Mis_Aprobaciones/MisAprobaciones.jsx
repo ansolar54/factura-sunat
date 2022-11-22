@@ -9,6 +9,7 @@ import {
   ListadoSolicitudes,
   ListadoSolicitudesForAprob,
   ModificarStateRequest,
+  UsuarioNotifi,
 } from "../../../Services/ServiceCambioPrecio";
 import toast, { Toaster } from "react-hot-toast";
 import {
@@ -228,33 +229,60 @@ const MisAprobaciones = () => {
                     if (result.indicator == 1) {
                       // email_solicitante = result.data[0].email;
                       // notificacion de correo - llamado a servicio
-                      let model_email_aprob = {
-                        state: state, // para identificar aprobacion o rechazo de solicitud en backend
-                        cliente: item.client_name,
-                        aprobador: jwt(localStorage.getItem("_token")).user, // se obtiene nombre de usuario de token vendedor = aprobador
-                        correos: [
-                          {
-                            email: result.data[0].email,
-                          },
-                        ],
-                        detalle: detalleCorreo,
+                      let model_usua_notifi = {
+                        IsNotif: "2",
+                        IsUser: result.data[0].username,
+                        IsVkbur: item.sales_ofi,
+                        IsVkorg: "",
                       };
-                      console.log("model_correo", model_email_aprob);
-                      EnviarCorreoAprob(model_email_aprob).then((result) => {
-                        console.log(result);
-                        if (result.indicator == 1) {
-                          toast.success("Solicitud aprobada correctamente.", {
-                            position: "top-center",
-                            autoClose: 1000,
-                            style: {
-                              backgroundColor: "#212121",
-                              color: "#fff",
-                            },
-                          });
-                          obtenerSolicitudes(offset);
-                          setspinner(false);
-                        } else {
-                          setspinner(false);
+                      let correos = [];
+                      console.log(model_usua_notifi);
+                      UsuarioNotifi(model_usua_notifi).then((result) => {
+                        if (result.etListusuariosField.length > 0) {
+                          for (
+                            let i = 0;
+                            i < result.etListusuariosField.length;
+                            i++
+                          ) {
+                            const element = result.etListusuariosField[i];
+                            if (element.correoField !== "") {
+                              let mails = {
+                                email: element.correoField,
+                              };
+                              correos.push(mails); // se pasa lista de correo de gerentes
+                            }
+                          }
+
+                          let model_email_aprob = {
+                            state: state, // para identificar aprobacion o rechazo de solicitud en backend
+                            cliente: item.client_name,
+                            aprobador: jwt(localStorage.getItem("_token")).user, // se obtiene nombre de usuario de token vendedor = aprobador
+                            correos: correos,
+                            detalle: detalleCorreo,
+                          };
+                          console.log("model_correo", model_email_aprob);
+                          EnviarCorreoAprob(model_email_aprob).then(
+                            (result) => {
+                              console.log(result);
+                              if (result.indicator == 1) {
+                                toast.success(
+                                  "Solicitud aprobada correctamente.",
+                                  {
+                                    position: "top-center",
+                                    autoClose: 1000,
+                                    style: {
+                                      backgroundColor: "#212121",
+                                      color: "#fff",
+                                    },
+                                  }
+                                );
+                                obtenerSolicitudes(offset);
+                                setspinner(false);
+                              } else {
+                                setspinner(false);
+                              }
+                            }
+                          );
                         }
                       });
                     }
@@ -277,33 +305,56 @@ const MisAprobaciones = () => {
                 if (result.indicator == 1) {
                   // email_solicitante = result.data[0].email;
                   // notificacion de correo - llamado a servicio
-                  let model_email_aprob = {
-                    state: state, // para identificar aprobacion o rechazo de solicitud en backend
-                    cliente: item.client_name,
-                    aprobador: jwt(localStorage.getItem("_token")).user, // se obtiene nombre de usuario de token vendedor = aprobador
-                    correos: [
-                      {
-                        email: result.data[0].email,
-                      },
-                    ],
-                    detalle: detalleCorreo,
+
+                  let model_usua_notifi = {
+                    IsNotif: "2",
+                    IsUser: result.data[0].username,
+                    IsVkbur: item.sales_ofi,
+                    IsVkorg: "",
                   };
-                  console.log(model_email_aprob);
-                  EnviarCorreoAprob(model_email_aprob).then((result) => {
-                    console.log(result);
-                    if (result.indicator == 1) {
-                      toast.success("Solicitud rechazada correctamente.", {
-                        position: "top-center",
-                        autoClose: 1000,
-                        style: {
-                          backgroundColor: "#212121",
-                          color: "#fff",
-                        },
+                  let correos = [];
+                  console.log(model_usua_notifi);
+                  UsuarioNotifi(model_usua_notifi).then((result) => {
+                    if (result.etListusuariosField.length > 0) {
+                      for (
+                        let i = 0;
+                        i < result.etListusuariosField.length;
+                        i++
+                      ) {
+                        const element = result.etListusuariosField[i];
+                        if (element.correoField !== "") {
+                          let mails = {
+                            email: element.correoField,
+                          };
+                          correos.push(mails); // se pasa lista de correo de gerentes
+                        }
+                      }
+
+                      let model_email_aprob = {
+                        state: state, // para identificar aprobacion o rechazo de solicitud en backend
+                        cliente: item.client_name,
+                        aprobador: jwt(localStorage.getItem("_token")).user, // se obtiene nombre de usuario de token vendedor = aprobador
+                        correos: correos,
+                        detalle: detalleCorreo,
+                      };
+                      console.log(model_email_aprob);
+                      EnviarCorreoAprob(model_email_aprob).then((result) => {
+                        console.log(result);
+                        if (result.indicator == 1) {
+                          toast.success("Solicitud rechazada correctamente.", {
+                            position: "top-center",
+                            autoClose: 1000,
+                            style: {
+                              backgroundColor: "#212121",
+                              color: "#fff",
+                            },
+                          });
+                          setspinner(false);
+                          obtenerSolicitudes(offset);
+                        } else {
+                          setspinner(false);
+                        }
                       });
-                      setspinner(false);
-                      obtenerSolicitudes(offset);
-                    } else {
-                      setspinner(false);
                     }
                   });
                 }
