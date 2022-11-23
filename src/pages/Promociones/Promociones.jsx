@@ -90,36 +90,20 @@ const Promociones = () => {
   const [indicadorruta, setindicadorruta] = useState(false);
 
   useEffect(() => {
-    if (indicadorruta == false) {
-      setspinnerroute(true);
-      ValidarRuta("05").then((result) => {
-        if (result.reporte == 1) {
-          setspinnerroute(false);
-          setaccesoruta(true);
-          setindicadorruta(true);
-          setTimeout(() => {
-            // var n =  new Date();
-            // //Año
-            // var y = n.getFullYear();
-            // //Mes
-            // var m = n.getMonth() + 1;
-            // //Día
-            // var d = n.getDate();
-            // console.log(d + "/" + m + "/" + y)
-            // setFiltroInicial({
-            //   ...filtroInicial,
-            //   ["valido_el"]: [{ Sign: "I", Option: "EQ", Low: d + "/" + m + "/" + y, High: "" }],
-            // });
-            // console.log(filtroInicial)
-            // document.getElementById('valido_el').value = d + "/" + m + "/" + y;
-          }, 1000);
-        } else {
-          setspinnerroute(false);
-          setaccesoruta(false);
-          setindicadorruta(true);
-        }
-      });
-    }
+    // if (indicadorruta == false) {
+    //   setspinnerroute(true);
+    //   ValidarRuta("05").then((result) => {
+    //     if (result.reporte == 1) {
+    //       setspinnerroute(false);
+    //       setaccesoruta(true);
+    //       setindicadorruta(true);
+    //     } else {
+    //       setspinnerroute(false);
+    //       setaccesoruta(false);
+    //       setindicadorruta(true);
+    //     }
+    //   });
+    // }
     //REGISTRO DE AUDITORÍA
     RegistrarAuditoria({
       id_user: Number(jwt(localStorage.getItem("_token")).nameid),
@@ -162,7 +146,7 @@ const Promociones = () => {
         IsParametro: "VKORG",
         PVkbur: "",
         PVkorg: filtroInicial.org_ventas[0].Low,
-        IsUser:jwt(localStorage.getItem("_token")).username
+        IsUser: jwt(localStorage.getItem("_token")).username,
       };
       MatchcodePromociones(model_vkorg).then((result) => {
         if (result.etOrgVentasField.length == 1) {
@@ -173,7 +157,6 @@ const Promociones = () => {
         }
       });
     } else {
-      
       document.getElementById("lblorgventas").style.display = "none"; //@JR
       setDescFiltroInicial({
         ...descFiltroInicial,
@@ -186,7 +169,7 @@ const Promociones = () => {
         IsParametro: "VKBUR",
         PVkbur: filtroInicial.ofi_ventas[0].Low,
         PVkorg: "",
-        IsUser:jwt(localStorage.getItem("_token")).username
+        IsUser: jwt(localStorage.getItem("_token")).username,
       };
       MatchcodePromociones(model_vkbur).then((result) => {
         if (result.etOfiVentasField.length == 1) {
@@ -196,7 +179,7 @@ const Promociones = () => {
           });
         }
       });
-    }else{
+    } else {
       setDescFiltroInicial({
         ...descFiltroInicial,
         ofi_ventas: "",
@@ -232,7 +215,6 @@ const Promociones = () => {
       setvaluepagination(true);
       setTotalData(result.esRegtotField.trim());
     });
-    
   }
 
   function Clear() {
@@ -882,7 +864,7 @@ const Promociones = () => {
       IsParametro: "VKORG",
       PVkbur: "",
       PVkorg: filtroInicial.org_ventas[0].Low,
-      IsUser:jwt(localStorage.getItem("_token")).username
+      IsUser: jwt(localStorage.getItem("_token")).username,
     };
     if (keycode == "13") {
       document.getElementById("lblorgventas").style.display = "block"; //@JR
@@ -905,7 +887,7 @@ const Promociones = () => {
       IsParametro: "VKBUR",
       PVkbur: filtroInicial.ofi_ventas[0].Low,
       PVkorg: "",
-      IsUser:jwt(localStorage.getItem("_token")).username
+      IsUser: jwt(localStorage.getItem("_token")).username,
     };
     if (keycode == "13") {
       MatchcodePromociones(model).then((result) => {
@@ -926,17 +908,17 @@ const Promociones = () => {
         <Spinner />
       ) : (
         <React.Fragment>
-          {accesoruta ? (
-            <div className="container-view">
-              <Matchcode_Org_Ventas
-                showOrgVentas={showOrgVentas}
-                setShowOrgVentas={setShowOrgVentas}
-                setFiltroInicial={setFiltroInicial}
-                filtroInicial={filtroInicial}
-                setDescFiltroInicial={setDescFiltroInicial}
-                descFiltroInicial={descFiltroInicial}
-              />
-              {/* <Matchcode_Lista_Precios
+          {/* {accesoruta ? ( */}
+          <div className="container-view">
+            <Matchcode_Org_Ventas
+              showOrgVentas={showOrgVentas}
+              setShowOrgVentas={setShowOrgVentas}
+              setFiltroInicial={setFiltroInicial}
+              filtroInicial={filtroInicial}
+              setDescFiltroInicial={setDescFiltroInicial}
+              descFiltroInicial={descFiltroInicial}
+            />
+            {/* <Matchcode_Lista_Precios
                 showListaPrecios={showListaPrecios}
                 setShowListaPrecios={setShowListaPrecios}
                 setFiltroInicial={setFiltroInicial}
@@ -944,82 +926,90 @@ const Promociones = () => {
                 setDescFiltroInicial={setDescFiltroInicial}
                 descFiltroInicial={descFiltroInicial}
               /> */}
-              <Matchcode_Ofi_Ventas
-                showOfiVentas={showOfiVentas}
-                setShowOfiVentas={setShowOfiVentas}
-                setFiltroInicial={setFiltroInicial}
-                filtroInicial={filtroInicial}
-                setDescFiltroInicial={setDescFiltroInicial}
-                descFiltroInicial={descFiltroInicial}
-              />
+            <Matchcode_Ofi_Ventas
+              showOfiVentas={showOfiVentas}
+              setShowOfiVentas={setShowOfiVentas}
+              setFiltroInicial={setFiltroInicial}
+              filtroInicial={filtroInicial}
+              setDescFiltroInicial={setDescFiltroInicial}
+              descFiltroInicial={descFiltroInicial}
+            />
 
-              <div className="title-section">
-                <div>
-                  <label> Reportes / Promociones </label>
-                  <label> Tipo cambio : <label style={{color: '#03BF68'}}>{localStorage.getItem("_tipoCambio")}</label> </label>
-                </div>
-                <hr />
+            <div className="title-section">
+              <div>
+                <label> Reportes / Promociones </label>
+                <label>
+                  {" "}
+                  Tipo cambio :{" "}
+                  <label style={{ color: "#03BF68" }}>
+                    {localStorage.getItem("_tipoCambio")}
+                  </label>{" "}
+                </label>
               </div>
-              <section>
-                <div style={{ margin: "10px" }} className="row">
-                  <div className="col-sm-2 d-flex align-items-center">
-                    <label>Organización de ventas:</label>
-                  </div>
-                  <div className="col-sm-2">
-                    <InputFormKeyUp
-                      attribute={{
-                        name: "org_ventas",
-                        type: "text",
-                        value: filtroInicial.org_ventas[0].Low,
-                        disabled: false,
-                        checked: false,
-                        matchcode: true,
-                        maxlength: 10,
-                      }}
-                      handleChange={handleChange}
-                      onClick={() => mc_org_ventas()}
-                      onKeyUp={(e) => onKeyUpOrgVentas(e)}
-                    />
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
+              <hr />
+            </div>
+            <section>
+              <div style={{ margin: "10px" }} className="row">
+                <div className="col-sm-2 d-flex align-items-center">
+                  <label>Organización de ventas:</label>
+                </div>
+                <div className="col-sm-2">
+                  <InputFormKeyUp
+                    attribute={{
+                      name: "org_ventas",
+                      type: "text",
+                      value: filtroInicial.org_ventas[0].Low,
+                      disabled: false,
+                      checked: false,
+                      matchcode: true,
+                      maxlength: 10,
                     }}
-                    className="col-sm-2"
-                  >
-                    <label id="lblorgventas">{descFiltroInicial.org_ventas}</label>
-                    {/* <label>{nameOrgVentas}</label> */}
-                  </div>
-                  <div className="col-sm-2 d-flex align-items-center">
-                    <label>Canal distribuidor:</label>
-                  </div>
-                  <div className="col-sm-2">
-                    <InputForm
-                      attribute={{
-                        name: "canal_distri",
-                        type: "text",
-                        value: 22,
-                        disabled: true,
-                        checked: false,
-                        matchcode: false,
-                        maxlength: 10,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
+                    handleChange={handleChange}
+                    onClick={() => mc_org_ventas()}
+                    onKeyUp={(e) => onKeyUpOrgVentas(e)}
+                  />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                  className="col-sm-2"
+                >
+                  <label id="lblorgventas">
+                    {descFiltroInicial.org_ventas}
+                  </label>
+                  {/* <label>{nameOrgVentas}</label> */}
+                </div>
+                <div className="col-sm-2 d-flex align-items-center">
+                  <label>Canal distribuidor:</label>
+                </div>
+                <div className="col-sm-2">
+                  <InputForm
+                    attribute={{
+                      name: "canal_distri",
+                      type: "text",
+                      value: 22,
+                      disabled: true,
+                      checked: false,
+                      matchcode: false,
+                      maxlength: 10,
                     }}
-                    className="col-sm-2"
-                  >
-                    <label>DISTRIBUIDOR</label>
-                  </div>
-                  {/* <div className="col-sm-2 d-flex align-items-center">
+                    handleChange={handleChange}
+                  />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                  className="col-sm-2"
+                >
+                  <label>DISTRIBUIDOR</label>
+                </div>
+                {/* <div className="col-sm-2 d-flex align-items-center">
                     <label>Lista de precios:</label>
                   </div>
                   <div className="col-sm-2">
@@ -1048,580 +1038,574 @@ const Promociones = () => {
                     <label>{descFiltroInicial.lista_precios}</label>
                   </div> */}
 
-                  <div className="col-sm-2 d-flex align-items-center">
-                    <label>Válido el:</label>
-                  </div>
-                  <div className="col-sm-2">
-                    <InputForm
-                      attribute={{
-                        name: "valido_el",
-                        type: "date",
-                        id: "valido_el",
-                        value: filtroInicial.valido_el[0].Low,
-                        disabled: false,
-                        checked: false,
-                        matchcode: false,
-                        maxlength: 10,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                    }}
-                    className="col-sm-2"
-                  >
-                    <label></label>
-                  </div>
-
-                  <div className="col-sm-2 d-flex align-items-center">
-                    <label>Oficina de ventas:</label>
-                  </div>
-                  <div className="col-sm-2">
-                    <InputFormKeyUp
-                      attribute={{
-                        name: "ofi_ventas",
-                        type: "text",
-                        value: filtroInicial.ofi_ventas[0].Low,
-                        disabled: false,
-                        checked: false,
-                        matchcode: true,
-                        maxlength: 10,
-                      }}
-                      handleChange={handleChange}
-                      onClick={() => mc_ofi_ventas()}
-                      onKeyUp={(e) => onKeyUpOfiVentas(e)}
-                    />
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                    }}
-                    className="col-sm-2"
-                  >
-                    <label>{descFiltroInicial.ofi_ventas}</label>
-                    {/* <label>{nameOfiVentas}</label> */}
-                  </div>
+                <div className="col-sm-2 d-flex align-items-center">
+                  <label>Válido el:</label>
                 </div>
-              </section>
-              <section>
-                <div className="col-sm-12 col-md-6 p-1">
-                  <BtnSearch
-                    attribute={{ name: "Buscar", classNamebtn: "btn_search" }}
-                    onClick={() => Search(1, "", "")}
+                <div className="col-sm-2">
+                  <InputForm
+                    attribute={{
+                      name: "valido_el",
+                      type: "date",
+                      id: "valido_el",
+                      value: filtroInicial.valido_el[0].Low,
+                      disabled: false,
+                      checked: false,
+                      matchcode: false,
+                      maxlength: 10,
+                    }}
+                    handleChange={handleChange}
                   />
                 </div>
-                <div className="col-sm-12 col-md-6 p-1">
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                  className="col-sm-2"
+                >
+                  <label></label>
+                </div>
+
+                <div className="col-sm-2 d-flex align-items-center">
+                  <label>Oficina de ventas:</label>
+                </div>
+                <div className="col-sm-2">
+                  <InputFormKeyUp
+                    attribute={{
+                      name: "ofi_ventas",
+                      type: "text",
+                      value: filtroInicial.ofi_ventas[0].Low,
+                      disabled: false,
+                      checked: false,
+                      matchcode: true,
+                      maxlength: 10,
+                    }}
+                    handleChange={handleChange}
+                    onClick={() => mc_ofi_ventas()}
+                    onKeyUp={(e) => onKeyUpOfiVentas(e)}
+                  />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                  className="col-sm-2"
+                >
+                  <label>{descFiltroInicial.ofi_ventas}</label>
+                  {/* <label>{nameOfiVentas}</label> */}
+                </div>
+              </div>
+            </section>
+            <section>
+              <div className="col-sm-12 col-md-6 p-1">
+                <BtnSearch
+                  attribute={{ name: "Buscar", classNamebtn: "btn_search" }}
+                  onClick={() => Search(1, "", "")}
+                />
+              </div>
+              <div className="col-sm-12 col-md-6 p-1">
+                <BtnSearch
+                  attribute={{
+                    name: "Limpiar Campos",
+                    classNamebtn: "btn_search",
+                  }}
+                  onClick={() => Clear()}
+                />
+              </div>
+              {resultado_consulta_promociones.length ? (
+                <div className="col-sm-12 col-md-12 m-1">
                   <BtnSearch
                     attribute={{
-                      name: "Limpiar Campos",
+                      name: text_btn_filtro,
                       classNamebtn: "btn_search",
                     }}
-                    onClick={() => Clear()}
+                    onClick={() => ModalFiltro()}
                   />
                 </div>
-                {resultado_consulta_promociones.length ? (
-                  <div className="col-sm-12 col-md-12 m-1">
-                    <BtnSearch
-                      attribute={{
-                        name: text_btn_filtro,
-                        classNamebtn: "btn_search",
-                      }}
-                      onClick={() => ModalFiltro()}
-                    />
-                  </div>
-                ) : null}
-              </section>
-              <section>
-                <div className="container-table">
-                  <div className="container-table-sm">
-                    <table className="content-table">
-                      <thead>
+              ) : null}
+            </section>
+            <section>
+              <div className="container-table">
+                <div className="container-table-sm">
+                  <table className="content-table">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>
+                          Org. Ventas |{" "}
+                          {col_8 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(8)}
+                            ></i>
+                          ) : null}
+                          {col_8 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(8)}
+                            ></i>
+                          ) : null}
+                          {col_8 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(8)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          Material |{" "}
+                          {col_1 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(1)}
+                            ></i>
+                          ) : null}
+                          {col_1 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(1)}
+                            ></i>
+                          ) : null}
+                          {col_1 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(1)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th style={{ textAlign: "left" }}>
+                          Denominación |{" "}
+                          {col_2 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(2)}
+                            ></i>
+                          ) : null}
+                          {col_2 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(2)}
+                            ></i>
+                          ) : null}
+                          {col_2 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(2)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          Ctd.mín. |{" "}
+                          {col_3 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(3)}
+                            ></i>
+                          ) : null}
+                          {col_3 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(3)}
+                            ></i>
+                          ) : null}
+                          {col_3 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(3)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          De |{" "}
+                          {col_4 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(4)}
+                            ></i>
+                          ) : null}
+                          {col_4 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(4)}
+                            ></i>
+                          ) : null}
+                          {col_4 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(4)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          UM Be |{" "}
+                          {col_5 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(5)}
+                            ></i>
+                          ) : null}
+                          {col_5 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(5)}
+                            ></i>
+                          ) : null}
+                          {col_5 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(5)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          Son bonif.es |{" "}
+                          {col_6 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(6)}
+                            ></i>
+                          ) : null}
+                          {col_6 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(6)}
+                            ></i>
+                          ) : null}
+                          {col_6 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(6)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          UM adic. |{" "}
+                          {col_7 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(7)}
+                            ></i>
+                          ) : null}
+                          {col_7 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(7)}
+                            ></i>
+                          ) : null}
+                          {col_7 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(7)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          MatAdBonEsp |{" "}
+                          {col_9 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(9)}
+                            ></i>
+                          ) : null}
+                          {col_9 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(9)}
+                            ></i>
+                          ) : null}
+                          {col_9 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(9)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th style={{ textAlign: "left" }}>
+                          Texto breve material |{" "}
+                          {col_10 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(10)}
+                            ></i>
+                          ) : null}
+                          {col_10 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(10)}
+                            ></i>
+                          ) : null}
+                          {col_10 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(10)}
+                            ></i>
+                          ) : null}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {mostrar_filtro_fila == true ? (
                         <tr>
-                          <th></th>
                           <th>
-                            Org. Ventas |{" "}
-                            {col_8 === 0 ? (
-                              <i
-                                className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(8)}
-                              ></i>
-                            ) : null}
-                            {col_8 === 1 ? (
-                              <i
-                                className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(8)}
-                              ></i>
-                            ) : null}
-                            {col_8 === 2 ? (
-                              <i
-                                className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(8)}
-                              ></i>
-                            ) : null}
+                            <button
+                              className="btn_search_filter"
+                              onClick={() => buscar_filtro_icono_btn()}
+                            >
+                              <i className="fas fa-filter"></i>
+                            </button>
                           </th>
                           <th>
-                            Material |{" "}
-                            {col_1 === 0 ? (
-                              <i
-                                className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(1)}
-                              ></i>
-                            ) : null}
-                            {col_1 === 1 ? (
-                              <i
-                                className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(1)}
-                              ></i>
-                            ) : null}
-                            {col_1 === 2 ? (
-                              <i
-                                className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(1)}
-                              ></i>
-                            ) : null}
-                          </th>
-                          <th style={{ textAlign: "left" }}>
-                            Denominación |{" "}
-                            {col_2 === 0 ? (
-                              <i
-                                className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(2)}
-                              ></i>
-                            ) : null}
-                            {col_2 === 1 ? (
-                              <i
-                                className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(2)}
-                              ></i>
-                            ) : null}
-                            {col_2 === 2 ? (
-                              <i
-                                className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(2)}
-                              ></i>
-                            ) : null}
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_vkorgField"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
                           </th>
                           <th>
-                            Ctd.mín. |{" "}
-                            {col_3 === 0 ? (
-                              <i
-                                className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(3)}
-                              ></i>
-                            ) : null}
-                            {col_3 === 1 ? (
-                              <i
-                                className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(3)}
-                              ></i>
-                            ) : null}
-                            {col_3 === 2 ? (
-                              <i
-                                className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(3)}
-                              ></i>
-                            ) : null}
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_matnrField"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
                           </th>
                           <th>
-                            De |{" "}
-                            {col_4 === 0 ? (
-                              <i
-                                className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(4)}
-                              ></i>
-                            ) : null}
-                            {col_4 === 1 ? (
-                              <i
-                                className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(4)}
-                              ></i>
-                            ) : null}
-                            {col_4 === 2 ? (
-                              <i
-                                className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(4)}
-                              ></i>
-                            ) : null}
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_maktxField"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
                           </th>
                           <th>
-                            UM Be |{" "}
-                            {col_5 === 0 ? (
-                              <i
-                                className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(5)}
-                              ></i>
-                            ) : null}
-                            {col_5 === 1 ? (
-                              <i
-                                className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(5)}
-                              ></i>
-                            ) : null}
-                            {col_5 === 2 ? (
-                              <i
-                                className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(5)}
-                              ></i>
-                            ) : null}
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_knrmmField"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
                           </th>
                           <th>
-                            Son bonif.es |{" "}
-                            {col_6 === 0 ? (
-                              <i
-                                className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(6)}
-                              ></i>
-                            ) : null}
-                            {col_6 === 1 ? (
-                              <i
-                                className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(6)}
-                              ></i>
-                            ) : null}
-                            {col_6 === 2 ? (
-                              <i
-                                className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(6)}
-                              ></i>
-                            ) : null}
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_knrnmField"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
                           </th>
                           <th>
-                            UM adic. |{" "}
-                            {col_7 === 0 ? (
-                              <i
-                                className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(7)}
-                              ></i>
-                            ) : null}
-                            {col_7 === 1 ? (
-                              <i
-                                className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(7)}
-                              ></i>
-                            ) : null}
-                            {col_7 === 2 ? (
-                              <i
-                                className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(7)}
-                              ></i>
-                            ) : null}
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_knrmeField"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
                           </th>
                           <th>
-                            MatAdBonEsp |{" "}
-                            {col_9 === 0 ? (
-                              <i
-                                className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(9)}
-                              ></i>
-                            ) : null}
-                            {col_9 === 1 ? (
-                              <i
-                                className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(9)}
-                              ></i>
-                            ) : null}
-                            {col_9 === 2 ? (
-                              <i
-                                className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(9)}
-                              ></i>
-                            ) : null}
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_knrzmField"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
                           </th>
-                          <th style={{ textAlign: "left" }}>
-                            Texto breve material |{" "}
-                            {col_10 === 0 ? (
-                              <i
-                                className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(10)}
-                              ></i>
-                            ) : null}
-                            {col_10 === 1 ? (
-                              <i
-                                className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(10)}
-                              ></i>
-                            ) : null}
-                            {col_10 === 2 ? (
-                              <i
-                                className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(10)}
-                              ></i>
-                            ) : null}
+                          <th>
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_knrezField"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_knrmatField"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_nrmaktxtField"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
                           </th>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {mostrar_filtro_fila == true ? (
-                          <tr>
-                            <th>
-                              <button
-                                className="btn_search_filter"
-                                onClick={() => buscar_filtro_icono_btn()}
-                              >
-                                <i className="fas fa-filter"></i>
-                              </button>
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_vkorgField"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_matnrField"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_maktxField"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_knrmmField"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_knrnmField"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_knrmeField"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_knrzmField"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_knrezField"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_knrmatField"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_nrmaktxtField"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                          </tr>
-                        ) : null}
+                      ) : null}
 
-                        {resultado_consulta_promociones.length > 0
-                          ? resultado_consulta_promociones.map(
-                              (response, key) => {
-                                return (
-                                  <tr key={key}>
-                                    <th style={{ textAlign: "center" }}></th>
-                                    <th style={{ textAlign: "center" }}>
-                                      {response.vkorgField}
-                                    </th>
-                                    <th style={{ textAlign: "center" }}>
-                                      {response.matnrField.replace(
-                                        /^(0+)/g,
-                                        ""
-                                      )}
-                                    </th>
-                                    <th style={{ textAlign: "left" }}>
-                                      {response.maktxField}
-                                    </th>
-                                    <th style={{ textAlign: "center" }}>
-                                      {response.knrmmField}
-                                    </th>
-                                    <th style={{ textAlign: "center" }}>
-                                      {response.knrnmField}
-                                    </th>
-                                    <th style={{ textAlign: "center" }}>
-                                      {response.knrmeField}
-                                    </th>
-                                    <th style={{ textAlign: "center" }}>
-                                      {response.knrzmField}
-                                    </th>
-                                    <th style={{ textAlign: "center" }}>
-                                      {response.knrezField}
-                                    </th>
-                                    <th style={{ textAlign: "center" }}>
-                                      {response.knrmatField.replace(
-                                        /^(0+)/g,
-                                        ""
-                                      )}
-                                    </th>
-                                    <th style={{ textAlign: "left" }}>
-                                      {response.nrmaktxtField}
-                                    </th>
-                                  </tr>
-                                );
-                              }
-                            )
-                          : null}
-                      </tbody>
-                    </table>
-                  </div>
-                  {resultado_consulta_promociones == 0 && spinner == false ? (
-                    <div
-                      style={{
-                        margin: "10px",
-                        textAlign: "center",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      No se encontraron resultados.
-                    </div>
-                  ) : null}
-                  {spinner && <Spinner />}
+                      {resultado_consulta_promociones.length > 0
+                        ? resultado_consulta_promociones.map(
+                            (response, key) => {
+                              return (
+                                <tr key={key}>
+                                  <th style={{ textAlign: "center" }}></th>
+                                  <th style={{ textAlign: "center" }}>
+                                    {response.vkorgField}
+                                  </th>
+                                  <th style={{ textAlign: "center" }}>
+                                    {response.matnrField.replace(/^(0+)/g, "")}
+                                  </th>
+                                  <th style={{ textAlign: "left" }}>
+                                    {response.maktxField}
+                                  </th>
+                                  <th style={{ textAlign: "center" }}>
+                                    {response.knrmmField}
+                                  </th>
+                                  <th style={{ textAlign: "center" }}>
+                                    {response.knrnmField}
+                                  </th>
+                                  <th style={{ textAlign: "center" }}>
+                                    {response.knrmeField}
+                                  </th>
+                                  <th style={{ textAlign: "center" }}>
+                                    {response.knrzmField}
+                                  </th>
+                                  <th style={{ textAlign: "center" }}>
+                                    {response.knrezField}
+                                  </th>
+                                  <th style={{ textAlign: "center" }}>
+                                    {response.knrmatField.replace(/^(0+)/g, "")}
+                                  </th>
+                                  <th style={{ textAlign: "left" }}>
+                                    {response.nrmaktxtField}
+                                  </th>
+                                </tr>
+                              );
+                            }
+                          )
+                        : null}
+                    </tbody>
+                  </table>
                 </div>
-              </section>
-              <div>
-                {valuepagination && (
-                  <Pagination
-                    postsPerPage={IsRegxpag}
-                    totalPosts={TotalData}
-                    changePage={changePage}
-                    prevPage={prevPage}
-                    nextPage={nextPage}
-                    ind={ind_pagina}
-                  />
-                )}
+                {resultado_consulta_promociones == 0 && spinner == false ? (
+                  <div
+                    style={{
+                      margin: "10px",
+                      textAlign: "center",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    No se encontraron resultados.
+                  </div>
+                ) : null}
+                {spinner && <Spinner />}
               </div>
+            </section>
+            <div>
+              {valuepagination && (
+                <Pagination
+                  postsPerPage={IsRegxpag}
+                  totalPosts={TotalData}
+                  changePage={changePage}
+                  prevPage={prevPage}
+                  nextPage={nextPage}
+                  ind={ind_pagina}
+                />
+              )}
             </div>
-          ) : (
+          </div>
+          {/* ) : (
             <div className="access-route">NO TIENE ACCESO A ESTE REPORTE</div>
-          )}
+          )} */}
         </React.Fragment>
       )}
     </React.Fragment>

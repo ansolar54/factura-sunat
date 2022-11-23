@@ -19,12 +19,11 @@ import ExcelSheet from "react-data-export/dist/ExcelPlugin/elements/ExcelSheet";
 
 //@MC - MIGUEL CARRASCO
 const Info_Cliente = () => {
-
-  const [indicadorfiltro_1,setindicadorfiltro_1] = useState(false);
+  const [indicadorfiltro_1, setindicadorfiltro_1] = useState(false);
   const [mostrar_filtro_fila_1, setmostrar_filtro_fila_1] = useState(false);
   const [text_btn_filtro_1, settext_btn_filtro_1] = useState("Filtrar");
 
-  const [indicadorfiltro_2,setindicadorfiltro_2] = useState(false);
+  const [indicadorfiltro_2, setindicadorfiltro_2] = useState(false);
   const [mostrar_filtro_fila_2, setmostrar_filtro_fila_2] = useState(false);
   const [text_btn_filtro_2, settext_btn_filtro_2] = useState("Filtrar");
 
@@ -81,10 +80,14 @@ const Info_Cliente = () => {
   const [indicador_spinner_2, setindicador_spinner_2] = useState(false);
 
   const [InputPAnt, setInputPAnt] = useState({ PAntDesde: "", PAntHasta: "" });
-  const [response_pedidoanioant, setresponse_pedidoanioant] = useState({itProductosAntField: []});
+  const [response_pedidoanioant, setresponse_pedidoanioant] = useState({
+    itProductosAntField: [],
+  });
 
   const [InputPAct, setInputPAct] = useState({ PActDesde: "", PActHasta: "" });
-  const [response_pedidoanioact, setresponse_pedidoanioact] = useState({itProductosActField: []});
+  const [response_pedidoanioact, setresponse_pedidoanioact] = useState({
+    itProductosActField: [],
+  });
 
   const [showmc_infocliente, setshowmc_infocliente] = useState(false);
 
@@ -99,13 +102,13 @@ const Info_Cliente = () => {
   //INDICADOR SI YA VALIDO RUTA
   const [indicadorruta, setindicadorruta] = useState(false);
 
-  const [f_matnrField_1,  setf_matnrField_1 ] = useState("");
-  const [f_maktxField_1,  setf_maktxField_1 ] = useState("");
+  const [f_matnrField_1, setf_matnrField_1] = useState("");
+  const [f_maktxField_1, setf_maktxField_1] = useState("");
   const [f_kwmengField_1, setf_kwmengField_1] = useState("");
-  const [f_vrkmeField_1,  setf_vrkmeField_1 ] = useState("");
-  const [f_netwrField_1,  setf_netwrField_1 ] = useState("");
-  const [f_waerkField_1,  setf_waerkField_1 ] = useState("");
-  const [f_vkorgField_1,  setf_vkorgField_1 ] = useState("");
+  const [f_vrkmeField_1, setf_vrkmeField_1] = useState("");
+  const [f_netwrField_1, setf_netwrField_1] = useState("");
+  const [f_waerkField_1, setf_waerkField_1] = useState("");
+  const [f_vkorgField_1, setf_vkorgField_1] = useState("");
 
   const [f_matnrField_2, setf_matnrField_2] = useState("");
   const [f_maktxField_2, setf_maktxField_2] = useState("");
@@ -131,53 +134,53 @@ const Info_Cliente = () => {
   const [col2_6, setcol2_6] = useState(0);
   const [col2_7, setcol2_7] = useState(0);
 
-//ALMACENA CHECKBOX MARCADOS INDIVIDUALMENTE PARA COMPARARLOS POR PAGINA BUSCADA Y MARCARLOS CON CHECK
-const [arraycheckbox_1, setarraycheckbox_1] = useState([]);
-const [arraycheckbox_export_1, setarraycheckbox_export_1] = useState([
-  {
-    columns: [
-      {
-        title: "Material",
-        style: { font: { sz: "18", bold: true } },
-        width: { wpx: 125 },
-      },
-      {
-        title: "Denominación",
-        style: { font: { sz: "18", bold: true } },
-        width: { wpx: 125 },
-      },
-      {
-        title: "Cantidad",
-        style: { font: { sz: "18", bold: true } },
-        width: { wpx: 125 },
-      },
-      {
-        title: "UM",
-        style: { font: { sz: "18", bold: true } },
-        width: { wpx: 125 },
-      },
-      {
-        title: "Valor Neto",
-        style: { font: { sz: "18", bold: true } },
-        width: { wpx: 125 },
-      },
-      {
-        title: "Moneda",
-        style: { font: { sz: "18", bold: true } },
-        width: { wpx: 125 },
-      },
-      {
-        title: "Org. Ventas",
-        style: { font: { sz: "18", bold: true } },
-        width: { wpx: 125 },
-      }
-    ],
-    data: [],
-  },
-]);
+  //ALMACENA CHECKBOX MARCADOS INDIVIDUALMENTE PARA COMPARARLOS POR PAGINA BUSCADA Y MARCARLOS CON CHECK
+  const [arraycheckbox_1, setarraycheckbox_1] = useState([]);
+  const [arraycheckbox_export_1, setarraycheckbox_export_1] = useState([
+    {
+      columns: [
+        {
+          title: "Material",
+          style: { font: { sz: "18", bold: true } },
+          width: { wpx: 125 },
+        },
+        {
+          title: "Denominación",
+          style: { font: { sz: "18", bold: true } },
+          width: { wpx: 125 },
+        },
+        {
+          title: "Cantidad",
+          style: { font: { sz: "18", bold: true } },
+          width: { wpx: 125 },
+        },
+        {
+          title: "UM",
+          style: { font: { sz: "18", bold: true } },
+          width: { wpx: 125 },
+        },
+        {
+          title: "Valor Neto",
+          style: { font: { sz: "18", bold: true } },
+          width: { wpx: 125 },
+        },
+        {
+          title: "Moneda",
+          style: { font: { sz: "18", bold: true } },
+          width: { wpx: 125 },
+        },
+        {
+          title: "Org. Ventas",
+          style: { font: { sz: "18", bold: true } },
+          width: { wpx: 125 },
+        },
+      ],
+      data: [],
+    },
+  ]);
 
-//PARA ALMACENAR LOS DATOS A EXPORTAR
-const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
+  //PARA ALMACENAR LOS DATOS A EXPORTAR
+  const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
 
   //ALMACENA CHECKBOX MARCADOS INDIVIDUALMENTE PARA COMPARARLOS POR PAGINA BUSCADA Y MARCARLOS CON CHECK
   const [arraycheckbox_2, setarraycheckbox_2] = useState([]);
@@ -218,7 +221,7 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
           title: "Org. Ventas",
           style: { font: { sz: "18", bold: true } },
           width: { wpx: 125 },
-        }
+        },
       ],
       data: [],
     },
@@ -237,21 +240,21 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
     //   }
     // });
     //valida acceso a ruta
-    if (indicadorruta == false) {
-      setspinnerroute(true);
-      ValidarRuta("02").then((result) => {
-        if (result.reporte == 1) {
-          setspinnerroute(false);
-          setaccesoruta(true);
-          setindicadorruta(true);
-          // Search();
-        } else {
-          setspinnerroute(false);
-          setaccesoruta(false);
-          setindicadorruta(true);
-        }
-      });
-    }
+    // if (indicadorruta == false) {
+    //   setspinnerroute(true);
+    //   ValidarRuta("02").then((result) => {
+    //     if (result.reporte == 1) {
+    //       setspinnerroute(false);
+    //       setaccesoruta(true);
+    //       setindicadorruta(true);
+    //       // Search();
+    //     } else {
+    //       setspinnerroute(false);
+    //       setaccesoruta(false);
+    //       setindicadorruta(true);
+    //     }
+    //   });
+    // }
     //REGISTRO DE AUDITORÍA
     RegistrarAuditoria({
       id_user: Number(jwt(localStorage.getItem("_token")).nameid),
@@ -365,7 +368,7 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
             IsOrdenAnt: "",
             PKunnr: PKunnr,
           };
-          
+
           InfoClienteMateriales(model_materiales).then((res) => {
             setindicador_spinner_1(false);
             setindicador_spinner_2(false);
@@ -380,136 +383,35 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
             console.log(res);
             setDataSet_2([
               {
-                columns:[
+                columns: [
                   {
-                    title: "Código: "+PKunnr,
+                    title: "Código: " + PKunnr,
                     style: { font: { sz: "18", bold: true } },
                     width: { wpx: 125 },
                   },
                   {
-                    title: "Cliente: "+resultmc.etClientesField[0].name1Field,
+                    title: "Cliente: " + resultmc.etClientesField[0].name1Field,
                     style: { font: { sz: "18", bold: true } },
                     width: { wpx: 125 },
                   },
                   {
-                    title: "Desde: "+res.isVentasFechasField.ventActDesdeField,
+                    title:
+                      "Desde: " + res.isVentasFechasField.ventActDesdeField,
                     style: { font: { sz: "18", bold: false } },
                     width: { wpx: 125 },
                   },
                   {
-                    title: "Hasta: "+res.isVentasFechasField.ventActHastaField,
+                    title:
+                      "Hasta: " + res.isVentasFechasField.ventActHastaField,
                     style: { font: { sz: "18", bold: false } },
                     width: { wpx: 125 },
-                  }
+                  },
                 ],
-                data:[]
+                data: [],
               },
-              
-              {
-                ySteps:1,
-                columns:
-                [
-                  {
-                    title: "Org. Ventas",
-                    style: { font: { sz: "18", bold: true } },
-                    width: { wpx: 125 },
-                  },
-                  {
-                    title: "Material",
-                    style: { font: { sz: "18", bold: true } },
-                    width: { wpx: 125 },
-                  },
-                  {
-                    title: "Denominación",
-                    style: { font: { sz: "18", bold: true } },
-                    width: { wpx: 125 },
-                  },
-                  {
-                    title: "Cantidad",
-                    style: { font: { sz: "18", bold: true } },
-                    width: { wpx: 125 },
-                  },
-                  {
-                    title: "UM",
-                    style: { font: { sz: "18", bold: true } },
-                    width: { wpx: 125 },
-                  },
-                  {
-                    title: "Valor Neto",
-                    style: { font: { sz: "18", bold: true } },
-                    width: { wpx: 125 },
-                  },
-                  {
-                    title: "Moneda",
-                    style: { font: { sz: "18", bold: true } },
-                    width: { wpx: 125 },
-                  }
-                  
-                ],
-                data: res.itProductosActField.map((data) => {
-                  return [
-                    { value: data.vkorgField, style: { font: { sz: "14" } } },
-                    { value: data.matnrField, style: { font: { sz: "14" } } },
-                    { value: data.maktxField, style: { font: { sz: "14" } } },
-                    {
-                      value: Math.round(data.kwmengField),
-                      style: { font: { sz: "14" } },
-                    },
-                    { value: data.vrkmeField, style: { font: { sz: "14" } } },
-                    { value: convertDecimal(data.netwrField), style: { font: { sz: "14" } } },
-                    {
-                      value: data.waerkField,
-                      style: { font: { sz: "14" } },
-                    },
-                    
-                  ];
-                }),
-              }
-            ]);
 
-            setresponse_pedidoanioact({itProductosActField: res.itProductosActField.map((d,index)=>{
-              return {
-                select: false,
-                index: index,
-                matnrField: d.matnrField,
-                maktxField: d.maktxField,
-                kwmengField: d.kwmengField,
-                vrkmeField: d.vrkmeField,
-                netwrField: d.netwrField,
-                waerkField: d.waerkField,
-                vkorgField: d.vkorgField
-              }
-            })})
-            //setresponse_pedidoanioact(res);
-
-            setDataSet_1([
               {
-                columns:[
-                  {
-                    title: "Código: "+PKunnr,
-                    style: { font: { sz: "18", bold: true } },
-                    width: { wpx: 125 },
-                  },
-                  {
-                    title: "Cliente: "+resultmc.etClientesField[0].name1Field,
-                    style: { font: { sz: "18", bold: true } },
-                    width: { wpx: 125 },
-                  },
-                  {
-                    title: "Desde: "+res.isVentasFechasField.ventAntDesdeField,
-                    style: { font: { sz: "18", bold: false } },
-                    width: { wpx: 125 },
-                  },
-                  {
-                    title: "Hasta: "+res.isVentasFechasField.ventAntHastaField,
-                    style: { font: { sz: "18", bold: false } },
-                    width: { wpx: 125 },
-                  }
-                ],
-                data:[]
-              },
-              {
-                ySteps:1,
+                ySteps: 1,
                 columns: [
                   {
                     title: "Org. Ventas",
@@ -545,7 +447,114 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                     title: "Moneda",
                     style: { font: { sz: "18", bold: true } },
                     width: { wpx: 125 },
-                  }
+                  },
+                ],
+                data: res.itProductosActField.map((data) => {
+                  return [
+                    { value: data.vkorgField, style: { font: { sz: "14" } } },
+                    { value: data.matnrField, style: { font: { sz: "14" } } },
+                    { value: data.maktxField, style: { font: { sz: "14" } } },
+                    {
+                      value: Math.round(data.kwmengField),
+                      style: { font: { sz: "14" } },
+                    },
+                    { value: data.vrkmeField, style: { font: { sz: "14" } } },
+                    {
+                      value: convertDecimal(data.netwrField),
+                      style: { font: { sz: "14" } },
+                    },
+                    {
+                      value: data.waerkField,
+                      style: { font: { sz: "14" } },
+                    },
+                  ];
+                }),
+              },
+            ]);
+
+            setresponse_pedidoanioact({
+              itProductosActField: res.itProductosActField.map((d, index) => {
+                return {
+                  select: false,
+                  index: index,
+                  matnrField: d.matnrField,
+                  maktxField: d.maktxField,
+                  kwmengField: d.kwmengField,
+                  vrkmeField: d.vrkmeField,
+                  netwrField: d.netwrField,
+                  waerkField: d.waerkField,
+                  vkorgField: d.vkorgField,
+                };
+              }),
+            });
+            //setresponse_pedidoanioact(res);
+
+            setDataSet_1([
+              {
+                columns: [
+                  {
+                    title: "Código: " + PKunnr,
+                    style: { font: { sz: "18", bold: true } },
+                    width: { wpx: 125 },
+                  },
+                  {
+                    title: "Cliente: " + resultmc.etClientesField[0].name1Field,
+                    style: { font: { sz: "18", bold: true } },
+                    width: { wpx: 125 },
+                  },
+                  {
+                    title:
+                      "Desde: " + res.isVentasFechasField.ventAntDesdeField,
+                    style: { font: { sz: "18", bold: false } },
+                    width: { wpx: 125 },
+                  },
+                  {
+                    title:
+                      "Hasta: " + res.isVentasFechasField.ventAntHastaField,
+                    style: { font: { sz: "18", bold: false } },
+                    width: { wpx: 125 },
+                  },
+                ],
+                data: [],
+              },
+              {
+                ySteps: 1,
+                columns: [
+                  {
+                    title: "Org. Ventas",
+                    style: { font: { sz: "18", bold: true } },
+                    width: { wpx: 125 },
+                  },
+                  {
+                    title: "Material",
+                    style: { font: { sz: "18", bold: true } },
+                    width: { wpx: 125 },
+                  },
+                  {
+                    title: "Denominación",
+                    style: { font: { sz: "18", bold: true } },
+                    width: { wpx: 125 },
+                  },
+                  {
+                    title: "Cantidad",
+                    style: { font: { sz: "18", bold: true } },
+                    width: { wpx: 125 },
+                  },
+                  {
+                    title: "UM",
+                    style: { font: { sz: "18", bold: true } },
+                    width: { wpx: 125 },
+                  },
+                  {
+                    title: "Valor Neto",
+                    style: { font: { sz: "18", bold: true } },
+                    width: { wpx: 125 },
+                  },
+                  {
+                    title: "Moneda",
+                    style: { font: { sz: "18", bold: true } },
+                    width: { wpx: 125 },
+                  },
                 ],
                 data: res.itProductosAntField.map((data) => {
                   return [
@@ -557,33 +566,36 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                       style: { font: { sz: "14" } },
                     },
                     { value: data.vrkmeField, style: { font: { sz: "14" } } },
-                    { value: convertDecimal(data.netwrField), style: { font: { sz: "14" } } },
+                    {
+                      value: convertDecimal(data.netwrField),
+                      style: { font: { sz: "14" } },
+                    },
                     {
                       value: data.waerkField,
                       style: { font: { sz: "14" } },
-                    }
-                    
+                    },
                   ];
                 }),
               },
             ]);
 
-            setresponse_pedidoanioant({itProductosAntField: res.itProductosAntField.map((d,index)=>{
-              return {
-                select: false,
-                index: index,
-                matnrField: d.matnrField,
-                maktxField: d.maktxField,
-                kwmengField: d.kwmengField,
-                vrkmeField: d.vrkmeField,
-                netwrField: d.netwrField,
-                waerkField: d.waerkField,
-                vkorgField: d.vkorgField
-              }
-            })})
+            setresponse_pedidoanioant({
+              itProductosAntField: res.itProductosAntField.map((d, index) => {
+                return {
+                  select: false,
+                  index: index,
+                  matnrField: d.matnrField,
+                  maktxField: d.maktxField,
+                  kwmengField: d.kwmengField,
+                  vrkmeField: d.vrkmeField,
+                  netwrField: d.netwrField,
+                  waerkField: d.waerkField,
+                  vkorgField: d.vkorgField,
+                };
+              }),
+            });
 
             // setresponse_pedidoanioant(res);
-
 
             setindicador_fechas_response_infocliente(false);
           });
@@ -612,7 +624,9 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                 resultmc.etClientesField[i].vtextField
             );
             setpltypField_agro(resultmc.etClientesField[i].pltypField);
-            setpltypPtextField_agro(resultmc.etClientesField[i].pltypPtextField);
+            setpltypPtextField_agro(
+              resultmc.etClientesField[i].pltypPtextField
+            );
           }
           if (resultmc.etClientesField[i].vkorgField === "SEMI") {
             setcondicion_semi(
@@ -621,7 +635,9 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                 resultmc.etClientesField[i].vtextField
             );
             setpltypField_semi(resultmc.etClientesField[i].pltypField);
-            setpltypPtextField_semi(resultmc.etClientesField[i].pltypPtextField);
+            setpltypPtextField_semi(
+              resultmc.etClientesField[i].pltypPtextField
+            );
           }
           if (resultmc.etClientesField[i].vkorgField === "ESPE") {
             setcondicion_espe(
@@ -630,7 +646,9 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                 resultmc.etClientesField[i].vtextField
             );
             setpltypField_espe(resultmc.etClientesField[i].pltypField);
-            setpltypPtextField_espe(resultmc.etClientesField[i].pltypPtextField);
+            setpltypPtextField_espe(
+              resultmc.etClientesField[i].pltypPtextField
+            );
           }
           if (resultmc.etClientesField[i].vkorgField === "SALU") {
             setcondicion_salu(
@@ -639,7 +657,9 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                 resultmc.etClientesField[i].vtextField
             );
             setpltypField_salu(resultmc.etClientesField[i].pltypField);
-            setpltypPtextField_salu(resultmc.etClientesField[i].pltypPtextField);
+            setpltypPtextField_salu(
+              resultmc.etClientesField[i].pltypPtextField
+            );
           }
         }
       } else {
@@ -651,27 +671,27 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
   }
 
   function clear_filtro_fila_1() {
-    setf_matnrField_1(""); 
-    setf_maktxField_1(""); 
+    setf_matnrField_1("");
+    setf_maktxField_1("");
     setf_kwmengField_1("");
-    setf_vrkmeField_1(""); 
-    setf_netwrField_1(""); 
-    setf_waerkField_1(""); 
+    setf_vrkmeField_1("");
+    setf_netwrField_1("");
+    setf_waerkField_1("");
     setf_vkorgField_1("");
   }
 
   function clear_filtro_fila_2() {
-    setf_matnrField_2(""); 
-    setf_maktxField_2(""); 
+    setf_matnrField_2("");
+    setf_maktxField_2("");
     setf_kwmengField_2("");
-    setf_vrkmeField_2(""); 
-    setf_netwrField_2(""); 
-    setf_waerkField_2(""); 
+    setf_vrkmeField_2("");
+    setf_netwrField_2("");
+    setf_waerkField_2("");
     setf_vkorgField_2("");
   }
 
-  function SearchPedidoAnioAnt(campo,orden) {
-    setresponse_pedidoanioant({itProductosAntField: []});
+  function SearchPedidoAnioAnt(campo, orden) {
+    setresponse_pedidoanioant({ itProductosAntField: [] });
     setindicador_spinner_1(true);
     settext_btn_filtro_1("Filtrar");
     setmostrar_filtro_fila_1(false);
@@ -698,32 +718,32 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
       // setresponse_pedidoanioant(result);
       setDataSet_1([
         {
-          columns:[
+          columns: [
             {
-              title: "Código: "+PKunnr,
+              title: "Código: " + PKunnr,
               style: { font: { sz: "18", bold: true } },
               width: { wpx: 125 },
             },
             {
-              title: "Cliente: "+name1Field,
+              title: "Cliente: " + name1Field,
               style: { font: { sz: "18", bold: true } },
               width: { wpx: 125 },
             },
             {
-              title: "Desde: "+InputPAnt.PAntDesde,
+              title: "Desde: " + InputPAnt.PAntDesde,
               style: { font: { sz: "18", bold: false } },
               width: { wpx: 125 },
             },
             {
-              title: "Hasta: "+InputPAnt.PAntHasta,
+              title: "Hasta: " + InputPAnt.PAntHasta,
               style: { font: { sz: "18", bold: false } },
               width: { wpx: 125 },
-            }
+            },
           ],
-          data:[]
+          data: [],
         },
         {
-          ySteps:1,
+          ySteps: 1,
           columns: [
             {
               title: "Org. Ventas",
@@ -759,8 +779,7 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
               title: "Moneda",
               style: { font: { sz: "18", bold: true } },
               width: { wpx: 125 },
-            }
-            
+            },
           ],
           data: result.itProductosAntField.map((data) => {
             return [
@@ -772,36 +791,40 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                 style: { font: { sz: "14" } },
               },
               { value: data.vrkmeField, style: { font: { sz: "14" } } },
-              { value: convertDecimal(data.netwrField), style: { font: { sz: "14" } } },
+              {
+                value: convertDecimal(data.netwrField),
+                style: { font: { sz: "14" } },
+              },
               {
                 value: data.waerkField,
                 style: { font: { sz: "14" } },
-              }
-              
+              },
             ];
           }),
         },
       ]);
 
-      setresponse_pedidoanioant({itProductosAntField: result.itProductosAntField.map((d,index)=>{
-        return {
-          select: false,
-          index: index,
-          matnrField: d.matnrField,
-          maktxField: d.maktxField,
-          kwmengField: d.kwmengField,
-          vrkmeField: d.vrkmeField,
-          netwrField: d.netwrField,
-          waerkField: d.waerkField,
-          vkorgField: d.vkorgField
-        }
-      })})
+      setresponse_pedidoanioant({
+        itProductosAntField: result.itProductosAntField.map((d, index) => {
+          return {
+            select: false,
+            index: index,
+            matnrField: d.matnrField,
+            maktxField: d.maktxField,
+            kwmengField: d.kwmengField,
+            vrkmeField: d.vrkmeField,
+            netwrField: d.netwrField,
+            waerkField: d.waerkField,
+            vkorgField: d.vkorgField,
+          };
+        }),
+      });
     });
   }
 
-  function SearchPedidoAnioAct(campo,orden) {
+  function SearchPedidoAnioAct(campo, orden) {
     arraycheckbox_export_2[0].data = [];
-    setresponse_pedidoanioact({itProductosActField: []});
+    setresponse_pedidoanioact({ itProductosActField: [] });
     setindicador_spinner_2(true);
     settext_btn_filtro_2("Filtrar");
     setmostrar_filtro_fila_2(false);
@@ -827,32 +850,32 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
       setindicador_spinner_2(false);
       setDataSet_2([
         {
-          columns:[
+          columns: [
             {
-              title: "Código: "+PKunnr,
+              title: "Código: " + PKunnr,
               style: { font: { sz: "18", bold: true } },
               width: { wpx: 125 },
             },
             {
-              title: "Cliente: "+name1Field,
+              title: "Cliente: " + name1Field,
               style: { font: { sz: "18", bold: true } },
               width: { wpx: 125 },
             },
             {
-              title: "Desde: "+InputPAnt.PActDesde,
+              title: "Desde: " + InputPAnt.PActDesde,
               style: { font: { sz: "18", bold: false } },
               width: { wpx: 125 },
             },
             {
-              title: "Hasta: "+InputPAnt.PActHasta,
+              title: "Hasta: " + InputPAnt.PActHasta,
               style: { font: { sz: "18", bold: false } },
               width: { wpx: 125 },
-            }
+            },
           ],
-          data:[]
+          data: [],
         },
         {
-          ySteps:1,
+          ySteps: 1,
           columns: [
             {
               title: "Org. Ventas",
@@ -888,7 +911,7 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
               title: "Moneda",
               style: { font: { sz: "18", bold: true } },
               width: { wpx: 125 },
-            }
+            },
           ],
           data: result.itProductosActField.map((data) => {
             return [
@@ -900,30 +923,34 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                 style: { font: { sz: "14" } },
               },
               { value: data.vrkmeField, style: { font: { sz: "14" } } },
-              { value: convertDecimal(data.netwrField), style: { font: { sz: "14" } } },
+              {
+                value: convertDecimal(data.netwrField),
+                style: { font: { sz: "14" } },
+              },
               {
                 value: data.waerkField,
                 style: { font: { sz: "14" } },
-              }
-              
+              },
             ];
           }),
         },
       ]);
 
-      setresponse_pedidoanioact({itProductosActField: result.itProductosActField.map((d,index)=>{
-        return {
-          select: false,
-          index: index,
-          matnrField: d.matnrField,
-          maktxField: d.maktxField,
-          kwmengField: d.kwmengField,
-          vrkmeField: d.vrkmeField,
-          netwrField: d.netwrField,
-          waerkField: d.waerkField,
-          vkorgField: d.vkorgField
-        }
-      })})
+      setresponse_pedidoanioact({
+        itProductosActField: result.itProductosActField.map((d, index) => {
+          return {
+            select: false,
+            index: index,
+            matnrField: d.matnrField,
+            maktxField: d.maktxField,
+            kwmengField: d.kwmengField,
+            vrkmeField: d.vrkmeField,
+            netwrField: d.netwrField,
+            waerkField: d.waerkField,
+            vkorgField: d.vkorgField,
+          };
+        }),
+      });
     });
   }
 
@@ -969,11 +996,8 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
 
   //completar decimal de 2 digitos
   function convertDecimal(num) {
-    
     if (num.toString().split(".").length == 2) {
       return (
-         
-         
         num
           .toString()
           .split(".")[0]
@@ -984,7 +1008,6 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
       );
     } else {
       return (
-        
         num
           .toString()
           .split(".")[0]
@@ -1035,26 +1058,24 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
     if (mostrar_filtro_fila_1 == true) {
       settext_btn_filtro_1("Filtrar");
       setmostrar_filtro_fila_1(false);
-      
     } else {
       settext_btn_filtro_1("Borrar filtros");
       setmostrar_filtro_fila_1(true);
     }
     setindicadorfiltro_1(true);
-  }
+  };
 
   const MostrarFiltro_2 = () => {
     clear_filtro_fila_2();
     if (mostrar_filtro_fila_2 == true) {
       settext_btn_filtro_2("Filtrar");
       setmostrar_filtro_fila_2(false);
-      
     } else {
       settext_btn_filtro_2("Borrar filtros");
       setmostrar_filtro_fila_2(true);
     }
     setindicadorfiltro_2(true);
-  }
+  };
 
   //para el filtro
   function handleChangeFiltro_1(name, value) {
@@ -1063,22 +1084,22 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
         setf_matnrField_1(value);
         break;
       case "f_maktxField_1":
-      setf_maktxField_1(value);
+        setf_maktxField_1(value);
         break;
       case "f_kwmengField_1":
-      setf_kwmengField_1(value);
+        setf_kwmengField_1(value);
         break;
       case "f_vrkmeField_1":
-      setf_vrkmeField_1(value);
+        setf_vrkmeField_1(value);
         break;
       case "f_netwrField_1":
-      setf_netwrField_1(value);
+        setf_netwrField_1(value);
         break;
       case "f_waerkField_1":
         setf_waerkField_1(value);
         break;
       case "f_vkorgField_1":
-      setf_vkorgField_1(value);
+        setf_vkorgField_1(value);
         break;
       default:
         break;
@@ -1092,22 +1113,22 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
         setf_matnrField_2(value);
         break;
       case "f_maktxField_2":
-      setf_maktxField_2(value);
+        setf_maktxField_2(value);
         break;
       case "f_kwmengField_2":
-      setf_kwmengField_2(value);
+        setf_kwmengField_2(value);
         break;
       case "f_vrkmeField_2":
-      setf_vrkmeField_2(value);
+        setf_vrkmeField_2(value);
         break;
       case "f_netwrField_2":
-      setf_netwrField_2(value);
+        setf_netwrField_2(value);
         break;
       case "f_waerkField_2":
         setf_waerkField_2(value);
         break;
       case "f_vkorgField_2":
-      setf_vkorgField_2(value);
+        setf_vkorgField_2(value);
         break;
       default:
         break;
@@ -1118,26 +1139,25 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
     var keycode = event.keyCode;
     if (keycode == "13") {
       ClearAllColumns_1();
-      SearchPedidoAnioAnt("","")
+      SearchPedidoAnioAnt("", "");
     }
   }
 
   function buscar_filtro_enter_2(event) {
     var keycode = event.keyCode;
     if (keycode == "13") {
-      
-      SearchPedidoAnioAct("","")
+      SearchPedidoAnioAct("", "");
     }
   }
 
-  function buscar_filtro_icono_btn_1(){
-    SearchPedidoAnioAnt("","")
+  function buscar_filtro_icono_btn_1() {
+    SearchPedidoAnioAnt("", "");
   }
-  function buscar_filtro_icono_btn_2(){
-    SearchPedidoAnioAct("","")
+  function buscar_filtro_icono_btn_2() {
+    SearchPedidoAnioAct("", "");
   }
 
-  function ClearAllColumns_1(){
+  function ClearAllColumns_1() {
     setcol1_1(0);
     setcol1_2(0);
     setcol1_3(0);
@@ -1147,7 +1167,7 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
     setcol1_7(0);
   }
 
-  function ClearAllColumns_2(){
+  function ClearAllColumns_2() {
     setcol2_1(0);
     setcol2_2(0);
     setcol2_3(0);
@@ -1283,7 +1303,7 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
     }
   }
 
-  function Clear(){
+  function Clear() {
     setPKunnr("");
 
     setresponse_infocliente({
@@ -1319,105 +1339,91 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
         clearColumnsIcon_1(1);
         if (col1_1 === 0) {
           setcol1_1(col1_1 + 1);
-          SearchPedidoAnioAnt("MATNR","0")
-          
+          SearchPedidoAnioAnt("MATNR", "0");
         } else if (col1_1 === 1) {
           setcol1_1(col1_1 + 1);
-          SearchPedidoAnioAnt("MATNR","1")
-          
+          SearchPedidoAnioAnt("MATNR", "1");
         } else {
           setcol1_1(0);
-          SearchPedidoAnioAnt("","")
+          SearchPedidoAnioAnt("", "");
         }
         break;
       case 2:
         clearColumnsIcon_1(2);
         if (col1_2 === 0) {
           setcol1_2(col1_2 + 1);
-          SearchPedidoAnioAnt("MAKTX","0")
-          
+          SearchPedidoAnioAnt("MAKTX", "0");
         } else if (col1_2 === 1) {
           setcol1_2(col1_2 + 1);
-          SearchPedidoAnioAnt("MAKTX","1")
-          
+          SearchPedidoAnioAnt("MAKTX", "1");
         } else {
           setcol1_2(0);
-          SearchPedidoAnioAnt("","")
+          SearchPedidoAnioAnt("", "");
         }
         break;
       case 3:
         clearColumnsIcon_1(3);
         if (col1_3 === 0) {
           setcol1_3(col1_3 + 1);
-          SearchPedidoAnioAnt("KWMENG","0")
-          
+          SearchPedidoAnioAnt("KWMENG", "0");
         } else if (col1_3 === 1) {
           setcol1_3(col1_3 + 1);
-          SearchPedidoAnioAnt("KWMENG","1")
-          
+          SearchPedidoAnioAnt("KWMENG", "1");
         } else {
           setcol1_3(0);
-          SearchPedidoAnioAnt("","")
+          SearchPedidoAnioAnt("", "");
         }
         break;
       case 4:
         clearColumnsIcon_1(4);
         if (col1_4 === 0) {
           setcol1_4(col1_4 + 1);
-          SearchPedidoAnioAnt("VRKME","0")
-          
+          SearchPedidoAnioAnt("VRKME", "0");
         } else if (col1_4 === 1) {
           setcol1_4(col1_4 + 1);
-          SearchPedidoAnioAnt("VRKME","1")
-          
+          SearchPedidoAnioAnt("VRKME", "1");
         } else {
           setcol1_4(0);
-          SearchPedidoAnioAnt("","")
+          SearchPedidoAnioAnt("", "");
         }
         break;
       case 5:
         clearColumnsIcon_1(5);
         if (col1_5 === 0) {
           setcol1_5(col1_5 + 1);
-          SearchPedidoAnioAnt("NETWR","0")
-          
+          SearchPedidoAnioAnt("NETWR", "0");
         } else if (col1_5 === 1) {
           setcol1_5(col1_5 + 1);
-          SearchPedidoAnioAnt("NETWR","1")
-          
+          SearchPedidoAnioAnt("NETWR", "1");
         } else {
           setcol1_5(0);
-          SearchPedidoAnioAnt("","")
+          SearchPedidoAnioAnt("", "");
         }
         break;
       case 6:
         clearColumnsIcon_1(6);
         if (col1_6 === 0) {
           setcol1_6(col1_6 + 1);
-          SearchPedidoAnioAnt("WAERK","0")
-          
+          SearchPedidoAnioAnt("WAERK", "0");
         } else if (col1_6 === 1) {
           setcol1_6(col1_6 + 1);
-          SearchPedidoAnioAnt("WAERK","1")
-          
+          SearchPedidoAnioAnt("WAERK", "1");
         } else {
           setcol1_6(0);
-          SearchPedidoAnioAnt("","")
+          SearchPedidoAnioAnt("", "");
         }
         break;
       case 7:
         clearColumnsIcon_1(7);
         if (col1_7 === 0) {
           setcol1_7(col1_7 + 1);
-          SearchPedidoAnioAnt("VKORG","0")
-          
+          SearchPedidoAnioAnt("VKORG", "0");
         } else if (col1_7 === 1) {
           setcol1_7(col1_7 + 1);
-          SearchPedidoAnioAnt("VKORG","1")
-          
+          SearchPedidoAnioAnt("VKORG", "1");
         } else {
           setcol1_7(0);
-          SearchPedidoAnioAnt("","")
+          SearchPedidoAnioAnt("", "");
         }
         break;
     }
@@ -1429,105 +1435,91 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
         clearColumnsIcon_2(1);
         if (col2_1 === 0) {
           setcol2_1(col2_1 + 1);
-          SearchPedidoAnioAct("MATNR","0")
-          
+          SearchPedidoAnioAct("MATNR", "0");
         } else if (col2_1 === 1) {
           setcol2_1(col2_1 + 1);
-          SearchPedidoAnioAct("MATNR","1")
-          
+          SearchPedidoAnioAct("MATNR", "1");
         } else {
           setcol2_1(0);
-          SearchPedidoAnioAct("","")
+          SearchPedidoAnioAct("", "");
         }
         break;
       case 2:
         clearColumnsIcon_2(2);
         if (col2_2 === 0) {
           setcol2_2(col2_2 + 1);
-          SearchPedidoAnioAct("MAKTX","0")
-          
+          SearchPedidoAnioAct("MAKTX", "0");
         } else if (col2_2 === 1) {
           setcol2_2(col2_2 + 1);
-          SearchPedidoAnioAct("MAKTX","1")
-          
+          SearchPedidoAnioAct("MAKTX", "1");
         } else {
           setcol2_2(0);
-          SearchPedidoAnioAct("","")
+          SearchPedidoAnioAct("", "");
         }
         break;
       case 3:
         clearColumnsIcon_2(3);
         if (col2_3 === 0) {
           setcol2_3(col2_3 + 1);
-          SearchPedidoAnioAct("KWMENG","0")
-          
+          SearchPedidoAnioAct("KWMENG", "0");
         } else if (col2_3 === 1) {
           setcol2_3(col2_3 + 1);
-          SearchPedidoAnioAct("KWMENG","1")
-          
+          SearchPedidoAnioAct("KWMENG", "1");
         } else {
           setcol2_3(0);
-          SearchPedidoAnioAct("","")
+          SearchPedidoAnioAct("", "");
         }
         break;
       case 4:
         clearColumnsIcon_1(4);
         if (col2_4 === 0) {
           setcol2_4(col2_4 + 1);
-          SearchPedidoAnioAct("VRKME","0")
-          
+          SearchPedidoAnioAct("VRKME", "0");
         } else if (col2_4 === 1) {
           setcol2_4(col2_4 + 1);
-          SearchPedidoAnioAct("VRKME","1")
-          
+          SearchPedidoAnioAct("VRKME", "1");
         } else {
           setcol2_4(0);
-          SearchPedidoAnioAct("","")
+          SearchPedidoAnioAct("", "");
         }
         break;
       case 5:
         clearColumnsIcon_1(5);
         if (col2_5 === 0) {
           setcol2_5(col2_5 + 1);
-          SearchPedidoAnioAct("NETWR","0")
-          
+          SearchPedidoAnioAct("NETWR", "0");
         } else if (col2_5 === 1) {
           setcol2_5(col2_5 + 1);
-          SearchPedidoAnioAct("NETWR","1")
-          
+          SearchPedidoAnioAct("NETWR", "1");
         } else {
           setcol2_5(0);
-          SearchPedidoAnioAct("","")
+          SearchPedidoAnioAct("", "");
         }
         break;
       case 6:
         clearColumnsIcon_1(6);
         if (col2_6 === 0) {
           setcol2_6(col2_6 + 1);
-          SearchPedidoAnioAct("WAERK","0")
-          
+          SearchPedidoAnioAct("WAERK", "0");
         } else if (col2_6 === 1) {
           setcol2_6(col2_6 + 1);
-          SearchPedidoAnioAct("WAERK","1")
-          
+          SearchPedidoAnioAct("WAERK", "1");
         } else {
           setcol2_6(0);
-          SearchPedidoAnioAct("","")
+          SearchPedidoAnioAct("", "");
         }
         break;
       case 7:
         clearColumnsIcon_1(7);
         if (col2_7 === 0) {
           setcol2_7(col2_7 + 1);
-          SearchPedidoAnioAct("VKORG","0")
-          
+          SearchPedidoAnioAct("VKORG", "0");
         } else if (col2_7 === 1) {
           setcol2_7(col2_7 + 1);
-          SearchPedidoAnioAct("VKORG","1")
-          
+          SearchPedidoAnioAct("VKORG", "1");
         } else {
           setcol2_7(0);
-          SearchPedidoAnioAct("","")
+          SearchPedidoAnioAct("", "");
         }
         break;
     }
@@ -1536,13 +1528,13 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
   //completar decimal de 2 digitos
   function convertDecimal(num) {
     let signo = "";
-    
+
     // return num.toFixed(Math.max(((num+'').split(".")[1]||"").length, 2));
     if (num == null || num == "" || num == "0") {
       return "0.00";
     } else {
-      if(Math.sign(num) == "-1"){
-        signo = "-"
+      if (Math.sign(num) == "-1") {
+        signo = "-";
       }
       if (num.toString().split(".").length == 2) {
         // console.log( num.toString().split(".")[0].replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") + "."+num.toString().split(".")[1]);
@@ -1565,13 +1557,14 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
             .toString()
             .split(".")[0]
             .replace(/\D/g, "")
-            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") + ".00"
+            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") +
+          ".00"
         );
       }
     }
   }
 
-  function ordenamiento_2(d){
+  function ordenamiento_2(d) {
     arraycheckbox_export_2[0].data.push([
       {
         value: d.vkorgField,
@@ -1614,8 +1607,7 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
         style: {
           font: { sz: "14" },
         },
-      }
-      
+      },
     ]);
     arraycheckbox_export_2[0].data.sort(function (a, b) {
       return a[0].value - b[0].value;
@@ -1633,603 +1625,606 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
         <Spinner />
       ) : (
         <>
-          {accesoruta ? (
-            <div className="container-view">
-              {/* MODAL MATCHCODE PARA CLIENTE */}
-              <Matchcode_InfoCliente
-                showmc_infocliente={showmc_infocliente}
-                setshowmc_infocliente={setshowmc_infocliente}
-                setPKunnr={setPKunnr}
-                PKunnr={PKunnr}
-                setetClientesField={setetClientesField}
-              />
-              <div className="title-section">
-                <div>
-                  <label> Reportes / Información del Cliente </label>
-                  <label> Tipo cambio : <label style={{color: '#03BF68'}}>{localStorage.getItem("_tipoCambio")}</label> </label>
-                </div>
-                <hr />
+          {/* {accesoruta ? ( */}
+          <div className="container-view">
+            {/* MODAL MATCHCODE PARA CLIENTE */}
+            <Matchcode_InfoCliente
+              showmc_infocliente={showmc_infocliente}
+              setshowmc_infocliente={setshowmc_infocliente}
+              setPKunnr={setPKunnr}
+              PKunnr={PKunnr}
+              setetClientesField={setetClientesField}
+            />
+            <div className="title-section">
+              <div>
+                <label> Reportes / Información del Cliente </label>
+                <label>
+                  {" "}
+                  Tipo cambio :{" "}
+                  <label style={{ color: "#03BF68" }}>
+                    {localStorage.getItem("_tipoCambio")}
+                  </label>{" "}
+                </label>
               </div>
-              <section>
-                <div style={{ margin: "10px" }} className="row">
-                  <div className="col-sm-3 d-flex align-items-center">
-                    <label>Cod. Cliente</label>
-                  </div>
-                  <div className="col-sm-9">
-                    <InputForm
-                      attribute={{
-                        name: "infocliente_cliente",
-                        type: "text",
-                        value: PKunnr,
-                        disabled: false,
-                        checked: false,
-                        matchcode: true,
-                        maxlength: 10,
-                      }}
-                      handleChange={handleChange}
-                      onClick={() => mc_InfoCliente()}
-                    />
-                  </div>
+              <hr />
+            </div>
+            <section>
+              <div style={{ margin: "10px" }} className="row">
+                <div className="col-sm-3 d-flex align-items-center">
+                  <label>Cod. Cliente</label>
                 </div>
-              </section>
-              <section className="col-md-6 p-1">
-                <div>
-                  <BtnSearch
-                    attribute={{ name: "Buscar", classNamebtn: "btn_search" }}
-                    onClick={() => Search()}
+                <div className="col-sm-9">
+                  <InputForm
+                    attribute={{
+                      name: "infocliente_cliente",
+                      type: "text",
+                      value: PKunnr,
+                      disabled: false,
+                      checked: false,
+                      matchcode: true,
+                      maxlength: 10,
+                    }}
+                    handleChange={handleChange}
+                    onClick={() => mc_InfoCliente()}
                   />
                 </div>
-                
-              </section>
-              <section  className="col-md-6 p-1">
+              </div>
+            </section>
+            <section className="col-md-6 p-1">
               <div>
-                                  <BtnSearch
-                                    attribute={{
-                                      name: "Limpiar Campos",
-                                      classNamebtn: "btn_search",
-                                    }}
-                                    onClick={() => Clear()}
-                                  />
-                                </div>
-              </section>
-              <section>
-                <div style={{ margin: "10px" }} className="row">
-                  <div className="container-input-2">
-                    {/* <label>Organiz. ventas</label>
+                <BtnSearch
+                  attribute={{ name: "Buscar", classNamebtn: "btn_search" }}
+                  onClick={() => Search()}
+                />
+              </div>
+            </section>
+            <section className="col-md-6 p-1">
+              <div>
+                <BtnSearch
+                  attribute={{
+                    name: "Limpiar Campos",
+                    classNamebtn: "btn_search",
+                  }}
+                  onClick={() => Clear()}
+                />
+              </div>
+            </section>
+            <section>
+              <div style={{ margin: "10px" }} className="row">
+                <div className="container-input-2">
+                  {/* <label>Organiz. ventas</label>
                                     <div className="col-1">
                                         <InputForm attribute={{name:'infocliente_orgventas',type:'text',value:etClientesField.vkorgField,disabled:true,checked:false,matchcode:false}} handleChange={handleChange} />
                                     </div> */}
-                  </div>
-
-                  <div className="col-sm-3 d-flex align-items-center">
-                    <label>Nombre Cliente</label>
-                  </div>
-                  <div className="col-sm-9">
-                    <InputForm
-                      attribute={{
-                        name: "infocliente_nombcliente",
-                        type: "text",
-                        value: name1Field,
-                        disabled: true,
-                        checked: false,
-                        matchcode: false,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="col-sm-3 d-flex align-items-center">
-                    <label></label>
-                  </div>
-                  <div
-                    className="col-sm-9 d-flex align-items-center"
-                    style={{ paddingLeft: "19px" }}
-                  >
-                    <input
-                      type="checkbox"
-                      name="2"
-                      className="checkbox_detalle_2"
-                      disabled
-                      checked={chkField == "X" ? true : false}
-                    />
-                    <label
-                      style={{
-                        margin: "10px",
-                        textTransform: "uppercase",
-                        fontWeight: "bold",
-                        paddingLeft: "3px",
-                      }}
-                    >
-                      {chkDescField}
-                    </label>
-                  </div>
-
-                  <div className="col-sm-3 d-flex align-items-center">
-                    <label>Canal distrib.</label>
-                  </div>
-                  <div className="col-sm-9" style={{ marginBottom: "20px" }}>
-                    <InputForm
-                      attribute={{
-                        name: "infocliente_canaldistrib",
-                        type: "text",
-                        value:
-                          vtwegField !== "" || vtwegVtextField !== ""
-                            ? vtwegField + " / " + vtwegVtextField
-                            : "",
-                        disabled: true,
-                        checked: false,
-                        matchcode: false,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="col-sm-3 d-flex align-items-center">
-                    <label>Creado el:</label>
-                  </div>
-                  <div className="col-sm-9" style={{ marginBottom: "20px" }}>
-                    <InputForm
-                      attribute={{
-                        name: "infocliente_canaldistrib",
-                        type: "text",
-                        value:
-                          formatDateSinguion(fcreacionField) +
-                          "  " +
-                          mjeFcreaField,
-                        disabled: true,
-                        checked: false,
-                        matchcode: false,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-
-                  {ctaCreditoField != "" ? (
-                    <react.Fragment>
-                      <div className="col-sm-3 d-flex align-items-center">
-                        <label>Relacionado a:</label>
-                      </div>
-
-                      <div
-                        className="col-sm-9"
-                        style={{ marginBottom: "20px" }}
-                      >
-                        <InputForm
-                          attribute={{
-                            name: "infocliente_canaldistrib",
-                            type: "text",
-                            value: ctaCreditoField + " - " + nameCtacredField,
-                            disabled: true,
-                            checked: false,
-                            matchcode: false,
-                          }}
-                          handleChange={handleChange}
-                        />
-                      </div>
-                    </react.Fragment>
-                  ) : null}
-
-                  <div className="col-sm-3 d-flex align-items-center">
-                    <label>Condición AGRO</label>
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "infocliente_condicion",
-                        type: "text",
-                        value: condicion_agro,
-                        disabled: true,
-                        checked: false,
-                        matchcode: false,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="col-sm-3 d-flex align-items-center">
-                    <label>Lista precios</label>
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "infocliente_listprecio",
-                        type: "text",
-                        value:
-                          pltypField_agro !== "" || pltypPtextField_agro !== ""
-                            ? pltypField_agro + " / " + pltypPtextField_agro
-                            : "",
-                        disabled: true,
-                        checked: false,
-                        matchcode: false,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="col-sm-3 d-flex align-items-center">
-                    <label>Condición ESPE</label>
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "infocliente_condicion",
-                        type: "text",
-                        value: condicion_espe,
-                        disabled: true,
-                        checked: false,
-                        matchcode: false,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="col-sm-3 d-flex align-items-center">
-                    <label>Lista precios</label>
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "infocliente_listprecio",
-                        type: "text",
-                        value:
-                          pltypField_espe !== "" || pltypPtextField_espe !== ""
-                            ? pltypField_espe + " / " + pltypPtextField_espe
-                            : "",
-                        disabled: true,
-                        checked: false,
-                        matchcode: false,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="col-sm-3 d-flex align-items-center">
-                    <label>Condición SEMI</label>
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "infocliente_condicion",
-                        type: "text",
-                        value: condicion_semi,
-                        disabled: true,
-                        checked: false,
-                        matchcode: false,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="col-sm-3 d-flex align-items-center">
-                    <label>Lista precios</label>
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "infocliente_listprecio",
-                        type: "text",
-                        value:
-                          pltypField_semi !== "" || pltypPtextField_semi !== ""
-                            ? pltypField_semi + " / " + pltypPtextField_semi
-                            : "",
-                        disabled: true,
-                        checked: false,
-                        matchcode: false,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="col-sm-3 d-flex align-items-center">
-                    <label>Condición SALU</label>
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "infocliente_condicion",
-                        type: "text",
-                        value: condicion_salu,
-                        disabled: true,
-                        checked: false,
-                        matchcode: false,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="col-sm-3 d-flex align-items-center">
-                    <label>Lista precios</label>
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "infocliente_listprecio",
-                        type: "text",
-                        value:
-                          pltypField_salu !== "" || pltypPtextField_salu !== ""
-                            ? pltypField_salu + " / " + pltypPtextField_salu
-                            : "",
-                        disabled: true,
-                        checked: false,
-                        matchcode: false,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
                 </div>
-              </section>
 
-              <section style={{ margin: "10px"}}>
+                <div className="col-sm-3 d-flex align-items-center">
+                  <label>Nombre Cliente</label>
+                </div>
+                <div className="col-sm-9">
+                  <InputForm
+                    attribute={{
+                      name: "infocliente_nombcliente",
+                      type: "text",
+                      value: name1Field,
+                      disabled: true,
+                      checked: false,
+                      matchcode: false,
+                    }}
+                    handleChange={handleChange}
+                  />
+                </div>
+
+                <div className="col-sm-3 d-flex align-items-center">
+                  <label></label>
+                </div>
+                <div
+                  className="col-sm-9 d-flex align-items-center"
+                  style={{ paddingLeft: "19px" }}
+                >
+                  <input
+                    type="checkbox"
+                    name="2"
+                    className="checkbox_detalle_2"
+                    disabled
+                    checked={chkField == "X" ? true : false}
+                  />
+                  <label
+                    style={{
+                      margin: "10px",
+                      textTransform: "uppercase",
+                      fontWeight: "bold",
+                      paddingLeft: "3px",
+                    }}
+                  >
+                    {chkDescField}
+                  </label>
+                </div>
+
+                <div className="col-sm-3 d-flex align-items-center">
+                  <label>Canal distrib.</label>
+                </div>
+                <div className="col-sm-9" style={{ marginBottom: "20px" }}>
+                  <InputForm
+                    attribute={{
+                      name: "infocliente_canaldistrib",
+                      type: "text",
+                      value:
+                        vtwegField !== "" || vtwegVtextField !== ""
+                          ? vtwegField + " / " + vtwegVtextField
+                          : "",
+                      disabled: true,
+                      checked: false,
+                      matchcode: false,
+                    }}
+                    handleChange={handleChange}
+                  />
+                </div>
+
+                <div className="col-sm-3 d-flex align-items-center">
+                  <label>Creado el:</label>
+                </div>
+                <div className="col-sm-9" style={{ marginBottom: "20px" }}>
+                  <InputForm
+                    attribute={{
+                      name: "infocliente_canaldistrib",
+                      type: "text",
+                      value:
+                        formatDateSinguion(fcreacionField) +
+                        "  " +
+                        mjeFcreaField,
+                      disabled: true,
+                      checked: false,
+                      matchcode: false,
+                    }}
+                    handleChange={handleChange}
+                  />
+                </div>
+
+                {ctaCreditoField != "" ? (
+                  <react.Fragment>
+                    <div className="col-sm-3 d-flex align-items-center">
+                      <label>Relacionado a:</label>
+                    </div>
+
+                    <div className="col-sm-9" style={{ marginBottom: "20px" }}>
+                      <InputForm
+                        attribute={{
+                          name: "infocliente_canaldistrib",
+                          type: "text",
+                          value: ctaCreditoField + " - " + nameCtacredField,
+                          disabled: true,
+                          checked: false,
+                          matchcode: false,
+                        }}
+                        handleChange={handleChange}
+                      />
+                    </div>
+                  </react.Fragment>
+                ) : null}
+
+                <div className="col-sm-3 d-flex align-items-center">
+                  <label>Condición AGRO</label>
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "infocliente_condicion",
+                      type: "text",
+                      value: condicion_agro,
+                      disabled: true,
+                      checked: false,
+                      matchcode: false,
+                    }}
+                    handleChange={handleChange}
+                  />
+                </div>
+
+                <div className="col-sm-3 d-flex align-items-center">
+                  <label>Lista precios</label>
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "infocliente_listprecio",
+                      type: "text",
+                      value:
+                        pltypField_agro !== "" || pltypPtextField_agro !== ""
+                          ? pltypField_agro + " / " + pltypPtextField_agro
+                          : "",
+                      disabled: true,
+                      checked: false,
+                      matchcode: false,
+                    }}
+                    handleChange={handleChange}
+                  />
+                </div>
+
+                <div className="col-sm-3 d-flex align-items-center">
+                  <label>Condición ESPE</label>
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "infocliente_condicion",
+                      type: "text",
+                      value: condicion_espe,
+                      disabled: true,
+                      checked: false,
+                      matchcode: false,
+                    }}
+                    handleChange={handleChange}
+                  />
+                </div>
+
+                <div className="col-sm-3 d-flex align-items-center">
+                  <label>Lista precios</label>
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "infocliente_listprecio",
+                      type: "text",
+                      value:
+                        pltypField_espe !== "" || pltypPtextField_espe !== ""
+                          ? pltypField_espe + " / " + pltypPtextField_espe
+                          : "",
+                      disabled: true,
+                      checked: false,
+                      matchcode: false,
+                    }}
+                    handleChange={handleChange}
+                  />
+                </div>
+
+                <div className="col-sm-3 d-flex align-items-center">
+                  <label>Condición SEMI</label>
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "infocliente_condicion",
+                      type: "text",
+                      value: condicion_semi,
+                      disabled: true,
+                      checked: false,
+                      matchcode: false,
+                    }}
+                    handleChange={handleChange}
+                  />
+                </div>
+
+                <div className="col-sm-3 d-flex align-items-center">
+                  <label>Lista precios</label>
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "infocliente_listprecio",
+                      type: "text",
+                      value:
+                        pltypField_semi !== "" || pltypPtextField_semi !== ""
+                          ? pltypField_semi + " / " + pltypPtextField_semi
+                          : "",
+                      disabled: true,
+                      checked: false,
+                      matchcode: false,
+                    }}
+                    handleChange={handleChange}
+                  />
+                </div>
+
+                <div className="col-sm-3 d-flex align-items-center">
+                  <label>Condición SALU</label>
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "infocliente_condicion",
+                      type: "text",
+                      value: condicion_salu,
+                      disabled: true,
+                      checked: false,
+                      matchcode: false,
+                    }}
+                    handleChange={handleChange}
+                  />
+                </div>
+
+                <div className="col-sm-3 d-flex align-items-center">
+                  <label>Lista precios</label>
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "infocliente_listprecio",
+                      type: "text",
+                      value:
+                        pltypField_salu !== "" || pltypPtextField_salu !== ""
+                          ? pltypField_salu + " / " + pltypPtextField_salu
+                          : "",
+                      disabled: true,
+                      checked: false,
+                      matchcode: false,
+                    }}
+                    handleChange={handleChange}
+                  />
+                </div>
+              </div>
+            </section>
+
+            <section style={{ margin: "10px" }}>
+              <div className="subtitle-section">Información de ventas</div>
+              <div className="col-md-6 p-1" style={{ marginBottom: "20px" }}>
+                <BtnSearch
+                  attribute={{
+                    name: "Ver Pedidos del año anterior",
+                    classNamebtn: "btn_search",
+                    iconname: "fas fa-file-alt",
+                  }}
+                  onClick={() => setshowmodal_1((prev) => !prev)}
+                />
+              </div>
+              <div className="col-md-6 p-1" style={{ marginBottom: "20px" }}>
+                <BtnSearch
+                  attribute={{
+                    name: "Ver Pedidos de este año",
+                    classNamebtn: "btn_search",
+                    iconname: "fas fa-file-alt",
+                  }}
+                  onClick={() => setshowmodal_2((prev) => !prev)}
+                />
+              </div>
+            </section>
+
+            <section>
+              <div style={{ margin: "10px" }}>
                 <div className="subtitle-section">
-                    Información de ventas
-                  </div>
-                <div className="col-md-6 p-1" style={{marginBottom:'20px'}}>
-                  <BtnSearch
-                    attribute={{
-                      name: "Ver Pedidos del año anterior",
-                      classNamebtn: "btn_search",
-                      iconname: "fas fa-file-alt"
-                    }}
-                    onClick={() => setshowmodal_1((prev) => !prev)}
-                  />
+                  Información Línea de Crédito y Grado de Uso
                 </div>
-                <div className="col-md-6 p-1" style={{marginBottom:'20px'}}>
-                  <BtnSearch
-                    attribute={{
-                      name: "Ver Pedidos de este año",
-                      classNamebtn: "btn_search",
-                      iconname: "fas fa-file-alt"
-                    }}
-                    onClick={() => setshowmodal_2((prev) => !prev)}
-                  />
+                <div className="container-table" style={{ margin: "15px" }}>
+                  <div className="container-table-sm">
+                    <table className="content-table">
+                      <thead>
+                        <tr style={{ border: "1px solid #91c848" }}>
+                          <th
+                            rowSpan="2"
+                            style={{ border: "1px solid #91c848" }}
+                          >
+                            Línea de Crédito
+                          </th>
+                          <th
+                            colSpan="2"
+                            style={{ border: "1px solid #91c848" }}
+                          >
+                            Línea de crédito utilizada
+                          </th>
+                          <th
+                            rowSpan="2"
+                            style={{ border: "1px solid #91c848" }}
+                          >
+                            Línea disponible
+                          </th>
+                          <th
+                            rowSpan="2"
+                            style={{ border: "1px solid #91c848" }}
+                          >
+                            Moneda
+                          </th>
+                        </tr>
+                        <tr style={{ border: "1px solid #91c848" }}>
+                          <td style={{ border: "1px solid #91c848" }}>
+                            Vigente
+                          </td>
+                          <td style={{ border: "1px solid #91c848" }}>
+                            Vencida
+                          </td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {response_infocliente.itInfoCreditoField.map(
+                          (response, key) => (
+                            <tr key={key}>
+                              <th style={{ textAlign: "center" }}>
+                                {convertDecimal(response.klimkField)}
+                              </th>
+                              <th style={{ textAlign: "center" }}>
+                                {convertDecimal(response.klimuVigField)}
+                              </th>
+                              <th style={{ textAlign: "center", color: "red" }}>
+                                {convertDecimal(response.klimuVenField)}
+                              </th>
+                              <th style={{ textAlign: "center" }}>
+                                {convertDecimal(response.klimdField)}
+                              </th>
+                              <th style={{ textAlign: "center" }}>
+                                {response.waerkField}
+                              </th>
+                            </tr>
+                          )
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                  {indicador_spinner && <Spinner />}
                 </div>
-              </section>
-
-              <section>
-                <div style={{ margin: "10px" }}>
-                  <div className="subtitle-section">
-                    Información Línea de Crédito y Grado de Uso
-                  </div>
-                  <div className="container-table" style={{ margin: "15px" }}>
-                    <div className="container-table-sm">
-                      <table className="content-table">
-                        <thead>
-                          <tr style={{ border: "1px solid #91c848" }}>
-                            <th
-                              rowSpan="2"
-                              style={{ border: "1px solid #91c848" }}
-                            >
-                              Línea de Crédito
-                            </th>
-                            <th
-                              colSpan="2"
-                              style={{ border: "1px solid #91c848" }}
-                            >
-                              Línea de crédito utilizada
-                            </th>
-                            <th
-                              rowSpan="2"
-                              style={{ border: "1px solid #91c848" }}
-                            >
-                              Línea disponible
-                            </th>
-                            <th
-                              rowSpan="2"
-                              style={{ border: "1px solid #91c848" }}
-                            >
-                              Moneda
-                            </th>
-                          </tr>
-                          <tr style={{ border: "1px solid #91c848" }}>
-                            <td style={{ border: "1px solid #91c848" }}>
-                              Vigente
-                            </td>
-                            <td style={{ border: "1px solid #91c848" }}>
-                              Vencida
-                            </td>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {response_infocliente.itInfoCreditoField.map(
-                            (response, key) => (
-                              <tr key={key}>
-                                <th style={{ textAlign: "center" }}>
-                                  {convertDecimal(response.klimkField)}
-                                </th>
-                                <th style={{ textAlign: "center" }}>
-                                  {convertDecimal(response.klimuVigField)}
-                                </th>
-                                <th style={{ textAlign: "center", color: 'red' }}>
-                                  {convertDecimal(response.klimuVenField)}
-                                </th>
-                                <th style={{ textAlign: "center" }}>
-                                  {convertDecimal(response.klimdField)}
-                                </th>
-                                <th style={{ textAlign: "center" }}>
-                                  {response.waerkField}
-                                </th>
-                              </tr>
-                            )
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                    {indicador_spinner && <Spinner />}
-                  </div>
+              </div>
+              <div style={{ margin: "10px" }}>
+                <div className="subtitle-section">
+                  Información Cuenta por Pagar y Días de Vencimiento
                 </div>
-                <div style={{ margin: "10px" }}>
-                  <div className="subtitle-section">
-                    Información Cuenta por Pagar y Días de Vencimiento
-                  </div>
-                  <div className="container-table" style={{ margin: "15px" }}>
-                    <div className="container-table-sm">
-                      <table className="content-table">
-                        <thead>
-                          <tr style={{ border: "1px solid #91c848" }}>
-                            <th
-                              colSpan="2"
-                              style={{ border: "1px solid #91c848" }}
-                            >
-                              Vigente
-                            </th>
-                            <th
-                              colSpan="4"
-                              style={{ border: "1px solid #91c848" }}
-                            >
-                              Vencido
-                            </th>
-                            <th
-                              rowSpan="2"
-                              style={{ border: "1px solid #91c848" }}
-                            >
-                              Moneda
-                            </th>
-                          </tr>
-                          <tr style={{ border: "1px solid #91c848" }}>
-                            <th style={{ border: "1px solid #91c848" }}>
-                              No vencido
-                            </th>
-                            <th style={{ border: "1px solid #91c848" }}>
-                              Vcdo 1-8 días
-                            </th>
-                            <th style={{ border: "1px solid #91c848" }}>
-                              Vcdo 9-30
-                            </th>
-                            <th style={{ border: "1px solid #91c848" }}>
-                              Vcdo 31-60
-                            </th>
-                            <th style={{ border: "1px solid #91c848" }}>
-                              Vcdo 61-90
-                            </th>
-                            <th style={{ border: "1px solid #91c848" }}>
-                              Vcdo más de 90 días
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {response_infocliente.itNcuentaPagarField.map(
-                            (response, key) => (
-                              <tr key={key}>
-                                <th style={{ textAlign: "center" }}>
-                                  {convertDecimal(response.noVencidoField)}
-                                </th>
-                                <th style={{ textAlign: "center" }}>
-                                  {convertDecimal(response.deu18Field)}
-                                </th>
-                                <th
-                                  style={
-                                    response.deu930Field > 0
-                                      ? { textAlign: "center", color: "red" }
-                                      : { textAlign: "center" }
-                                  }
-                                >
-                                  {convertDecimal(response.deu930Field)}
-                                </th>
-                                <th
-                                  style={
-                                    response.deu3160Field > 0
-                                      ? { textAlign: "center", color: "red" }
-                                      : { textAlign: "center" }
-                                  }
-                                >
-                                  {convertDecimal(response.deu3160Field)}
-                                </th>
-                                <th
-                                  style={
-                                    response.deu6190Field > 0
-                                      ? { textAlign: "center", color: "red" }
-                                      : { textAlign: "center" }
-                                  }
-                                >
-                                  {convertDecimal(response.deu6190Field)}
-                                </th>
-                                <th
-                                  style={
-                                    response.deu91Field > 0
-                                      ? { textAlign: "center", color: "red" }
-                                      : { textAlign: "center" }
-                                  }
-                                >
-                                  {convertDecimal(response.deu91Field)}
-                                </th>
-                                <th style={{ textAlign: "center" }}>
-                                  {response.waersField}
-                                </th>
-                              </tr>
-                            )
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                    {indicador_spinner && <Spinner />}
-                  </div>
-                </div>
-              </section>
-
-              
-              {showmodal_1 == true ? (
-                <react.Fragment>
-                  <div
-                    className="container-modal-background"
-                    onClick={closeModal_1}
-                    ref={modalRef_1}
-                  >
-                    <div className="modal-wrapper modal-wrapper-bg">
-                      <section className="row" style={{ paddingTop: "50px" }}>
-                        <section>
-                          <div style={{ margin: "10px" }} className="row">
-                            <div className="subtitle-section">
-                              Pedidos del año anterior (3 últimos meses)
-                            </div>
-
-                            <div className="col-sm-3 d-flex align-items-center">
-                              <label>Desde</label>
-                            </div>
-                            <div className="col-sm-3">
-                              <InputForm
-                                attribute={{
-                                  name: "desde_infocliente_anio_ant_fecha",
-                                  type: "date",
-                                  value: InputPAnt.PAntDesde,
-                                  disabled: false,
-                                  checked: false,
-                                  matchcode: false,
-                                }}
-                                handleChange={handleChange}
-                              />
-                            </div>
-
-                            <div className="col-sm-3 d-flex align-items-center">
-                              <label>Hasta</label>
-                            </div>
-                            <div className="col-sm-3">
-                              <InputForm
-                                attribute={{
-                                  name: "hasta_infocliente_anio_ant_fecha",
-                                  type: "date",
-                                  value: InputPAnt.PAntHasta,
-                                  disabled: false,
-                                  checked: false,
-                                  matchcode: false,
-                                }}
-                                handleChange={handleChange}
-                              />
-                            </div>
-
-                            {indicador_response_infocliente && (
-                              <div
-                                style={{ margin: "10px", alignSelf: "center" }}
+                <div className="container-table" style={{ margin: "15px" }}>
+                  <div className="container-table-sm">
+                    <table className="content-table">
+                      <thead>
+                        <tr style={{ border: "1px solid #91c848" }}>
+                          <th
+                            colSpan="2"
+                            style={{ border: "1px solid #91c848" }}
+                          >
+                            Vigente
+                          </th>
+                          <th
+                            colSpan="4"
+                            style={{ border: "1px solid #91c848" }}
+                          >
+                            Vencido
+                          </th>
+                          <th
+                            rowSpan="2"
+                            style={{ border: "1px solid #91c848" }}
+                          >
+                            Moneda
+                          </th>
+                        </tr>
+                        <tr style={{ border: "1px solid #91c848" }}>
+                          <th style={{ border: "1px solid #91c848" }}>
+                            No vencido
+                          </th>
+                          <th style={{ border: "1px solid #91c848" }}>
+                            Vcdo 1-8 días
+                          </th>
+                          <th style={{ border: "1px solid #91c848" }}>
+                            Vcdo 9-30
+                          </th>
+                          <th style={{ border: "1px solid #91c848" }}>
+                            Vcdo 31-60
+                          </th>
+                          <th style={{ border: "1px solid #91c848" }}>
+                            Vcdo 61-90
+                          </th>
+                          <th style={{ border: "1px solid #91c848" }}>
+                            Vcdo más de 90 días
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {response_infocliente.itNcuentaPagarField.map(
+                          (response, key) => (
+                            <tr key={key}>
+                              <th style={{ textAlign: "center" }}>
+                                {convertDecimal(response.noVencidoField)}
+                              </th>
+                              <th style={{ textAlign: "center" }}>
+                                {convertDecimal(response.deu18Field)}
+                              </th>
+                              <th
+                                style={
+                                  response.deu930Field > 0
+                                    ? { textAlign: "center", color: "red" }
+                                    : { textAlign: "center" }
+                                }
                               >
-                                <div className="col-md-6 p-1">
-                                  <BtnSearch
-                                    attribute={{
-                                      name: "Buscar",
-                                      classNamebtn: "btn_search",
-                                    }}
-                                    onClick={() => { ClearAllColumns_1(); clear_filtro_fila_1(); SearchPedidoAnioAnt("","");}}
-                                  />
-                                </div>
-                                <div className="col-md-6 p-1">
+                                {convertDecimal(response.deu930Field)}
+                              </th>
+                              <th
+                                style={
+                                  response.deu3160Field > 0
+                                    ? { textAlign: "center", color: "red" }
+                                    : { textAlign: "center" }
+                                }
+                              >
+                                {convertDecimal(response.deu3160Field)}
+                              </th>
+                              <th
+                                style={
+                                  response.deu6190Field > 0
+                                    ? { textAlign: "center", color: "red" }
+                                    : { textAlign: "center" }
+                                }
+                              >
+                                {convertDecimal(response.deu6190Field)}
+                              </th>
+                              <th
+                                style={
+                                  response.deu91Field > 0
+                                    ? { textAlign: "center", color: "red" }
+                                    : { textAlign: "center" }
+                                }
+                              >
+                                {convertDecimal(response.deu91Field)}
+                              </th>
+                              <th style={{ textAlign: "center" }}>
+                                {response.waersField}
+                              </th>
+                            </tr>
+                          )
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                  {indicador_spinner && <Spinner />}
+                </div>
+              </div>
+            </section>
+
+            {showmodal_1 == true ? (
+              <react.Fragment>
+                <div
+                  className="container-modal-background"
+                  onClick={closeModal_1}
+                  ref={modalRef_1}
+                >
+                  <div className="modal-wrapper modal-wrapper-bg">
+                    <section className="row" style={{ paddingTop: "50px" }}>
+                      <section>
+                        <div style={{ margin: "10px" }} className="row">
+                          <div className="subtitle-section">
+                            Pedidos del año anterior (3 últimos meses)
+                          </div>
+
+                          <div className="col-sm-3 d-flex align-items-center">
+                            <label>Desde</label>
+                          </div>
+                          <div className="col-sm-3">
+                            <InputForm
+                              attribute={{
+                                name: "desde_infocliente_anio_ant_fecha",
+                                type: "date",
+                                value: InputPAnt.PAntDesde,
+                                disabled: false,
+                                checked: false,
+                                matchcode: false,
+                              }}
+                              handleChange={handleChange}
+                            />
+                          </div>
+
+                          <div className="col-sm-3 d-flex align-items-center">
+                            <label>Hasta</label>
+                          </div>
+                          <div className="col-sm-3">
+                            <InputForm
+                              attribute={{
+                                name: "hasta_infocliente_anio_ant_fecha",
+                                type: "date",
+                                value: InputPAnt.PAntHasta,
+                                disabled: false,
+                                checked: false,
+                                matchcode: false,
+                              }}
+                              handleChange={handleChange}
+                            />
+                          </div>
+
+                          {indicador_response_infocliente && (
+                            <div
+                              style={{ margin: "10px", alignSelf: "center" }}
+                            >
+                              <div className="col-md-6 p-1">
+                                <BtnSearch
+                                  attribute={{
+                                    name: "Buscar",
+                                    classNamebtn: "btn_search",
+                                  }}
+                                  onClick={() => {
+                                    ClearAllColumns_1();
+                                    clear_filtro_fila_1();
+                                    SearchPedidoAnioAnt("", "");
+                                  }}
+                                />
+                              </div>
+                              <div className="col-md-6 p-1">
                                 {arraycheckbox_export_1[0].data.length > 0 ? (
                                   <ExcelFile
                                     filename="Informacion de Cliente"
@@ -2261,218 +2256,266 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                                       />
                                     }
                                   >
-                                    <ExcelSheet dataSet={DataSet_1} name="exportacion" />
+                                    <ExcelSheet
+                                      dataSet={DataSet_1}
+                                      name="exportacion"
+                                    />
                                   </ExcelFile>
                                 )}
                               </div>
-                                <div className="col-sm-12 col-md-12 m-1">
-                                  <BtnSearch
-                                    attribute={{
-                                      name: text_btn_filtro_1,
-                                      classNamebtn: "btn_search",
-                                    }}
-                                    onClick={() => MostrarFiltro_1()}
-                                  />
-                                </div>
+                              <div className="col-sm-12 col-md-12 m-1">
+                                <BtnSearch
+                                  attribute={{
+                                    name: text_btn_filtro_1,
+                                    classNamebtn: "btn_search",
+                                  }}
+                                  onClick={() => MostrarFiltro_1()}
+                                />
                               </div>
-                            )}
+                            </div>
+                          )}
 
-                            <div className="col-md-12">
-                              <div className="title-section">
-                                <label> Productos </label>
-                                <hr />
-                              </div>
-                              <div className="container-table-200">
-                                <table className="content-table">
-                                  <thead>
-                                    <tr>
-                                      <th></th>
-                                      <th style={{ textAlign: "center" }}>
-                                        Org. Ventas |{" "}
-                                          {col1_7 === 0 ? (
-                                              <i
-                                              className="fas fa-arrows-alt-v"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(7)}
-                                              ></i>
-                                            ) : null}
-                                            {col1_7 === 1 ? (
-                                              <i
-                                              className="fas fa-sort-amount-up"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(7)}
-                                              ></i>
-                                            ) : null}
-                                            {col1_7 === 2 ? (
-                                              <i
-                                              className="fas fa-sort-amount-down-alt"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(7)}
-                                              ></i>
-                                            ) : null}
-                                      </th>
-                                      <th style={{ height: "auto" }}>
-                                        Material |{" "}
-                                          {col1_1 === 0 ? (
-                                              <i
-                                              className="fas fa-arrows-alt-v"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(1)}
-                                              ></i>
-                                            ) : null}
-                                            {col1_1 === 1 ? (
-                                              <i
-                                              className="fas fa-sort-amount-up"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(1)}
-                                              ></i>
-                                            ) : null}
-                                            {col1_1 === 2 ? (
-                                              <i
-                                              className="fas fa-sort-amount-down-alt"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(1)}
-                                              ></i>
-                                            ) : null}
-                                      </th>
-                                      <th style={{ textAlign: "left" }}>
-                                        Denominación |{" "}
-                                          {col1_2 === 0 ? (
-                                              <i
-                                              className="fas fa-arrows-alt-v"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(2)}
-                                              ></i>
-                                            ) : null}
-                                            {col1_2 === 1 ? (
-                                              <i
-                                              className="fas fa-sort-amount-up"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(2)}
-                                              ></i>
-                                            ) : null}
-                                            {col1_2 === 2 ? (
-                                              <i
-                                              className="fas fa-sort-amount-down-alt"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(2)}
-                                              ></i>
-                                            ) : null}
-                                      </th>
-                                      <th style={{ textAlign: "right" }}>
-                                        Cantidad |{" "}
-                                          {col1_3 === 0 ? (
-                                              <i
-                                              className="fas fa-arrows-alt-v"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(3)}
-                                              ></i>
-                                            ) : null}
-                                            {col1_3 === 1 ? (
-                                              <i
-                                              className="fas fa-sort-amount-up"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(3)}
-                                              ></i>
-                                            ) : null}
-                                            {col1_3 === 2 ? (
-                                              <i
-                                              className="fas fa-sort-amount-down-alt"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(3)}
-                                              ></i>
-                                            ) : null}
-                                      </th>
-                                      <th style={{ textAlign: "center" }}>
-                                        UM |{" "}
-                                          {col1_4 === 0 ? (
-                                              <i
-                                              className="fas fa-arrows-alt-v"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(4)}
-                                              ></i>
-                                            ) : null}
-                                            {col1_4 === 1 ? (
-                                              <i
-                                              className="fas fa-sort-amount-up"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(4)}
-                                              ></i>
-                                            ) : null}
-                                            {col1_4 === 2 ? (
-                                              <i
-                                              className="fas fa-sort-amount-down-alt"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(4)}
-                                              ></i>
-                                            ) : null}
-                                      </th>
-                                      <th style={{ textAlign: "right" }}>
-                                        Valor Neto |{" "}
-                                          {col1_5 === 0 ? (
-                                              <i
-                                              className="fas fa-arrows-alt-v"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(5)}
-                                              ></i>
-                                            ) : null}
-                                            {col1_5 === 1 ? (
-                                              <i
-                                              className="fas fa-sort-amount-up"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(5)}
-                                              ></i>
-                                            ) : null}
-                                            {col1_5 === 2 ? (
-                                              <i
-                                              className="fas fa-sort-amount-down-alt"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(5)}
-                                              ></i>
-                                            ) : null}
-                                      </th>
-                                      <th style={{ textAlign: "center" }}>
-                                        Moneda |{" "}
-                                          {col1_6 === 0 ? (
-                                              <i
-                                              className="fas fa-arrows-alt-v"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(6)}
-                                              ></i>
-                                            ) : null}
-                                            {col1_6 === 1 ? (
-                                              <i
-                                              className="fas fa-sort-amount-up"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(6)}
-                                              ></i>
-                                            ) : null}
-                                            {col1_6 === 2 ? (
-                                              <i
-                                              className="fas fa-sort-amount-down-alt"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_1(6)}
-                                              ></i>
-                                            ) : null}
-                                      </th>
-                                      
-                                    </tr>
-                                  </thead>
-                                  <tbody>
+                          <div className="col-md-12">
+                            <div className="title-section">
+                              <label> Productos </label>
+                              <hr />
+                            </div>
+                            <div className="container-table-200">
+                              <table className="content-table">
+                                <thead>
+                                  <tr>
+                                    <th></th>
+                                    <th style={{ textAlign: "center" }}>
+                                      Org. Ventas |{" "}
+                                      {col1_7 === 0 ? (
+                                        <i
+                                          className="fas fa-arrows-alt-v"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(7)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col1_7 === 1 ? (
+                                        <i
+                                          className="fas fa-sort-amount-up"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(7)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col1_7 === 2 ? (
+                                        <i
+                                          className="fas fa-sort-amount-down-alt"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(7)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                    </th>
+                                    <th style={{ height: "auto" }}>
+                                      Material |{" "}
+                                      {col1_1 === 0 ? (
+                                        <i
+                                          className="fas fa-arrows-alt-v"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(1)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col1_1 === 1 ? (
+                                        <i
+                                          className="fas fa-sort-amount-up"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(1)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col1_1 === 2 ? (
+                                        <i
+                                          className="fas fa-sort-amount-down-alt"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(1)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                    </th>
+                                    <th style={{ textAlign: "left" }}>
+                                      Denominación |{" "}
+                                      {col1_2 === 0 ? (
+                                        <i
+                                          className="fas fa-arrows-alt-v"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(2)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col1_2 === 1 ? (
+                                        <i
+                                          className="fas fa-sort-amount-up"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(2)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col1_2 === 2 ? (
+                                        <i
+                                          className="fas fa-sort-amount-down-alt"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(2)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                    </th>
+                                    <th style={{ textAlign: "right" }}>
+                                      Cantidad |{" "}
+                                      {col1_3 === 0 ? (
+                                        <i
+                                          className="fas fa-arrows-alt-v"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(3)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col1_3 === 1 ? (
+                                        <i
+                                          className="fas fa-sort-amount-up"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(3)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col1_3 === 2 ? (
+                                        <i
+                                          className="fas fa-sort-amount-down-alt"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(3)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                    </th>
+                                    <th style={{ textAlign: "center" }}>
+                                      UM |{" "}
+                                      {col1_4 === 0 ? (
+                                        <i
+                                          className="fas fa-arrows-alt-v"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(4)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col1_4 === 1 ? (
+                                        <i
+                                          className="fas fa-sort-amount-up"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(4)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col1_4 === 2 ? (
+                                        <i
+                                          className="fas fa-sort-amount-down-alt"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(4)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                    </th>
+                                    <th style={{ textAlign: "right" }}>
+                                      Valor Neto |{" "}
+                                      {col1_5 === 0 ? (
+                                        <i
+                                          className="fas fa-arrows-alt-v"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(5)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col1_5 === 1 ? (
+                                        <i
+                                          className="fas fa-sort-amount-up"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(5)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col1_5 === 2 ? (
+                                        <i
+                                          className="fas fa-sort-amount-down-alt"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(5)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                    </th>
+                                    <th style={{ textAlign: "center" }}>
+                                      Moneda |{" "}
+                                      {col1_6 === 0 ? (
+                                        <i
+                                          className="fas fa-arrows-alt-v"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(6)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col1_6 === 1 ? (
+                                        <i
+                                          className="fas fa-sort-amount-up"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(6)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col1_6 === 2 ? (
+                                        <i
+                                          className="fas fa-sort-amount-down-alt"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_1(6)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
                                   {mostrar_filtro_fila_1 == true ? (
                                     <tr>
                                       <th>
                                         <button
                                           className="btn_search_filter"
-                                          onClick={() => buscar_filtro_icono_btn_1()}
+                                          onClick={() =>
+                                            buscar_filtro_icono_btn_1()
+                                          }
                                         >
-                                        <i className="fas fa-filter"></i>
+                                          <i className="fas fa-filter"></i>
                                         </button>
                                       </th>
                                       <th>
                                         <input
                                           type="text"
-                                          onKeyUp={(e) => buscar_filtro_enter_1(e)}
+                                          onKeyUp={(e) =>
+                                            buscar_filtro_enter_1(e)
+                                          }
                                           name="f_vkorgField_1"
                                           maxLength="10"
                                           onChange={(e) =>
@@ -2486,7 +2529,9 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                                       <th>
                                         <input
                                           type="text"
-                                          onKeyUp={(e) => buscar_filtro_enter_1(e)}
+                                          onKeyUp={(e) =>
+                                            buscar_filtro_enter_1(e)
+                                          }
                                           name="f_matnrField_1"
                                           maxLength="10"
                                           onChange={(e) =>
@@ -2500,7 +2545,9 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                                       <th>
                                         <input
                                           type="text"
-                                          onKeyUp={(e) => buscar_filtro_enter_1(e)}
+                                          onKeyUp={(e) =>
+                                            buscar_filtro_enter_1(e)
+                                          }
                                           name="f_maktxField_1"
                                           maxLength="10"
                                           onChange={(e) =>
@@ -2514,7 +2561,9 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                                       <th>
                                         <input
                                           type="text"
-                                          onKeyUp={(e) => buscar_filtro_enter_1(e)}
+                                          onKeyUp={(e) =>
+                                            buscar_filtro_enter_1(e)
+                                          }
                                           name="f_kwmengField_1"
                                           maxLength="10"
                                           onChange={(e) =>
@@ -2528,7 +2577,9 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                                       <th>
                                         <input
                                           type="text"
-                                          onKeyUp={(e) => buscar_filtro_enter_1(e)}
+                                          onKeyUp={(e) =>
+                                            buscar_filtro_enter_1(e)
+                                          }
                                           name="f_vrkmeField_1"
                                           maxLength="10"
                                           onChange={(e) =>
@@ -2542,7 +2593,9 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                                       <th>
                                         <input
                                           type="text"
-                                          onKeyUp={(e) => buscar_filtro_enter_1(e)}
+                                          onKeyUp={(e) =>
+                                            buscar_filtro_enter_1(e)
+                                          }
                                           name="f_netwrField_1"
                                           maxLength="10"
                                           onChange={(e) =>
@@ -2556,7 +2609,9 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                                       <th>
                                         <input
                                           type="text"
-                                          onKeyUp={(e) => buscar_filtro_enter_1(e)}
+                                          onKeyUp={(e) =>
+                                            buscar_filtro_enter_1(e)
+                                          }
                                           name="f_waerkField_1"
                                           maxLength="10"
                                           onChange={(e) =>
@@ -2567,138 +2622,127 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                                           }
                                         />
                                       </th>
-                                      
                                     </tr>
-                                  ):null}
-                                    {response_pedidoanioant.itProductosAntField.map(
-                                      (response, key) => (
-                                        <tr key={key}>
-                                          <th></th>
-                                          <th
-                                            style={{ textAlign: "center" }}
-                                          >
-                                            {response.vkorgField}
-                                          </th>
-                                          <th style={{ textAlign: "center" }}>
-                                            {response.matnrField}
-                                          </th>
-                                          <th
-                                            style={{ textAlign: "left" }}
-                                          >
-                                            {response.maktxField}
-                                          </th>
-                                          <th
-                                            style={{ textAlign: "right" }}
-                                          >
-                                            {Math.round(response.kwmengField)}
-                                          </th>
-                                          <th
-                                            style={{ textAlign: "center" }}
-                                          >
-                                            {response.vrkmeField}
-                                          </th>
-                                          <th
-                                            style={{ textAlign: "right" }}
-                                          >
-                                            {convertDecimal(response.netwrField)}
-                                          </th>
-                                          <th
-                                            style={{ textAlign: "center" }}
-                                          >
-                                            {response.waerkField}
-                                          </th>
-                                          
-                                        </tr>
-                                      )
-                                    )}
-                                  </tbody>
-                                </table>
-                              </div>
-                              {indicador_spinner_1 && <Spinner />}
+                                  ) : null}
+                                  {response_pedidoanioant.itProductosAntField.map(
+                                    (response, key) => (
+                                      <tr key={key}>
+                                        <th></th>
+                                        <th style={{ textAlign: "center" }}>
+                                          {response.vkorgField}
+                                        </th>
+                                        <th style={{ textAlign: "center" }}>
+                                          {response.matnrField}
+                                        </th>
+                                        <th style={{ textAlign: "left" }}>
+                                          {response.maktxField}
+                                        </th>
+                                        <th style={{ textAlign: "right" }}>
+                                          {Math.round(response.kwmengField)}
+                                        </th>
+                                        <th style={{ textAlign: "center" }}>
+                                          {response.vrkmeField}
+                                        </th>
+                                        <th style={{ textAlign: "right" }}>
+                                          {convertDecimal(response.netwrField)}
+                                        </th>
+                                        <th style={{ textAlign: "center" }}>
+                                          {response.waerkField}
+                                        </th>
+                                      </tr>
+                                    )
+                                  )}
+                                </tbody>
+                              </table>
                             </div>
+                            {indicador_spinner_1 && <Spinner />}
                           </div>
-                        </section>
+                        </div>
                       </section>
-                      <div
-                        className="close-modal-button"
-                        onClick={() => {
-                            setshowmodal_1((prev) => !prev);
-                            settext_btn_filtro_1("Filtrar");
-                            setmostrar_filtro_fila_1(false);
-                          }
-                        }
-                      >
-                        <i className="fas fa-times"></i>
-                      </div>
+                    </section>
+                    <div
+                      className="close-modal-button"
+                      onClick={() => {
+                        setshowmodal_1((prev) => !prev);
+                        settext_btn_filtro_1("Filtrar");
+                        setmostrar_filtro_fila_1(false);
+                      }}
+                    >
+                      <i className="fas fa-times"></i>
                     </div>
                   </div>
-                </react.Fragment>
-              ) : null}
+                </div>
+              </react.Fragment>
+            ) : null}
 
-              {showmodal_2 == true ? (
-                <react.Fragment>
-                  <div
-                    className="container-modal-background"
-                    onClick={closeModal_2}
-                    ref={modalRef_2}
-                  >
-                    <div className="modal-wrapper modal-wrapper-bg">
-                      <section className="row" style={{ paddingTop: "50px" }}>
-                        <section>
-                          <div style={{ margin: "10px" }} className="row">
-                            <div className="subtitle-section">
-                              Pedidos de este año (3 últimos meses)
-                            </div>
+            {showmodal_2 == true ? (
+              <react.Fragment>
+                <div
+                  className="container-modal-background"
+                  onClick={closeModal_2}
+                  ref={modalRef_2}
+                >
+                  <div className="modal-wrapper modal-wrapper-bg">
+                    <section className="row" style={{ paddingTop: "50px" }}>
+                      <section>
+                        <div style={{ margin: "10px" }} className="row">
+                          <div className="subtitle-section">
+                            Pedidos de este año (3 últimos meses)
+                          </div>
 
-                            <div className="col-sm-3 d-flex align-items-center">
-                              <label>Desde</label>
-                            </div>
-                            <div className="col-sm-3">
-                              <InputForm
-                                attribute={{
-                                  name: "desde_infocliente_anio_act_fecha",
-                                  type: "date",
-                                  value: InputPAct.PActDesde,
-                                  disabled: false,
-                                  checked: false,
-                                  matchcode: false,
-                                }}
-                                handleChange={handleChange}
-                              />
-                            </div>
+                          <div className="col-sm-3 d-flex align-items-center">
+                            <label>Desde</label>
+                          </div>
+                          <div className="col-sm-3">
+                            <InputForm
+                              attribute={{
+                                name: "desde_infocliente_anio_act_fecha",
+                                type: "date",
+                                value: InputPAct.PActDesde,
+                                disabled: false,
+                                checked: false,
+                                matchcode: false,
+                              }}
+                              handleChange={handleChange}
+                            />
+                          </div>
 
-                            <div className="col-sm-3 d-flex align-items-center">
-                              <label>Hasta</label>
-                            </div>
-                            <div className="col-sm-3">
-                              <InputForm
-                                attribute={{
-                                  name: "hasta_infocliente_anio_act_fecha",
-                                  type: "date",
-                                  value: InputPAct.PActHasta,
-                                  disabled: false,
-                                  checked: false,
-                                  matchcode: false,
-                                }}
-                                handleChange={handleChange}
-                              />
-                            </div>
+                          <div className="col-sm-3 d-flex align-items-center">
+                            <label>Hasta</label>
+                          </div>
+                          <div className="col-sm-3">
+                            <InputForm
+                              attribute={{
+                                name: "hasta_infocliente_anio_act_fecha",
+                                type: "date",
+                                value: InputPAct.PActHasta,
+                                disabled: false,
+                                checked: false,
+                                matchcode: false,
+                              }}
+                              handleChange={handleChange}
+                            />
+                          </div>
 
-                            {indicador_response_infocliente && (
-                              <div
-                                style={{ margin: "10px", alignSelf: "center" }}
-                              >
-                                <div className="col-md-6 p-1">
-                                  <BtnSearch
-                                    attribute={{
-                                      name: "Buscar",
-                                      classNamebtn: "btn_search",
-                                    }}
-                                    onClick={() => {ClearAllColumns_2(); clear_filtro_fila_2(); SearchPedidoAnioAct("","")}}
-                                  />
-                                </div>
-                                
-                                <div className="col-md-6 p-1">
+                          {indicador_response_infocliente && (
+                            <div
+                              style={{ margin: "10px", alignSelf: "center" }}
+                            >
+                              <div className="col-md-6 p-1">
+                                <BtnSearch
+                                  attribute={{
+                                    name: "Buscar",
+                                    classNamebtn: "btn_search",
+                                  }}
+                                  onClick={() => {
+                                    ClearAllColumns_2();
+                                    clear_filtro_fila_2();
+                                    SearchPedidoAnioAct("", "");
+                                  }}
+                                />
+                              </div>
+
+                              <div className="col-md-6 p-1">
                                 {arraycheckbox_export_2[0].data.length > 0 ? (
                                   <ExcelFile
                                     filename="Informacion de Cliente"
@@ -2730,218 +2774,266 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                                       />
                                     }
                                   >
-                                    <ExcelSheet dataSet={DataSet_2} name="exportacion" />
+                                    <ExcelSheet
+                                      dataSet={DataSet_2}
+                                      name="exportacion"
+                                    />
                                   </ExcelFile>
                                 )}
                               </div>
-                                <div className="col-sm-12 col-md-12 m-1">
-                                  <BtnSearch
-                                    attribute={{
-                                      name: text_btn_filtro_2,
-                                      classNamebtn: "btn_search",
-                                    }}
-                                    onClick={() => MostrarFiltro_2()}
-                                  />
-                                </div>
+                              <div className="col-sm-12 col-md-12 m-1">
+                                <BtnSearch
+                                  attribute={{
+                                    name: text_btn_filtro_2,
+                                    classNamebtn: "btn_search",
+                                  }}
+                                  onClick={() => MostrarFiltro_2()}
+                                />
                               </div>
-                            )}
+                            </div>
+                          )}
 
-                            <div className="col-md-12">
-                              <div className="title-section">
-                                <label> Productos </label>
-                                <hr />
-                              </div>
-                              <div className="container-table-200">
-                                <table className="content-table">
-                                  <thead>
+                          <div className="col-md-12">
+                            <div className="title-section">
+                              <label> Productos </label>
+                              <hr />
+                            </div>
+                            <div className="container-table-200">
+                              <table className="content-table">
+                                <thead>
                                   <tr>
-                                      <th></th>
-                                      <th style={{ textAlign: "center" }}>
-                                        Org. Ventas |{" "}
-                                          {col2_7 === 0 ? (
-                                              <i
-                                              className="fas fa-arrows-alt-v"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(7)}
-                                              ></i>
-                                            ) : null}
-                                            {col2_7 === 1 ? (
-                                              <i
-                                              className="fas fa-sort-amount-up"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(7)}
-                                              ></i>
-                                            ) : null}
-                                            {col2_7 === 2 ? (
-                                              <i
-                                              className="fas fa-sort-amount-down-alt"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(7)}
-                                              ></i>
-                                            ) : null}
-                                      </th>
-                                      <th style={{ height: "auto" }}>
-                                        Material |{" "}
-                                          {col2_1 === 0 ? (
-                                              <i
-                                              className="fas fa-arrows-alt-v"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(1)}
-                                              ></i>
-                                            ) : null}
-                                            {col2_1 === 1 ? (
-                                              <i
-                                              className="fas fa-sort-amount-up"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(1)}
-                                              ></i>
-                                            ) : null}
-                                            {col2_1 === 2 ? (
-                                              <i
-                                              className="fas fa-sort-amount-down-alt"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(1)}
-                                              ></i>
-                                            ) : null}
-                                      </th>
-                                      <th style={{ textAlign: "left" }}>
-                                        Denominación |{" "}
-                                          {col2_2 === 0 ? (
-                                              <i
-                                              className="fas fa-arrows-alt-v"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(2)}
-                                              ></i>
-                                            ) : null}
-                                            {col2_2 === 1 ? (
-                                              <i
-                                              className="fas fa-sort-amount-up"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(2)}
-                                              ></i>
-                                            ) : null}
-                                            {col2_2 === 2 ? (
-                                              <i
-                                              className="fas fa-sort-amount-down-alt"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(2)}
-                                              ></i>
-                                            ) : null}
-                                      </th>
-                                      <th style={{ textAlign: "right" }}>
-                                        Cantidad |{" "}
-                                          {col2_3 === 0 ? (
-                                              <i
-                                              className="fas fa-arrows-alt-v"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(3)}
-                                              ></i>
-                                            ) : null}
-                                            {col2_3 === 1 ? (
-                                              <i
-                                              className="fas fa-sort-amount-up"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(3)}
-                                              ></i>
-                                            ) : null}
-                                            {col2_3 === 2 ? (
-                                              <i
-                                              className="fas fa-sort-amount-down-alt"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(3)}
-                                              ></i>
-                                            ) : null}
-                                      </th>
-                                      <th style={{ textAlign: "center" }}>
-                                        UM |{" "}
-                                          {col2_4 === 0 ? (
-                                              <i
-                                              className="fas fa-arrows-alt-v"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(4)}
-                                              ></i>
-                                            ) : null}
-                                            {col2_4 === 1 ? (
-                                              <i
-                                              className="fas fa-sort-amount-up"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(4)}
-                                              ></i>
-                                            ) : null}
-                                            {col2_4 === 2 ? (
-                                              <i
-                                              className="fas fa-sort-amount-down-alt"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(4)}
-                                              ></i>
-                                            ) : null}
-                                      </th>
-                                      <th style={{ textAlign: "right" }}>
-                                        Valor Neto |{" "}
-                                          {col2_5 === 0 ? (
-                                              <i
-                                              className="fas fa-arrows-alt-v"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(5)}
-                                              ></i>
-                                            ) : null}
-                                            {col2_5 === 1 ? (
-                                              <i
-                                              className="fas fa-sort-amount-up"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(5)}
-                                              ></i>
-                                            ) : null}
-                                            {col2_5 === 2 ? (
-                                              <i
-                                              className="fas fa-sort-amount-down-alt"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(5)}
-                                              ></i>
-                                            ) : null}
-                                      </th>
-                                      <th style={{ textAlign: "center" }}>
-                                        Moneda |{" "}
-                                          {col2_6 === 0 ? (
-                                              <i
-                                              className="fas fa-arrows-alt-v"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(6)}
-                                              ></i>
-                                            ) : null}
-                                            {col2_6 === 1 ? (
-                                              <i
-                                              className="fas fa-sort-amount-up"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(6)}
-                                              ></i>
-                                            ) : null}
-                                            {col2_6 === 2 ? (
-                                              <i
-                                              className="fas fa-sort-amount-down-alt"
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => handleChangeColumna_2(6)}
-                                              ></i>
-                                            ) : null}
-                                      </th>
-                                      
-                                    </tr>
-                                  </thead>
-                                  <tbody>
+                                    <th></th>
+                                    <th style={{ textAlign: "center" }}>
+                                      Org. Ventas |{" "}
+                                      {col2_7 === 0 ? (
+                                        <i
+                                          className="fas fa-arrows-alt-v"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(7)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col2_7 === 1 ? (
+                                        <i
+                                          className="fas fa-sort-amount-up"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(7)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col2_7 === 2 ? (
+                                        <i
+                                          className="fas fa-sort-amount-down-alt"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(7)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                    </th>
+                                    <th style={{ height: "auto" }}>
+                                      Material |{" "}
+                                      {col2_1 === 0 ? (
+                                        <i
+                                          className="fas fa-arrows-alt-v"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(1)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col2_1 === 1 ? (
+                                        <i
+                                          className="fas fa-sort-amount-up"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(1)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col2_1 === 2 ? (
+                                        <i
+                                          className="fas fa-sort-amount-down-alt"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(1)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                    </th>
+                                    <th style={{ textAlign: "left" }}>
+                                      Denominación |{" "}
+                                      {col2_2 === 0 ? (
+                                        <i
+                                          className="fas fa-arrows-alt-v"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(2)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col2_2 === 1 ? (
+                                        <i
+                                          className="fas fa-sort-amount-up"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(2)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col2_2 === 2 ? (
+                                        <i
+                                          className="fas fa-sort-amount-down-alt"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(2)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                    </th>
+                                    <th style={{ textAlign: "right" }}>
+                                      Cantidad |{" "}
+                                      {col2_3 === 0 ? (
+                                        <i
+                                          className="fas fa-arrows-alt-v"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(3)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col2_3 === 1 ? (
+                                        <i
+                                          className="fas fa-sort-amount-up"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(3)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col2_3 === 2 ? (
+                                        <i
+                                          className="fas fa-sort-amount-down-alt"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(3)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                    </th>
+                                    <th style={{ textAlign: "center" }}>
+                                      UM |{" "}
+                                      {col2_4 === 0 ? (
+                                        <i
+                                          className="fas fa-arrows-alt-v"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(4)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col2_4 === 1 ? (
+                                        <i
+                                          className="fas fa-sort-amount-up"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(4)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col2_4 === 2 ? (
+                                        <i
+                                          className="fas fa-sort-amount-down-alt"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(4)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                    </th>
+                                    <th style={{ textAlign: "right" }}>
+                                      Valor Neto |{" "}
+                                      {col2_5 === 0 ? (
+                                        <i
+                                          className="fas fa-arrows-alt-v"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(5)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col2_5 === 1 ? (
+                                        <i
+                                          className="fas fa-sort-amount-up"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(5)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col2_5 === 2 ? (
+                                        <i
+                                          className="fas fa-sort-amount-down-alt"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(5)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                    </th>
+                                    <th style={{ textAlign: "center" }}>
+                                      Moneda |{" "}
+                                      {col2_6 === 0 ? (
+                                        <i
+                                          className="fas fa-arrows-alt-v"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(6)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col2_6 === 1 ? (
+                                        <i
+                                          className="fas fa-sort-amount-up"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(6)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                      {col2_6 === 2 ? (
+                                        <i
+                                          className="fas fa-sort-amount-down-alt"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            handleChangeColumna_2(6)
+                                          }
+                                        ></i>
+                                      ) : null}
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
                                   {mostrar_filtro_fila_2 == true ? (
                                     <tr>
                                       <th>
                                         <button
-                                            className="btn_search_filter"
-                                            onClick={() => buscar_filtro_icono_btn_2()}
-                                          >
+                                          className="btn_search_filter"
+                                          onClick={() =>
+                                            buscar_filtro_icono_btn_2()
+                                          }
+                                        >
                                           <i className="fas fa-filter"></i>
                                         </button>
                                       </th>
                                       <th>
                                         <input
                                           type="text"
-                                          onKeyUp={(e) => buscar_filtro_enter_2(e)}
+                                          onKeyUp={(e) =>
+                                            buscar_filtro_enter_2(e)
+                                          }
                                           name="f_vkorgField_2"
                                           maxLength="10"
                                           onChange={(e) =>
@@ -2955,7 +3047,9 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                                       <th>
                                         <input
                                           type="text"
-                                          onKeyUp={(e) => buscar_filtro_enter_2(e)}
+                                          onKeyUp={(e) =>
+                                            buscar_filtro_enter_2(e)
+                                          }
                                           name="f_matnrField_2"
                                           maxLength="10"
                                           onChange={(e) =>
@@ -2969,7 +3063,9 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                                       <th>
                                         <input
                                           type="text"
-                                          onKeyUp={(e) => buscar_filtro_enter_2(e)}
+                                          onKeyUp={(e) =>
+                                            buscar_filtro_enter_2(e)
+                                          }
                                           name="f_maktxField_2"
                                           maxLength="10"
                                           onChange={(e) =>
@@ -2983,7 +3079,9 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                                       <th>
                                         <input
                                           type="text"
-                                          onKeyUp={(e) => buscar_filtro_enter_2(e)}
+                                          onKeyUp={(e) =>
+                                            buscar_filtro_enter_2(e)
+                                          }
                                           name="f_kwmengField_2"
                                           maxLength="10"
                                           onChange={(e) =>
@@ -2997,7 +3095,9 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                                       <th>
                                         <input
                                           type="text"
-                                          onKeyUp={(e) => buscar_filtro_enter_2(e)}
+                                          onKeyUp={(e) =>
+                                            buscar_filtro_enter_2(e)
+                                          }
                                           name="f_vrkmeField_2"
                                           maxLength="10"
                                           onChange={(e) =>
@@ -3011,7 +3111,9 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                                       <th>
                                         <input
                                           type="text"
-                                          onKeyUp={(e) => buscar_filtro_enter_2(e)}
+                                          onKeyUp={(e) =>
+                                            buscar_filtro_enter_2(e)
+                                          }
                                           name="f_netwrField_2"
                                           maxLength="10"
                                           onChange={(e) =>
@@ -3025,7 +3127,9 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                                       <th>
                                         <input
                                           type="text"
-                                          onKeyUp={(e) => buscar_filtro_enter_2(e)}
+                                          onKeyUp={(e) =>
+                                            buscar_filtro_enter_2(e)
+                                          }
                                           name="f_waerkField_2"
                                           maxLength="10"
                                           onChange={(e) =>
@@ -3036,13 +3140,12 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                                           }
                                         />
                                       </th>
-                                      
                                     </tr>
-                                  ):null}
-                                    {response_pedidoanioact.itProductosActField.map(
-                                      (response, key) => (
-                                        <tr key={key}>
-                                          <th>
+                                  ) : null}
+                                  {response_pedidoanioact.itProductosActField.map(
+                                    (response, key) => (
+                                      <tr key={key}>
+                                        <th>
                                           {/* <input
                                               type="checkbox"
                                               id={
@@ -3089,72 +3192,57 @@ const [DataSet_1, setDataSet_1] = useState([{ columns: [], data: [] }]);
                                                   });
                                               }}
                                             /> */}
-                                          </th>
-                                          <th
-                                            style={{ textAlign: "center" }}
-                                          >
-                                            {response.vkorgField}
-                                          </th>
-                                          <th style={{ textAlign: "center" }}>
-                                            {response.matnrField}
-                                          </th>
-                                          <th
-                                            style={{ textAlign: "left" }}
-                                          >
-                                            {response.maktxField}
-                                          </th>
-                                          <th
-                                            style={{ textAlign: "right" }}
-                                          >
-                                            {Math.round(response.kwmengField)}
-                                          </th>
-                                          <th
-                                            style={{ textAlign: "center" }}
-                                          >
-                                            {response.vrkmeField}
-                                          </th>
-                                          <th
-                                            style={{ textAlign: "right" }}
-                                          >
-                                            {convertDecimal(response.netwrField)}
-                                          </th>
-                                          <th
-                                            style={{ textAlign: "center" }}
-                                          >
-                                            {response.waerkField}
-                                          </th>
-                                          
-                                        </tr>
-                                      )
-                                    )}
-                                  </tbody>
-                                </table>
-                              </div>
-                              {indicador_spinner_2 && <Spinner />}
+                                        </th>
+                                        <th style={{ textAlign: "center" }}>
+                                          {response.vkorgField}
+                                        </th>
+                                        <th style={{ textAlign: "center" }}>
+                                          {response.matnrField}
+                                        </th>
+                                        <th style={{ textAlign: "left" }}>
+                                          {response.maktxField}
+                                        </th>
+                                        <th style={{ textAlign: "right" }}>
+                                          {Math.round(response.kwmengField)}
+                                        </th>
+                                        <th style={{ textAlign: "center" }}>
+                                          {response.vrkmeField}
+                                        </th>
+                                        <th style={{ textAlign: "right" }}>
+                                          {convertDecimal(response.netwrField)}
+                                        </th>
+                                        <th style={{ textAlign: "center" }}>
+                                          {response.waerkField}
+                                        </th>
+                                      </tr>
+                                    )
+                                  )}
+                                </tbody>
+                              </table>
                             </div>
+                            {indicador_spinner_2 && <Spinner />}
                           </div>
-                        </section>
+                        </div>
                       </section>
-                      <div
-                        className="close-modal-button"
-                        onClick={() => 
-                          {
-                            setshowmodal_2((prev) => !prev);
-                            settext_btn_filtro_2("Filtrar");
-                            setmostrar_filtro_fila_2(false);
-                          }
-                      }
-                      >
-                        <i className="fas fa-times"></i>
-                      </div>
+                    </section>
+                    <div
+                      className="close-modal-button"
+                      onClick={() => {
+                        setshowmodal_2((prev) => !prev);
+                        settext_btn_filtro_2("Filtrar");
+                        setmostrar_filtro_fila_2(false);
+                      }}
+                    >
+                      <i className="fas fa-times"></i>
                     </div>
                   </div>
-                </react.Fragment>
-              ) : null}
-            </div>
-          ) : (
+                </div>
+              </react.Fragment>
+            ) : null}
+          </div>
+          {/* ) : (
             <div className="access-route">NO TIENE ACCESO A ESTE REPORTE</div>
-          )}
+          )} */}
         </>
       )}
     </React.Fragment>

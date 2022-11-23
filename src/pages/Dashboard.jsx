@@ -6,24 +6,36 @@ import { getUser } from "../Services/ServiceUser";
 import Spinner from "../components/Spinner";
 import jwt from "jwt-decode";
 import ChangeStatusPassword from "../components/ChangeStatusPassword/ChangeStatusPassword";
+import { ConfiPerfiles } from "../Services/ServiceCambioPrecio";
 const Dashboard = () => {
   document.body.classList.remove("body-green");
   document.body.classList.add("body-light");
 
   //CARGA DE SPINNER
   const [spinner, setspinner] = useState(false);
-  const [roladmin, setroladmin] = useState(false);
-  const [consultapedido, setconsultapedido] = useState(false);
-  const [informacioncliente, setinformacioncliente] = useState(false);
-  const [consultastock, setconsultastock] = useState(false);
-  const [deudacliente, setdeudacliente] = useState(false);
-  const [reportepromociones, setreportepromociones] = useState(false);
 
   //para el cambio de contraseña
   const [show_status_password, setshow_status_password] = useState(false);
 
+  // CONTROL DE ACCESO A ITEMS DE MENUS
+  const [usuarios, setUsuarios] = useState(false);
+  const [roles, setRoles] = useState(false);
+  const [auditoria, setAuditoria] = useState(false);
+  const [configuracion, setConfiguracion] = useState(false);
+  const [consPedidos, setConsPedidos] = useState(false);
+  const [consStock, setConsStock] = useState(false);
+  const [promociones, setPromociones] = useState(false);
+  const [infoCliente, setInfoCliente] = useState(false);
+  const [estadoCuenta, setEstadoCuenta] = useState(false);
+  const [generarSolicitud, setGenerarSolicitud] = useState(false);
+  const [misSolicitudes, setMisSolicitudes] = useState(false);
+  const [misAprobaciones, setMisAprobaciones] = useState(false);
+
+  const [modAdministracion, setModAdministracion] = useState(false);
+  const [modReportes, setModReportes] = useState(false);
+  const [modCambioPrecio, setModCambioPrecio] = useState(false);
+
   useEffect(() => {
-    
     if (localStorage.getItem("_token")) {
       //valida para el nuevo cambio de contraseña
       getUser(jwt(localStorage.getItem("_token")).nameid).then((result) => {
@@ -39,61 +51,122 @@ const Dashboard = () => {
       getUser(jwt(localStorage.getItem("_token")).nameid).then((result) => {
         // rol 1 -- adminsitrador
         // rol 2 -- supervisor
-        if (result.data[0].id_role == 1) {
-          setroladmin(true);
-        }
-        let model_sap = {
-          IsUsuario: result.data[0].username,
+        // rol 3 -- gerente
+        let model_perfil = {
+          IsOpcion: "L",
+          IsRol: result.data[0].id_role.toString(),
+          IsUser: "",
+          ItPerfil: [],
         };
-        ValidarUsuarioSAP(model_sap).then((result_sap) => {
-          for (
-            let index = 0;
-            index < result_sap.etValidaViewField.length;
-            index++
-          ) {
-            if (result_sap.etValidaViewField[index].reporteField == "01") {
-              if (result_sap.etValidaViewField[index].validoField == "1") {
-                setconsultapedido(true);
-              } else {
-                setconsultapedido(false);
+        ConfiPerfiles(model_perfil).then((result) => {
+          console.log(result);
+          if (result.etPerfilField.length > 0) {
+            for (let i = 0; i < result.etPerfilField.length; i++) {
+              const element = result.etPerfilField[i];
+              if (element.grupoField == "1") {
+                if (
+                  element.idModuloField == "AUD" &&
+                  element.activeField == "X"
+                ) {
+                  setAuditoria(true);
+                  setModAdministracion(true);
+                }
+
+                if (
+                  element.idModuloField == "CONF" &&
+                  element.activeField == "X"
+                ) {
+                  setConfiguracion(true);
+                  setModAdministracion(true);
+                }
+
+                if (
+                  element.idModuloField == "ROL" &&
+                  element.activeField == "X"
+                ) {
+                  setRoles(true);
+                  setModAdministracion(true);
+                }
+
+                if (
+                  element.idModuloField == "USU" &&
+                  element.activeField == "X"
+                ) {
+                  setUsuarios(true);
+                  setModAdministracion(true);
+                }
               }
-            } else if (
-              result_sap.etValidaViewField[index].reporteField == "02"
-            ) {
-              if (result_sap.etValidaViewField[index].validoField == "1") {
-                setinformacioncliente(true);
-              } else {
-                setinformacioncliente(false);
+
+              if (element.grupoField == "2") {
+                if (
+                  element.idModuloField == "R01" &&
+                  element.activeField == "X"
+                ) {
+                  setConsPedidos(true);
+                  setModReportes(true);
+                }
+
+                if (
+                  element.idModuloField == "R02" &&
+                  element.activeField == "X"
+                ) {
+                  setConsStock(true);
+                  setModReportes(true);
+                }
+
+                if (
+                  element.idModuloField == "R03" &&
+                  element.activeField == "X"
+                ) {
+                  setPromociones(true);
+                  setModReportes(true);
+                }
+
+                if (
+                  element.idModuloField == "R04" &&
+                  element.activeField == "X"
+                ) {
+                  setInfoCliente(true);
+                  setModReportes(true);
+                }
+
+                if (
+                  element.idModuloField == "R05" &&
+                  element.activeField == "X"
+                ) {
+                  setEstadoCuenta(true);
+                  setModReportes(true);
+                }
               }
-            } else if (
-              result_sap.etValidaViewField[index].reporteField == "03"
-            ) {
-              if (result_sap.etValidaViewField[index].validoField == "1") {
-                setconsultastock(true);
-              } else {
-                setconsultastock(false);
+
+              if (element.grupoField == "3") {
+                if (
+                  element.idModuloField == "CP01" &&
+                  element.activeField == "X"
+                ) {
+                  setGenerarSolicitud(true);
+                  setModCambioPrecio(true);
+                }
+
+                if (
+                  element.idModuloField == "CP02" &&
+                  element.activeField == "X"
+                ) {
+                  setMisSolicitudes(true);
+                  setModCambioPrecio(true);
+                }
+
+                if (
+                  element.idModuloField == "CP03" &&
+                  element.activeField == "X"
+                ) {
+                  setMisAprobaciones(true);
+                  setModCambioPrecio(true);
+                }
               }
-            } else if (
-              result_sap.etValidaViewField[index].reporteField == "04"
-            ) {
-              if (result_sap.etValidaViewField[index].validoField == "1") {
-                setdeudacliente(true);
-              } else {
-                setdeudacliente(false);
-              }
-            } else if (
-              result_sap.etValidaViewField[index].reporteField == "05"
-            ) {
-              if (result_sap.etValidaViewField[index].validoField == "1") {
-                setreportepromociones(true);
-              } else {
-                setreportepromociones(false);
-              }
-            }
-            if (result_sap.etValidaViewField.length - 1 == index) {
-              setspinner(false);
             }
           }
+          setspinner(false);
         });
       });
     }
@@ -107,7 +180,7 @@ const Dashboard = () => {
         />
       ) : null}
       <div className="container-dashboard">
-        {roladmin && (
+        {usuarios && (
           <div className="dasboard-grid">
             {/* Usuarios */}
             <div className="row-fila">
@@ -116,7 +189,7 @@ const Dashboard = () => {
             <Link to="users">Usuarios</Link>
           </div>
         )}
-        {roladmin && (
+        {auditoria && (
           <div className="dasboard-grid">
             {/* Auditoria */}
             <div className="row-fila">
@@ -125,7 +198,7 @@ const Dashboard = () => {
             <Link to="auditoria">Auditoría</Link>
           </div>
         )}
-        {roladmin && (
+        {configuracion && (
           <div className="dasboard-grid">
             {/* Auditoria */}
             <div className="row-fila">
@@ -135,7 +208,7 @@ const Dashboard = () => {
           </div>
         )}
         {spinner && <Spinner />}
-        {consultapedido && (
+        {consPedidos && (
           <div className="dasboard-grid">
             {/* Consulta de pedidos */}
             <div className="row-fila">
@@ -144,7 +217,7 @@ const Dashboard = () => {
             <Link to="consulta_pedido">Consulta de Pedidos</Link>
           </div>
         )}
-        {consultastock && (
+        {consStock && (
           <div className="dasboard-grid">
             {/* Consulta de stock */}
             <div className="row-fila">
@@ -153,7 +226,7 @@ const Dashboard = () => {
             <Link to="consulta_stock">Consulta de stock</Link>
           </div>
         )}
-        {reportepromociones && (
+        {promociones && (
           <div className="dasboard-grid">
             {/* Reporte de Promociones */}
             <div className="row-fila">
@@ -162,7 +235,7 @@ const Dashboard = () => {
             <a href="promociones">Promociones</a>
           </div>
         )}
-        {informacioncliente && (
+        {infoCliente && (
           <div className="dasboard-grid">
             {/* Información del cliente */}
             <div className="row-fila">
@@ -171,7 +244,7 @@ const Dashboard = () => {
             <Link to="informacion_cliente">Información del Cliente</Link>
           </div>
         )}
-        {deudacliente && (
+        {estadoCuenta && (
           <div className="dasboard-grid">
             {/* Deuda de cliente */}
             <div className="row-fila">

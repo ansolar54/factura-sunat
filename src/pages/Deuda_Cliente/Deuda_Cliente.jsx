@@ -10,7 +10,7 @@ import jwt from "jwt-decode";
 import { RegistrarAuditoria } from "../../Services/ServiceAuditoria";
 
 const Deuda_Cliente = () => {
-  const [listaCorreo,setListaCorreo] = useState([]);
+  const [listaCorreo, setListaCorreo] = useState([]);
   //CODIGO DE CLIENTE
   const [IsCliente, setIsCliente] = useState("");
   //RESSULTADO DE LA BUSQUEDA
@@ -67,23 +67,26 @@ const Deuda_Cliente = () => {
   const [IsOrden, setIsOrden] = useState("");
 
   useEffect(() => {
-    if (indicadorruta == false) {
-      setspinnerroute(true);
-      ValidarRuta("04").then((result) => {
-        if (result.reporte == 1) {
-          setspinnerroute(false);
-          setaccesoruta(true);
-          setindicadorruta(true);
-        } else {
-          setspinnerroute(false);
-          setaccesoruta(false);
-          setindicadorruta(true);
-        }
-      });
-    }
+    // if (indicadorruta == false) {
+    //   setspinnerroute(true);
+    //   ValidarRuta("04").then((result) => {
+    //     if (result.reporte == 1) {
+    //       setspinnerroute(false);
+    //       setaccesoruta(true);
+    //       setindicadorruta(true);
+    //     } else {
+    //       setspinnerroute(false);
+    //       setaccesoruta(false);
+    //       setindicadorruta(true);
+    //     }
+    //   });
+    // }
 
     //REGISTRO DE AUDITORÍA
-    RegistrarAuditoria({id_user:Number(jwt(localStorage.getItem("_token")).nameid), id_event:4});
+    RegistrarAuditoria({
+      id_user: Number(jwt(localStorage.getItem("_token")).nameid),
+      id_event: 4,
+    });
   }, []);
 
   function handleChangeFiltro(name, value) {
@@ -238,7 +241,7 @@ const Deuda_Cliente = () => {
     }
   }
 
-  function handleChangeColumna(num_col){
+  function handleChangeColumna(num_col) {
     switch (num_col) {
       // 1: ascendente
       // 0: descendente
@@ -249,7 +252,6 @@ const Deuda_Cliente = () => {
           setIsCampo("TIPO_DOC");
           setIsOrden("0");
           SearchDeuCliDetalle("TIPO_DOC", "0");
-          
         } else if (col_1 === 1) {
           setcol_1(col_1 + 1);
           setIsCampo("TIPO_DOC");
@@ -269,7 +271,6 @@ const Deuda_Cliente = () => {
           setIsCampo("NRO_DOC");
           setIsOrden("0");
           SearchDeuCliDetalle("NRO_DOC", "0");
-          
         } else if (col_2 === 1) {
           setcol_2(col_2 + 1);
           setIsCampo("NRO_DOC");
@@ -289,7 +290,6 @@ const Deuda_Cliente = () => {
           setIsCampo("FEMISION");
           setIsOrden("0");
           SearchDeuCliDetalle("FEMISION", "0");
-          
         } else if (col_3 === 1) {
           setcol_3(col_3 + 1);
           setIsCampo("FEMISION");
@@ -437,31 +437,29 @@ const Deuda_Cliente = () => {
         break;
     }
   }
-  function SearchDeuCliDetalle(IsCampo,IsOrden) {
-
-
+  function SearchDeuCliDetalle(IsCampo, IsOrden) {
     setListaCorreo([]);
-    
+
     let model = {
       IsCampoAct: IsCampo,
       IsOrdenAct: IsOrden,
       IsCliente: IsCliente,
       IsChkCab: "",
       IsUser: jwt(localStorage.getItem("_token")).username,
-      ItFilter:[
+      ItFilter: [
         {
           TIPO_DOC: f_TIPO_DOC,
           NRO_DOC: f_NRO_DOC,
           FECHA_EMISION: f_FECHA_EMISION,
           FECHA_VENCI: f_FECHA_VENCI,
           MONEDA: f_MONEDA,
-          DEUDA: f_DEUDA.replace(',', ''),
+          DEUDA: f_DEUDA.replace(",", ""),
           A_FAVOR: f_A_FAVOR,
           BANCO: f_BANCO,
           NRO_UNICO: f_NRO_UNICO,
-          DOC_ORIGEN: f_DOC_ORIGEN
-        }
-      ]
+          DOC_ORIGEN: f_DOC_ORIGEN,
+        },
+      ],
     };
     setspinner(true);
     setrespuesta_DeuCliBuscar({
@@ -469,7 +467,7 @@ const Deuda_Cliente = () => {
         { rucField: "", direccionField: "", razonSocField: "" },
       ],
       etDetalleField: [],
-      etCorreosField:[],
+      etCorreosField: [],
       etResumenField: [],
     });
 
@@ -477,18 +475,21 @@ const Deuda_Cliente = () => {
       if (result.etCabeceraField.length >= 1) {
         setvalidateIscliente(true);
         setrespuesta_DeuCliBuscar(result);
-        
+
         for (let i = 0; i < result.etCorreosField.length; i++) {
           // setListaCorreo([... listaCorreo, {
           //   num: i,
           //   correoField:result.etCorreosField[i].correoField
           // }])
-          setListaCorreo(listaCorreo => [...listaCorreo,{
-            num: i,
-            correoField:result.etCorreosField[i].correoField
-          }]);
-          console.log(i)
-          console.log(listaCorreo)
+          setListaCorreo((listaCorreo) => [
+            ...listaCorreo,
+            {
+              num: i,
+              correoField: result.etCorreosField[i].correoField,
+            },
+          ]);
+          console.log(i);
+          console.log(listaCorreo);
         }
         // setListaCorreo(result.etCorreosField);
       }
@@ -496,21 +497,19 @@ const Deuda_Cliente = () => {
     });
   }
 
-  function SearchDeuCli(IsCampo,IsOrden) {
+  function SearchDeuCli(IsCampo, IsOrden) {
     setListaCorreo([]);
     clear_filtro_fila();
     settext_btn_filtro("Filtrar");
     setmostrar_filtro_fila(false);
 
-    
-    
     let model = {
       IsCampoAct: IsCampo,
       IsOrdenAct: IsOrden,
       IsCliente: IsCliente,
       IsChkCab: "",
       IsUser: jwt(localStorage.getItem("_token")).username,
-      ItFilter:[
+      ItFilter: [
         {
           TIPO_DOC: "",
           NRO_DOC: "",
@@ -521,35 +520,38 @@ const Deuda_Cliente = () => {
           A_FAVOR: "",
           BANCO: "",
           NRO_UNICO: "",
-          DOC_ORIGEN: ""
-        }
-      ]
+          DOC_ORIGEN: "",
+        },
+      ],
     };
     setspinner(true);
     setrespuesta_DeuCliBuscar({
       etCabeceraField: [
         { rucField: "", direccionField: "", razonSocField: "" },
       ],
-      etCorreosField:[],
+      etCorreosField: [],
       etDetalleField: [],
       etResumenField: [],
     });
-    console.log(model)
+    console.log(model);
     DeuCli_Buscar(model).then((result) => {
       if (result.etCabeceraField.length >= 1) {
         setvalidateIscliente(true);
         setrespuesta_DeuCliBuscar(result);
-        console.log(result)
+        console.log(result);
         for (let i = 0; i < result.etCorreosField.length; i++) {
           // setListaCorreo([... listaCorreo, {
           //   num: i,
           //   correoField:result.etCorreosField[i].correoField
           // }])
-          setListaCorreo(listaCorreo => [...listaCorreo,{
-            num: i,
-            correoField:result.etCorreosField[i].correoField
-          }]);
-          console.log(result.etCorreosField[i].correoField)
+          setListaCorreo((listaCorreo) => [
+            ...listaCorreo,
+            {
+              num: i,
+              correoField: result.etCorreosField[i].correoField,
+            },
+          ]);
+          console.log(result.etCorreosField[i].correoField);
           console.log(listaCorreo);
         }
         // setListaCorreo(result.etCorreosField);
@@ -574,14 +576,16 @@ const Deuda_Cliente = () => {
     }
   }
 
-  function Clear(){
-    setvalidateIscliente(false)
+  function Clear() {
+    setvalidateIscliente(false);
     setrespuesta_DeuCliBuscar({
-      etCabeceraField: [{ rucField: "", direccionField: "" ,razonSocField:""}],
+      etCabeceraField: [
+        { rucField: "", direccionField: "", razonSocField: "" },
+      ],
       etDetalleField: [],
       etCorreosField: [],
       etResumenField: [],
-    })
+    });
     setIsCliente("");
   }
 
@@ -679,699 +683,745 @@ const Deuda_Cliente = () => {
         <Spinner />
       ) : (
         <>
-          {accesoruta ? (
-            <div className="container-view">
-              <MatchcodeCliente
-                showMcCliente={showMcCliente}
-                setShowMcCliente={setshowMcCliente}
-                IsCliente={IsCliente}
-                setIsCliente={setIsCliente}
-              />
-              <Envio_Correo
-                showEnvcorreo={showEnvCorreo}
-                setshowEnvcorreo={setshowEnvCorreo}
-                IsCliente={IsCliente}
-                listaCorreo={listaCorreo}
-              />
-              <div className="title-section">
-                <div>
-                  <label> Reportes / Estado de Cuenta </label>
-                  <label> Tipo cambio : <label style={{color: '#03BF68'}}>{localStorage.getItem("_tipoCambio")}</label> </label>
-                </div>
-                <hr />
+          {/* {accesoruta ? ( */}
+          <div className="container-view">
+            <MatchcodeCliente
+              showMcCliente={showMcCliente}
+              setShowMcCliente={setshowMcCliente}
+              IsCliente={IsCliente}
+              setIsCliente={setIsCliente}
+            />
+            <Envio_Correo
+              showEnvcorreo={showEnvCorreo}
+              setshowEnvcorreo={setshowEnvCorreo}
+              IsCliente={IsCliente}
+              listaCorreo={listaCorreo}
+            />
+            <div className="title-section">
+              <div>
+                <label> Reportes / Estado de Cuenta </label>
+                <label>
+                  {" "}
+                  Tipo cambio :{" "}
+                  <label style={{ color: "#03BF68" }}>
+                    {localStorage.getItem("_tipoCambio")}
+                  </label>{" "}
+                </label>
               </div>
-              <section>
-                <div style={{ margin: "10px" }} className="row">
-                  <div className="col-sm-2 d-flex align-items-center">
-                    <label>Cod. Cliente</label>
-                  </div>
-                  <div className="col-sm-10">
-                    <InputForm
-                      attribute={{
-                        name: "deucli_cliente",
-                        type: "text",
-                        value: IsCliente,
-                        disabled: false,
-                        checked: false,
-                        matchcode: true,
-                        maxlength:10
-                      }}
-                      handleChange={handleChange}
-                      onClick={() => mc_Cliente()}
-                    />
-                  </div>
-                </div>
-              </section>
-              <section className="col-md-12 row">
-                <div className="col-md-6 p-2">
-                  <BtnSearch
-                    attribute={{ name: "Buscar", classNamebtn: "btn_search" }}
-                    onClick={() => SearchDeuCli("","")}
-                  />
-                </div>
-                <div className="col-md-6 p-2">
-                  <BtnSearch
-                    attribute={{ name: "Limpiar Campos", classNamebtn: "btn_search" }}
-                    onClick={() => Clear()}
-                  />
-                </div>
-                {validateIscliente && (
-                  <div className="col-md-12 p-2">
-                    <BtnSearch
-                      attribute={{
-                        name: "Enviar PDF",
-                        classNamebtn: "btn_search",
-                      }}
-                      onClick={() => Exportar_pdf()}
-                    />
-                  </div>
-                )}
-              </section>
-              <section>
-                <div style={{ margin: "10px" }} className="row">
-                  <div className="col-sm-2 d-flex align-items-center">
-                    <label>Nombre Cliente</label>
-                  </div>
-                  <div className="col-sm-10">
-                    <InputForm
-                      attribute={{
-                        name: "deucli_razonsocial",
-                        type: "text",
-                        value:
-                          respuesta_DeuCliBuscar.etCabeceraField[0]
-                            .razonSocField,
-                        disabled: true,
-                        checked: false,
-                        matchcode: false,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="col-sm-2 d-flex align-items-center">
-                    <label></label>
-                  </div>
-                  <div className="col-sm-10 d-flex align-items-center" style={{paddingLeft:'18px'}}>
-                    <input
-                      type="checkbox"
-                      name="2"
-                      className="checkbox_detalle_2"
-                     
-                      disabled
-                      checked={
-                        respuesta_DeuCliBuscar.etCabeceraField[0].chkField ==
-                        "X"
-                          ? true
-                          : false
-                      }
-                    />
-                    <label style={{ margin: "10px",textTransform:'uppercase',fontWeight:'bold' }}>
-                      {respuesta_DeuCliBuscar.etCabeceraField[0].chkDescField}
-                    </label>
-                  </div>
-                </div>
-              </section>
-
-              <section style={{marginBottom:'47px'}}>
-                <div style={{ margin: "10px" }} className="row">
-                  <div className="col-sm-2 d-flex align-items-center">
-                    <label>RUC</label>
-                  </div>
-                  <div className="col-sm-10">
-                    <InputForm
-                      attribute={{
-                        name: "deucli_ruc",
-                        type: "text",
-                        value:
-                          respuesta_DeuCliBuscar.etCabeceraField[0].rucField,
-                        disabled: true,
-                        checked: false,
-                        matchcode: false,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="col-sm-2 d-flex align-items-center">
-                    <label>Dirección</label>
-                  </div>
-                  <div className="col-sm-10">
-                    <InputForm
-                      attribute={{
-                        name: "deucli_direccion",
-                        type: "text",
-                        value:
-                          respuesta_DeuCliBuscar.etCabeceraField[0]
-                            .direccionField,
-                        disabled: true,
-                        checked: false,
-                        matchcode: false,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-                </div>
-              </section>
-              <section>
-                <div className="container-table" style={{ margin: "15px" }}>
-                  <div  style={{fontSize:'18px', margin:'8px',fontWeight:'bold'}}>
-                    <label> Resumen </label>
-                    <hr />
-                  </div>
-                  <div className="container-table-600">
-                    <table className="content-table">
-                      <thead>
-                        <tr>
-                          <th>Tipo de Doc.</th>
-                          <th>Soles</th>
-                          <th>Dólares</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {respuesta_DeuCliBuscar.etResumenField.map(
-                          (response, key) => (
-                            <>
-                            {respuesta_DeuCliBuscar.etResumenField.length ==
-                              key + 1 ? (
-                                <tr key={key} style={{backgroundColor:"#b5ecca", fontSize:'16px'}}>
-                              
-                              <th style={{ textAlign: "left", textTransform: "uppercase", fontWeight:'bold' }} align={"left"}>
-                                {response.tipoDocField}
-                              </th> 
-                              <th
-                                style={{ textAlign: "right" }}
-                                align={"right"}
-                              >
-                                {/* {convertDecimal(response.montoSolesField)} */}
-                                {response.montoSolesField}
-                              </th>
-                              
-                              <th
-                                  style={{ textAlign: "right" }}
-                                  align={"right"}
-                                >
-                                  {/* {convertDecimal(response.montoDolaresField)} */}
-                                  {response.montoDolaresField}
-                                </th>
-                            </tr>
-                              ) :
-                              <tr key={key}>
-                              
-                              <th style={{ textAlign: "left" , textTransform: "uppercase", fontWeight:'bold',fontSize:'16px' }} align={"left"}>
-                                {response.tipoDocField}
-                              </th> 
-                              <th
-                                style={{ textAlign: "right" }}
-                                align={"right"}
-                              >
-                                {/* {convertDecimal(response.montoSolesField)} */}
-                                {response.montoSolesField}
-                              </th>
-                              
-                              <th
-                                  style={{ textAlign: "right" }}
-                                  align={"right"}
-                                >
-                                  {/* {convertDecimal(response.montoDolaresField)} */}
-                                  {response.montoDolaresField}
-                                </th>
-                            </tr>
-                              }
-                            
-                          </>)
-                        )}
-                      </tbody>
-                    </table>
-                    {spinner && <Spinner />}
-                  </div>
-                </div>
-              </section>
-              
-              <section>
-                <div className="container-table" style={{ margin: "15px" }}>
-                  <div style={{fontSize:'18px', margin:'8px', fontWeight:'bold'}}>
-                    <label> Detalle </label>
-                    <hr />
-                    {respuesta_DeuCliBuscar.etDetalleField.length ? (
-                  <div className="col-sm-12 col-md-12 m-1">
-                    <BtnSearch
-                      attribute={{
-                        name: text_btn_filtro,
-                        classNamebtn: "btn_search",
-                      }}
-                      onClick={() => ModalFiltro()}
-                    />
-                  </div>
-                ) : null}
-                  </div>
-                  <div className="container-table-600">
-                    <table className="content-table">
-                      <thead>
-                        <tr>
-                          {
-                            mostrar_filtro_fila == true ? (
-                              <th></th>
-                            ): null
-                          }
-                          <th>Tipo de Doc. |{" "}
-                          {col_1 === 0 ? (
-                              <i
-                              className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(1)}
-                              ></i>
-                            ) : null}
-                            {col_1 === 1 ? (
-                              <i
-                              className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(1)}
-                              ></i>
-                            ) : null}
-                            {col_1 === 2 ? (
-                              <i
-                              className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(1)}
-                              ></i>
-                            ) : null}</th>
-                          <th>Nro. Doc. |{" "}
-                          {col_2 === 0 ? (
-                              <i
-                              className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(2)}
-                              ></i>
-                            ) : null}
-                            {col_2 === 1 ? (
-                              <i
-                              className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(2)}
-                              ></i>
-                            ) : null}
-                            {col_2 === 2 ? (
-                              <i
-                              className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(2)}
-                              ></i>
-                            ) : null}
-                          </th>
-                          <th>Emisión |{" "}
-                          {col_3 === 0 ? (
-                              <i
-                              className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(3)}
-                              ></i>
-                            ) : null}
-                            {col_3 === 1 ? (
-                              <i
-                              className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(3)}
-                              ></i>
-                            ) : null}
-                            {col_3 === 2 ? (
-                              <i
-                              className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(3)}
-                              ></i>
-                            ) : null}
-                          </th>
-                          <th>Vcmto |{" "}
-                          {col_4 === 0 ? (
-                              <i
-                              className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(4)}
-                              ></i>
-                            ) : null}
-                            {col_4 === 1 ? (
-                              <i
-                              className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(4)}
-                              ></i>
-                            ) : null}
-                            {col_4 === 2 ? (
-                              <i
-                              className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(4)}
-                              ></i>
-                            ) : null}
-                          </th>
-                          <th>Mon. |{" "}
-                          {col_5 === 0 ? (
-                              <i
-                              className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(5)}
-                              ></i>
-                            ) : null}
-                            {col_5 === 1 ? (
-                              <i
-                              className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(5)}
-                              ></i>
-                            ) : null}
-                            {col_5 === 2 ? (
-                              <i
-                              className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(5)}
-                              ></i>
-                            ) : null}
-                          </th>
-                          <th>Deuda |{" "}
-                          {col_6 === 0 ? (
-                              <i
-                              className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(6)}
-                              ></i>
-                            ) : null}
-                            {col_6 === 1 ? (
-                              <i
-                              className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(6)}
-                              ></i>
-                            ) : null}
-                            {col_6 === 2 ? (
-                              <i
-                              className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(6)}
-                              ></i>
-                            ) : null}
-                          </th>
-                          <th>A favor |{" "}
-                          {col_7 === 0 ? (
-                              <i
-                              className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(7)}
-                              ></i>
-                            ) : null}
-                            {col_7 === 1 ? (
-                              <i
-                              className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(7)}
-                              ></i>
-                            ) : null}
-                            {col_7 === 2 ? (
-                              <i
-                              className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(7)}
-                              ></i>
-                            ) : null}
-                          </th>
-                          <th>Banco |{" "}
-                          {col_8 === 0 ? (
-                              <i
-                              className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(8)}
-                              ></i>
-                            ) : null}
-                            {col_8 === 1 ? (
-                              <i
-                              className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(8)}
-                              ></i>
-                            ) : null}
-                            {col_8 === 2 ? (
-                              <i
-                              className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(8)}
-                              ></i>
-                            ) : null}
-                          </th>
-                          <th>Nro. Único |{" "}
-                          {col_9 === 0 ? (
-                              <i
-                              className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(9)}
-                              ></i>
-                            ) : null}
-                            {col_9 === 1 ? (
-                              <i
-                              className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(9)}
-                              ></i>
-                            ) : null}
-                            {col_9 === 2 ? (
-                              <i
-                              className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(9)}
-                              ></i>
-                            ) : null}
-                          </th>
-                          <th>Doc. Ori |{" "}
-                          {col_10 === 0 ? (
-                              <i
-                              className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(10)}
-                              ></i>
-                            ) : null}
-                            {col_10 === 1 ? (
-                              <i
-                              className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(10)}
-                              ></i>
-                            ) : null}
-                            {col_10 === 2 ? (
-                              <i
-                              className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(10)}
-                              ></i>
-                            ) : null}
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                      {mostrar_filtro_fila == true ? (
-                          <tr>
-                            <th>
-                              <button
-                                className="btn_search_filter"
-                                onClick={() => buscar_filtro_icono_btn()}
-                              >
-                                <i className="fas fa-filter"></i>
-                              </button>
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_TIPO_DOC"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_NRO_DOC"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="date"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_FECHA_EMISION"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="date"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_FECHA_VENCI"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_MONEDA"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_DEUDA"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_A_FAVOR"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_BANCO"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_NRO_UNICO"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_DOC_ORIGEN"
-                                maxLength="150"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            
-                          </tr>
-                        ) : null}
-                        {respuesta_DeuCliBuscar.etDetalleField.map(
-                          (response, key) => (
-                            <tr key={key}>
-                              {
-                                mostrar_filtro_fila == true ? (
-                                  <th></th>
-                                ): null
-                              }
-                              <th style={{ textAlign: "left" }}>
-                                {response.tipoDocField}
-                              </th>
-                              <th style={{ textAlign: "center" }}>
-                                {response.nroDocField}
-                              </th>
-                              <th style={{ textAlign: "center" }}>
-                                {/* {formatDate(response.fechaEmisionField)} */}
-                                {response.fechaEmisionField}
-                              </th>
-                              <th style={{ textAlign: "center" }}>
-                                {/* {formatDate(response.fechaVenciField)} */}
-                                {response.fechaVenciField}
-                              </th>
-                              <th style={{ textAlign: "center" }}>
-                                {response.monedaField}
-                              </th>
-                              <th style={{ textAlign: "right" }}>
-                                {convertDecimal(response.deudaField)}
-                              </th>
-                              <th style={{ textAlign: "center" }}>
-                                {response.aFavorField}
-                              </th>
-                              <th style={{ textAlign: "center" }}>
-                                {response.bancoField}
-                              </th>
-                              <th style={{ textAlign: "center" }}>
-                                {response.nroUnicoField}
-                              </th>
-                              <th style={{ textAlign: "center" }}>
-                                {response.docOrigenField}
-                              </th>
-                            </tr>
-                          )
-                        )}
-                      </tbody>
-                    </table>
-                    {spinner && <Spinner />}
-                  </div>
-                </div>
-              </section>
-              
+              <hr />
             </div>
-          ) : (
+            <section>
+              <div style={{ margin: "10px" }} className="row">
+                <div className="col-sm-2 d-flex align-items-center">
+                  <label>Cod. Cliente</label>
+                </div>
+                <div className="col-sm-10">
+                  <InputForm
+                    attribute={{
+                      name: "deucli_cliente",
+                      type: "text",
+                      value: IsCliente,
+                      disabled: false,
+                      checked: false,
+                      matchcode: true,
+                      maxlength: 10,
+                    }}
+                    handleChange={handleChange}
+                    onClick={() => mc_Cliente()}
+                  />
+                </div>
+              </div>
+            </section>
+            <section className="col-md-12 row">
+              <div className="col-md-6 p-2">
+                <BtnSearch
+                  attribute={{ name: "Buscar", classNamebtn: "btn_search" }}
+                  onClick={() => SearchDeuCli("", "")}
+                />
+              </div>
+              <div className="col-md-6 p-2">
+                <BtnSearch
+                  attribute={{
+                    name: "Limpiar Campos",
+                    classNamebtn: "btn_search",
+                  }}
+                  onClick={() => Clear()}
+                />
+              </div>
+              {validateIscliente && (
+                <div className="col-md-12 p-2">
+                  <BtnSearch
+                    attribute={{
+                      name: "Enviar PDF",
+                      classNamebtn: "btn_search",
+                    }}
+                    onClick={() => Exportar_pdf()}
+                  />
+                </div>
+              )}
+            </section>
+            <section>
+              <div style={{ margin: "10px" }} className="row">
+                <div className="col-sm-2 d-flex align-items-center">
+                  <label>Nombre Cliente</label>
+                </div>
+                <div className="col-sm-10">
+                  <InputForm
+                    attribute={{
+                      name: "deucli_razonsocial",
+                      type: "text",
+                      value:
+                        respuesta_DeuCliBuscar.etCabeceraField[0].razonSocField,
+                      disabled: true,
+                      checked: false,
+                      matchcode: false,
+                    }}
+                    handleChange={handleChange}
+                  />
+                </div>
+
+                <div className="col-sm-2 d-flex align-items-center">
+                  <label></label>
+                </div>
+                <div
+                  className="col-sm-10 d-flex align-items-center"
+                  style={{ paddingLeft: "18px" }}
+                >
+                  <input
+                    type="checkbox"
+                    name="2"
+                    className="checkbox_detalle_2"
+                    disabled
+                    checked={
+                      respuesta_DeuCliBuscar.etCabeceraField[0].chkField == "X"
+                        ? true
+                        : false
+                    }
+                  />
+                  <label
+                    style={{
+                      margin: "10px",
+                      textTransform: "uppercase",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {respuesta_DeuCliBuscar.etCabeceraField[0].chkDescField}
+                  </label>
+                </div>
+              </div>
+            </section>
+
+            <section style={{ marginBottom: "47px" }}>
+              <div style={{ margin: "10px" }} className="row">
+                <div className="col-sm-2 d-flex align-items-center">
+                  <label>RUC</label>
+                </div>
+                <div className="col-sm-10">
+                  <InputForm
+                    attribute={{
+                      name: "deucli_ruc",
+                      type: "text",
+                      value: respuesta_DeuCliBuscar.etCabeceraField[0].rucField,
+                      disabled: true,
+                      checked: false,
+                      matchcode: false,
+                    }}
+                    handleChange={handleChange}
+                  />
+                </div>
+
+                <div className="col-sm-2 d-flex align-items-center">
+                  <label>Dirección</label>
+                </div>
+                <div className="col-sm-10">
+                  <InputForm
+                    attribute={{
+                      name: "deucli_direccion",
+                      type: "text",
+                      value:
+                        respuesta_DeuCliBuscar.etCabeceraField[0]
+                          .direccionField,
+                      disabled: true,
+                      checked: false,
+                      matchcode: false,
+                    }}
+                    handleChange={handleChange}
+                  />
+                </div>
+              </div>
+            </section>
+            <section>
+              <div className="container-table" style={{ margin: "15px" }}>
+                <div
+                  style={{
+                    fontSize: "18px",
+                    margin: "8px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  <label> Resumen </label>
+                  <hr />
+                </div>
+                <div className="container-table-600">
+                  <table className="content-table">
+                    <thead>
+                      <tr>
+                        <th>Tipo de Doc.</th>
+                        <th>Soles</th>
+                        <th>Dólares</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {respuesta_DeuCliBuscar.etResumenField.map(
+                        (response, key) => (
+                          <>
+                            {respuesta_DeuCliBuscar.etResumenField.length ==
+                            key + 1 ? (
+                              <tr
+                                key={key}
+                                style={{
+                                  backgroundColor: "#b5ecca",
+                                  fontSize: "16px",
+                                }}
+                              >
+                                <th
+                                  style={{
+                                    textAlign: "left",
+                                    textTransform: "uppercase",
+                                    fontWeight: "bold",
+                                  }}
+                                  align={"left"}
+                                >
+                                  {response.tipoDocField}
+                                </th>
+                                <th
+                                  style={{ textAlign: "right" }}
+                                  align={"right"}
+                                >
+                                  {/* {convertDecimal(response.montoSolesField)} */}
+                                  {response.montoSolesField}
+                                </th>
+
+                                <th
+                                  style={{ textAlign: "right" }}
+                                  align={"right"}
+                                >
+                                  {/* {convertDecimal(response.montoDolaresField)} */}
+                                  {response.montoDolaresField}
+                                </th>
+                              </tr>
+                            ) : (
+                              <tr key={key}>
+                                <th
+                                  style={{
+                                    textAlign: "left",
+                                    textTransform: "uppercase",
+                                    fontWeight: "bold",
+                                    fontSize: "16px",
+                                  }}
+                                  align={"left"}
+                                >
+                                  {response.tipoDocField}
+                                </th>
+                                <th
+                                  style={{ textAlign: "right" }}
+                                  align={"right"}
+                                >
+                                  {/* {convertDecimal(response.montoSolesField)} */}
+                                  {response.montoSolesField}
+                                </th>
+
+                                <th
+                                  style={{ textAlign: "right" }}
+                                  align={"right"}
+                                >
+                                  {/* {convertDecimal(response.montoDolaresField)} */}
+                                  {response.montoDolaresField}
+                                </th>
+                              </tr>
+                            )}
+                          </>
+                        )
+                      )}
+                    </tbody>
+                  </table>
+                  {spinner && <Spinner />}
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <div className="container-table" style={{ margin: "15px" }}>
+                <div
+                  style={{
+                    fontSize: "18px",
+                    margin: "8px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  <label> Detalle </label>
+                  <hr />
+                  {respuesta_DeuCliBuscar.etDetalleField.length ? (
+                    <div className="col-sm-12 col-md-12 m-1">
+                      <BtnSearch
+                        attribute={{
+                          name: text_btn_filtro,
+                          classNamebtn: "btn_search",
+                        }}
+                        onClick={() => ModalFiltro()}
+                      />
+                    </div>
+                  ) : null}
+                </div>
+                <div className="container-table-600">
+                  <table className="content-table">
+                    <thead>
+                      <tr>
+                        {mostrar_filtro_fila == true ? <th></th> : null}
+                        <th>
+                          Tipo de Doc. |{" "}
+                          {col_1 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(1)}
+                            ></i>
+                          ) : null}
+                          {col_1 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(1)}
+                            ></i>
+                          ) : null}
+                          {col_1 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(1)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          Nro. Doc. |{" "}
+                          {col_2 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(2)}
+                            ></i>
+                          ) : null}
+                          {col_2 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(2)}
+                            ></i>
+                          ) : null}
+                          {col_2 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(2)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          Emisión |{" "}
+                          {col_3 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(3)}
+                            ></i>
+                          ) : null}
+                          {col_3 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(3)}
+                            ></i>
+                          ) : null}
+                          {col_3 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(3)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          Vcmto |{" "}
+                          {col_4 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(4)}
+                            ></i>
+                          ) : null}
+                          {col_4 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(4)}
+                            ></i>
+                          ) : null}
+                          {col_4 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(4)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          Mon. |{" "}
+                          {col_5 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(5)}
+                            ></i>
+                          ) : null}
+                          {col_5 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(5)}
+                            ></i>
+                          ) : null}
+                          {col_5 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(5)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          Deuda |{" "}
+                          {col_6 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(6)}
+                            ></i>
+                          ) : null}
+                          {col_6 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(6)}
+                            ></i>
+                          ) : null}
+                          {col_6 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(6)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          A favor |{" "}
+                          {col_7 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(7)}
+                            ></i>
+                          ) : null}
+                          {col_7 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(7)}
+                            ></i>
+                          ) : null}
+                          {col_7 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(7)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          Banco |{" "}
+                          {col_8 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(8)}
+                            ></i>
+                          ) : null}
+                          {col_8 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(8)}
+                            ></i>
+                          ) : null}
+                          {col_8 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(8)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          Nro. Único |{" "}
+                          {col_9 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(9)}
+                            ></i>
+                          ) : null}
+                          {col_9 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(9)}
+                            ></i>
+                          ) : null}
+                          {col_9 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(9)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          Doc. Ori |{" "}
+                          {col_10 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(10)}
+                            ></i>
+                          ) : null}
+                          {col_10 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(10)}
+                            ></i>
+                          ) : null}
+                          {col_10 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(10)}
+                            ></i>
+                          ) : null}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {mostrar_filtro_fila == true ? (
+                        <tr>
+                          <th>
+                            <button
+                              className="btn_search_filter"
+                              onClick={() => buscar_filtro_icono_btn()}
+                            >
+                              <i className="fas fa-filter"></i>
+                            </button>
+                          </th>
+                          <th>
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_TIPO_DOC"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_NRO_DOC"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="date"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_FECHA_EMISION"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="date"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_FECHA_VENCI"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_MONEDA"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_DEUDA"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_A_FAVOR"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_BANCO"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_NRO_UNICO"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_DOC_ORIGEN"
+                              maxLength="150"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                        </tr>
+                      ) : null}
+                      {respuesta_DeuCliBuscar.etDetalleField.map(
+                        (response, key) => (
+                          <tr key={key}>
+                            {mostrar_filtro_fila == true ? <th></th> : null}
+                            <th style={{ textAlign: "left" }}>
+                              {response.tipoDocField}
+                            </th>
+                            <th style={{ textAlign: "center" }}>
+                              {response.nroDocField}
+                            </th>
+                            <th style={{ textAlign: "center" }}>
+                              {/* {formatDate(response.fechaEmisionField)} */}
+                              {response.fechaEmisionField}
+                            </th>
+                            <th style={{ textAlign: "center" }}>
+                              {/* {formatDate(response.fechaVenciField)} */}
+                              {response.fechaVenciField}
+                            </th>
+                            <th style={{ textAlign: "center" }}>
+                              {response.monedaField}
+                            </th>
+                            <th style={{ textAlign: "right" }}>
+                              {convertDecimal(response.deudaField)}
+                            </th>
+                            <th style={{ textAlign: "center" }}>
+                              {response.aFavorField}
+                            </th>
+                            <th style={{ textAlign: "center" }}>
+                              {response.bancoField}
+                            </th>
+                            <th style={{ textAlign: "center" }}>
+                              {response.nroUnicoField}
+                            </th>
+                            <th style={{ textAlign: "center" }}>
+                              {response.docOrigenField}
+                            </th>
+                          </tr>
+                        )
+                      )}
+                    </tbody>
+                  </table>
+                  {spinner && <Spinner />}
+                </div>
+              </div>
+            </section>
+          </div>
+          {/* ) : (
             <div className="access-route">NO TIENE ACCESO A ESTE REPORTE</div>
-          )}
+          )} */}
         </>
       )}
     </>

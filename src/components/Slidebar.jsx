@@ -6,23 +6,33 @@ import { getUser } from "../Services/ServiceUser";
 import Spinner from "./Spinner";
 import jwt from "jwt-decode";
 import logo_farmex from "../assets/logo-farmex-white.png";
+import { ConfiPerfiles } from "../Services/ServiceCambioPrecio";
 
 const Slidebar = () => {
   //CARGA DE SPINNER
   const [spinner, setspinner] = useState(false);
-  // const [rol, setRol] = useState(1);
-  const [roladmin, setroladmin] = useState(false);
-  const [consultapedido, setconsultapedido] = useState(false);
-  const [informacioncliente, setinformacioncliente] = useState(false);
-  const [consultastock, setconsultastock] = useState(false);
-  const [deudacliente, setdeudacliente] = useState(false);
-  const [reportepromociones, setreportepromociones] = useState(false);
 
   const history = useHistory();
   const [estado_switch, setestado_switch] = useState(1);
   const [nameuser, setnameuser] = useState("");
 
-  const [isGerente, setIsGerente] = useState(false);
+  // CONTROL DE ACCESO A ITEMS DE MENUS
+  const [usuarios, setUsuarios] = useState(false);
+  const [roles, setRoles] = useState(false);
+  const [auditoria, setAuditoria] = useState(false);
+  const [configuracion, setConfiguracion] = useState(false);
+  const [consPedidos, setConsPedidos] = useState(false);
+  const [consStock, setConsStock] = useState(false);
+  const [promociones, setPromociones] = useState(false);
+  const [infoCliente, setInfoCliente] = useState(false);
+  const [estadoCuenta, setEstadoCuenta] = useState(false);
+  const [generarSolicitud, setGenerarSolicitud] = useState(false);
+  const [misSolicitudes, setMisSolicitudes] = useState(false);
+  const [misAprobaciones, setMisAprobaciones] = useState(false);
+
+  const [modAdministracion, setModAdministracion] = useState(false);
+  const [modReportes, setModReportes] = useState(false);
+  const [modCambioPrecio, setModCambioPrecio] = useState(false);
 
   function HandleCategory(id_html) {
     switch (id_html) {
@@ -66,68 +76,122 @@ const Slidebar = () => {
         setnameuser(jwt(localStorage.getItem("_token")).username);
         // rol 1 -- adminsitrador
         // rol 2 -- supervisor
-        // rol 4 -- gerente
-        if (result.data[0].id_role == 1) {
-          setroladmin(true);
-        }
-
-        if (result.data[0].id_role == 4) {
-          setIsGerente(true);
-        }
-        // setRol(result.data[0].id_role);
-        let model_sap = {
-          IsUsuario: result.data[0].username,
+        // rol 3 -- gerente
+        let model_perfil = {
+          IsOpcion: "L",
+          IsRol: result.data[0].id_role.toString(),
+          IsUser: "",
+          ItPerfil: [],
         };
-        ValidarUsuarioSAP(model_sap).then((result_sap) => {
-          // console.log(result_sap);
-          for (
-            let index = 0;
-            index < result_sap.etValidaViewField.length;
-            index++
-          ) {
-            if (result_sap.etValidaViewField[index].reporteField == "01") {
-              if (result_sap.etValidaViewField[index].validoField == "1") {
-                setconsultapedido(true);
-              } else {
-                setconsultapedido(false);
+        ConfiPerfiles(model_perfil).then((result) => {
+          console.log(result);
+          if (result.etPerfilField.length > 0) {
+            for (let i = 0; i < result.etPerfilField.length; i++) {
+              const element = result.etPerfilField[i];
+              if (element.grupoField == "1") {
+                if (
+                  element.idModuloField == "AUD" &&
+                  element.activeField == "X"
+                ) {
+                  setAuditoria(true);
+                  setModAdministracion(true);
+                }
+
+                if (
+                  element.idModuloField == "CONF" &&
+                  element.activeField == "X"
+                ) {
+                  setConfiguracion(true);
+                  setModAdministracion(true);
+                }
+
+                if (
+                  element.idModuloField == "ROL" &&
+                  element.activeField == "X"
+                ) {
+                  setRoles(true);
+                  setModAdministracion(true);
+                }
+
+                if (
+                  element.idModuloField == "USU" &&
+                  element.activeField == "X"
+                ) {
+                  setUsuarios(true);
+                  setModAdministracion(true);
+                }
               }
-            } else if (
-              result_sap.etValidaViewField[index].reporteField == "02"
-            ) {
-              if (result_sap.etValidaViewField[index].validoField == "1") {
-                setinformacioncliente(true);
-              } else {
-                setinformacioncliente(false);
+
+              if (element.grupoField == "2") {
+                if (
+                  element.idModuloField == "R01" &&
+                  element.activeField == "X"
+                ) {
+                  setConsPedidos(true);
+                  setModReportes(true);
+                }
+
+                if (
+                  element.idModuloField == "R02" &&
+                  element.activeField == "X"
+                ) {
+                  setConsStock(true);
+                  setModReportes(true);
+                }
+
+                if (
+                  element.idModuloField == "R03" &&
+                  element.activeField == "X"
+                ) {
+                  setPromociones(true);
+                  setModReportes(true);
+                }
+
+                if (
+                  element.idModuloField == "R04" &&
+                  element.activeField == "X"
+                ) {
+                  setInfoCliente(true);
+                  setModReportes(true);
+                }
+
+                if (
+                  element.idModuloField == "R05" &&
+                  element.activeField == "X"
+                ) {
+                  setEstadoCuenta(true);
+                  setModReportes(true);
+                }
               }
-            } else if (
-              result_sap.etValidaViewField[index].reporteField == "03"
-            ) {
-              if (result_sap.etValidaViewField[index].validoField == "1") {
-                setconsultastock(true);
-              } else {
-                setconsultastock(false);
+
+              if (element.grupoField == "3") {
+                if (
+                  element.idModuloField == "CP01" &&
+                  element.activeField == "X"
+                ) {
+                  setGenerarSolicitud(true);
+                  setModCambioPrecio(true);
+                }
+
+                if (
+                  element.idModuloField == "CP02" &&
+                  element.activeField == "X"
+                ) {
+                  setMisSolicitudes(true);
+                  setModCambioPrecio(true);
+                }
+
+                if (
+                  element.idModuloField == "CP03" &&
+                  element.activeField == "X"
+                ) {
+                  setMisAprobaciones(true);
+                  setModCambioPrecio(true);
+                }
               }
-            } else if (
-              result_sap.etValidaViewField[index].reporteField == "04"
-            ) {
-              if (result_sap.etValidaViewField[index].validoField == "1") {
-                setdeudacliente(true);
-              } else {
-                setdeudacliente(false);
-              }
-            } else if (
-              result_sap.etValidaViewField[index].reporteField == "05"
-            ) {
-              if (result_sap.etValidaViewField[index].validoField == "1") {
-                setreportepromociones(true);
-              } else {
-                setreportepromociones(false);
-              }
-            }
-            if (result_sap.etValidaViewField.length - 1 == index) {
-              setspinner(false);
             }
           }
+          setspinner(false);
         });
       });
     }
@@ -200,7 +264,7 @@ const Slidebar = () => {
           )}
         </div>
 
-        {roladmin && (
+        {modAdministracion && (
           <div className="slidebar-categories">
             <div
               className="slidebar-categories-header"
@@ -212,29 +276,37 @@ const Slidebar = () => {
             </div>
             <div className="slidebar-subcategories" id="subcat-01">
               <ul>
-                <li className="slidebar-categories-child">
-                  <i className="fas fa-users"></i>
-                  <Link to="users">Usuarios</Link>
-                </li>
-                <li className="slidebar-categories-child">
-                  <i className="far fa-address-card"></i>
-                  <Link to="roles">Roles</Link>
-                </li>
-                <li className="slidebar-categories-child">
-                  <i className="fas fa-newspaper"></i>
-                  <Link to="auditoria">Auditoría</Link>
-                </li>
-                <li className="slidebar-categories-child">
-                  <i className="fas fa-cog"></i>
-                  <Link to="configuracion">Configuración</Link>
-                </li>
+                {usuarios && (
+                  <li className="slidebar-categories-child">
+                    <i className="fas fa-users"></i>
+                    <Link to="users">Usuarios</Link>
+                  </li>
+                )}
+                {roles && (
+                  <li className="slidebar-categories-child">
+                    <i className="far fa-address-card"></i>
+                    <Link to="roles">Roles</Link>
+                  </li>
+                )}
+                {auditoria && (
+                  <li className="slidebar-categories-child">
+                    <i className="fas fa-newspaper"></i>
+                    <Link to="auditoria">Auditoría</Link>
+                  </li>
+                )}
+                {configuracion && (
+                  <li className="slidebar-categories-child">
+                    <i className="fas fa-cog"></i>
+                    <Link to="configuracion">Configuración</Link>
+                  </li>
+                )}
               </ul>
             </div>
           </div>
         )}
 
         {/* REPORTES */}
-        {!isGerente && (
+        {modReportes && (
           <div className="slidebar-categories">
             <div
               className="slidebar-categories-header"
@@ -247,25 +319,25 @@ const Slidebar = () => {
             <div className="slidebar-subcategories" id="subcat-02">
               {spinner && <Spinner />}
               <ul>
-                {consultapedido && (
+                {consPedidos && (
                   <li className="slidebar-categories-child">
                     <i className="fas fa-search"></i>
                     <Link to="consulta_pedido">Consulta de Pedidos</Link>
                   </li>
                 )}
-                {consultastock && (
+                {consStock && (
                   <li className="slidebar-categories-child">
                     <i className="fas fa-pencil-alt"></i>
                     <Link to="consulta_stock">Consulta de Stock</Link>
                   </li>
                 )}
-                {reportepromociones && (
+                {promociones && (
                   <li className="slidebar-categories-child">
                     <i className="fas fa-list-alt"></i>
                     <Link to="promociones">Promociones</Link>
                   </li>
                 )}
-                {informacioncliente && (
+                {infoCliente && (
                   <li className="slidebar-categories-child">
                     <i className="fas fa-id-card"></i>
                     <Link to="informacion_cliente">
@@ -274,7 +346,7 @@ const Slidebar = () => {
                   </li>
                 )}
 
-                {deudacliente && (
+                {estadoCuenta && (
                   <li className="slidebar-categories-child">
                     <i className="fas fa-digital-tachograph"></i>
                     <Link to="estado_cuenta">Estado de Cuenta</Link>
@@ -286,39 +358,42 @@ const Slidebar = () => {
         )}
 
         {/* CAMBIO PRECIO */}
-        <div className="slidebar-categories">
-          <div
-            className="slidebar-categories-header"
-            onClick={() => HandleCategory("icon-close-03")}
-          >
-            <i className="fas fa-box-open"></i>
-            <a>Cambio precio</a>
-            <i className="fas fa-angle-down slider-down-icon"></i>
-          </div>
-          <div className="slidebar-subcategories" id="subcat-03">
-            {spinner && <Spinner />}
-            <ul>
-              {isGerente ? (
-                <li className="slidebar-categories-child">
-                  <i className="fa fa-fax"></i>
-                  <Link to="mis_aprobaciones">Mis aprobaciones</Link>
-                </li>
-              ) : (
-                <>
+        {modCambioPrecio && (
+          <div className="slidebar-categories">
+            <div
+              className="slidebar-categories-header"
+              onClick={() => HandleCategory("icon-close-03")}
+            >
+              <i className="fas fa-box-open"></i>
+              <a>Cambio precio</a>
+              <i className="fas fa-angle-down slider-down-icon"></i>
+            </div>
+            <div className="slidebar-subcategories" id="subcat-03">
+              {spinner && <Spinner />}
+              <ul>
+                {generarSolicitud && (
                   <li className="slidebar-categories-child">
                     <i className="fa fa-book"></i>
                     <Link to="generar_solicitud">Generar solicitud</Link>
                   </li>
+                )}
 
+                {misSolicitudes && (
                   <li className="slidebar-categories-child">
                     <i className="fa fa-credit-card"></i>
                     <Link to="mis_solicitudes">Mis solicitudes</Link>
                   </li>
-                </>
-              )}
-            </ul>
+                )}
+                {misAprobaciones && (
+                  <li className="slidebar-categories-child">
+                    <i className="fa fa-fax"></i>
+                    <Link to="mis_aprobaciones">Mis aprobaciones</Link>
+                  </li>
+                )}
+              </ul>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* <div className="slidebar-categories">
           <div

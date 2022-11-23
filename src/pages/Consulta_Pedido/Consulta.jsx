@@ -317,21 +317,21 @@ const Consulta = () => {
       }
     });
     //valida acceso a ruta
-    if (indicadorruta == false) {
-      setspinnerroute(true);
-      ValidarRuta("01").then((result) => {
-        if (result.reporte == 1) {
-          setspinnerroute(false);
-          setaccesoruta(true);
-          setindicadorruta(true);
-          // Search(1, 0,"","");
-        } else {
-          setspinnerroute(false);
-          setaccesoruta(false);
-          setindicadorruta(true);
-        }
-      });
-    }
+    // if (indicadorruta == false) {
+    //   setspinnerroute(true);
+    //   ValidarRuta("01").then((result) => {
+    //     if (result.reporte == 1) {
+    //       setspinnerroute(false);
+    //       setaccesoruta(true);
+    //       setindicadorruta(true);
+    //       // Search(1, 0,"","");
+    //     } else {
+    //       setspinnerroute(false);
+    //       setaccesoruta(false);
+    //       setindicadorruta(true);
+    //     }
+    //   });
+    // }
     //REGISTRO DE AUDITORÍA
     RegistrarAuditoria({
       id_user: Number(jwt(localStorage.getItem("_token")).nameid),
@@ -2629,61 +2629,61 @@ const Consulta = () => {
         <Spinner />
       ) : (
         <React.Fragment>
-          {accesoruta ? (
-            <div className="container-view">
-              {/* MODAL DE RANGO */}
-              <BusquedaMult
-                showBusMult={showBusMult}
-                setshowBusMult={setshowBusMult}
-                rangos={rangos}
-                setrangos={setrangos}
-                ind_rangos={ind_rang}
-                setind_rangos={setind_rang}
-                type_input={type_input}
-                settype_input={settype_input}
-              />
-              {/* MODALES  */}
-              <VerPedido
-                showverpedido={showverpedido}
-                setshowVerPedido={setshowVerPedido}
-                data={PVbeln}
-              />
-              {/* MODAL MATCHCODE ORGANIZACION DE VENTAS */}
-              <Mc_Org_Ventas_desde
-                showorgventa={showorgventa_desde}
-                setshoworgventa={setshoworgventa_desde}
-                setorg_ventas_desde={setorg_ventas_desde}
-                org_ventas_desde={org_ventas_desde}
-                org_ventas_hasta={org_ventas_hasta}
-                setorg_ventas={setorg_ventas}
-              />
-              <Mc_Org_Ventas_hasta
-                showorgventa={showorgventa_hasta}
-                setshoworgventa={setshoworgventa_hasta}
-                setorg_ventas_hasta={setorg_ventas_hasta}
-                org_ventas_hasta={org_ventas_hasta}
-                org_ventas_desde={org_ventas_desde}
-                setorg_ventas={setorg_ventas}
-              />
-              {/* MODAL MATCHCODE OFICINA DE VENTAS */}
-              <Mc_Ofi_Ventas_desde
-                showofiventa={showofiventa_desde}
-                setshowofiventa={setshowofiventa_desde}
-                setofi_ventas_desde={setofi_ventas_desde}
-                ofi_ventas_desde={ofi_ventas_desde}
-                ofi_ventas_hasta={ofi_ventas_hasta}
-                setofi_ventas={setofi_ventas}
-              />
-              <Mc_Ofi_Ventas_hasta
-                showofiventa={showofiventa_hasta}
-                setshowofiventa={setshowofiventa_hasta}
-                setofi_ventas_hasta={setofi_ventas_hasta}
-                ofi_ventas_hasta={ofi_ventas_hasta}
-                ofi_ventas_desde={ofi_ventas_desde}
-                setofi_ventas={setofi_ventas}
-              />
-              {/* MODAL MATCHCODE CLIENTE */}
-              {/* <Mc_Cliente_desde
+          {/* {accesoruta ? ( */}
+          <div className="container-view">
+            {/* MODAL DE RANGO */}
+            <BusquedaMult
+              showBusMult={showBusMult}
+              setshowBusMult={setshowBusMult}
+              rangos={rangos}
+              setrangos={setrangos}
+              ind_rangos={ind_rang}
+              setind_rangos={setind_rang}
+              type_input={type_input}
+              settype_input={settype_input}
+            />
+            {/* MODALES  */}
+            <VerPedido
+              showverpedido={showverpedido}
+              setshowVerPedido={setshowVerPedido}
+              data={PVbeln}
+            />
+            {/* MODAL MATCHCODE ORGANIZACION DE VENTAS */}
+            <Mc_Org_Ventas_desde
+              showorgventa={showorgventa_desde}
+              setshoworgventa={setshoworgventa_desde}
+              setorg_ventas_desde={setorg_ventas_desde}
+              org_ventas_desde={org_ventas_desde}
+              org_ventas_hasta={org_ventas_hasta}
+              setorg_ventas={setorg_ventas}
+            />
+            <Mc_Org_Ventas_hasta
+              showorgventa={showorgventa_hasta}
+              setshoworgventa={setshoworgventa_hasta}
+              setorg_ventas_hasta={setorg_ventas_hasta}
+              org_ventas_hasta={org_ventas_hasta}
+              org_ventas_desde={org_ventas_desde}
+              setorg_ventas={setorg_ventas}
+            />
+            {/* MODAL MATCHCODE OFICINA DE VENTAS */}
+            <Mc_Ofi_Ventas_desde
+              showofiventa={showofiventa_desde}
+              setshowofiventa={setshowofiventa_desde}
+              setofi_ventas_desde={setofi_ventas_desde}
+              ofi_ventas_desde={ofi_ventas_desde}
+              ofi_ventas_hasta={ofi_ventas_hasta}
+              setofi_ventas={setofi_ventas}
+            />
+            <Mc_Ofi_Ventas_hasta
+              showofiventa={showofiventa_hasta}
+              setshowofiventa={setshowofiventa_hasta}
+              setofi_ventas_hasta={setofi_ventas_hasta}
+              ofi_ventas_hasta={ofi_ventas_hasta}
+              ofi_ventas_desde={ofi_ventas_desde}
+              setofi_ventas={setofi_ventas}
+            />
+            {/* MODAL MATCHCODE CLIENTE */}
+            {/* <Mc_Cliente_desde
                 showcliente={showcliente_desde}
                 setshowcliente={setshowcliente_desde}
                 setcliente_desde={setcliente_desde}
@@ -2691,7 +2691,7 @@ const Consulta = () => {
                 cliente_hasta={cliente_hasta}
                 setcliente={setcliente}
               /> */}
-              {/* <Mc_Cliente_hasta
+            {/* <Mc_Cliente_hasta
                 showcliente={showcliente_hasta}
                 setshowcliente={setshowcliente_hasta}
                 setcliente_hasta={setcliente_hasta}
@@ -2699,459 +2699,459 @@ const Consulta = () => {
                 cliente_desde={cliente_desde}
                 setcliente={setcliente}
               /> */}
-              <Mc_Cliente_desde_v2
-                showcliente={showcliente_desde}
-                setshowcliente={setshowcliente_desde}
-                setcliente_desde={setcliente_desde}
-                cliente_desde={cliente_desde}
-                cliente_hasta={cliente_hasta}
-                setcliente={setcliente}
-              />
-              <Mc_Cliente_hasta_v2
-                showcliente={showcliente_hasta}
-                setshowcliente={setshowcliente_hasta}
-                setcliente_hasta={setcliente_hasta}
-                cliente_hasta={cliente_hasta}
-                cliente_desde={cliente_desde}
-                setcliente={setcliente}
-              />
-              {/* MODAL MATCHCODE MATERIAL */}
-              <Mc_Material_desde
-                showmaterial={showmaterial_desde}
-                setshowmaterial={setshowmaterial_desde}
-                setmaterial_desde={setmaterial_desde}
-                material_desde={material_desde}
-                material_hasta={material_hasta}
-                setmaterial={setmaterial}
-              />
-              <Mc_Material_hasta
-                showmaterial={showmaterial_hasta}
-                setshowmaterial={setshowmaterial_hasta}
-                setmaterial_hasta={setmaterial_hasta}
-                material_hasta={material_hasta}
-                material_desde={material_desde}
-                setmaterial={setmaterial}
-              />
-              <Mc_Comercial_desde
-                showcomercial={showcomercial_desde}
-                setshowcomercial={setshowcomercial_desde}
-                setcomercial_desde={setcomercial_desde}
-                comercial_desde={comercial_desde}
-                comercial_hasta={comercial_hasta}
-                setcomercial={setcomercial}
-                setcomercial_desde_value={setcomercial_desde_value}
-              />
-              <Mc_Comercial_hasta
-                showcomercial={showcomercial_hasta}
-                setshowcomercial={setshowcomercial_hasta}
-                setcomercial_hasta={setcomercial_hasta}
-                comercial_hasta={comercial_hasta}
-                comercial_desde={comercial_desde}
-                setcomercial={setcomercial}
-                setcomercial_hasta_value={setcomercial_hasta_value}
-              />
-              <div className="title-section">
-                <div>
-                  <label> Reportes / Consulta de Pedidos </label>
-                  <label>
-                    {" "}
-                    Tipo cambio :{" "}
-                    <label style={{ color: "#03BF68" }}>
-                      {localStorage.getItem("_tipoCambio")}
-                    </label>{" "}
-                  </label>
-                </div>
-                <hr />
+            <Mc_Cliente_desde_v2
+              showcliente={showcliente_desde}
+              setshowcliente={setshowcliente_desde}
+              setcliente_desde={setcliente_desde}
+              cliente_desde={cliente_desde}
+              cliente_hasta={cliente_hasta}
+              setcliente={setcliente}
+            />
+            <Mc_Cliente_hasta_v2
+              showcliente={showcliente_hasta}
+              setshowcliente={setshowcliente_hasta}
+              setcliente_hasta={setcliente_hasta}
+              cliente_hasta={cliente_hasta}
+              cliente_desde={cliente_desde}
+              setcliente={setcliente}
+            />
+            {/* MODAL MATCHCODE MATERIAL */}
+            <Mc_Material_desde
+              showmaterial={showmaterial_desde}
+              setshowmaterial={setshowmaterial_desde}
+              setmaterial_desde={setmaterial_desde}
+              material_desde={material_desde}
+              material_hasta={material_hasta}
+              setmaterial={setmaterial}
+            />
+            <Mc_Material_hasta
+              showmaterial={showmaterial_hasta}
+              setshowmaterial={setshowmaterial_hasta}
+              setmaterial_hasta={setmaterial_hasta}
+              material_hasta={material_hasta}
+              material_desde={material_desde}
+              setmaterial={setmaterial}
+            />
+            <Mc_Comercial_desde
+              showcomercial={showcomercial_desde}
+              setshowcomercial={setshowcomercial_desde}
+              setcomercial_desde={setcomercial_desde}
+              comercial_desde={comercial_desde}
+              comercial_hasta={comercial_hasta}
+              setcomercial={setcomercial}
+              setcomercial_desde_value={setcomercial_desde_value}
+            />
+            <Mc_Comercial_hasta
+              showcomercial={showcomercial_hasta}
+              setshowcomercial={setshowcomercial_hasta}
+              setcomercial_hasta={setcomercial_hasta}
+              comercial_hasta={comercial_hasta}
+              comercial_desde={comercial_desde}
+              setcomercial={setcomercial}
+              setcomercial_hasta_value={setcomercial_hasta_value}
+            />
+            <div className="title-section">
+              <div>
+                <label> Reportes / Consulta de Pedidos </label>
+                <label>
+                  {" "}
+                  Tipo cambio :{" "}
+                  <label style={{ color: "#03BF68" }}>
+                    {localStorage.getItem("_tipoCambio")}
+                  </label>{" "}
+                </label>
               </div>
-              <section>
-                <div style={{ margin: "10px" }} className="row">
-                  <div className="col-sm-4 d-flex align-items-center">
-                    <label>N° de Pedido</label>
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "docu_comercial_desde",
-                        type: "text",
-                        value: docu_comercial_desde,
-                        disabled: false,
-                        checked: false,
-                        matchcode: false,
-                        maxlength: 10,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "docu_comercial_hasta",
-                        type: "text",
-                        value: docu_comercial_hasta,
-                        disabled: false,
-                        checked: false,
-                        matchcode: false,
-                        maxlength: 10,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-                  <div className="col-sm-2 d-flex align-items-center">
-                    <i
-                      className="fas fa-file-export icon-matchcode-2"
-                      onClick={ChangeBusquedaMult_DocComercial}
-                    ></i>
-                  </div>
-
-                  <div className="col-sm-4 d-flex align-items-center">
-                    <label>Oficina de ventas</label>
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "ofi_ventas_desde",
-                        type: "text",
-                        value: ofi_ventas_desde,
-                        disabled: false,
-                        checked: false,
-                        matchcode: true,
-                        maxlength: 4,
-                      }}
-                      handleChange={handleChange}
-                      onClick={() => mc_ofi_ventas_desde()}
-                    />
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "ofi_ventas_hasta",
-                        type: "text",
-                        value: ofi_ventas_hasta,
-                        disabled: false,
-                        checked: false,
-                        matchcode: true,
-                        maxlength: 4,
-                      }}
-                      handleChange={handleChange}
-                      onClick={() => mc_ofi_ventas_hasta()}
-                    />
-                  </div>
-                  <div className="col-sm-2 d-flex align-items-center">
-                    <i
-                      className="fas fa-file-export icon-matchcode-2"
-                      onClick={ChangeBusquedaMult_OficinaVentas}
-                    ></i>
-                  </div>
-
-                  <div className="col-sm-4 d-flex align-items-center">
-                    <label>Creado el</label>
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "creado_el_desde",
-                        type: "date",
-                        value: creado_el_desde,
-                        disabled: false,
-                        checked: false,
-                        matchcode: false,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "creado_el_hasta",
-                        type: "date",
-                        value: creado_el_hasta,
-                        disabled: false,
-                        checked: false,
-                        matchcode: false,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-                  <div className="col-sm-2 d-flex align-items-center">
-                    <i
-                      className="fas fa-file-export icon-matchcode-2"
-                      onClick={ChangeBusquedaMult_CreadoEl}
-                    ></i>
-                  </div>
-
-                  <div className="col-sm-4 d-flex align-items-center">
-                    <label>Material</label>
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "material_desde",
-                        type: "text",
-                        value: material_desde,
-                        disabled: false,
-                        checked: false,
-                        matchcode: true,
-                        maxlength: 18,
-                      }}
-                      handleChange={handleChange}
-                      onClick={() => mc_material_desde()}
-                    />
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "material_hasta",
-                        type: "text",
-                        value: material_hasta,
-                        disabled: false,
-                        checked: false,
-                        matchcode: true,
-                        maxlength: 18,
-                      }}
-                      handleChange={handleChange}
-                      onClick={() => mc_material_hasta()}
-                    />
-                  </div>
-                  <div className="col-sm-2 d-flex align-items-center">
-                    <i
-                      className="fas fa-file-export icon-matchcode-2"
-                      onClick={ChangeBusquedaMult_Material}
-                    ></i>
-                  </div>
-
-                  <div className="col-sm-4 d-flex align-items-center">
-                    <label>Organización ventas</label>
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "org_ventas_desde",
-                        type: "text",
-                        value: org_ventas_desde,
-                        disabled: false,
-                        checked: false,
-                        matchcode: true,
-                        maxlength: 4,
-                      }}
-                      handleChange={handleChange}
-                      onClick={() => mc_org_ventas_desde()}
-                    />
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "org_ventas_hasta",
-                        type: "text",
-                        value: org_ventas_hasta,
-                        disabled: false,
-                        checked: false,
-                        matchcode: true,
-                        maxlength: 4,
-                      }}
-                      handleChange={handleChange}
-                      onClick={() => mc_org_ventas_hasta()}
-                    />
-                  </div>
-                  <div className="col-sm-2 d-flex align-items-center">
-                    <i
-                      className="fas fa-file-export icon-matchcode-2"
-                      onClick={ChangeBusquedaMult_OrganizacionVentas}
-                    ></i>
-                  </div>
-
-                  <div className="col-sm-4 d-flex align-items-center">
-                    <label>Cod. Cliente</label>
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "cliente_desde",
-                        type: "text",
-                        value: cliente_desde,
-                        disabled: false,
-                        checked: false,
-                        matchcode: true,
-                        maxlength: 10,
-                      }}
-                      handleChange={handleChange}
-                      onClick={() => mc_cliente_desde()}
-                    />
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "cliente_hasta",
-                        type: "text",
-                        value: cliente_hasta,
-                        disabled: false,
-                        checked: false,
-                        matchcode: true,
-                        maxlength: 10,
-                      }}
-                      handleChange={handleChange}
-                      onClick={() => mc_cliente_hasta()}
-                    />
-                  </div>
-                  <div className="col-sm-2 d-flex align-items-center">
-                    <i
-                      className="fas fa-file-export icon-matchcode-2"
-                      onClick={ChangeBusquedaMult_Cliente}
-                    ></i>
-                  </div>
-
-                  <div className="col-sm-4 d-flex align-items-center">
-                    <label>Comercial</label>
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "comercial_desde",
-                        type: "text",
-                        value: comercial_desde_value,
-                        disabled: true,
-                        checked: false,
-                        matchcode: true,
-                        maxlength: 6,
-                      }}
-                      handleChange={handleChange}
-                      onClick={() => mc_comercial_desde()}
-                    />
-                  </div>
-                  <div className="col-sm-3">
-                    <InputForm
-                      attribute={{
-                        name: "comercial_hasta",
-                        type: "text",
-                        value: comercial_hasta_value,
-                        disabled: true,
-                        checked: false,
-                        matchcode: true,
-                        maxlength: 6,
-                      }}
-                      handleChange={handleChange}
-                      onClick={() => mc_comercial_hasta()}
-                    />
-                  </div>
-                  <div className="col-sm-2 d-flex align-items-center">
-                    <i
-                      className="fas fa-file-export icon-matchcode-2"
-                      onClick={ChangeBusquedaMult_Comercial}
-                    ></i>
-                  </div>
+              <hr />
+            </div>
+            <section>
+              <div style={{ margin: "10px" }} className="row">
+                <div className="col-sm-4 d-flex align-items-center">
+                  <label>N° de Pedido</label>
                 </div>
-              </section>
-              <section>
-                <div className="col-sm-12 col-md-2 p-1">
-                  <BtnSearch
-                    attribute={{ name: "Buscar", classNamebtn: "btn_search" }}
-                    onClick={() => Search(1, 0, "", "")}
-                  />
-                </div>
-                <div className="col-sm-12 col-md-2 p-1">
-                  <BtnSearch
+                <div className="col-sm-3">
+                  <InputForm
                     attribute={{
-                      name: "Limpiar Campos",
-                      classNamebtn: "btn_search",
+                      name: "docu_comercial_desde",
+                      type: "text",
+                      value: docu_comercial_desde,
+                      disabled: false,
+                      checked: false,
+                      matchcode: false,
+                      maxlength: 10,
                     }}
-                    onClick={() => Clear()}
+                    handleChange={handleChange}
                   />
                 </div>
-                <div className="col-sm-12 col-md-2 p-1">
-                  {arraycheckbox_export[0].data.length > 0 ? (
-                    <ExcelFile
-                      filename="Consulta de Pedidos"
-                      element={
-                        <BtnExportar
-                          attribute={{
-                            name: "Descargar Excel",
-                            classNamebtn: "btn_export",
-                            disabled: false,
-                          }}
-                        />
-                      }
-                    >
-                      <ExcelSheet
-                        dataSet={arraycheckbox_export}
-                        name="exportacion"
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "docu_comercial_hasta",
+                      type: "text",
+                      value: docu_comercial_hasta,
+                      disabled: false,
+                      checked: false,
+                      matchcode: false,
+                      maxlength: 10,
+                    }}
+                    handleChange={handleChange}
+                  />
+                </div>
+                <div className="col-sm-2 d-flex align-items-center">
+                  <i
+                    className="fas fa-file-export icon-matchcode-2"
+                    onClick={ChangeBusquedaMult_DocComercial}
+                  ></i>
+                </div>
+
+                <div className="col-sm-4 d-flex align-items-center">
+                  <label>Oficina de ventas</label>
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "ofi_ventas_desde",
+                      type: "text",
+                      value: ofi_ventas_desde,
+                      disabled: false,
+                      checked: false,
+                      matchcode: true,
+                      maxlength: 4,
+                    }}
+                    handleChange={handleChange}
+                    onClick={() => mc_ofi_ventas_desde()}
+                  />
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "ofi_ventas_hasta",
+                      type: "text",
+                      value: ofi_ventas_hasta,
+                      disabled: false,
+                      checked: false,
+                      matchcode: true,
+                      maxlength: 4,
+                    }}
+                    handleChange={handleChange}
+                    onClick={() => mc_ofi_ventas_hasta()}
+                  />
+                </div>
+                <div className="col-sm-2 d-flex align-items-center">
+                  <i
+                    className="fas fa-file-export icon-matchcode-2"
+                    onClick={ChangeBusquedaMult_OficinaVentas}
+                  ></i>
+                </div>
+
+                <div className="col-sm-4 d-flex align-items-center">
+                  <label>Creado el</label>
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "creado_el_desde",
+                      type: "date",
+                      value: creado_el_desde,
+                      disabled: false,
+                      checked: false,
+                      matchcode: false,
+                    }}
+                    handleChange={handleChange}
+                  />
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "creado_el_hasta",
+                      type: "date",
+                      value: creado_el_hasta,
+                      disabled: false,
+                      checked: false,
+                      matchcode: false,
+                    }}
+                    handleChange={handleChange}
+                  />
+                </div>
+                <div className="col-sm-2 d-flex align-items-center">
+                  <i
+                    className="fas fa-file-export icon-matchcode-2"
+                    onClick={ChangeBusquedaMult_CreadoEl}
+                  ></i>
+                </div>
+
+                <div className="col-sm-4 d-flex align-items-center">
+                  <label>Material</label>
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "material_desde",
+                      type: "text",
+                      value: material_desde,
+                      disabled: false,
+                      checked: false,
+                      matchcode: true,
+                      maxlength: 18,
+                    }}
+                    handleChange={handleChange}
+                    onClick={() => mc_material_desde()}
+                  />
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "material_hasta",
+                      type: "text",
+                      value: material_hasta,
+                      disabled: false,
+                      checked: false,
+                      matchcode: true,
+                      maxlength: 18,
+                    }}
+                    handleChange={handleChange}
+                    onClick={() => mc_material_hasta()}
+                  />
+                </div>
+                <div className="col-sm-2 d-flex align-items-center">
+                  <i
+                    className="fas fa-file-export icon-matchcode-2"
+                    onClick={ChangeBusquedaMult_Material}
+                  ></i>
+                </div>
+
+                <div className="col-sm-4 d-flex align-items-center">
+                  <label>Organización ventas</label>
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "org_ventas_desde",
+                      type: "text",
+                      value: org_ventas_desde,
+                      disabled: false,
+                      checked: false,
+                      matchcode: true,
+                      maxlength: 4,
+                    }}
+                    handleChange={handleChange}
+                    onClick={() => mc_org_ventas_desde()}
+                  />
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "org_ventas_hasta",
+                      type: "text",
+                      value: org_ventas_hasta,
+                      disabled: false,
+                      checked: false,
+                      matchcode: true,
+                      maxlength: 4,
+                    }}
+                    handleChange={handleChange}
+                    onClick={() => mc_org_ventas_hasta()}
+                  />
+                </div>
+                <div className="col-sm-2 d-flex align-items-center">
+                  <i
+                    className="fas fa-file-export icon-matchcode-2"
+                    onClick={ChangeBusquedaMult_OrganizacionVentas}
+                  ></i>
+                </div>
+
+                <div className="col-sm-4 d-flex align-items-center">
+                  <label>Cod. Cliente</label>
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "cliente_desde",
+                      type: "text",
+                      value: cliente_desde,
+                      disabled: false,
+                      checked: false,
+                      matchcode: true,
+                      maxlength: 10,
+                    }}
+                    handleChange={handleChange}
+                    onClick={() => mc_cliente_desde()}
+                  />
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "cliente_hasta",
+                      type: "text",
+                      value: cliente_hasta,
+                      disabled: false,
+                      checked: false,
+                      matchcode: true,
+                      maxlength: 10,
+                    }}
+                    handleChange={handleChange}
+                    onClick={() => mc_cliente_hasta()}
+                  />
+                </div>
+                <div className="col-sm-2 d-flex align-items-center">
+                  <i
+                    className="fas fa-file-export icon-matchcode-2"
+                    onClick={ChangeBusquedaMult_Cliente}
+                  ></i>
+                </div>
+
+                <div className="col-sm-4 d-flex align-items-center">
+                  <label>Comercial</label>
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "comercial_desde",
+                      type: "text",
+                      value: comercial_desde_value,
+                      disabled: true,
+                      checked: false,
+                      matchcode: true,
+                      maxlength: 6,
+                    }}
+                    handleChange={handleChange}
+                    onClick={() => mc_comercial_desde()}
+                  />
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "comercial_hasta",
+                      type: "text",
+                      value: comercial_hasta_value,
+                      disabled: true,
+                      checked: false,
+                      matchcode: true,
+                      maxlength: 6,
+                    }}
+                    handleChange={handleChange}
+                    onClick={() => mc_comercial_hasta()}
+                  />
+                </div>
+                <div className="col-sm-2 d-flex align-items-center">
+                  <i
+                    className="fas fa-file-export icon-matchcode-2"
+                    onClick={ChangeBusquedaMult_Comercial}
+                  ></i>
+                </div>
+              </div>
+            </section>
+            <section>
+              <div className="col-sm-12 col-md-2 p-1">
+                <BtnSearch
+                  attribute={{ name: "Buscar", classNamebtn: "btn_search" }}
+                  onClick={() => Search(1, 0, "", "")}
+                />
+              </div>
+              <div className="col-sm-12 col-md-2 p-1">
+                <BtnSearch
+                  attribute={{
+                    name: "Limpiar Campos",
+                    classNamebtn: "btn_search",
+                  }}
+                  onClick={() => Clear()}
+                />
+              </div>
+              <div className="col-sm-12 col-md-2 p-1">
+                {arraycheckbox_export[0].data.length > 0 ? (
+                  <ExcelFile
+                    filename="Consulta de Pedidos"
+                    element={
+                      <BtnExportar
+                        attribute={{
+                          name: "Descargar Excel",
+                          classNamebtn: "btn_export",
+                          disabled: false,
+                        }}
                       />
-                    </ExcelFile>
-                  ) : (
-                    <ExcelFile
-                      filename="Consulta de Pedidos"
-                      element={
-                        <BtnExportar
-                          attribute={{
-                            name: "Descargar Excel",
-                            classNamebtn: "btn_export",
-                            disabled: false,
-                          }}
-                        />
-                      }
-                    >
-                      <ExcelSheet dataSet={DataSet} name="exportacion" />
-                    </ExcelFile>
-                  )}
-                </div>
+                    }
+                  >
+                    <ExcelSheet
+                      dataSet={arraycheckbox_export}
+                      name="exportacion"
+                    />
+                  </ExcelFile>
+                ) : (
+                  <ExcelFile
+                    filename="Consulta de Pedidos"
+                    element={
+                      <BtnExportar
+                        attribute={{
+                          name: "Descargar Excel",
+                          classNamebtn: "btn_export",
+                          disabled: false,
+                        }}
+                      />
+                    }
+                  >
+                    <ExcelSheet dataSet={DataSet} name="exportacion" />
+                  </ExcelFile>
+                )}
+              </div>
+              <div className="col-sm-12 col-md-2 p-1">
+                <BtnSearch
+                  attribute={{
+                    name: "Cantidad de documentos",
+                    classNamebtn: "btn_search",
+                  }}
+                  onClick={() => openDatosPagina()}
+                />
+              </div>
+              {response_consulta_pedido.length ? (
                 <div className="col-sm-12 col-md-2 p-1">
                   <BtnSearch
                     attribute={{
-                      name: "Cantidad de documentos",
+                      name: text_btn_filtro,
                       classNamebtn: "btn_search",
                     }}
-                    onClick={() => openDatosPagina()}
+                    onClick={() => ModalFiltro()}
                   />
                 </div>
-                {response_consulta_pedido.length ? (
-                  <div className="col-sm-12 col-md-2 p-1">
-                    <BtnSearch
-                      attribute={{
-                        name: text_btn_filtro,
-                        classNamebtn: "btn_search",
-                      }}
-                      onClick={() => ModalFiltro()}
-                    />
-                  </div>
-                ) : null}
-              </section>
-              <section>
-                <div className="container-table">
-                  <div className="container-table-sm">
-                    <table className="content-table">
-                      <thead>
-                        <tr>
-                          <th>
-                            <input
-                              type="checkbox"
-                              onClick={(e) => {
-                                onClickHeaderCheckbox(e);
-                              }}
-                            />
-                          </th>
-                          <th>
-                            N° Pedido |{" "}
-                            {col_1 === 0 ? (
-                              <i
-                                className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(1)}
-                              ></i>
-                            ) : null}
-                            {col_1 === 1 ? (
-                              <i
-                                className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(1)}
-                              ></i>
-                            ) : null}
-                            {col_1 === 2 ? (
-                              <i
-                                className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(1)}
-                              ></i>
-                            ) : null}
-                          </th>
-                          {/* <th style={{textAlign:'center'}}>Clase Pedido |{" "}
+              ) : null}
+            </section>
+            <section>
+              <div className="container-table">
+                <div className="container-table-sm">
+                  <table className="content-table">
+                    <thead>
+                      <tr>
+                        <th>
+                          <input
+                            type="checkbox"
+                            onClick={(e) => {
+                              onClickHeaderCheckbox(e);
+                            }}
+                          />
+                        </th>
+                        <th>
+                          N° Pedido |{" "}
+                          {col_1 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(1)}
+                            ></i>
+                          ) : null}
+                          {col_1 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(1)}
+                            ></i>
+                          ) : null}
+                          {col_1 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(1)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        {/* <th style={{textAlign:'center'}}>Clase Pedido |{" "}
                           {col_10 === 0 ? (
                               <i
                               className="fas fa-arrows-alt-v"
@@ -3174,227 +3174,227 @@ const Consulta = () => {
                               ></i>
                             ) : null}
                           </th> */}
+                        <th>
+                          Org. Ventas. |{" "}
+                          {col_2 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(2)}
+                            ></i>
+                          ) : null}
+                          {col_2 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(2)}
+                            ></i>
+                          ) : null}
+                          {col_2 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(2)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          Creado el |{" "}
+                          {col_3 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(3)}
+                            ></i>
+                          ) : null}
+                          {col_3 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(3)}
+                            ></i>
+                          ) : null}
+                          {col_3 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(3)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          Cod. Cliente |{" "}
+                          {col_4 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(4)}
+                            ></i>
+                          ) : null}
+                          {col_4 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(4)}
+                            ></i>
+                          ) : null}
+                          {col_4 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(4)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th style={{ textAlign: "center" }}>
+                          Nombre Cliente |{" "}
+                          {col_5 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(5)}
+                            ></i>
+                          ) : null}
+                          {col_5 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(5)}
+                            ></i>
+                          ) : null}
+                          {col_5 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(5)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th style={{ textAlign: "end" }}>
+                          Valor Neto |{" "}
+                          {col_6 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(6)}
+                            ></i>
+                          ) : null}
+                          {col_6 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(6)}
+                            ></i>
+                          ) : null}
+                          {col_6 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(6)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          Moneda |{" "}
+                          {col_7 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(7)}
+                            ></i>
+                          ) : null}
+                          {col_7 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(7)}
+                            ></i>
+                          ) : null}
+                          {col_7 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(7)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          Condición de Pago |{" "}
+                          {col_8 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(8)}
+                            ></i>
+                          ) : null}
+                          {col_8 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(8)}
+                            ></i>
+                          ) : null}
+                          {col_8 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(8)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          Est. Operac. |{" "}
+                          {col_9 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(9)}
+                            ></i>
+                          ) : null}
+                          {col_9 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(9)}
+                            ></i>
+                          ) : null}
+                          {col_9 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(9)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {mostrar_filtro_fila == true ? (
+                        <tr>
                           <th>
-                            Org. Ventas. |{" "}
-                            {col_2 === 0 ? (
-                              <i
-                                className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(2)}
-                              ></i>
-                            ) : null}
-                            {col_2 === 1 ? (
-                              <i
-                                className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(2)}
-                              ></i>
-                            ) : null}
-                            {col_2 === 2 ? (
-                              <i
-                                className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(2)}
-                              ></i>
-                            ) : null}
+                            <button
+                              className="btn_search_filter"
+                              onClick={() => buscar_filtro_icono_btn()}
+                            >
+                              <i className="fas fa-filter"></i>
+                            </button>
                           </th>
                           <th>
-                            Creado el |{" "}
-                            {col_3 === 0 ? (
-                              <i
-                                className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(3)}
-                              ></i>
-                            ) : null}
-                            {col_3 === 1 ? (
-                              <i
-                                className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(3)}
-                              ></i>
-                            ) : null}
-                            {col_3 === 2 ? (
-                              <i
-                                className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(3)}
-                              ></i>
-                            ) : null}
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_vbelnField"
+                              maxLength="10"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
                           </th>
-                          <th>
-                            Cod. Cliente |{" "}
-                            {col_4 === 0 ? (
-                              <i
-                                className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(4)}
-                              ></i>
-                            ) : null}
-                            {col_4 === 1 ? (
-                              <i
-                                className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(4)}
-                              ></i>
-                            ) : null}
-                            {col_4 === 2 ? (
-                              <i
-                                className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(4)}
-                              ></i>
-                            ) : null}
-                          </th>
-                          <th style={{ textAlign: "center" }}>
-                            Nombre Cliente |{" "}
-                            {col_5 === 0 ? (
-                              <i
-                                className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(5)}
-                              ></i>
-                            ) : null}
-                            {col_5 === 1 ? (
-                              <i
-                                className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(5)}
-                              ></i>
-                            ) : null}
-                            {col_5 === 2 ? (
-                              <i
-                                className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(5)}
-                              ></i>
-                            ) : null}
-                          </th>
-                          <th style={{ textAlign: "end" }}>
-                            Valor Neto |{" "}
-                            {col_6 === 0 ? (
-                              <i
-                                className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(6)}
-                              ></i>
-                            ) : null}
-                            {col_6 === 1 ? (
-                              <i
-                                className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(6)}
-                              ></i>
-                            ) : null}
-                            {col_6 === 2 ? (
-                              <i
-                                className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(6)}
-                              ></i>
-                            ) : null}
-                          </th>
-                          <th>
-                            Moneda |{" "}
-                            {col_7 === 0 ? (
-                              <i
-                                className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(7)}
-                              ></i>
-                            ) : null}
-                            {col_7 === 1 ? (
-                              <i
-                                className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(7)}
-                              ></i>
-                            ) : null}
-                            {col_7 === 2 ? (
-                              <i
-                                className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(7)}
-                              ></i>
-                            ) : null}
-                          </th>
-                          <th>
-                            Condición de Pago |{" "}
-                            {col_8 === 0 ? (
-                              <i
-                                className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(8)}
-                              ></i>
-                            ) : null}
-                            {col_8 === 1 ? (
-                              <i
-                                className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(8)}
-                              ></i>
-                            ) : null}
-                            {col_8 === 2 ? (
-                              <i
-                                className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(8)}
-                              ></i>
-                            ) : null}
-                          </th>
-                          <th>
-                            Est. Operac. |{" "}
-                            {col_9 === 0 ? (
-                              <i
-                                className="fas fa-arrows-alt-v"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(9)}
-                              ></i>
-                            ) : null}
-                            {col_9 === 1 ? (
-                              <i
-                                className="fas fa-sort-amount-up"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(9)}
-                              ></i>
-                            ) : null}
-                            {col_9 === 2 ? (
-                              <i
-                                className="fas fa-sort-amount-down-alt"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleChangeColumna(9)}
-                              ></i>
-                            ) : null}
-                          </th>
-                          <th>Acción</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {mostrar_filtro_fila == true ? (
-                          <tr>
-                            <th>
-                              <button
-                                className="btn_search_filter"
-                                onClick={() => buscar_filtro_icono_btn()}
-                              >
-                                <i className="fas fa-filter"></i>
-                              </button>
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_vbelnField"
-                                maxLength="10"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            {/* <th>
+                          {/* <th>
                               <input
                                 type="text"
                                 onKeyUp={(e) => buscar_filtro_enter(e)}
@@ -3408,397 +3408,387 @@ const Consulta = () => {
                                 }
                               />
                             </th> */}
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_vkorgField"
-                                maxLength="4"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="date"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_erdatField"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_kunnrField"
-                                maxLength="10"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_name1Field"
-                                maxLength="30"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_netwrField"
-                                maxLength="18"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_waerkField"
-                                maxLength="5"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_text1Field"
-                                maxLength="50"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th>
-                              <input
-                                type="text"
-                                onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_statusField"
-                                maxLength="25"
-                                onChange={(e) =>
-                                  handleChangeFiltro(
-                                    e.target.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </th>
-                            <th></th>
-                          </tr>
-                        ) : null}
+                          <th>
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_vkorgField"
+                              maxLength="4"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="date"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_erdatField"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_kunnrField"
+                              maxLength="10"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_name1Field"
+                              maxLength="30"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_netwrField"
+                              maxLength="18"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_waerkField"
+                              maxLength="5"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_text1Field"
+                              maxLength="50"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="text"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_statusField"
+                              maxLength="25"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th></th>
+                        </tr>
+                      ) : null}
 
-                        {response_consulta_pedido != null &&
-                        response_consulta_pedido.length > 0
-                          ? response_consulta_pedido.map((response, key) => {
-                              return (
-                                <tr key={key}>
-                                  <th>
-                                    <input
-                                      type="checkbox"
-                                      id={
-                                        `checkbox-body-` + response.vbelnField
-                                      }
-                                      onChange={(e) => {
-                                        setresponse_consulta_pedido(
-                                          response_consulta_pedido.map((d) => {
-                                            if (
-                                              d.vbelnField ==
-                                              response.vbelnField
+                      {response_consulta_pedido != null &&
+                      response_consulta_pedido.length > 0
+                        ? response_consulta_pedido.map((response, key) => {
+                            return (
+                              <tr key={key}>
+                                <th>
+                                  <input
+                                    type="checkbox"
+                                    id={`checkbox-body-` + response.vbelnField}
+                                    onChange={(e) => {
+                                      setresponse_consulta_pedido(
+                                        response_consulta_pedido.map((d) => {
+                                          if (
+                                            d.vbelnField == response.vbelnField
+                                          ) {
+                                            d.select = e.target.checked;
+                                            if (e.target.checked == true) {
+                                              if (stateChecboxHeader == true) {
+                                                // DataSet[0].data
+
+                                                // setDataSet([
+                                                //   ...DataSet,
+                                                //   DataSet[0].data = [
+                                                //     { value: d.vbelnField, style: { font: { sz: "14" } } },
+                                                //     { value: d.vkorgField, style: { font: { sz: "14" } } },
+                                                //     {
+                                                //       value: formatDate(d.erdatField),
+                                                //       style: { font: { sz: "14" } },
+                                                //     },
+                                                //     { value: d.kunnrField, style: { font: { sz: "14" } } },
+                                                //     { value: d.name1Field, style: { font: { sz: "14" } } },
+                                                //     {
+                                                //       value: convertDecimal(d.netwrField, 2),
+                                                //       style: { font: { sz: "14" } },
+                                                //     },
+                                                //     { value: d.waerkField, style: { font: { sz: "14" } } },
+                                                //     { value: d.text1Field, style: { font: { sz: "14" } } },
+                                                //     { value: d.statusField, style: { font: { sz: "14" } } },
+                                                //     { value: d.motivoField, style: { font: { sz: "14" } } },
+                                                //   ]
+
+                                                // ]);
+                                                DataSet[0].data.push([
+                                                  {
+                                                    value: d.vbelnField,
+                                                    style: {
+                                                      font: { sz: "14" },
+                                                    },
+                                                  },
+                                                  // { value: d.bezeiField, style: { font: { sz: "14" } } },
+                                                  {
+                                                    value: d.vkorgField,
+                                                    style: {
+                                                      font: { sz: "14" },
+                                                    },
+                                                  },
+                                                  {
+                                                    value: formatDate(
+                                                      d.erdatField
+                                                    ),
+                                                    style: {
+                                                      font: { sz: "14" },
+                                                    },
+                                                  },
+                                                  {
+                                                    value: d.kunnrField,
+                                                    style: {
+                                                      font: { sz: "14" },
+                                                    },
+                                                  },
+                                                  {
+                                                    value: d.name1Field,
+                                                    style: {
+                                                      font: { sz: "14" },
+                                                    },
+                                                  },
+                                                  {
+                                                    value: convertDecimal(
+                                                      d.netwrField,
+                                                      2
+                                                    ),
+                                                    style: {
+                                                      font: { sz: "14" },
+                                                    },
+                                                  },
+                                                  {
+                                                    value: d.waerkField,
+                                                    style: {
+                                                      font: { sz: "14" },
+                                                    },
+                                                  },
+                                                  {
+                                                    value: d.text1Field,
+                                                    style: {
+                                                      font: { sz: "14" },
+                                                    },
+                                                  },
+                                                  {
+                                                    value: d.statusField,
+                                                    style: {
+                                                      font: { sz: "14" },
+                                                    },
+                                                  },
+                                                  {
+                                                    value: d.motivoField,
+                                                    style: {
+                                                      font: { sz: "14" },
+                                                    },
+                                                  },
+                                                ]);
+                                                console.log(DataSet);
+                                              } else {
+                                                setarraycheckbox([
+                                                  ...arraycheckbox,
+                                                  {
+                                                    vbelnField: d.vbelnField,
+                                                  },
+                                                ]);
+                                                ordenamiento(d);
+                                              }
+                                            } else if (
+                                              e.target.checked == false
                                             ) {
-                                              d.select = e.target.checked;
-                                              if (e.target.checked == true) {
+                                              // console.log("false")
+                                              // setDataSet([{columns:[], data:[]}]);
+                                              // // console.log(arraycheckbox_export)
+                                              // console.log(arraycheckbox)
+
+                                              for (
+                                                let i = 0;
+                                                i < arraycheckbox.length;
+                                                i++
+                                              ) {
                                                 if (
-                                                  stateChecboxHeader == true
+                                                  d.vbelnField ==
+                                                  arraycheckbox[i].vbelnField
                                                 ) {
-                                                  // DataSet[0].data
-
-                                                  // setDataSet([
-                                                  //   ...DataSet,
-                                                  //   DataSet[0].data = [
-                                                  //     { value: d.vbelnField, style: { font: { sz: "14" } } },
-                                                  //     { value: d.vkorgField, style: { font: { sz: "14" } } },
-                                                  //     {
-                                                  //       value: formatDate(d.erdatField),
-                                                  //       style: { font: { sz: "14" } },
-                                                  //     },
-                                                  //     { value: d.kunnrField, style: { font: { sz: "14" } } },
-                                                  //     { value: d.name1Field, style: { font: { sz: "14" } } },
-                                                  //     {
-                                                  //       value: convertDecimal(d.netwrField, 2),
-                                                  //       style: { font: { sz: "14" } },
-                                                  //     },
-                                                  //     { value: d.waerkField, style: { font: { sz: "14" } } },
-                                                  //     { value: d.text1Field, style: { font: { sz: "14" } } },
-                                                  //     { value: d.statusField, style: { font: { sz: "14" } } },
-                                                  //     { value: d.motivoField, style: { font: { sz: "14" } } },
-                                                  //   ]
-
-                                                  // ]);
-                                                  DataSet[0].data.push([
-                                                    {
-                                                      value: d.vbelnField,
-                                                      style: {
-                                                        font: { sz: "14" },
-                                                      },
-                                                    },
-                                                    // { value: d.bezeiField, style: { font: { sz: "14" } } },
-                                                    {
-                                                      value: d.vkorgField,
-                                                      style: {
-                                                        font: { sz: "14" },
-                                                      },
-                                                    },
-                                                    {
-                                                      value: formatDate(
-                                                        d.erdatField
-                                                      ),
-                                                      style: {
-                                                        font: { sz: "14" },
-                                                      },
-                                                    },
-                                                    {
-                                                      value: d.kunnrField,
-                                                      style: {
-                                                        font: { sz: "14" },
-                                                      },
-                                                    },
-                                                    {
-                                                      value: d.name1Field,
-                                                      style: {
-                                                        font: { sz: "14" },
-                                                      },
-                                                    },
-                                                    {
-                                                      value: convertDecimal(
-                                                        d.netwrField,
-                                                        2
-                                                      ),
-                                                      style: {
-                                                        font: { sz: "14" },
-                                                      },
-                                                    },
-                                                    {
-                                                      value: d.waerkField,
-                                                      style: {
-                                                        font: { sz: "14" },
-                                                      },
-                                                    },
-                                                    {
-                                                      value: d.text1Field,
-                                                      style: {
-                                                        font: { sz: "14" },
-                                                      },
-                                                    },
-                                                    {
-                                                      value: d.statusField,
-                                                      style: {
-                                                        font: { sz: "14" },
-                                                      },
-                                                    },
-                                                    {
-                                                      value: d.motivoField,
-                                                      style: {
-                                                        font: { sz: "14" },
-                                                      },
-                                                    },
-                                                  ]);
-                                                  console.log(DataSet);
+                                                  arraycheckbox.splice(i, 1);
+                                                  arraycheckbox_export[0].data.splice(
+                                                    i,
+                                                    1
+                                                  );
                                                 } else {
                                                   setarraycheckbox([
                                                     ...arraycheckbox,
                                                     {
-                                                      vbelnField: d.vbelnField,
+                                                      vbelnField:
+                                                        arraycheckbox[i]
+                                                          .vbelnField,
                                                     },
                                                   ]);
                                                   ordenamiento(d);
-                                                }
-                                              } else if (
-                                                e.target.checked == false
-                                              ) {
-                                                // console.log("false")
-                                                // setDataSet([{columns:[], data:[]}]);
-                                                // // console.log(arraycheckbox_export)
-                                                // console.log(arraycheckbox)
-
-                                                for (
-                                                  let i = 0;
-                                                  i < arraycheckbox.length;
-                                                  i++
-                                                ) {
-                                                  if (
-                                                    d.vbelnField ==
-                                                    arraycheckbox[i].vbelnField
-                                                  ) {
-                                                    arraycheckbox.splice(i, 1);
-                                                    arraycheckbox_export[0].data.splice(
-                                                      i,
-                                                      1
-                                                    );
-                                                  } else {
-                                                    setarraycheckbox([
-                                                      ...arraycheckbox,
-                                                      {
-                                                        vbelnField:
-                                                          arraycheckbox[i]
-                                                            .vbelnField,
-                                                      },
-                                                    ]);
-                                                    ordenamiento(d);
-                                                    // console.log(arraycheckbox)
-                                                  }
-                                                }
-                                                for (
-                                                  let y = 0;
-                                                  y < DataSet[0].data.length;
-                                                  y++
-                                                ) {
-                                                  if (
-                                                    d.vbelnField ==
-                                                    DataSet[0].data[y][0].value
-                                                  ) {
-                                                    //  console.log(DataSet[0].data[y])
-                                                    arraycheckbox_export[0].data =
-                                                      [];
-                                                    DataSet[0].data.splice(
-                                                      y,
-                                                      1
-                                                    );
-                                                  }
-                                                  // console.log(DataSet);
-                                                  // console.log(arraycheckbox_export[0].data)
+                                                  // console.log(arraycheckbox)
                                                 }
                                               }
+                                              for (
+                                                let y = 0;
+                                                y < DataSet[0].data.length;
+                                                y++
+                                              ) {
+                                                if (
+                                                  d.vbelnField ==
+                                                  DataSet[0].data[y][0].value
+                                                ) {
+                                                  //  console.log(DataSet[0].data[y])
+                                                  arraycheckbox_export[0].data =
+                                                    [];
+                                                  DataSet[0].data.splice(y, 1);
+                                                }
+                                                // console.log(DataSet);
+                                                // console.log(arraycheckbox_export[0].data)
+                                              }
                                             }
-                                            return d;
-                                          })
-                                        );
-                                      }}
-                                    />
-                                  </th>
-                                  <th style={{ textAlign: "center" }}>
-                                    {response.vbelnField}
-                                  </th>
-                                  {/* <th style={{ textAlign: "left" }}>
+                                          }
+                                          return d;
+                                        })
+                                      );
+                                    }}
+                                  />
+                                </th>
+                                <th style={{ textAlign: "center" }}>
+                                  {response.vbelnField}
+                                </th>
+                                {/* <th style={{ textAlign: "left" }}>
                                     {response.bezeiField}
                                   </th> */}
-                                  <th style={{ textAlign: "center" }}>
-                                    {response.vkorgField}
-                                  </th>
-                                  <th style={{ textAlign: "center" }}>
-                                    {formatDate(response.erdatField)}
-                                  </th>
-                                  <th style={{ textAlign: "center" }}>
-                                    {response.kunnrField}
-                                  </th>
-                                  <th
-                                    style={{ textAlign: "left" }}
-                                    align={"left"}
-                                  >
-                                    {response.name1Field}
-                                  </th>
-                                  <th
-                                    style={{ textAlign: "right" }}
-                                    align={"right"}
-                                  >
-                                    {convertDecimal(response.netwrField, 2)}
-                                  </th>
-                                  <th style={{ textAlign: "center" }}>
-                                    {response.waerkField}
-                                  </th>
-                                  <th
-                                    style={{ textAlign: "left" }}
-                                    align={"left"}
-                                  >
-                                    {response.text1Field}
-                                  </th>
-                                  <th style={{ textAlign: "center" }}>
-                                    {response.statusField}
-                                  </th>
-                                  <th
-                                    onClick={() =>
-                                      verPedido(response.vbelnField)
-                                    }
-                                  >
-                                    <i
-                                      className="fas fa-clipboard-list"
-                                      title="Ver pedido"
-                                    ></i>
-                                  </th>
-                                </tr>
-                              );
-                            })
-                          : null}
-                      </tbody>
-                    </table>
-                  </div>
-                  {response_consulta_pedido == 0 && spinner == false ? (
-                    <div
-                      style={{
-                        margin: "10px",
-                        textAlign: "center",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      No se encontraron resultados.
-                    </div>
-                  ) : null}
-                  {spinner && <Spinner />}
+                                <th style={{ textAlign: "center" }}>
+                                  {response.vkorgField}
+                                </th>
+                                <th style={{ textAlign: "center" }}>
+                                  {formatDate(response.erdatField)}
+                                </th>
+                                <th style={{ textAlign: "center" }}>
+                                  {response.kunnrField}
+                                </th>
+                                <th
+                                  style={{ textAlign: "left" }}
+                                  align={"left"}
+                                >
+                                  {response.name1Field}
+                                </th>
+                                <th
+                                  style={{ textAlign: "right" }}
+                                  align={"right"}
+                                >
+                                  {convertDecimal(response.netwrField, 2)}
+                                </th>
+                                <th style={{ textAlign: "center" }}>
+                                  {response.waerkField}
+                                </th>
+                                <th
+                                  style={{ textAlign: "left" }}
+                                  align={"left"}
+                                >
+                                  {response.text1Field}
+                                </th>
+                                <th style={{ textAlign: "center" }}>
+                                  {response.statusField}
+                                </th>
+                                <th
+                                  onClick={() => verPedido(response.vbelnField)}
+                                >
+                                  <i
+                                    className="fas fa-clipboard-list"
+                                    title="Ver pedido"
+                                  ></i>
+                                </th>
+                              </tr>
+                            );
+                          })
+                        : null}
+                    </tbody>
+                  </table>
                 </div>
-              </section>
-              <div>
-                {valuepagination && (
-                  <Pagination
-                    postsPerPage={IsRegxpag}
-                    totalPosts={TotalData}
-                    changePage={changePage}
-                    prevPage={prevPage}
-                    nextPage={nextPage}
-                    ind={ind_pagina}
-                  />
-                )}
+                {response_consulta_pedido == 0 && spinner == false ? (
+                  <div
+                    style={{
+                      margin: "10px",
+                      textAlign: "center",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    No se encontraron resultados.
+                  </div>
+                ) : null}
+                {spinner && <Spinner />}
               </div>
+            </section>
+            <div>
+              {valuepagination && (
+                <Pagination
+                  postsPerPage={IsRegxpag}
+                  totalPosts={TotalData}
+                  changePage={changePage}
+                  prevPage={prevPage}
+                  nextPage={nextPage}
+                  ind={ind_pagina}
+                />
+              )}
             </div>
-          ) : (
+          </div>
+          {/* ) : (
             <div className="access-route">NO TIENE ACCESO A ESTE REPORTE</div>
-          )}
+          )} */}
         </React.Fragment>
       )}
     </React.Fragment>
