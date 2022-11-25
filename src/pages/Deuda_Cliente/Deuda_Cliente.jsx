@@ -7,7 +7,10 @@ import MatchcodeCliente from "./Matchcode_Cliente/Mc_DeuCli_Cliente";
 import Envio_Correo from "./Envio_Correo/Envio_Correo";
 import { ValidarRuta } from "../../Services/ServiceValidaUsuario";
 import jwt from "jwt-decode";
-import { RegistrarAuditoria } from "../../Services/ServiceAuditoria";
+import {
+  getOficinaVentasSAP,
+  RegistrarAuditoria,
+} from "../../Services/ServiceAuditoria";
 
 const Deuda_Cliente = () => {
   const [listaCorreo, setListaCorreo] = useState([]);
@@ -82,10 +85,24 @@ const Deuda_Cliente = () => {
     //   });
     // }
 
-    //REGISTRO DE AUDITORÍA
-    RegistrarAuditoria({
-      id_user: Number(jwt(localStorage.getItem("_token")).nameid),
-      id_event: 4,
+    // OBTENER OFICINA DE VENTAS DE USUARIO DESDE SAP
+    let ofi_ventas = "";
+    getOficinaVentasSAP({
+      IsUser: jwt(localStorage.getItem("_token")).username,
+    }).then((result) => {
+      if (result.etOfiVentasField.length) {
+        ofi_ventas =
+          result.etOfiVentasField[0].codOfventaField +
+          " - " +
+          result.etOfiVentasField[0].descripcionField;
+        //REGISTRO DE AUDITORÍA
+        RegistrarAuditoria({
+          id_user: Number(jwt(localStorage.getItem("_token")).nameid),
+          id_event: 4,
+          sales_ofi: ofi_ventas,
+          indicator: "WEB",
+        });
+      }
     });
   }, []);
 
@@ -677,6 +694,22 @@ const Deuda_Cliente = () => {
     }
   }
 
+  const getDateAct = () => {
+    let date = new Date();
+
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+
+    if (month < 10) {
+      return `${day}/0${month}/${year}`;
+      // console.log(`${day}-0${month}-${year}`);
+    } else {
+      return `${day}/${month}/${year}`;
+      // console.log(`${day}-${month}-${year}`);
+    }
+  };
+
   return (
     <>
       {spinnerroute ? (
@@ -703,8 +736,10 @@ const Deuda_Cliente = () => {
                 <label>
                   {" "}
                   Tipo cambio :{" "}
-                  <label style={{ color: "#03BF68" }}>
-                    {localStorage.getItem("_tipoCambio")}
+                  <label style={{ color: "#00179B" }}>
+                    {getDateAct() +
+                      " --> $ " +
+                      localStorage.getItem("_tipoCambio")}
                   </label>{" "}
                 </label>
               </div>

@@ -33,7 +33,10 @@ import FiltroConsultaPedido from "./FiltroConsultaPedido";
 import { ConsPedidoFiltro } from "../../Services/ServicePedidos";
 import ChangeStatusPassword from "../../components/ChangeStatusPassword/ChangeStatusPassword";
 import { getUser } from "../../Services/ServiceUser";
-import { RegistrarAuditoria } from "../../Services/ServiceAuditoria";
+import {
+  getOficinaVentasSAP,
+  RegistrarAuditoria,
+} from "../../Services/ServiceAuditoria";
 import Mc_Cliente_desde_v2 from "./Matchcode_Cliente/Mc_Cliente_desde_v2";
 import Mc_Cliente_hasta_v2 from "./Matchcode_Cliente/Mc_Cliente_hasta_v2";
 import Mc_Comercial_desde from "./Matchcode_Comercial/Mc_Comercial_desde";
@@ -332,10 +335,24 @@ const Consulta = () => {
     //     }
     //   });
     // }
-    //REGISTRO DE AUDITORÍA
-    RegistrarAuditoria({
-      id_user: Number(jwt(localStorage.getItem("_token")).nameid),
-      id_event: 1,
+    // OBTENER OFICINA DE VENTAS DE USUARIO DESDE SAP
+    let ofi_ventas = "";
+    getOficinaVentasSAP({
+      IsUser: jwt(localStorage.getItem("_token")).username,
+    }).then((result) => {
+      if (result.etOfiVentasField.length) {
+        ofi_ventas =
+          result.etOfiVentasField[0].codOfventaField +
+          " - " +
+          result.etOfiVentasField[0].descripcionField;
+        //REGISTRO DE AUDITORÍA
+        RegistrarAuditoria({
+          id_user: Number(jwt(localStorage.getItem("_token")).nameid),
+          id_event: 1,
+          sales_ofi: ofi_ventas,
+          indicator: "WEB",
+        });
+      }
     });
   }, []);
 
@@ -2566,6 +2583,22 @@ const Consulta = () => {
     setshowModalPagina((prev) => !prev);
   }
 
+  const getDateAct = () => {
+    let date = new Date();
+
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+
+    if (month < 10) {
+      return `${day}/0${month}/${year}`;
+      // console.log(`${day}-0${month}-${year}`);
+    } else {
+      return `${day}/${month}/${year}`;
+      // console.log(`${day}-${month}-${year}`);
+    }
+  };
+
   return (
     <React.Fragment>
       {showModalPagina ? (
@@ -2756,8 +2789,10 @@ const Consulta = () => {
                 <label>
                   {" "}
                   Tipo cambio :{" "}
-                  <label style={{ color: "#03BF68" }}>
-                    {localStorage.getItem("_tipoCambio")}
+                  <label style={{ color: "#00179B" }}>
+                    {getDateAct() +
+                      " --> $ " +
+                      localStorage.getItem("_tipoCambio")}
                   </label>{" "}
                 </label>
               </div>

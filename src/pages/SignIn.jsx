@@ -7,7 +7,10 @@ import "./SignIn.css";
 import { Redirect } from "react-router-dom";
 import jwt from "jwt-decode";
 import logo_farmex from "../assets/logo-farmex.png";
-import { RegistrarAuditoria } from "../Services/ServiceAuditoria";
+import {
+  getOficinaVentasSAP,
+  RegistrarAuditoria,
+} from "../Services/ServiceAuditoria";
 import { ConsultarTipoCambio } from "../Services/ServiceTipoCambio";
 
 const SignIn = () => {
@@ -52,11 +55,28 @@ const SignIn = () => {
           setaccessuser(true);
           localStorage.setItem("_token", result.data.token);
           document.body.classList.remove("body-green");
-          //REGISTRO DE AUDITORÍA
-          RegistrarAuditoria({
-            id_user: Number(jwt(localStorage.getItem("_token")).nameid),
-            id_event: 5,
+          // OBTENER OFICINA DE VENTAS DE USUARIO DESDE SAP
+          let ofi_ventas = "";
+          getOficinaVentasSAP({
+            IsUser: jwt(localStorage.getItem("_token")).username,
+          }).then((result) => {
+            if (result.etOfiVentasField.length) {
+              ofi_ventas =
+                result.etOfiVentasField[0].codOfventaField +
+                " - " +
+                result.etOfiVentasField[0].descripcionField;
+              //REGISTRO DE AUDITORÍA
+              let model = {
+                id_user: Number(jwt(localStorage.getItem("_token")).nameid),
+                id_event: 5,
+                sales_ofi: ofi_ventas,
+                indicator: "WEB",
+              };
+              // console.log(model);
+              RegistrarAuditoria(model);
+            }
           });
+
           // window.location.pathname("/dashboard");
 
           // OBTENIENDO TIPO DE CAMBIO DE SAP

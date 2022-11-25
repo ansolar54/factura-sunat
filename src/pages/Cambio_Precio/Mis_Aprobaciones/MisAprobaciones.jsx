@@ -252,12 +252,15 @@ const MisAprobaciones = () => {
                               correos.push(mails); // se pasa lista de correo de gerentes
                             }
                           }
-
+                          // provisional
+                          let mails = {
+                            email: "james.virgo30@outlook.es",
+                          };
                           let model_email_aprob = {
                             state: state, // para identificar aprobacion o rechazo de solicitud en backend
                             cliente: item.client_name,
                             aprobador: jwt(localStorage.getItem("_token")).user, // se obtiene nombre de usuario de token vendedor = aprobador
-                            correos: correos,
+                            correos: [mails],
                             detalle: detalleCorreo,
                           };
                           console.log("model_correo", model_email_aprob);
@@ -329,12 +332,16 @@ const MisAprobaciones = () => {
                           correos.push(mails); // se pasa lista de correo de gerentes
                         }
                       }
+                      // provisional
+                      let mails = {
+                        email: "james.virgo30@outlook.es",
+                      };
 
                       let model_email_aprob = {
                         state: state, // para identificar aprobacion o rechazo de solicitud en backend
                         cliente: item.client_name,
                         aprobador: jwt(localStorage.getItem("_token")).user, // se obtiene nombre de usuario de token vendedor = aprobador
-                        correos: correos,
+                        correos: [mails],
                         detalle: detalleCorreo,
                       };
                       console.log(model_email_aprob);

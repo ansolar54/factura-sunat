@@ -11,7 +11,10 @@ import { Mc_InfoCliente_Cliente } from "../../Services/ServiceCliente";
 import jwt from "jwt-decode";
 import { getUser } from "../../Services/ServiceUser";
 import ChangeStatusPassword from "../../components/ChangeStatusPassword/ChangeStatusPassword";
-import { RegistrarAuditoria } from "../../Services/ServiceAuditoria";
+import {
+  getOficinaVentasSAP,
+  RegistrarAuditoria,
+} from "../../Services/ServiceAuditoria";
 import { InfoClienteMateriales } from "../../Services/ServiceInfoCliMateriales";
 import react from "react";
 import ExcelFile from "react-data-export/dist/ExcelPlugin/components/ExcelFile";
@@ -255,10 +258,24 @@ const Info_Cliente = () => {
     //     }
     //   });
     // }
-    //REGISTRO DE AUDITORÍA
-    RegistrarAuditoria({
-      id_user: Number(jwt(localStorage.getItem("_token")).nameid),
-      id_event: 2,
+    // OBTENER OFICINA DE VENTAS DE USUARIO DESDE SAP
+    let ofi_ventas = "";
+    getOficinaVentasSAP({
+      IsUser: jwt(localStorage.getItem("_token")).username,
+    }).then((result) => {
+      if (result.etOfiVentasField.length) {
+        ofi_ventas =
+          result.etOfiVentasField[0].codOfventaField +
+          " - " +
+          result.etOfiVentasField[0].descripcionField;
+        //REGISTRO DE AUDITORÍA
+        RegistrarAuditoria({
+          id_user: Number(jwt(localStorage.getItem("_token")).nameid),
+          id_event: 2,
+          sales_ofi: ofi_ventas,
+          indicator: "WEB",
+        });
+      }
     });
   }, []);
 
@@ -1614,6 +1631,22 @@ const Info_Cliente = () => {
     });
   }
 
+  const getDateAct = () => {
+    let date = new Date();
+
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+
+    if (month < 10) {
+      return `${day}/0${month}/${year}`;
+      // console.log(`${day}-0${month}-${year}`);
+    } else {
+      return `${day}/${month}/${year}`;
+      // console.log(`${day}-${month}-${year}`);
+    }
+  };
+
   return (
     <React.Fragment>
       {/* {show_status_password ? (
@@ -1641,8 +1674,10 @@ const Info_Cliente = () => {
                 <label>
                   {" "}
                   Tipo cambio :{" "}
-                  <label style={{ color: "#03BF68" }}>
-                    {localStorage.getItem("_tipoCambio")}
+                  <label style={{ color: "#00179B" }}>
+                    {getDateAct() +
+                      " --> $ " +
+                      localStorage.getItem("_tipoCambio")}
                   </label>{" "}
                 </label>
               </div>

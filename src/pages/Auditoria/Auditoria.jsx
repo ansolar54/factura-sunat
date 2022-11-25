@@ -80,14 +80,14 @@ const Auditoria = () => {
           title: "HORA",
           style: { font: { sz: "18", bold: true } },
           width: { wpx: 125 },
-        }
+        },
       ],
       data: [],
     },
   ]);
 
   useEffect(() => {
-    listarAuditoria(0, "", 0, "", 1,0,0);
+    listarAuditoria(0, "", 0, "", 1, 0, 0);
     listarEventos();
     listarRoles();
   }, []);
@@ -96,7 +96,7 @@ const Auditoria = () => {
     getRoleState().then((res) => {
       setRoles(res.data);
     });
-  }
+  };
 
   const listarEventos = () => {
     exportar();
@@ -105,112 +105,151 @@ const Auditoria = () => {
     });
   };
   //listar auditoría
-  const listarAuditoria = (id_rol, search, id_event, created_at, offset,exp,ind) => {
+  const listarAuditoria = (
+    id_rol,
+    search,
+    id_event,
+    created_at,
+    offset,
+    exp,
+    ind
+  ) => {
     setspinner(true);
     setdataAuditoria([]);
-    if(ind==0){
+    if (ind == 0) {
       arraycheckbox_export[0].data = [];
-      ConsultarAuditoria(id_rol, search, id_event, created_at, Limit, offset,exp,0)
-      .then((result) => {
-        setdataAuditoria(result.data.map((d)=>{
-          return {
-            select: false,
-            id: d.id,
-            name_user:d.name_user,
-            ape_pat:d.ape_pat,
-            ape_mat:d.ape_mat,
-            username:d.username,
-            email:d.email,
-            name_role:d.name_role,
-            name_event:d.name_event,
-            created_at:d.created_at
-          }
-        }));
-        setTotalData(result.totalItems);
-        setspinner(false);
-        setvaluepagination(true);
-      })
-      .catch((err) => console.log(err));
-    }else{
-      ConsultarAuditoria(id_rol, search, id_event, created_at, Limit, offset,1,0)
-      .then((result) => {
-        if (stateChecboxHeader === true) {
-          setdataAuditoria(result.data.map((d)=>{
-            return {
-              select: true,
-              id: d.id,
-              name_user:d.name_user,
-              ape_pat:d.ape_pat,
-              ape_mat:d.ape_mat,
-              username:d.username,
-              email:d.email,
-              name_role:d.name_role,
-              name_event:d.name_event,
-              created_at:d.created_at
-            }
-          }));
+      ConsultarAuditoria(
+        id_rol,
+        search,
+        id_event,
+        created_at,
+        Limit,
+        offset,
+        exp,
+        0
+      )
+        .then((result) => {
+          console.log(result);
+          setdataAuditoria(
+            result.data.map((d) => {
+              return {
+                select: false,
+                id: d.id,
+                name_user: d.name_user,
+                ape_pat: d.ape_pat,
+                ape_mat: d.ape_mat,
+                username: d.username,
+                email: d.email,
+                name_role: d.name_role,
+                name_event: d.name_event,
+                created_at: d.created_at,
+                sales_ofi: d.sales_ofi,
+                indicator: d.indicator,
+              };
+            })
+          );
+          setTotalData(result.totalItems);
+          setspinner(false);
+          setvaluepagination(true);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      ConsultarAuditoria(
+        id_rol,
+        search,
+        id_event,
+        created_at,
+        Limit,
+        offset,
+        1,
+        0
+      )
+        .then((result) => {
+          console.log(result);
+          if (stateChecboxHeader === true) {
+            setdataAuditoria(
+              result.data.map((d) => {
+                return {
+                  select: true,
+                  id: d.id,
+                  name_user: d.name_user,
+                  ape_pat: d.ape_pat,
+                  ape_mat: d.ape_mat,
+                  username: d.username,
+                  email: d.email,
+                  name_role: d.name_role,
+                  name_event: d.name_event,
+                  created_at: d.created_at,
+                  sales_ofi: d.sales_ofi,
+                  indicator: d.indicator,
+                };
+              })
+            );
 
-          for (let i = 0; i < result.data.length; i++) {
-            document.getElementById(
-              "checkbox-body-" + result.data[i].id
-            ).checked = true;
-          }
-        } else {
-          setdataAuditoria(result.data.map((d)=>{
-            return {
-              select: false,
-              id: d.id,
-              name_user:d.name_user,
-              ape_pat:d.ape_pat,
-              ape_mat:d.ape_mat,
-              username:d.username,
-              email:d.email,
-              name_role:d.name_role,
-              name_event:d.name_event,
-              created_at:d.created_at
+            for (let i = 0; i < result.data.length; i++) {
+              document.getElementById(
+                "checkbox-body-" + result.data[i].id
+              ).checked = true;
             }
-          }));
-          for (let i = 0; i < result.data.length; i++) {
-            document.getElementById(
-              "checkbox-body-" + result.data[i].id
-            ).checked = false;
+          } else {
+            setdataAuditoria(
+              result.data.map((d) => {
+                return {
+                  select: false,
+                  id: d.id,
+                  name_user: d.name_user,
+                  ape_pat: d.ape_pat,
+                  ape_mat: d.ape_mat,
+                  username: d.username,
+                  email: d.email,
+                  name_role: d.name_role,
+                  name_event: d.name_event,
+                  created_at: d.created_at,
+                  sales_ofi: d.sales_ofi,
+                  indicator: d.indicator,
+                };
+              })
+            );
+            for (let i = 0; i < result.data.length; i++) {
+              document.getElementById(
+                "checkbox-body-" + result.data[i].id
+              ).checked = false;
+            }
           }
-        }
 
-        for (let y = 0; y < result.data.length; y++) {
-          if (arraycheckbox.length > 0) {
-            for (let i = 0; i < arraycheckbox.length; i++) {
-              if (
-                result.data[y].id ==
-                arraycheckbox[i].id
-              ) {
-                document.getElementById(
-                  "checkbox-body-" + result.data[y].id
-                ).checked = true;
+          for (let y = 0; y < result.data.length; y++) {
+            if (arraycheckbox.length > 0) {
+              for (let i = 0; i < arraycheckbox.length; i++) {
+                if (result.data[y].id == arraycheckbox[i].id) {
+                  document.getElementById(
+                    "checkbox-body-" + result.data[y].id
+                  ).checked = true;
+                }
               }
             }
           }
-        }
-        
-        setTotalData(result.totalItems);
-        setspinner(false);
-        setvaluepagination(true);
-      })
-      .catch((err) => console.log(err));
+
+          setTotalData(result.totalItems);
+          setspinner(false);
+          setvaluepagination(true);
+        })
+        .catch((err) => console.log(err));
     }
-    
   };
 
   const exportar = () => {
-    setDataSet([{columns:[], data:[]}]);
+    setDataSet([{ columns: [], data: [] }]);
     ConsultarAuditoria(
       filtro.id_rol,
       filtro.search,
       filtro.id_event,
       filtro.created_at,
-      1,Limit,1)
+      1,
+      Limit,
+      1
+    )
       .then((result) => {
-        console.log(result)
+        console.log(result);
         setDataSet([
           {
             columns: [
@@ -253,12 +292,15 @@ const Auditoria = () => {
                 title: "HORA",
                 style: { font: { sz: "18", bold: true } },
                 width: { wpx: 125 },
-              }
+              },
             ],
             data: result.data.map((data) => {
               return [
                 { value: data.name_user, style: { font: { sz: "14" } } },
-                { value: data.ape_pat + " " + data.ape_mat, style: { font: { sz: "14" } } },
+                {
+                  value: data.ape_pat + " " + data.ape_mat,
+                  style: { font: { sz: "14" } },
+                },
                 {
                   value: data.username,
                   style: { font: { sz: "14" } },
@@ -269,15 +311,21 @@ const Auditoria = () => {
                   value: data.name_event,
                   style: { font: { sz: "14" } },
                 },
-                { value: formatDate(data.created_at), style: { font: { sz: "14" } } },
-                { value: formatTime(data.created_at), style: { font: { sz: "14" } } },
+                {
+                  value: formatDate(data.created_at),
+                  style: { font: { sz: "14" } },
+                },
+                {
+                  value: formatTime(data.created_at),
+                  style: { font: { sz: "14" } },
+                },
               ];
             }),
           },
         ]);
       })
       .catch((err) => console.log(err));
-  }
+  };
 
   function ordenamiento(d) {
     arraycheckbox_export[0].data.push([
@@ -328,7 +376,7 @@ const Auditoria = () => {
         style: {
           font: { sz: "14" },
         },
-      }
+      },
     ]);
     arraycheckbox_export[0].data.sort(function (a, b) {
       return a[0].value - b[0].value;
@@ -342,7 +390,9 @@ const Auditoria = () => {
       filtro.search,
       filtro.id_event,
       filtro.created_at,
-      pageNumber,0,0
+      pageNumber,
+      0,
+      0
     );
   };
   // siguiente pagina
@@ -352,7 +402,9 @@ const Auditoria = () => {
       filtro.search,
       filtro.id_event,
       filtro.created_at,
-      value - 1,0,0
+      value - 1,
+      0,
+      0
     );
   };
   //pagina anterior
@@ -362,7 +414,9 @@ const Auditoria = () => {
       filtro.search,
       filtro.id_event,
       filtro.created_at,
-      value + 1,0,0
+      value + 1,
+      0,
+      0
     );
   };
 
@@ -377,17 +431,19 @@ const Auditoria = () => {
       filtro.search,
       filtro.id_event,
       filtro.created_at,
-      1,0,0
+      1,
+      0,
+      0
     );
   };
 
   //formateo de la hora
   function formatTime(value) {
     var datePart = value.match(/\d+/g),
-      h=datePart[3],
-      m=datePart[4],
-      s=datePart[5];
-    return h+":"+m+":"+s;
+      h = datePart[3],
+      m = datePart[4],
+      s = datePart[5];
+    return h + ":" + m + ":" + s;
   }
   //formateo de la fecha
   function formatDate(value) {
@@ -395,7 +451,7 @@ const Auditoria = () => {
       year = datePart[0],
       month = datePart[1],
       day = datePart[2];
-    return day + "-" + month + "-" + year ;
+    return day + "-" + month + "-" + year;
   }
 
   return (
@@ -461,40 +517,37 @@ const Auditoria = () => {
             />
           </div>
           <div className="col-sm-6 col-md-6 p-1">
-              {arraycheckbox_export[0].data.length > 0 ? (
-                    <ExcelFile
-                      filename="Data exportada"
-                      element={
-                        <BtnExportar
-                          attribute={{
-                            name: "Exportar",
-                            classNamebtn: "btn_export",
-                            disabled: false,
-                          }}
-                        />
-                      }
-                    >
-                      <ExcelSheet
-                        dataSet={arraycheckbox_export}
-                        name="exportacion"
-                      />
-                    </ExcelFile>
-                  ) : (
-                    <ExcelFile
-                      filename="Data exportada"
-                      element={
-                        <BtnExportar
-                          attribute={{
-                            name: "Exportar",
-                            classNamebtn: "btn_export",
-                            disabled: false,
-                          }}
-                        />
-                      }
-                    >
-                      <ExcelSheet dataSet={DataSet} name="exportacion" />
-                    </ExcelFile>
-                  )}
+            {arraycheckbox_export[0].data.length > 0 ? (
+              <ExcelFile
+                filename="Data exportada"
+                element={
+                  <BtnExportar
+                    attribute={{
+                      name: "Exportar",
+                      classNamebtn: "btn_export",
+                      disabled: false,
+                    }}
+                  />
+                }
+              >
+                <ExcelSheet dataSet={arraycheckbox_export} name="exportacion" />
+              </ExcelFile>
+            ) : (
+              <ExcelFile
+                filename="Data exportada"
+                element={
+                  <BtnExportar
+                    attribute={{
+                      name: "Exportar",
+                      classNamebtn: "btn_export",
+                      disabled: false,
+                    }}
+                  />
+                }
+              >
+                <ExcelSheet dataSet={DataSet} name="exportacion" />
+              </ExcelFile>
+            )}
           </div>
         </div>
         <section>
@@ -504,14 +557,16 @@ const Auditoria = () => {
                 <thead>
                   <tr>
                     <th></th>
-                    <th style={{textAlign:"left"}}>NOMBRES</th>
-                    <th style={{textAlign:"left"}}>APELLIDOS</th>
-                    <th style={{textAlign:"left"}}>USUARIO</th>
-                    <th style={{textAlign:"left"}}>CORREO</th>
-                    <th style={{textAlign:"left"}}>ROL</th>
-                    <th style={{textAlign:"left"}}>EVENTO</th>
-                    <th style={{textAlign:"center"}}>FECHA</th>
-                    <th style={{textAlign:"center"}}>HORA</th>
+                    <th style={{ textAlign: "center" }}>NOMBRES</th>
+                    <th style={{ textAlign: "center" }}>APELLIDOS</th>
+                    <th style={{ textAlign: "center" }}>USUARIO</th>
+                    <th style={{ textAlign: "center" }}>CORREO</th>
+                    <th style={{ textAlign: "center" }}>ROL</th>
+                    <th style={{ textAlign: "center" }}>EVENTO</th>
+                    <th style={{ textAlign: "center" }}>FECHA</th>
+                    <th style={{ textAlign: "center" }}>HORA</th>
+                    <th style={{ textAlign: "center" }}>OFI. VENTAS</th>
+                    <th style={{ textAlign: "center" }}>ORI. INGRESO</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -519,52 +574,42 @@ const Auditoria = () => {
                     ? dataAuditoria.map((item, key) => (
                         <tr key={key}>
                           <th>
-                                    <input
-                                      type="checkbox"
-                                      id={
-                                        `checkbox-body-` + item.id
+                            <input
+                              type="checkbox"
+                              id={`checkbox-body-` + item.id}
+                              onChange={(e) => {
+                                setdataAuditoria(
+                                  dataAuditoria.map((d) => {
+                                    if (d.id == item.id) {
+                                      d.select = e.target.checked;
+                                      if (e.target.checked == true) {
+                                        setarraycheckbox([
+                                          ...arraycheckbox,
+                                          { id: d.id },
+                                        ]);
+                                        ordenamiento(d);
+                                      } else if (e.target.checked == false) {
+                                        for (
+                                          let i = 0;
+                                          i < arraycheckbox.length;
+                                          i++
+                                        ) {
+                                          if (d.id == arraycheckbox[i].id) {
+                                            arraycheckbox.splice(i, 1);
+                                            arraycheckbox_export[0].data.splice(
+                                              i,
+                                              1
+                                            );
+                                          }
+                                        }
                                       }
-                                      onChange={(e) => {
-                                        setdataAuditoria(
-                                          dataAuditoria.map((d) => {
-                                            if (
-                                              d.id ==
-                                              item.id
-                                            ) {
-                                              d.select = e.target.checked;
-                                              if (e.target.checked == true) {
-                                                setarraycheckbox([
-                                                  ...arraycheckbox,
-                                                  { id: d.id },
-                                                ]);
-                                                ordenamiento(d);
-                                              } else if (
-                                                e.target.checked == false
-                                              ) {
-                                                for (
-                                                  let i = 0;
-                                                  i < arraycheckbox.length;
-                                                  i++
-                                                ) {
-                                                  if (
-                                                    d.id ==
-                                                    arraycheckbox[i].id
-                                                  ) {
-                                                    arraycheckbox.splice(i, 1);
-                                                    arraycheckbox_export[0].data.splice(
-                                                      i,
-                                                      1
-                                                    );
-                                                  }
-                                                }
-                                              }
-                                            }
-                                            return d;
-                                          })
-                                        );
-                                      }}
-                                    />
-                                  </th>
+                                    }
+                                    return d;
+                                  })
+                                );
+                              }}
+                            />
+                          </th>
                           <th>{item.name_user}</th>
                           <th>
                             {item.ape_pat} {item.ape_mat}
@@ -573,26 +618,34 @@ const Auditoria = () => {
                           <th>{item.email}</th>
                           <th>{item.name_role}</th>
                           <th>{item.name_event}</th>
-                          <th style={{textAlign:"center"}}>{formatDate(item.created_at)}</th>
-                          <th style={{textAlign:"center"}}>{formatTime(item.created_at)}</th>
+                          <th style={{ textAlign: "center" }}>
+                            {formatDate(item.created_at)}
+                          </th>
+                          <th style={{ textAlign: "center" }}>
+                            {formatTime(item.created_at)}
+                          </th>
+                          <th>{item.sales_ofi}</th>
+                          <th style={{ textAlign: "center" }}>
+                            {item.indicator}
+                          </th>
                         </tr>
                       ))
                     : null}
                 </tbody>
               </table>
-                {spinner==false && dataAuditoria.length == 0 ? (
-                    <div
-                      style={{
-                        margin: "10px",
-                        textAlign: "center",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      No se encontraron resultados.
-                    </div>
-                  ) : null}
+              {spinner == false && dataAuditoria.length == 0 ? (
+                <div
+                  style={{
+                    margin: "10px",
+                    textAlign: "center",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  No se encontraron resultados.
+                </div>
+              ) : null}
               {spinner && <Spinner />}
             </div>
           </div>
