@@ -252,6 +252,7 @@ const MisSolicitudes = () => {
                 // notificacion de correo - llamado a servicio
                 let model_email_aprob = {
                   state: state, // para identificar aprobacion o rechazo de solicitud en backend
+                  nro_solicitud: item.id.toString(),
                   cliente: item.client_name,
                   aprobador: jwt(localStorage.getItem("_token")).user, // se obtiene nombre de usuario de token vendedor = aprobador
                   correos: correos,
@@ -261,7 +262,7 @@ const MisSolicitudes = () => {
                 EnviarCorreoAprob(model_email_aprob).then((result) => {
                   console.log(result);
                   if (result.indicator == 1) {
-                    toast.success("Solicitud anulada correctamente.", {
+                    toast.success("Solicitud anulada.", {
                       position: "top-center",
                       autoClose: 1000,
                       style: {
@@ -420,9 +421,9 @@ const MisSolicitudes = () => {
                   <tr>
                     <th style={{ textAlign: "center" }}>N° SOLICITUD</th>
                     <th style={{ textAlign: "center" }}>FECHA REGISTRO</th>
-                    <th style={{ textAlign: "center" }}>ESTADO</th>
-                    <th style={{ textAlign: "center" }}>CLIENTE</th>
                     <th style={{ textAlign: "center" }}>ORG. VENTAS</th>
+                    <th style={{ textAlign: "center" }}>CLIENTE</th>
+                    <th style={{ textAlign: "center" }}>ESTADO</th>
                     <th style={{ textAlign: "center" }}>ACCION</th>
                   </tr>
                 </thead>
@@ -434,6 +435,12 @@ const MisSolicitudes = () => {
                           <th style={{ textAlign: "center" }}>
                             {extraeFecha(item.created_at)}
                           </th>
+                          <th style={{ textAlign: "center" }}>
+                            {item.sales_org}
+                          </th>
+                          <th style={{ textAlign: "center" }}>
+                            {item.client_name}
+                          </th>
                           <th
                             style={{
                               textAlign: "center",
@@ -441,12 +448,6 @@ const MisSolicitudes = () => {
                             }}
                           >
                             {validateState(item.state)}
-                          </th>
-                          <th style={{ textAlign: "center" }}>
-                            {item.client_name}
-                          </th>
-                          <th style={{ textAlign: "center" }}>
-                            {item.sales_org}
                           </th>
                           <th
                             style={{

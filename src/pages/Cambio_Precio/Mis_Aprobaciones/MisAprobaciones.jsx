@@ -47,6 +47,8 @@ const MisAprobaciones = () => {
   const [showModalDetail, setShowModalDetail] = useState(false);
   const [idSolicitud, setIdSolicitud] = useState();
   const [stateSolicitud, setStateSolicitud] = useState();
+  const [idUserForModal, setIdUserForModal] = useState(0);
+  const [salesOfi, setSalesOfi] = useState("");
 
   useEffect(() => {
     obtenerSolicitudes(1);
@@ -71,7 +73,7 @@ const MisAprobaciones = () => {
       limit,
       page
     ).then((result) => {
-      // console.log(result);
+      console.log(result);
       setSolicitudes(result.data);
       setTotalData(result.totalItems);
       setspinner(false);
@@ -171,7 +173,7 @@ const MisAprobaciones = () => {
       id: item.id,
       state: state.toString(),
     };
-
+    // let nro_solicitud = '';
     ModificarStateRequest(model).then((result) => {
       // console.log(result);
       setspinner(true);
@@ -209,6 +211,8 @@ const MisAprobaciones = () => {
               };
 
               detalleCorreo.push(detalle);
+
+              // nro_solicitud = element.id_request;
             }
 
             if (state == 1) {
@@ -258,6 +262,7 @@ const MisAprobaciones = () => {
                           };
                           let model_email_aprob = {
                             state: state, // para identificar aprobacion o rechazo de solicitud en backend
+                            nro_solicitud: item.id.toString(),
                             cliente: item.client_name,
                             aprobador: jwt(localStorage.getItem("_token")).user, // se obtiene nombre de usuario de token vendedor = aprobador
                             correos: [mails],
@@ -339,6 +344,7 @@ const MisAprobaciones = () => {
 
                       let model_email_aprob = {
                         state: state, // para identificar aprobacion o rechazo de solicitud en backend
+                        nro_solicitud: item.id.toString(),
                         cliente: item.client_name,
                         aprobador: jwt(localStorage.getItem("_token")).user, // se obtiene nombre de usuario de token vendedor = aprobador
                         correos: [mails],
@@ -348,7 +354,7 @@ const MisAprobaciones = () => {
                       EnviarCorreoAprob(model_email_aprob).then((result) => {
                         console.log(result);
                         if (result.indicator == 1) {
-                          toast.success("Solicitud rechazada correctamente.", {
+                          toast.success("Solicitud rechazada.", {
                             position: "top-center",
                             autoClose: 1000,
                             style: {
@@ -409,6 +415,8 @@ const MisAprobaciones = () => {
   const openDetalle = (item) => {
     setIdSolicitud(item.id);
     setStateSolicitud(item.state);
+    setIdUserForModal(item.id_user);
+    setSalesOfi(item.sales_ofi);
     setShowModalDetail((prev) => !prev);
   };
 
@@ -422,6 +430,8 @@ const MisAprobaciones = () => {
           idSolicitud={idSolicitud}
           extraeFecha={extraeFecha}
           stateSolicitud={stateSolicitud}
+          idUser={idUserForModal}
+          salesOfi={salesOfi}
         />
         <div className="title-section">
           <label> Mis Aprobaciones </label>
@@ -487,9 +497,9 @@ const MisAprobaciones = () => {
                   <tr>
                     <th style={{ textAlign: "center" }}>N° SOLICITUD</th>
                     <th style={{ textAlign: "center" }}>FECHA REGISTRO</th>
-                    <th style={{ textAlign: "center" }}>ESTADO</th>
-                    <th style={{ textAlign: "center" }}>CLIENTE</th>
                     <th style={{ textAlign: "center" }}>ORG. VENTAS</th>
+                    <th style={{ textAlign: "center" }}>CLIENTE</th>
+                    <th style={{ textAlign: "center" }}>ESTADO</th>
                     <th style={{ textAlign: "center" }}>ACCION</th>
                   </tr>
                 </thead>
@@ -501,6 +511,13 @@ const MisAprobaciones = () => {
                           <th style={{ textAlign: "center" }}>
                             {extraeFecha(item.created_at)}
                           </th>
+                          <th style={{ textAlign: "center" }}>
+                            {item.sales_org}
+                          </th>
+
+                          <th style={{ textAlign: "center" }}>
+                            {item.client_name}
+                          </th>
                           <th
                             style={{
                               textAlign: "center",
@@ -508,12 +525,6 @@ const MisAprobaciones = () => {
                             }}
                           >
                             {validateState(item.state)}
-                          </th>
-                          <th style={{ textAlign: "center" }}>
-                            {item.client_name}
-                          </th>
-                          <th style={{ textAlign: "center" }}>
-                            {item.sales_org}
                           </th>
                           <th
                             style={{

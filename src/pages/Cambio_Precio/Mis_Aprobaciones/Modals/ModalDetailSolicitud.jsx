@@ -10,6 +10,8 @@ const ModalDetailSolicitud = ({
   idSolicitud,
   extraeFecha,
   stateSolicitud,
+  idUser,
+  salesOfi,
 }) => {
   const modalRef = useRef();
   const closeModal = (e) => {
@@ -110,6 +112,8 @@ const ModalDetailSolicitud = ({
             setShowModalEditMaterial={setShowModalEditMaterial}
             dataMaterial={material}
             setDetalle={setDetalle}
+            idUser={idUser}
+            salesOfi={salesOfi}
           />
           <div className="modal-wrapper modal-wrapper-bg">
             {/* <div className="modal-header">
@@ -150,9 +154,9 @@ const ModalDetailSolicitud = ({
                             <th style={{ textAlign: "center" }}>
                               LIMITE INFERIOR
                             </th>
-                            <th style={{ textAlign: "center" }}>
+                            {/* <th style={{ textAlign: "center" }}>
                               LIMITE SUPERIOR
-                            </th>
+                            </th> */}
                             <th style={{ textAlign: "center" }}>MARGEN</th>
                             <th style={{ textAlign: "center" }}>
                               FECHA INICIO
@@ -182,9 +186,9 @@ const ModalDetailSolicitud = ({
                               <th style={{ textAlign: "right" }}>
                                 {convertDecimal(response.lower_limit)}
                               </th>
-                              <th style={{ textAlign: "right" }}>
+                              {/* <th style={{ textAlign: "right" }}>
                                 {convertDecimal(response.upper_limit)}
-                              </th>
+                              </th> */}
                               <th style={{ textAlign: "right" }}>
                                 {convertDecimal(response.margin)}
                               </th>

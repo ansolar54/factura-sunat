@@ -121,6 +121,7 @@ const ModalEditMaterial = ({
           GetSolicitud(dataMaterial.id_request).then((result) => {
             if (result.indicator == 1) {
               let client = result.data[0].client_name;
+              let nro_solicitud = result.data[0].id.toString();
               // console.log(result.data[0].id_user);
               let model_usua_notifi = {
                 IsNotif: "1",
@@ -141,6 +142,7 @@ const ModalEditMaterial = ({
 
                   let model_email_aprob = {
                     state: 0, // para identificar aprobacion o rechazo de solicitud en backend
+                    nro_solicitud: nro_solicitud,
                     cliente: client,
                     aprobador: jwt(localStorage.getItem("_token")).user, // se obtiene nombre de usuario de token vendedor = aprobador
                     correos: correos,
@@ -230,8 +232,19 @@ const ModalEditMaterial = ({
   };
 
   const guardar = () => {
-    // console.log("guardar");
-    calcularMargen();
+    console.log("guardar", material.suggested_price, material.lower_limit);
+    if (material.suggested_price > material.lower_limit) {
+      toast.error("Precio sugerido debe ser menor a " + material.lower_limit, {
+        position: "top-center",
+        autoClose: 5000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        },
+      });
+    } else {
+      calcularMargen();
+    }
   };
 
   function handleChange(name, value) {

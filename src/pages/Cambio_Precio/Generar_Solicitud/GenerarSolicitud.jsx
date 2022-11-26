@@ -11,6 +11,7 @@ import toast, { Toaster } from "react-hot-toast";
 import jwt from "jwt-decode";
 import {
   EnviarCorreo,
+  GetSolicitudLimit,
   GuardarSolicitud,
   UsuarioNotifi,
 } from "../../../Services/ServiceCambioPrecio";
@@ -158,7 +159,7 @@ const GenerarSolicitud = () => {
       let data_detail = [];
       for (let i = 0; i < dataMaterial.length; i++) {
         const element = dataMaterial[i];
-        console.log(Number(element.prec_sug.replaceAll(",", "")));
+        // console.log(Number(element.prec_sug.replaceAll(",", "")));
         let model_detail = {
           material: element.cod_mat,
           material_name: element.name_mat,
@@ -228,32 +229,38 @@ const GenerarSolicitud = () => {
           GuardarSolicitud(model).then((result) => {
             console.log(result);
             if (result.indicator == 1) {
-              // ENVIAR SOLICITUD PARA APROBACION POR CORREO
-              let model_correo = {
-                cliente: isClientName,
-                vendedor: jwt(localStorage.getItem("_token")).user,
-                correos: correos,
-              };
-              // console.log(model_correo);
-              EnviarCorreo(model_correo).then((result) => {
-                console.log(result);
-                if (result.indicator == 1) {
-                  toast.success("Solicitud creada correctamente.", {
-                    position: "top-center",
-                    autoClose: 1000,
-                    style: {
-                      backgroundColor: "#212121",
-                      color: "#fff",
-                    },
+              // OBTENER SOLICITUD CREADA - se necesita el id generado
+              GetSolicitudLimit().then((result) => {
+                if (result.data.length > 0) {
+                  // ENVIAR SOLICITUD PARA APROBACION POR CORREO
+                  let model_correo = {
+                    nro_solicitud: result.data[0].id.toString(),
+                    cliente: isClientName,
+                    vendedor: jwt(localStorage.getItem("_token")).user,
+                    correos: correos,
+                  };
+                  // console.log("MODEL CORREO", model_correo);
+                  EnviarCorreo(model_correo).then((result) => {
+                    console.log(result);
+                    if (result.indicator == 1) {
+                      toast.success("Solicitud creada correctamente.", {
+                        position: "top-center",
+                        autoClose: 1000,
+                        style: {
+                          backgroundColor: "#212121",
+                          color: "#fff",
+                        },
+                      });
+                      setDataMaterial([]);
+                      setOrgVentasValue("AGRO");
+                      setOrgVentasName("");
+                      setIsCliente("");
+                      setIsClientName("");
+                      setspinner(false);
+                    } else {
+                      setspinner(false);
+                    }
                   });
-                  setDataMaterial([]);
-                  setOrgVentasValue("AGRO");
-                  setOrgVentasName("");
-                  setIsCliente("");
-                  setIsClientName("");
-                  setspinner(false);
-                } else {
-                  setspinner(false);
                 }
               });
 
@@ -485,7 +492,7 @@ const GenerarSolicitud = () => {
                     : null}
                 </tbody>
               </table>
-              {spinner == false && dataMaterial.length == 0 ? (
+              {/* {spinner == false && dataMaterial.length == 0 ? (
                 <div
                   style={{
                     margin: "10px",
@@ -498,7 +505,7 @@ const GenerarSolicitud = () => {
                   No se encontraron resultados.
                 </div>
               ) : null}
-              {spinner && <Spinner />}
+              {spinner && <Spinner />} */}
             </div>
           </div>
         </section>

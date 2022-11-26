@@ -6,21 +6,31 @@ import McMaterial from "../../Modals_General/McMaterial";
 import toast, { Toaster } from "react-hot-toast";
 import {
   AprobMargen,
+  EnviarCorreoAprob,
   GetDetalleSolicitud,
+  GetSolicitud,
   ModificarRequestDetail,
+  UsuarioNotifi,
 } from "../../../../Services/ServiceCambioPrecio";
+import Spinner from "../../../../components/Spinner";
+import { getUser } from "../../../../Services/ServiceUser";
+import jwt from "jwt-decode";
 
 const ModalEditMaterial = ({
   showModalEditMaterial,
   setShowModalEditMaterial,
   dataMaterial,
   setDetalle,
+  idUser,
+  salesOfi,
 }) => {
   // console.log("MATERIAL", dataMaterial);
 
   const [showMcMaterial, setShowMcMaterial] = useState(false);
 
   const [activateButton, setActivateButton] = useState(false);
+
+  const [spinner, setspinner] = useState(false);
 
   const [indicator, setIndicator] = useState(false);
 
@@ -60,6 +70,7 @@ const ModalEditMaterial = ({
   useEffect(() => {
     // console.log("cambio", material);
     if (indicator) {
+      setspinner(true);
       let model = {
         id: material.id,
         suggested_price:
@@ -82,17 +93,100 @@ const ModalEditMaterial = ({
       };
       console.log(model);
       // llamado a servicio parar modificar request detail
+      let detalle_mat = [];
       ModificarRequestDetail(model).then((result) => {
         console.log(result);
         GetDetalleSolicitud(dataMaterial.id_request).then((result) => {
           console.log(result);
           setDetalle(result);
           // setViewInfo(true);
+          for (let i = 0; i < result.data.length; i++) {
+            const element = result.data[i];
+            // mapeamos los campos para detalle de correo
+            let detalle = {
+              producto: element.material_name,
+              moneda: element.currency,
+              precio: convertDecimal(element.suggested_price.toString()),
+              fec_ini: formatFechaForCorreo(element.start_date.split("T")[0]),
+              fec_fin: formatFechaForCorreo(element.end_date.split("T")[0]),
+            };
+
+            detalle_mat.push(detalle);
+          }
+          // IMPLEMENTACION PARA NOTIFICAR POR CORREO LA MODIFICACION DE DETALLE DE SOLICITUD
+          // IMPLEMENTAR SERVICIO EN C# QUE CUANDO LE ENVIE material.id_request DEVUELVA LA SOLICITUD CABECERA DE TB_REQUEST
+          GetSolicitud(dataMaterial.id_request).then((result) => {
+            if (result.indicator == 1) {
+              let client = result.data[0].client_name;
+              let nro_solicitud = result.data[0].id.toString();
+
+              getUser(idUser).then((result) => {
+                if (result.indicator == 1) {
+                  // console.log(result.data[0].id_user);
+                  let model_usua_notifi = {
+                    IsNotif: "2",
+                    IsUser: result.data[0].username,
+                    IsVkbur: salesOfi,
+                    IsVkorg: "",
+                  };
+                  let correos = [];
+                  UsuarioNotifi(model_usua_notifi).then((result) => {
+                    if (result.etListusuariosField.length > 0) {
+                      for (
+                        let i = 0;
+                        i < result.etListusuariosField.length;
+                        i++
+                      ) {
+                        const element = result.etListusuariosField[i];
+                        let mails = {
+                          email: element.correoField,
+                        };
+                        correos.push(mails); // se pasa lista de correo de gerentes
+                      }
+
+                      // provisional
+                      let mails = {
+                        email: "james.virgo30@outlook.es",
+                      };
+
+                      let model_email_aprob = {
+                        state: 0, // para identificar aprobacion o rechazo de solicitud en backend
+                        nro_solicitud: nro_solicitud,
+                        cliente: client,
+                        aprobador: jwt(localStorage.getItem("_token")).user, // se obtiene nombre de usuario de token vendedor = aprobador
+                        correos: [mails],
+                        detalle: detalle_mat,
+                      };
+                      console.log(model_email_aprob);
+                      EnviarCorreoAprob(model_email_aprob).then((result) => {
+                        console.log(result);
+                        if (result.indicator == 1) {
+                          toast.success("Solicitud modificada correctamente.", {
+                            position: "top-center",
+                            autoClose: 1000,
+                            style: {
+                              backgroundColor: "#212121",
+                              color: "#fff",
+                            },
+                          });
+                          setShowModalEditMaterial(false);
+                          setIndicator(false);
+                          setspinner(false);
+                        } else {
+                          setspinner(false);
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          });
         });
       });
 
-      setShowModalEditMaterial(false);
-      setIndicator(false);
+      // setShowModalEditMaterial(false);
+      // setIndicator(false);
     }
   }, [indicator]);
 
@@ -112,6 +206,11 @@ const ModalEditMaterial = ({
   //     }
   //   }
   // };
+
+  const formatFechaForCorreo = (fecha) => {
+    let parts = fecha.split("-");
+    return parts[2] + "-" + parts[1] + "-" + parts[0];
+  };
 
   const cancelar = () => {
     setShowModalEditMaterial(false);
@@ -416,7 +515,7 @@ const ModalEditMaterial = ({
                   />
                 </div>
               </div>
-
+              {spinner && <Spinner />}
               {activateButton && (
                 <div className="row-md">
                   <BtnSave
