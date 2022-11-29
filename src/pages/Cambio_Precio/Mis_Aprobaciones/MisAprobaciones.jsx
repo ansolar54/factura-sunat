@@ -9,6 +9,7 @@ import {
   ListadoSolicitudes,
   ListadoSolicitudesForAprob,
   ModificarStateRequest,
+  UpdateDetailRequestLastAprobRequest,
   UsuarioNotifi,
 } from "../../../Services/ServiceCambioPrecio";
 import toast, { Toaster } from "react-hot-toast";
@@ -184,6 +185,7 @@ const MisAprobaciones = () => {
           if (result.indicator == 1) {
             let itMatAprob = [];
             let detalleCorreo = []; // para llenar tabla detalle de correo de aprobacion
+            let detailMaterial = []; // ARREGLO DE DETALLE MATERIAL PARA SU MODIFICACION EN BD
             for (let i = 0; i < result.data.length; i++) {
               const element = result.data[i];
               // console.log(element);
@@ -213,6 +215,13 @@ const MisAprobaciones = () => {
               detalleCorreo.push(detalle);
 
               // nro_solicitud = element.id_request;
+              //  MODEL FROM EDIT DETAIL MATERIAL
+              let material = {
+                id: element.id,
+                suggested_price: element.actual_price,
+                lower_limit: element.suggested_price,
+              };
+              detailMaterial.push(material);
             }
 
             if (state == 1) {
@@ -226,6 +235,12 @@ const MisAprobaciones = () => {
                 console.log(result);
                 if (result.etMsgReturnField[0].successField == "X") {
                   // let email_solicitante = "";
+                  // modificacion de detalle de solicitud en base de datos
+                  UpdateDetailRequestLastAprobRequest({
+                    detailMaterial: detailMaterial,
+                  }).then((result) => {
+                    console.log("result modify detail", result);
+                  });
                   // obteniendo correo de solicitante
                   // console.log(item.id_user);
                   getUser(item.id_user).then((result) => {

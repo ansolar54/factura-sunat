@@ -260,6 +260,29 @@ export function GetSolicitudLimit() {
       });
   });
 }
+
+export function UpdateDetailRequestLastAprobRequest(req) {
+  const base = process.env.REACT_APP_BASE_URL;
+  let BaseUrl = base + "request/update_request_detail_last_aprob";
+
+  return new Promise((resolve, reject) => {
+    fetch(BaseUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(req),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        resolve(responseJson);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
 // ---------------------
 
 // SERVICIOS SAP
