@@ -517,7 +517,7 @@ const Auditoria = () => {
               ))}
             </select>
           </div>
-          <div className="input-box col-md-5">
+          {/* <div className="input-box col-md-5">
             <h5>Select Fruits</h5>
             <pre>{JSON.stringify(selected)}</pre>
             <MultiSelect
@@ -526,7 +526,7 @@ const Auditoria = () => {
               onChange={setSelected}
               labelledBy="Select"
             />
-          </div>
+          </div> */}
           <div className="input-box col-md-5">
             <label className="label-input">Fecha (Desde)</label>
             <input
