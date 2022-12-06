@@ -212,13 +212,13 @@ const Promociones = () => {
       ItDatam:
         filtroInicial.valido_el[0].Low.length == 10
           ? [
-              {
-                Sign: "I",
-                Option: "EQ",
-                Low: formatDateSAP(filtroInicial.valido_el[0].Low),
-                High: "",
-              },
-            ]
+            {
+              Sign: "I",
+              Option: "EQ",
+              Low: formatDateSAP(filtroInicial.valido_el[0].Low),
+              High: "",
+            },
+          ]
           : [{ Sign: "I", Option: "EQ", Low: "", High: "" }],
       ItPltyp: filtroInicial.lista_precios,
       ItVkbur: filtroInicial.ofi_ventas,
@@ -319,13 +319,13 @@ const Promociones = () => {
       ItDatam:
         filtroInicial.valido_el[0].Low.length == 10
           ? [
-              {
-                Sign: "I",
-                Option: "EQ",
-                Low: formatDateSAP(filtroInicial.valido_el[0].Low),
-                High: "",
-              },
-            ]
+            {
+              Sign: "I",
+              Option: "EQ",
+              Low: formatDateSAP(filtroInicial.valido_el[0].Low),
+              High: "",
+            },
+          ]
           : [{ Sign: "I", Option: "EQ", Low: "", High: "" }],
       ItPltyp: filtroInicial.lista_precios,
       ItVkbur: filtroInicial.ofi_ventas,
@@ -973,11 +973,20 @@ const Promociones = () => {
                 <label> Reportes / Promociones </label>
                 <label>
                   {" "}
-                  Tipo cambio :{" "}
-                  <label style={{ color: "#00179B" }}>
-                    {getDateAct() +
-                      " --> $ " +
-                      localStorage.getItem("_tipoCambio")}
+                  Tipo de cambio :{" "}
+                  <i style={{ color: "#008040" }} class="fas fa-dollar-sign"></i>{" "}
+                  <label style={{ color: "#008040", fontSize: "17px" }}>
+                    {localStorage.getItem("_tipoCambio")}
+                  </label>{" "}
+                </label>
+              </div>
+              <div style={{ justifyContent: "flex-end", display: "flex" }} className="col-md-12">
+                <label>
+                  {" "}
+                  Fecha (hoy) :{" "}
+                  {/* <i class="fas fa-dollar-sign"></i> {" "}:{" "} */}
+                  <label style={{ color: "#008040" }}>
+                    {getDateAct()}
                   </label>{" "}
                 </label>
               </div>
@@ -1567,44 +1576,44 @@ const Promociones = () => {
 
                       {resultado_consulta_promociones.length > 0
                         ? resultado_consulta_promociones.map(
-                            (response, key) => {
-                              return (
-                                <tr key={key}>
-                                  <th style={{ textAlign: "center" }}></th>
-                                  <th style={{ textAlign: "center" }}>
-                                    {response.vkorgField}
-                                  </th>
-                                  <th style={{ textAlign: "center" }}>
-                                    {response.matnrField.replace(/^(0+)/g, "")}
-                                  </th>
-                                  <th style={{ textAlign: "left" }}>
-                                    {response.maktxField}
-                                  </th>
-                                  <th style={{ textAlign: "center" }}>
-                                    {response.knrmmField}
-                                  </th>
-                                  <th style={{ textAlign: "center" }}>
-                                    {response.knrnmField}
-                                  </th>
-                                  <th style={{ textAlign: "center" }}>
-                                    {response.knrmeField}
-                                  </th>
-                                  <th style={{ textAlign: "center" }}>
-                                    {response.knrzmField}
-                                  </th>
-                                  <th style={{ textAlign: "center" }}>
-                                    {response.knrezField}
-                                  </th>
-                                  <th style={{ textAlign: "center" }}>
-                                    {response.knrmatField.replace(/^(0+)/g, "")}
-                                  </th>
-                                  <th style={{ textAlign: "left" }}>
-                                    {response.nrmaktxtField}
-                                  </th>
-                                </tr>
-                              );
-                            }
-                          )
+                          (response, key) => {
+                            return (
+                              <tr key={key}>
+                                <th style={{ textAlign: "center" }}></th>
+                                <th style={{ textAlign: "center" }}>
+                                  {response.vkorgField}
+                                </th>
+                                <th style={{ textAlign: "center" }}>
+                                  {response.matnrField.replace(/^(0+)/g, "")}
+                                </th>
+                                <th style={{ textAlign: "left" }}>
+                                  {response.maktxField}
+                                </th>
+                                <th style={{ textAlign: "center" }}>
+                                  {response.knrmmField}
+                                </th>
+                                <th style={{ textAlign: "center" }}>
+                                  {response.knrnmField}
+                                </th>
+                                <th style={{ textAlign: "center" }}>
+                                  {response.knrmeField}
+                                </th>
+                                <th style={{ textAlign: "center" }}>
+                                  {response.knrzmField}
+                                </th>
+                                <th style={{ textAlign: "center" }}>
+                                  {response.knrezField}
+                                </th>
+                                <th style={{ textAlign: "center" }}>
+                                  {response.knrmatField.replace(/^(0+)/g, "")}
+                                </th>
+                                <th style={{ textAlign: "left" }}>
+                                  {response.nrmaktxtField}
+                                </th>
+                              </tr>
+                            );
+                          }
+                        )
                         : null}
                     </tbody>
                   </table>

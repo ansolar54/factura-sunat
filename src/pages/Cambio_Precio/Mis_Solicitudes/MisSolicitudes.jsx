@@ -60,6 +60,9 @@ const MisSolicitudes = () => {
   // PARA OBTENER CANAL DE DIST. DE MATCH CLIENTE
   const [canalDistValue, setCanalDistValue] = useState("");
 
+  // OBTENER OFICINA DE VENTAS PARA REGISTRAR EN TB_REQUEST
+  const [ofiVentas, setOfiVentas] = useState("");
+
   useEffect(() => {
     obtenerSolicitudes(1);
   }, []);
@@ -202,13 +205,14 @@ const MisSolicitudes = () => {
   }
 
   const anularSolicitud = (state, item) => {
+    console.log("viendo item", item);
     let model = {
       id: item.id,
       state: state.toString(),
     };
     setspinner(true);
     ModificarStateRequest(model).then((result) => {
-      // console.log(result);
+      console.log("estado - anulado", result);
 
       if (result.indicator == 1) {
         GetDetalleSolicitud(item.id).then((result) => {
@@ -248,6 +252,10 @@ const MisSolicitudes = () => {
                   correos.push(mails); // se pasa lista de correo de gerentes
                 }
                 // correos = result.data; // se pasa lista de correo de gerentes
+                // provisional
+                let mails = {
+                  email: "amendozac@farmex.com.pe",
+                };
 
                 // notificacion de correo - llamado a servicio
                 let model_email_aprob = {
@@ -255,10 +263,11 @@ const MisSolicitudes = () => {
                   nro_solicitud: item.id.toString(),
                   cliente: item.client_name,
                   aprobador: jwt(localStorage.getItem("_token")).user, // se obtiene nombre de usuario de token vendedor = aprobador
-                  correos: correos,
+                  correos: [mails],
+                  org_ventas: item.sales_org_desc,
                   detalle: detalleCorreo,
                 };
-                console.log("model_correo", model_email_aprob);
+                console.log("model_correo_solicitud", model_email_aprob);
                 EnviarCorreoAprob(model_email_aprob).then((result) => {
                   console.log(result);
                   if (result.indicator == 1) {
@@ -294,6 +303,22 @@ const MisSolicitudes = () => {
     });
   };
 
+  const getDateAct = () => {
+    let date = new Date();
+
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+
+    if (month < 10) {
+      return `${day}/0${month}/${year}`;
+      // console.log(`${day}-0${month}-${year}`);
+    } else {
+      return `${day}/${month}/${year}`;
+      // console.log(`${day}-${month}-${year}`);
+    }
+  };
+
   return (
     <React.Fragment>
       <div className="container-view">
@@ -314,6 +339,7 @@ const MisSolicitudes = () => {
           setIsClientName={setIsClientName}
           orgVentasValue={orgVentasValue}
           setCanalDistValue={setCanalDistValue}
+          setOfiVentas={setOfiVentas}
         />
         <ModalDetailSolicitud
           showModalDetail={showModalDetail}
@@ -325,7 +351,26 @@ const MisSolicitudes = () => {
         />
 
         <div className="title-section">
-          <label> Mis Solicitudes </label>
+          <div>
+            <label>Cambio Precio / Mis Solicitudes </label>
+            <label >
+              Tipo de cambio :{" "}
+              <i style={{ color: "#008040" }} class="fas fa-dollar-sign"></i>{" "}
+              <label style={{ color: "#008040", fontSize: "17px" }}>
+                {localStorage.getItem("_tipoCambio")}
+              </label>{" "}
+            </label>
+          </div>
+          <div style={{justifyContent: "flex-end", display: "flex"}} className="col-md-12">
+          <label>
+              {" "}
+              Fecha (hoy) :{" "}
+              {/* <i class="fas fa-dollar-sign"></i> {" "}:{" "} */}
+              <label style={{ color: "#008040" }}>
+                {getDateAct()}
+              </label>{" "}
+            </label>
+          </div>
           <hr />
         </div>
 
@@ -341,7 +386,7 @@ const MisSolicitudes = () => {
                     name: "org_ventas",
                     type: "text",
                     value: orgVentasValue,
-                    disabled: false,
+                    disabled: true,
                     checked: false,
                     matchcode: true,
                     maxlength: 4,
@@ -430,55 +475,55 @@ const MisSolicitudes = () => {
                 <tbody>
                   {solicitudes.length >= 1
                     ? solicitudes.map((item, key) => (
-                        <tr key={item.id}>
-                          <th style={{ textAlign: "center" }}>{item.id}</th>
-                          <th style={{ textAlign: "center" }}>
-                            {extraeFecha(item.created_at)}
-                          </th>
-                          <th style={{ textAlign: "center" }}>
-                            {item.sales_org}
-                          </th>
-                          <th style={{ textAlign: "center" }}>
-                            {item.client_name}
-                          </th>
-                          <th
-                            style={{
-                              textAlign: "center",
-                              color: item.state == "4" ? "red" : "",
-                            }}
-                          >
-                            {validateState(item.state)}
-                          </th>
-                          <th
-                            style={{
-                              textAlign: "center",
-                            }}
-                          >
-                            <i
-                              style={{ cursor: "pointer", margin: "2px" }}
-                              title="Ver detalle"
-                              className="fa fa-bars"
-                              onClick={() => openDetalle(item)}
-                            ></i>
-                            {item.state == "2" && (
-                              <>
-                                {/* <i
+                      <tr key={item.id}>
+                        <th style={{ textAlign: "center" }}>{item.id}</th>
+                        <th style={{ textAlign: "center" }}>
+                          {extraeFecha(item.created_at)}
+                        </th>
+                        <th style={{ textAlign: "center" }}>
+                          {item.sales_org}
+                        </th>
+                        <th style={{ textAlign: "center" }}>
+                          {item.client_name}
+                        </th>
+                        <th
+                          style={{
+                            textAlign: "center",
+                            color: item.state == "4" ? "red" : "",
+                          }}
+                        >
+                          {validateState(item.state)}
+                        </th>
+                        <th
+                          style={{
+                            textAlign: "center",
+                          }}
+                        >
+                          <i
+                            style={{ cursor: "pointer", margin: "6px" }}
+                            title="Ver detalle"
+                            className="fa fa-bars fa-lg"
+                            onClick={() => openDetalle(item)}
+                          ></i>
+                          {(item.state == "2") && (
+                            <>
+                              {/* <i
                                   style={{ cursor: "pointer", margin: "2px" }}
                                   title="Editar solicitud"
                                   className="fas fa-edit"
                                   onClick={() => {}}
                                 ></i> */}
-                                <i
-                                  style={{ cursor: "pointer", margin: "2px" }}
-                                  title="Anular solicitud"
-                                  className="fas fa-trash-alt"
-                                  onClick={() => anularSolicitud(4, item)}
-                                ></i>
-                              </>
-                            )}
-                          </th>
-                        </tr>
-                      ))
+                              <i
+                                style={{ cursor: "pointer", margin: "6px" }}
+                                title="Anular solicitud"
+                                className="fas fa-trash-alt fa-lg"
+                                onClick={() => anularSolicitud(4, item)}
+                              ></i>
+                            </>
+                          )}
+                        </th>
+                      </tr>
+                    ))
                     : null}
                 </tbody>
               </table>

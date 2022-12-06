@@ -27,7 +27,7 @@ const GenerarSolicitud = () => {
   const [dataMaterial, setDataMaterial] = useState([]);
 
   // ORG VENTAS
-  const [orgVentasValue, setOrgVentasValue] = useState("AGRO"); // IsVkorg
+  const [orgVentasValue, setOrgVentasValue] = useState(""); // IsVkorg
   const [orgVentasName, setOrgVentasName] = useState("");
   const [orgVentas, setOrgVentas] = useState([
     { Sign: "I", Option: "EQ", Low: "", High: "" },
@@ -41,15 +41,14 @@ const GenerarSolicitud = () => {
 
   // PARA OBTENER CANAL DE DIST. DE MATCH CLIENTE
   const [canalDistValue, setCanalDistValue] = useState("");
+  const [CanalDistDescValue, setCanalDistDescValue] = useState("");
   // OBTENER OFICINA DE VENTAS PARA REGISTRAR EN TB_REQUEST
   const [ofiVentas, setOfiVentas] = useState("");
 
   //CARGA DE SPINNER
   const [spinner, setspinner] = useState(false);
 
-  const openAddMaterial = () => {
-    setShowModalMaterial((prev) => !prev);
-  };
+
 
   const openEditMaterial = (id_material) => {
     setIdMaterial(id_material);
@@ -142,6 +141,25 @@ const GenerarSolicitud = () => {
     }
   };
 
+  function solounproducto() {
+    const openAddMaterial = () => {
+      setShowModalMaterial((prev) => !prev);
+    };
+    if (dataMaterial.length != 0 ) {
+      toast.error("Solo se puede seleccionar un material.", {
+        position: "top-center",
+        autoClose: 1000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        }
+      })
+    }
+    else{
+      return openAddMaterial();
+    }
+  }
+
   const enviarSolicitud = () => {
     // MAPEO DE CAMPOS DE ARREGLO MATERIAL
     setspinner(true);
@@ -216,16 +234,25 @@ const GenerarSolicitud = () => {
             correos.push(mails); // se pasa lista de correo de gerentes
           }
 
+          // provisional
+          let mails = {
+            email: "amendozac@farmex.com.pe",
+          };
+
           // correos = result.data; // se pasa lista de correo de gerentes
+          // se debe de enviar canal de Distribución (Canal de Venta)
           let model = {
             sales_org: orgVentasValue,
             client: IsCliente,
             client_name: isClientName,
             id_user: Number(jwt(localStorage.getItem("_token")).nameid),
             sales_ofi: ofiVentas,
+            sales_org_desc: orgVentasName,
             detail: data_detail,
+            sales_channel: canalDistValue,
+            sales_channel_desc: CanalDistDescValue
           };
-          console.log(model);
+          //console.log("generando solicitud",model);
           GuardarSolicitud(model).then((result) => {
             console.log(result);
             if (result.indicator == 1) {
@@ -237,9 +264,10 @@ const GenerarSolicitud = () => {
                     nro_solicitud: result.data[0].id.toString(),
                     cliente: isClientName,
                     vendedor: jwt(localStorage.getItem("_token")).user,
-                    correos: correos,
+                    org_ventas: orgVentasName,
+                    correos: [mails],
                   };
-                  // console.log("MODEL CORREO", model_correo);
+                  console.log("MODEL CORREO", model_correo);
                   EnviarCorreo(model_correo).then((result) => {
                     console.log(result);
                     if (result.indicator == 1) {
@@ -252,7 +280,7 @@ const GenerarSolicitud = () => {
                         },
                       });
                       setDataMaterial([]);
-                      setOrgVentasValue("AGRO");
+                      setOrgVentasValue("");
                       setOrgVentasName("");
                       setIsCliente("");
                       setIsClientName("");
@@ -266,13 +294,13 @@ const GenerarSolicitud = () => {
 
               // ----------------------------------------
             } else {
-              toast.error("No se pudo enviar la solicitud.", {
+              toast.error(result.message, {
                 position: "top-center",
-                autoClose: 1000,
+                autoClose: 3000,
                 style: {
                   backgroundColor: "#212121",
                   color: "#fff",
-                },
+                }
               });
               setspinner(false);
             }
@@ -337,6 +365,22 @@ const GenerarSolicitud = () => {
     }
   }
 
+  const getDateAct = () => {
+    let date = new Date();
+
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+
+    if (month < 10) {
+      return `${day}/0${month}/${year}`;
+      // console.log(`${day}-0${month}-${year}`);
+    } else {
+      return `${day}/${month}/${year}`;
+      // console.log(`${day}-${month}-${year}`);
+    }
+  };
+
   return (
     <React.Fragment>
       <div className="container-view">
@@ -372,11 +416,31 @@ const GenerarSolicitud = () => {
           setIsClientName={setIsClientName}
           orgVentasValue={orgVentasValue}
           setCanalDistValue={setCanalDistValue}
+          setCanalDistDescValue={setCanalDistDescValue}
           setOfiVentas={setOfiVentas}
         />
 
         <div className="title-section">
-          <label> Generar Solicitud </label>
+          <div>
+            <label>Cambio Precio / Generar Solicitud </label>
+            <label >
+              Tipo de cambio :{" "}
+              <i style={{ color: "#008040" }} class="fas fa-dollar-sign"></i>{" "}
+              <label style={{ color: "#008040", fontSize: "17px" }}>
+                {localStorage.getItem("_tipoCambio")}
+              </label>{" "}
+            </label>
+          </div>
+          <div style={{ justifyContent: "flex-end", display: "flex" }} className="col-md-12">
+            <label>
+              {" "}
+              Fecha (hoy) :{" "}
+              {/* <i class="fas fa-dollar-sign"></i> {" "}:{" "} */}
+              <label style={{ color: "#008040" }}>
+                {getDateAct()}
+              </label>{" "}
+            </label>
+          </div>
           <hr />
         </div>
         <div className="container-form2">
@@ -391,10 +455,11 @@ const GenerarSolicitud = () => {
                     name: "org_ventas",
                     type: "text",
                     value: orgVentasValue,
-                    disabled: false,
+                    disabled: true,
                     checked: false,
                     matchcode: true,
                     maxlength: 4,
+                    placeholder: "Seleccione..."
                   }}
                   handleChange={handleChange}
                   onClick={() => openMcOrgVentas()}
@@ -414,9 +479,10 @@ const GenerarSolicitud = () => {
                     name: "cliente",
                     type: "text",
                     value: IsCliente,
-                    disabled: false,
+                    disabled: true,
                     checked: false,
                     matchcode: true,
+                    placeholder: "Seleccione..."
                   }}
                   handleChange={handleChange}
                   onClick={() => openMcCliente()}
@@ -437,8 +503,9 @@ const GenerarSolicitud = () => {
               attribute={{
                 name: "Agregar material",
                 classNamebtn: "btn_material",
+                //disabled: dataMaterial.length == 0,
               }}
-              onClick={() => openAddMaterial()}
+              onClick={() => solounproducto()}
             />
           </div>
         </div>
@@ -461,38 +528,41 @@ const GenerarSolicitud = () => {
                 <tbody>
                   {dataMaterial.length >= 1
                     ? dataMaterial.map((item, key) => (
-                        <tr key={item.cod_mat}>
-                          <th>{item.cod_mat}</th>
-                          <th>{item.name_mat}</th>
-                          <th>{item.moneda}</th>
-                          <th style={{ textAlign: "center" }}>
-                            {convertDecimal(item.prec_act)}
-                          </th>
-                          <th style={{ textAlign: "center" }}>
-                            {convertDecimal(item.prec_sug)}
-                          </th>
-                          <th>{formatFecha(item.fec_ini)}</th>
-                          <th>{formatFecha(item.fec_fin)}</th>
-                          <th>
-                            <i
-                              style={{ cursor: "pointer", margin: "2px" }}
-                              title="Editar material"
-                              className="fas fa-edit"
-                              onClick={() => openEditMaterial(item.cod_mat)}
-                            ></i>
-                            <i
-                              style={{ cursor: "pointer", margin: "2px" }}
-                              title="Eliminar material"
-                              className="fas fa-trash-alt"
-                              onClick={() => handleDelete(item.cod_mat)}
-                            ></i>
-                          </th>
-                        </tr>
-                      ))
+
+                      <tr key={item.cod_mat}>
+                        <th>{item.cod_mat}</th>
+                        <th>{item.name_mat}</th>
+                        <th>{item.moneda}</th>
+                        <th style={{ textAlign: "center" }}>
+                          {convertDecimal(item.prec_act)}
+                        </th>
+                        <th style={{ textAlign: "center" }}>
+                          {convertDecimal(item.prec_sug)}
+                        </th>
+                        <th>{formatFecha(item.fec_ini)}</th>
+                        <th>{formatFecha(item.fec_fin)}</th>
+                        <th>
+                          <i
+                            style={{ cursor: "pointer", margin: "6px" }}
+                            title="Editar material"
+                            className="fas fa-edit fa-lg"
+                            onClick={() => openEditMaterial(item.cod_mat)}
+                          ></i>
+                          <i
+                            style={{ cursor: "pointer", margin: "6px" }}
+                            title="Eliminar material"
+                            className="fas fa-trash-alt fa-lg"
+                            onClick={() => handleDelete(item.cod_mat)}
+                          ></i>
+                        </th>
+                      </tr>
+                    )
+                    )
+
                     : null}
                 </tbody>
               </table>
-              {/* {spinner == false && dataMaterial.length == 0 ? (
+              {spinner == false && dataMaterial.length == 0 ? (
                 <div
                   style={{
                     margin: "10px",
@@ -502,10 +572,10 @@ const GenerarSolicitud = () => {
                     alignItems: "center",
                   }}
                 >
-                  No se encontraron resultados.
+                  {/* No se encontraron resultados. */}
                 </div>
               ) : null}
-              {spinner && <Spinner />} */}
+              {spinner && <Spinner />}
             </div>
           </div>
         </section>

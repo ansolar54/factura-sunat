@@ -186,9 +186,9 @@ export function deleteUser(id) {
 }
 
 // @JR
-export function getDistinctUser(id) {
+export function getDistinctUser(id, id_rol) {
   const base = process.env.REACT_APP_BASE_URL;
-  let BaseUrl = base + "user/get_distinct_user?id=" + id;
+  let BaseUrl = base + "user/get_distinct_user?id=" + id + "&id_rol=" + id_rol;
 
   return new Promise((resolve, reject) => {
     fetch(BaseUrl, {

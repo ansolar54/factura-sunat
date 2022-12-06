@@ -15,6 +15,7 @@ const InputForm = ({ attribute, handleChange, onClick }) => {
         maxLength={attribute.maxlength}
         onChange={(e) => handleChange(e.target.name, e.target.value)}
         min={attribute.min}
+        placeholder={attribute.placeholder}
       />
       {
         attribute.matchcode && (

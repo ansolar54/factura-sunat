@@ -9,6 +9,7 @@ import {
   EnviarCorreoAprob,
   GetDetalleSolicitud,
   GetSolicitud,
+  ModificarStateRequest,
   ModificarRequestDetail,
   UsuarioNotifi,
 } from "../../../../Services/ServiceCambioPrecio";
@@ -140,18 +141,30 @@ const ModalEditMaterial = ({
                     correos.push(mails); // se pasa lista de correo de gerentes
                   }
 
+                  let mails = {
+                    email: "amendozac@farmex.com.pe",
+                  };
+
                   let model_email_aprob = {
                     state: 0, // para identificar aprobacion o rechazo de solicitud en backend
                     nro_solicitud: nro_solicitud,
                     cliente: client,
                     aprobador: jwt(localStorage.getItem("_token")).user, // se obtiene nombre de usuario de token vendedor = aprobador
-                    correos: correos,
+                    correos: [mails],
                     detalle: detalle_mat,
                   };
                   console.log(model_email_aprob);
                   EnviarCorreoAprob(model_email_aprob).then((result) => {
                     console.log(result);
+                    let model = {
+                      id: Number(nro_solicitud),
+                      state: "2",
+                    };
+                    console.log("impr. model",model);
                     if (result.indicator == 1) {
+                      ModificarStateRequest(model).then((result) => {
+                        console.log("estado - modificado",result);
+                      });
                       toast.success("Solicitud modificada correctamente.", {
                         position: "top-center",
                         autoClose: 1000,
@@ -541,7 +554,7 @@ const ModalEditMaterial = ({
                 }}
                 onClick={() => cancelar()}
               />
-              <BtnSave
+                <BtnSave
                 attribute={{
                   name: "btnGuardar",
                   value: "Guardar",

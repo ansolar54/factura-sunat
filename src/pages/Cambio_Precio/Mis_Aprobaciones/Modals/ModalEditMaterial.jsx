@@ -11,6 +11,7 @@ import {
   GetSolicitud,
   ModificarRequestDetail,
   UsuarioNotifi,
+  ModificarStateRequest,
 } from "../../../../Services/ServiceCambioPrecio";
 import Spinner from "../../../../components/Spinner";
 import { getUser } from "../../../../Services/ServiceUser";
@@ -146,7 +147,7 @@ const ModalEditMaterial = ({
 
                       // provisional
                       let mails = {
-                        email: "james.virgo30@outlook.es",
+                        email: "amendozac@farmex.com.pe",
                       };
 
                       let model_email_aprob = {
@@ -160,7 +161,15 @@ const ModalEditMaterial = ({
                       console.log(model_email_aprob);
                       EnviarCorreoAprob(model_email_aprob).then((result) => {
                         console.log(result);
+                        let model = {
+                          id: Number(nro_solicitud),
+                          state: "2",
+                          id_manager: Number(jwt(localStorage.getItem("_token")).nameid),
+                        };
                         if (result.indicator == 1) {
+                          ModificarStateRequest(model).then((result) => {
+                            console.log("estado - modificado",result);
+                          });
                           toast.success("Solicitud modificada correctamente.", {
                             position: "top-center",
                             autoClose: 1000,

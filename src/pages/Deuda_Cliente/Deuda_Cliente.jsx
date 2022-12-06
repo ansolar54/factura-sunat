@@ -735,11 +735,20 @@ const Deuda_Cliente = () => {
                 <label> Reportes / Estado de Cuenta </label>
                 <label>
                   {" "}
-                  Tipo cambio :{" "}
-                  <label style={{ color: "#00179B" }}>
-                    {getDateAct() +
-                      " --> $ " +
-                      localStorage.getItem("_tipoCambio")}
+                  Tipo de cambio :{" "}
+                  <i style={{ color: "#008040" }} class="fas fa-dollar-sign"></i>{" "}
+                  <label style={{ color: "#008040", fontSize: "17px" }}>
+                    {localStorage.getItem("_tipoCambio")}
+                  </label>{" "}
+                </label>
+              </div>
+              <div style={{ justifyContent: "flex-end", display: "flex" }} className="col-md-12">
+                <label>
+                  {" "}
+                  Fecha (hoy) :{" "}
+                  {/* <i class="fas fa-dollar-sign"></i> {" "}:{" "} */}
+                  <label style={{ color: "#008040" }}>
+                    {getDateAct()}
                   </label>{" "}
                 </label>
               </div>
@@ -911,7 +920,7 @@ const Deuda_Cliente = () => {
                         (response, key) => (
                           <>
                             {respuesta_DeuCliBuscar.etResumenField.length ==
-                            key + 1 ? (
+                              key + 1 ? (
                               <tr
                                 key={key}
                                 style={{

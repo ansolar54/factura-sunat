@@ -1290,11 +1290,20 @@ const Consulta = () => {
                 <label> Reportes / Consulta de Stock </label>
                 <label>
                   {" "}
-                  Tipo cambio :{" "}
-                  <label style={{ color: "#00179B" }}>
-                    {getDateAct() +
-                      " --> $ " +
-                      localStorage.getItem("_tipoCambio")}
+                  Tipo de cambio :{" "}
+                  <i style={{ color: "#008040" }} class="fas fa-dollar-sign"></i>{" "}
+                  <label style={{ color: "#008040", fontSize: "17px" }}>
+                    {localStorage.getItem("_tipoCambio")}
+                  </label>{" "}
+                </label>
+              </div>
+              <div style={{ justifyContent: "flex-end", display: "flex" }} className="col-md-12">
+                <label>
+                  {" "}
+                  Fecha (hoy) :{" "}
+                  {/* <i class="fas fa-dollar-sign"></i> {" "}:{" "} */}
+                  <label style={{ color: "#008040" }}>
+                    {getDateAct()}
                   </label>{" "}
                 </label>
               </div>
@@ -1850,11 +1859,11 @@ const Consulta = () => {
 
                       {response_consulta != null && response_consulta.length > 0
                         ? response_consulta.map((response, key) => {
-                            return (
-                              <tr key={key}>
-                                {mostrar_filtro_fila == true ? <th></th> : null}
+                          return (
+                            <tr key={key}>
+                              {mostrar_filtro_fila == true ? <th></th> : null}
 
-                                {/* <th>
+                              {/* <th>
                                                             <input type="checkbox" id={`checkbox-body-`+response.werksField} onChange={(e)=>{
                                                                 setresponse_consulta(
                                                                     response_consulta.map(d=>{
@@ -1888,38 +1897,38 @@ const Consulta = () => {
                                                                 );                                                        
                                                             }}/>
                                                         </th> */}
-                                <th style={{ textAlign: "center" }}>
-                                  {response.werksField}
-                                </th>
-                                <th style={{ textAlign: "center" }}>
-                                  {parseInt(response.matnrField)}
-                                </th>
-                                <th style={{ textAlign: "initial" }}>
-                                  {response.maktxField}
-                                </th>
-                                <th style={{ textAlign: "end" }}>
-                                  {convertDecimal(response.labstField, 2)}
-                                </th>
-                                <th style={{ textAlign: "end" }}>
-                                  {convertDecimal(response.clabsField, 2)}
-                                </th>
-                                <th style={{ textAlign: "center" }}>
-                                  {response.meinsField}
-                                </th>
+                              <th style={{ textAlign: "center" }}>
+                                {response.werksField}
+                              </th>
+                              <th style={{ textAlign: "center" }}>
+                                {parseInt(response.matnrField)}
+                              </th>
+                              <th style={{ textAlign: "initial" }}>
+                                {response.maktxField}
+                              </th>
+                              <th style={{ textAlign: "end" }}>
+                                {convertDecimal(response.labstField, 2)}
+                              </th>
+                              <th style={{ textAlign: "end" }}>
+                                {convertDecimal(response.clabsField, 2)}
+                              </th>
+                              <th style={{ textAlign: "center" }}>
+                                {response.meinsField}
+                              </th>
 
-                                <th style={{ textAlign: "center" }}>
-                                  {response.chargField}
-                                </th>
+                              <th style={{ textAlign: "center" }}>
+                                {response.chargField}
+                              </th>
 
-                                <th style={{ textAlign: "center" }}>
-                                  {formatDate(response.fvencField)}
-                                </th>
-                                <th style={{ textAlign: "center" }}>
-                                  {response.mtartField}
-                                </th>
-                              </tr>
-                            );
-                          })
+                              <th style={{ textAlign: "center" }}>
+                                {formatDate(response.fvencField)}
+                              </th>
+                              <th style={{ textAlign: "center" }}>
+                                {response.mtartField}
+                              </th>
+                            </tr>
+                          );
+                        })
                         : null}
                     </tbody>
                   </table>

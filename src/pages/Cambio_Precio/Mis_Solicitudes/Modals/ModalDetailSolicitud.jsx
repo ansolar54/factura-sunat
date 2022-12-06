@@ -155,6 +155,7 @@ const ModalDetailSolicitud = ({
                             {/* <th style={{ textAlign: "center" }}>
                               LIMITE SUPERIOR
                             </th> */}
+                            <th style={{ textAlign: "center" }}>MARGEN</th>
                             <th style={{ textAlign: "center" }}>
                               FECHA INICIO
                             </th>
@@ -186,6 +187,9 @@ const ModalDetailSolicitud = ({
                               {/* <th style={{ textAlign: "right" }}>
                                 {convertDecimal(response.upper_limit)}
                               </th> */}
+                              <th style={{ textAlign: "right" }}>
+                                {convertDecimal(response.margin*100)} %
+                              </th>
                               <th style={{ textAlign: "center" }}>
                                 {extraeFecha(response.start_date)}
                               </th>
@@ -197,10 +201,10 @@ const ModalDetailSolicitud = ({
                                   <i
                                     style={{
                                       cursor: "pointer",
-                                      margin: "2px",
+                                      margin: "6px",
                                     }}
                                     title="Editar material"
-                                    className="fas fa-edit"
+                                    className="fas fa-edit fa-lg"
                                     onClick={() => openEditMaterial(response)}
                                   ></i>
                                   {/* <i

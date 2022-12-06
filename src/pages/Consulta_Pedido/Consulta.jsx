@@ -997,7 +997,7 @@ const Consulta = () => {
     }
   }
 
-  // Funcion Rangos cliente
+  // Funcion Rangos Creado El
   function RangosCreadoEl() {
     if (rangos_creado_el.length === 1) {
       if (
@@ -2788,11 +2788,20 @@ const Consulta = () => {
                 <label> Reportes / Consulta de Pedidos </label>
                 <label>
                   {" "}
-                  Tipo cambio :{" "}
-                  <label style={{ color: "#00179B" }}>
-                    {getDateAct() +
-                      " --> $ " +
-                      localStorage.getItem("_tipoCambio")}
+                  Tipo de cambio :{" "}
+                  <i style={{ color: "#008040" }} class="fas fa-dollar-sign"></i>{" "}
+                  <label style={{ color: "#008040", fontSize: "17px" }}>
+                    {localStorage.getItem("_tipoCambio")}
+                  </label>{" "}
+                </label>
+              </div>
+              <div style={{ justifyContent: "flex-end", display: "flex" }} className="col-md-12">
+                <label>
+                  {" "}
+                  Fecha (hoy) :{" "}
+                  {/* <i class="fas fa-dollar-sign"></i> {" "}:{" "} */}
+                  <label style={{ color: "#008040" }}>
+                    {getDateAct()}
                   </label>{" "}
                 </label>
               </div>
@@ -3559,235 +3568,235 @@ const Consulta = () => {
                       ) : null}
 
                       {response_consulta_pedido != null &&
-                      response_consulta_pedido.length > 0
+                        response_consulta_pedido.length > 0
                         ? response_consulta_pedido.map((response, key) => {
-                            return (
-                              <tr key={key}>
-                                <th>
-                                  <input
-                                    type="checkbox"
-                                    id={`checkbox-body-` + response.vbelnField}
-                                    onChange={(e) => {
-                                      setresponse_consulta_pedido(
-                                        response_consulta_pedido.map((d) => {
-                                          if (
-                                            d.vbelnField == response.vbelnField
+                          return (
+                            <tr key={key}>
+                              <th>
+                                <input
+                                  type="checkbox"
+                                  id={`checkbox-body-` + response.vbelnField}
+                                  onChange={(e) => {
+                                    setresponse_consulta_pedido(
+                                      response_consulta_pedido.map((d) => {
+                                        if (
+                                          d.vbelnField == response.vbelnField
+                                        ) {
+                                          d.select = e.target.checked;
+                                          if (e.target.checked == true) {
+                                            if (stateChecboxHeader == true) {
+                                              // DataSet[0].data
+
+                                              // setDataSet([
+                                              //   ...DataSet,
+                                              //   DataSet[0].data = [
+                                              //     { value: d.vbelnField, style: { font: { sz: "14" } } },
+                                              //     { value: d.vkorgField, style: { font: { sz: "14" } } },
+                                              //     {
+                                              //       value: formatDate(d.erdatField),
+                                              //       style: { font: { sz: "14" } },
+                                              //     },
+                                              //     { value: d.kunnrField, style: { font: { sz: "14" } } },
+                                              //     { value: d.name1Field, style: { font: { sz: "14" } } },
+                                              //     {
+                                              //       value: convertDecimal(d.netwrField, 2),
+                                              //       style: { font: { sz: "14" } },
+                                              //     },
+                                              //     { value: d.waerkField, style: { font: { sz: "14" } } },
+                                              //     { value: d.text1Field, style: { font: { sz: "14" } } },
+                                              //     { value: d.statusField, style: { font: { sz: "14" } } },
+                                              //     { value: d.motivoField, style: { font: { sz: "14" } } },
+                                              //   ]
+
+                                              // ]);
+                                              DataSet[0].data.push([
+                                                {
+                                                  value: d.vbelnField,
+                                                  style: {
+                                                    font: { sz: "14" },
+                                                  },
+                                                },
+                                                // { value: d.bezeiField, style: { font: { sz: "14" } } },
+                                                {
+                                                  value: d.vkorgField,
+                                                  style: {
+                                                    font: { sz: "14" },
+                                                  },
+                                                },
+                                                {
+                                                  value: formatDate(
+                                                    d.erdatField
+                                                  ),
+                                                  style: {
+                                                    font: { sz: "14" },
+                                                  },
+                                                },
+                                                {
+                                                  value: d.kunnrField,
+                                                  style: {
+                                                    font: { sz: "14" },
+                                                  },
+                                                },
+                                                {
+                                                  value: d.name1Field,
+                                                  style: {
+                                                    font: { sz: "14" },
+                                                  },
+                                                },
+                                                {
+                                                  value: convertDecimal(
+                                                    d.netwrField,
+                                                    2
+                                                  ),
+                                                  style: {
+                                                    font: { sz: "14" },
+                                                  },
+                                                },
+                                                {
+                                                  value: d.waerkField,
+                                                  style: {
+                                                    font: { sz: "14" },
+                                                  },
+                                                },
+                                                {
+                                                  value: d.text1Field,
+                                                  style: {
+                                                    font: { sz: "14" },
+                                                  },
+                                                },
+                                                {
+                                                  value: d.statusField,
+                                                  style: {
+                                                    font: { sz: "14" },
+                                                  },
+                                                },
+                                                {
+                                                  value: d.motivoField,
+                                                  style: {
+                                                    font: { sz: "14" },
+                                                  },
+                                                },
+                                              ]);
+                                              console.log(DataSet);
+                                            } else {
+                                              setarraycheckbox([
+                                                ...arraycheckbox,
+                                                {
+                                                  vbelnField: d.vbelnField,
+                                                },
+                                              ]);
+                                              ordenamiento(d);
+                                            }
+                                          } else if (
+                                            e.target.checked == false
                                           ) {
-                                            d.select = e.target.checked;
-                                            if (e.target.checked == true) {
-                                              if (stateChecboxHeader == true) {
-                                                // DataSet[0].data
+                                            // console.log("false")
+                                            // setDataSet([{columns:[], data:[]}]);
+                                            // // console.log(arraycheckbox_export)
+                                            // console.log(arraycheckbox)
 
-                                                // setDataSet([
-                                                //   ...DataSet,
-                                                //   DataSet[0].data = [
-                                                //     { value: d.vbelnField, style: { font: { sz: "14" } } },
-                                                //     { value: d.vkorgField, style: { font: { sz: "14" } } },
-                                                //     {
-                                                //       value: formatDate(d.erdatField),
-                                                //       style: { font: { sz: "14" } },
-                                                //     },
-                                                //     { value: d.kunnrField, style: { font: { sz: "14" } } },
-                                                //     { value: d.name1Field, style: { font: { sz: "14" } } },
-                                                //     {
-                                                //       value: convertDecimal(d.netwrField, 2),
-                                                //       style: { font: { sz: "14" } },
-                                                //     },
-                                                //     { value: d.waerkField, style: { font: { sz: "14" } } },
-                                                //     { value: d.text1Field, style: { font: { sz: "14" } } },
-                                                //     { value: d.statusField, style: { font: { sz: "14" } } },
-                                                //     { value: d.motivoField, style: { font: { sz: "14" } } },
-                                                //   ]
-
-                                                // ]);
-                                                DataSet[0].data.push([
-                                                  {
-                                                    value: d.vbelnField,
-                                                    style: {
-                                                      font: { sz: "14" },
-                                                    },
-                                                  },
-                                                  // { value: d.bezeiField, style: { font: { sz: "14" } } },
-                                                  {
-                                                    value: d.vkorgField,
-                                                    style: {
-                                                      font: { sz: "14" },
-                                                    },
-                                                  },
-                                                  {
-                                                    value: formatDate(
-                                                      d.erdatField
-                                                    ),
-                                                    style: {
-                                                      font: { sz: "14" },
-                                                    },
-                                                  },
-                                                  {
-                                                    value: d.kunnrField,
-                                                    style: {
-                                                      font: { sz: "14" },
-                                                    },
-                                                  },
-                                                  {
-                                                    value: d.name1Field,
-                                                    style: {
-                                                      font: { sz: "14" },
-                                                    },
-                                                  },
-                                                  {
-                                                    value: convertDecimal(
-                                                      d.netwrField,
-                                                      2
-                                                    ),
-                                                    style: {
-                                                      font: { sz: "14" },
-                                                    },
-                                                  },
-                                                  {
-                                                    value: d.waerkField,
-                                                    style: {
-                                                      font: { sz: "14" },
-                                                    },
-                                                  },
-                                                  {
-                                                    value: d.text1Field,
-                                                    style: {
-                                                      font: { sz: "14" },
-                                                    },
-                                                  },
-                                                  {
-                                                    value: d.statusField,
-                                                    style: {
-                                                      font: { sz: "14" },
-                                                    },
-                                                  },
-                                                  {
-                                                    value: d.motivoField,
-                                                    style: {
-                                                      font: { sz: "14" },
-                                                    },
-                                                  },
-                                                ]);
-                                                console.log(DataSet);
+                                            for (
+                                              let i = 0;
+                                              i < arraycheckbox.length;
+                                              i++
+                                            ) {
+                                              if (
+                                                d.vbelnField ==
+                                                arraycheckbox[i].vbelnField
+                                              ) {
+                                                arraycheckbox.splice(i, 1);
+                                                arraycheckbox_export[0].data.splice(
+                                                  i,
+                                                  1
+                                                );
                                               } else {
                                                 setarraycheckbox([
                                                   ...arraycheckbox,
                                                   {
-                                                    vbelnField: d.vbelnField,
+                                                    vbelnField:
+                                                      arraycheckbox[i]
+                                                        .vbelnField,
                                                   },
                                                 ]);
                                                 ordenamiento(d);
-                                              }
-                                            } else if (
-                                              e.target.checked == false
-                                            ) {
-                                              // console.log("false")
-                                              // setDataSet([{columns:[], data:[]}]);
-                                              // // console.log(arraycheckbox_export)
-                                              // console.log(arraycheckbox)
-
-                                              for (
-                                                let i = 0;
-                                                i < arraycheckbox.length;
-                                                i++
-                                              ) {
-                                                if (
-                                                  d.vbelnField ==
-                                                  arraycheckbox[i].vbelnField
-                                                ) {
-                                                  arraycheckbox.splice(i, 1);
-                                                  arraycheckbox_export[0].data.splice(
-                                                    i,
-                                                    1
-                                                  );
-                                                } else {
-                                                  setarraycheckbox([
-                                                    ...arraycheckbox,
-                                                    {
-                                                      vbelnField:
-                                                        arraycheckbox[i]
-                                                          .vbelnField,
-                                                    },
-                                                  ]);
-                                                  ordenamiento(d);
-                                                  // console.log(arraycheckbox)
-                                                }
-                                              }
-                                              for (
-                                                let y = 0;
-                                                y < DataSet[0].data.length;
-                                                y++
-                                              ) {
-                                                if (
-                                                  d.vbelnField ==
-                                                  DataSet[0].data[y][0].value
-                                                ) {
-                                                  //  console.log(DataSet[0].data[y])
-                                                  arraycheckbox_export[0].data =
-                                                    [];
-                                                  DataSet[0].data.splice(y, 1);
-                                                }
-                                                // console.log(DataSet);
-                                                // console.log(arraycheckbox_export[0].data)
+                                                // console.log(arraycheckbox)
                                               }
                                             }
+                                            for (
+                                              let y = 0;
+                                              y < DataSet[0].data.length;
+                                              y++
+                                            ) {
+                                              if (
+                                                d.vbelnField ==
+                                                DataSet[0].data[y][0].value
+                                              ) {
+                                                //  console.log(DataSet[0].data[y])
+                                                arraycheckbox_export[0].data =
+                                                  [];
+                                                DataSet[0].data.splice(y, 1);
+                                              }
+                                              // console.log(DataSet);
+                                              // console.log(arraycheckbox_export[0].data)
+                                            }
                                           }
-                                          return d;
-                                        })
-                                      );
-                                    }}
-                                  />
-                                </th>
-                                <th style={{ textAlign: "center" }}>
-                                  {response.vbelnField}
-                                </th>
-                                {/* <th style={{ textAlign: "left" }}>
+                                        }
+                                        return d;
+                                      })
+                                    );
+                                  }}
+                                />
+                              </th>
+                              <th style={{ textAlign: "center" }}>
+                                {response.vbelnField}
+                              </th>
+                              {/* <th style={{ textAlign: "left" }}>
                                     {response.bezeiField}
                                   </th> */}
-                                <th style={{ textAlign: "center" }}>
-                                  {response.vkorgField}
-                                </th>
-                                <th style={{ textAlign: "center" }}>
-                                  {formatDate(response.erdatField)}
-                                </th>
-                                <th style={{ textAlign: "center" }}>
-                                  {response.kunnrField}
-                                </th>
-                                <th
-                                  style={{ textAlign: "left" }}
-                                  align={"left"}
-                                >
-                                  {response.name1Field}
-                                </th>
-                                <th
-                                  style={{ textAlign: "right" }}
-                                  align={"right"}
-                                >
-                                  {convertDecimal(response.netwrField, 2)}
-                                </th>
-                                <th style={{ textAlign: "center" }}>
-                                  {response.waerkField}
-                                </th>
-                                <th
-                                  style={{ textAlign: "left" }}
-                                  align={"left"}
-                                >
-                                  {response.text1Field}
-                                </th>
-                                <th style={{ textAlign: "center" }}>
-                                  {response.statusField}
-                                </th>
-                                <th
-                                  onClick={() => verPedido(response.vbelnField)}
-                                >
-                                  <i
-                                    className="fas fa-clipboard-list"
-                                    title="Ver pedido"
-                                  ></i>
-                                </th>
-                              </tr>
-                            );
-                          })
+                              <th style={{ textAlign: "center" }}>
+                                {response.vkorgField}
+                              </th>
+                              <th style={{ textAlign: "center" }}>
+                                {formatDate(response.erdatField)}
+                              </th>
+                              <th style={{ textAlign: "center" }}>
+                                {response.kunnrField}
+                              </th>
+                              <th
+                                style={{ textAlign: "left" }}
+                                align={"left"}
+                              >
+                                {response.name1Field}
+                              </th>
+                              <th
+                                style={{ textAlign: "right" }}
+                                align={"right"}
+                              >
+                                {convertDecimal(response.netwrField, 2)}
+                              </th>
+                              <th style={{ textAlign: "center" }}>
+                                {response.waerkField}
+                              </th>
+                              <th
+                                style={{ textAlign: "left" }}
+                                align={"left"}
+                              >
+                                {response.text1Field}
+                              </th>
+                              <th style={{ textAlign: "center" }}>
+                                {response.statusField}
+                              </th>
+                              <th
+                                onClick={() => verPedido(response.vbelnField)}
+                              >
+                                <i
+                                  className="fas fa-clipboard-list"
+                                  title="Ver pedido"
+                                ></i>
+                              </th>
+                            </tr>
+                          );
+                        })
                         : null}
                     </tbody>
                   </table>

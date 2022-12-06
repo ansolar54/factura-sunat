@@ -29,6 +29,8 @@ const Slidebar = () => {
   const [generarSolicitud, setGenerarSolicitud] = useState(false);
   const [misSolicitudes, setMisSolicitudes] = useState(false);
   const [misAprobaciones, setMisAprobaciones] = useState(false);
+  const [reporteSolicitud, setReporteSolicitud] = useState(false);
+
 
   const [modAdministracion, setModAdministracion] = useState(false);
   const [modReportes, setModReportes] = useState(false);
@@ -188,14 +190,25 @@ const Slidebar = () => {
                   setMisAprobaciones(true);
                   setModCambioPrecio(true);
                 }
+                if (
+                  element.idModuloField == "CP04" &&
+                  element.activeField == "X"
+                ) {
+                  setReporteSolicitud(true);
+                  setModCambioPrecio(true);
+                }
               }
             }
+            console.log("mensajito",result);
           }
+          
           setspinner(false);
         });
       });
     }
   }, []);
+
+ 
 
   function activeSlide() {
     document.getElementById("slidebar").classList.add("expand-slidebar");
@@ -370,7 +383,7 @@ const Slidebar = () => {
             </div>
             <div className="slidebar-subcategories" id="subcat-03">
               {spinner && <Spinner />}
-              <ul>
+              <ul>                
                 {generarSolicitud && (
                   <li className="slidebar-categories-child">
                     <i className="fa fa-book"></i>
@@ -387,9 +400,17 @@ const Slidebar = () => {
                 {misAprobaciones && (
                   <li className="slidebar-categories-child">
                     <i className="fa fa-fax"></i>
+                    {/* <Link to="reporte_solicitud">Reporte de Solicitud</Link> */}
                     <Link to="mis_aprobaciones">Mis aprobaciones</Link>
                   </li>
                 )}
+                {reporteSolicitud && (
+                  <li className="slidebar-categories-child">
+                    <i className="fa fa-file"></i>
+                    <Link to="reporte_solicitud">Reporte de Solicitud</Link>
+                  </li>
+                )}
+
               </ul>
             </div>
           </div>

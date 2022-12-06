@@ -637,8 +637,8 @@ const Info_Cliente = () => {
           if (resultmc.etClientesField[i].vkorgField === "AGRO") {
             setcondicion_agro(
               resultmc.etClientesField[i].ztermField +
-                " / " +
-                resultmc.etClientesField[i].vtextField
+              " / " +
+              resultmc.etClientesField[i].vtextField
             );
             setpltypField_agro(resultmc.etClientesField[i].pltypField);
             setpltypPtextField_agro(
@@ -648,8 +648,8 @@ const Info_Cliente = () => {
           if (resultmc.etClientesField[i].vkorgField === "SEMI") {
             setcondicion_semi(
               resultmc.etClientesField[i].ztermField +
-                " / " +
-                resultmc.etClientesField[i].vtextField
+              " / " +
+              resultmc.etClientesField[i].vtextField
             );
             setpltypField_semi(resultmc.etClientesField[i].pltypField);
             setpltypPtextField_semi(
@@ -659,8 +659,8 @@ const Info_Cliente = () => {
           if (resultmc.etClientesField[i].vkorgField === "ESPE") {
             setcondicion_espe(
               resultmc.etClientesField[i].ztermField +
-                " / " +
-                resultmc.etClientesField[i].vtextField
+              " / " +
+              resultmc.etClientesField[i].vtextField
             );
             setpltypField_espe(resultmc.etClientesField[i].pltypField);
             setpltypPtextField_espe(
@@ -670,8 +670,8 @@ const Info_Cliente = () => {
           if (resultmc.etClientesField[i].vkorgField === "SALU") {
             setcondicion_salu(
               resultmc.etClientesField[i].ztermField +
-                " / " +
-                resultmc.etClientesField[i].vtextField
+              " / " +
+              resultmc.etClientesField[i].vtextField
             );
             setpltypField_salu(resultmc.etClientesField[i].pltypField);
             setpltypPtextField_salu(
@@ -1673,11 +1673,20 @@ const Info_Cliente = () => {
                 <label> Reportes / Información del Cliente </label>
                 <label>
                   {" "}
-                  Tipo cambio :{" "}
-                  <label style={{ color: "#00179B" }}>
-                    {getDateAct() +
-                      " --> $ " +
-                      localStorage.getItem("_tipoCambio")}
+                  Tipo de cambio :{" "}
+                  <i style={{ color: "#008040" }} class="fas fa-dollar-sign"></i>{" "}
+                  <label style={{ color: "#008040", fontSize: "17px" }}>
+                    {localStorage.getItem("_tipoCambio")}
+                  </label>{" "}
+                </label>
+              </div>
+              <div style={{ justifyContent: "flex-end", display: "flex" }} className="col-md-12">
+                <label>
+                  {" "}
+                  Fecha (hoy) :{" "}
+                  {/* <i class="fas fa-dollar-sign"></i> {" "}:{" "} */}
+                  <label style={{ color: "#008040" }}>
+                    {getDateAct()}
                   </label>{" "}
                 </label>
               </div>

@@ -28,6 +28,7 @@ import Rol from "./pages/Rol/Rol";
 import GenerarSolicitud from "./pages/Cambio_Precio/Generar_Solicitud/GenerarSolicitud";
 import MisSolicitudes from "./pages/Cambio_Precio/Mis_Solicitudes/MisSolicitudes";
 import MisAprobaciones from "./pages/Cambio_Precio/Mis_Aprobaciones/MisAprobaciones";
+import ReporteSolicitud from "./pages/Cambio_Precio/Reporte_Solicitud/ReporteSolicitud";
 
 const App = () => {
   const history = useHistory();
@@ -169,6 +170,15 @@ const App = () => {
               >
                 <Slidebar />
                 <MisAprobaciones />
+              </Route>
+              <Route
+                exact
+                strict
+                path="/reporte_solicitud"
+                component={ReporteSolicitud}
+              >
+                <Slidebar />
+                <ReporteSolicitud />
               </Route>
               <Route path="*">
                 <NotFound />

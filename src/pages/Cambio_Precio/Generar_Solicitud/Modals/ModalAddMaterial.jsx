@@ -289,7 +289,7 @@ const ModalAddMaterial = ({
                       name: "material",
                       type: "text",
                       value: material.cod_mat,
-                      disabled: false,
+                      disabled: true,
                       checked: false,
                       matchcode: true,
                     }}

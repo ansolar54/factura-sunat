@@ -89,6 +89,8 @@ const ModalAsignarPerfiles = ({
         return "Mis solicitudes";
       case "CP03":
         return "Mis aprobaciones";
+      case "CP04":
+        return "Reporte Solicitudes";
       case "R01":
         return "Consulta de pedidos";
       case "R02":

@@ -105,6 +105,7 @@ const McMaterial = ({
   }
 
   function clickcelda(material) {
+    console.log("MATERIAL LOG",material)
     setspinner(true);
     let model = {
       IsKunnr: cliente,
@@ -114,12 +115,12 @@ const McMaterial = ({
         {
           Sign: "I",
           Option: "EQ",
-          Low: CodProductoMat,
+          Low: CodProductoMat == '' ? material.matnrField : CodProductoMat, 
           High: "",
         },
       ],
     };
-    console.log(model);
+    console.log("MODEL LOG",model);
     DetalleMaterialSAP(model).then((result) => {
       console.log(result);
       setMaterial((prevState) => ({

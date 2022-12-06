@@ -9,15 +9,27 @@ import { ConsultarEventos } from "../../Services/ServiceEvent";
 import "./Auditoria.css";
 import ExcelSheet from "react-data-export/dist/ExcelPlugin/elements/ExcelSheet";
 import { getRoleState } from "../../Services/ServiceRol";
+import { MultiSelect } from "react-multi-select-component";
+
+const options = [
+  { label: "Grapes 🍇", value: "grapes" },
+  { label: "Mango 🥭", value: "mango" },
+  { label: "Strawberry 🍓", value: "strawberry", disabled: true },
+];
 
 const Auditoria = () => {
+
+  const [selected, setSelected] = useState([]);
+
   //FILTRO
   const [filtro, setFiltro] = useState({
     id_rol: 0,
     search: "",
     id_event: 0,
     created_at: "",
+    created_up: "",
   });
+
   //DATOS DE AUDITORÍA
   const [dataAuditoria, setdataAuditoria] = useState([]);
   //NUMERO TOTAL DE DATOS
@@ -435,6 +447,7 @@ const Auditoria = () => {
       0,
       0
     );
+    console.log("FILTRO", filtro);
   };
 
   //formateo de la hora
@@ -480,7 +493,8 @@ const Auditoria = () => {
               <option value="2">COMERCIAL</option>
             </select>
           </div> */}
-          <div className="input-box col-md-2">
+          
+          <div className="input-box col-md-3">
             <label className="label-input">Rol</label>
             <select name="id_rol" onChange={(e) => handleChange(e)}>
               <option value="0">TODOS</option>
@@ -491,7 +505,8 @@ const Auditoria = () => {
               ))}
             </select>
           </div>
-          <div className="input-box col-md-2">
+          
+          <div className="input-box col-md-3">
             <label className="label-input">Evento</label>
             <select name="id_event" onChange={(e) => handleChange(e)}>
               <option value="0">TODOS</option>
@@ -502,11 +517,29 @@ const Auditoria = () => {
               ))}
             </select>
           </div>
-          <div className="input-box col-md-2">
-            <label className="label-input">Fecha</label>
+          <div className="input-box col-md-5">
+            <h5>Select Fruits</h5>
+            <pre>{JSON.stringify(selected)}</pre>
+            <MultiSelect
+              options={options}
+              value={selected}
+              onChange={setSelected}
+              labelledBy="Select"
+            />
+          </div>
+          <div className="input-box col-md-5">
+            <label className="label-input">Fecha (Desde)</label>
             <input
               type="date"
               name="created_at"
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
+          <div className="input-box col-md-5">
+            <label className="label-input">Fecha (Hasta)</label>
+            <input
+              type="date"
+              name="created_up"
               onChange={(e) => handleChange(e)}
             />
           </div>
@@ -572,64 +605,64 @@ const Auditoria = () => {
                 <tbody>
                   {dataAuditoria.length >= 1
                     ? dataAuditoria.map((item, key) => (
-                        <tr key={key}>
-                          <th>
-                            <input
-                              type="checkbox"
-                              id={`checkbox-body-` + item.id}
-                              onChange={(e) => {
-                                setdataAuditoria(
-                                  dataAuditoria.map((d) => {
-                                    if (d.id == item.id) {
-                                      d.select = e.target.checked;
-                                      if (e.target.checked == true) {
-                                        setarraycheckbox([
-                                          ...arraycheckbox,
-                                          { id: d.id },
-                                        ]);
-                                        ordenamiento(d);
-                                      } else if (e.target.checked == false) {
-                                        for (
-                                          let i = 0;
-                                          i < arraycheckbox.length;
-                                          i++
-                                        ) {
-                                          if (d.id == arraycheckbox[i].id) {
-                                            arraycheckbox.splice(i, 1);
-                                            arraycheckbox_export[0].data.splice(
-                                              i,
-                                              1
-                                            );
-                                          }
+                      <tr key={key}>
+                        <th>
+                          <input
+                            type="checkbox"
+                            id={`checkbox-body-` + item.id}
+                            onChange={(e) => {
+                              setdataAuditoria(
+                                dataAuditoria.map((d) => {
+                                  if (d.id == item.id) {
+                                    d.select = e.target.checked;
+                                    if (e.target.checked == true) {
+                                      setarraycheckbox([
+                                        ...arraycheckbox,
+                                        { id: d.id },
+                                      ]);
+                                      ordenamiento(d);
+                                    } else if (e.target.checked == false) {
+                                      for (
+                                        let i = 0;
+                                        i < arraycheckbox.length;
+                                        i++
+                                      ) {
+                                        if (d.id == arraycheckbox[i].id) {
+                                          arraycheckbox.splice(i, 1);
+                                          arraycheckbox_export[0].data.splice(
+                                            i,
+                                            1
+                                          );
                                         }
                                       }
                                     }
-                                    return d;
-                                  })
-                                );
-                              }}
-                            />
-                          </th>
-                          <th>{item.name_user}</th>
-                          <th>
-                            {item.ape_pat} {item.ape_mat}
-                          </th>
-                          <th>{item.username}</th>
-                          <th>{item.email}</th>
-                          <th>{item.name_role}</th>
-                          <th>{item.name_event}</th>
-                          <th style={{ textAlign: "center" }}>
-                            {formatDate(item.created_at)}
-                          </th>
-                          <th style={{ textAlign: "center" }}>
-                            {formatTime(item.created_at)}
-                          </th>
-                          <th>{item.sales_ofi}</th>
-                          <th style={{ textAlign: "center" }}>
-                            {item.indicator}
-                          </th>
-                        </tr>
-                      ))
+                                  }
+                                  return d;
+                                })
+                              );
+                            }}
+                          />
+                        </th>
+                        <th>{item.name_user}</th>
+                        <th>
+                          {item.ape_pat} {item.ape_mat}
+                        </th>
+                        <th>{item.username}</th>
+                        <th>{item.email}</th>
+                        <th>{item.name_role}</th>
+                        <th>{item.name_event}</th>
+                        <th style={{ textAlign: "center" }}>
+                          {formatDate(item.created_at)}
+                        </th>
+                        <th style={{ textAlign: "center" }}>
+                          {formatTime(item.created_at)}
+                        </th>
+                        <th>{item.sales_ofi}</th>
+                        <th style={{ textAlign: "center" }}>
+                          {item.indicator}
+                        </th>
+                      </tr>
+                    ))
                     : null}
                 </tbody>
               </table>
