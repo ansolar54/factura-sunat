@@ -11,6 +11,7 @@ const ModalDetailSolicitud = ({
   extraeFecha,
   stateSolicitud,
   orgVentas,
+  orgVentasDesc,
 }) => {
   const modalRef = useRef();
   const closeModal = (e) => {
@@ -112,6 +113,7 @@ const ModalDetailSolicitud = ({
             dataMaterial={material}
             setDetalle={setDetalle}
             orgVentas={orgVentas}
+            orgVentasDesc={orgVentasDesc}
           />
           <div className="modal-wrapper modal-wrapper-bg">
             {/* <div className="modal-header">
@@ -144,23 +146,29 @@ const ModalDetailSolicitud = ({
                             <th style={{ textAlign: "center" }}>CODIGO</th>
                             <th style={{ textAlign: "center" }}>MATERIAL</th>
                             <th style={{ textAlign: "center" }}>
+                              MONEDA
+                            </th> 
+                            <th style={{ textAlign: "center" }}>
                               PRECIO ACTUAL
                             </th>
-                            <th style={{ textAlign: "center" }}>
-                              PRECIO SUGERIDO
-                            </th>
-                            <th style={{ textAlign: "center" }}>
-                              LIMITE INFERIOR
-                            </th>
+                            {(stateSolicitud == "1") && (
+                              <th style={{ textAlign: "center" }}>PRECIO APROBADO</th>
+                            )} 
+                            {(stateSolicitud != "1") && (
+                              <th style={{ textAlign: "center" }}>LIMITE INFERIOR</th>
+                            )} 
+                            {(stateSolicitud != "1") && (
+                              <th style={{ textAlign: "center" }}>PRECIO SUGERIDO</th>
+                            )}
                             {/* <th style={{ textAlign: "center" }}>
                               LIMITE SUPERIOR
                             </th> */}
-                            <th style={{ textAlign: "center" }}>MARGEN</th>
+                            {/* <th style={{ textAlign: "center" }}>MARGEN</th> */}
                             <th style={{ textAlign: "center" }}>
                               FECHA INICIO
                             </th>
                             <th style={{ textAlign: "center" }}>FECHA FIN</th>
-                            {stateSolicitud == "2" && (
+                            {(stateSolicitud == "2") && (
                               <th style={{ textAlign: "center" }}>ACCION</th>
                             )}
                           </tr>
@@ -175,28 +183,32 @@ const ModalDetailSolicitud = ({
                                 {response.material}
                               </th>
                               <th>{response.material_name}</th>
-                              <th style={{ textAlign: "right" }}>
+                              <th style={{ textAlign: "center" }}>
+                                {(response.currency)}
+                              </th>
+                              <th style={{ textAlign: "center" }}>
                                 {convertDecimal(response.actual_price)}
                               </th>
-                              <th style={{ textAlign: "right" }}>
-                                {convertDecimal(response.suggested_price)}
-                              </th>
-                              <th style={{ textAlign: "right" }}>
+                              <th style={{ textAlign: "center" }}>
                                 {convertDecimal(response.lower_limit)}
                               </th>
+                              {(stateSolicitud != "1") && (
+                              <th style={{ textAlign: "center" }}>
+                                {convertDecimal(response.suggested_price)}
+                              </th>)}
                               {/* <th style={{ textAlign: "right" }}>
                                 {convertDecimal(response.upper_limit)}
                               </th> */}
-                              <th style={{ textAlign: "right" }}>
+                              {/* <th style={{ textAlign: "right" }}>
                                 {convertDecimal(response.margin*100)} %
-                              </th>
+                              </th> */}
                               <th style={{ textAlign: "center" }}>
                                 {extraeFecha(response.start_date)}
                               </th>
                               <th style={{ textAlign: "center" }}>
                                 {extraeFecha(response.end_date)}
                               </th>
-                              {stateSolicitud == "2" && (
+                              {(stateSolicitud == "2") && (
                                 <th style={{ textAlign: "center" }}>
                                   <i
                                     style={{

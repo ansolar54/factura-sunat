@@ -380,7 +380,7 @@ const ReporteSolicitud = () => {
                     <div style={{ justifyContent: "flex-end", display: "flex" }} className="col-md-12">
                         <label>
                             {" "}
-                            Fecha (hoy) :{" "}
+                            Fecha :{" "}
                             {/* <i class="fas fa-dollar-sign"></i> {" "}:{" "} */}
                             <label style={{ color: "#008040" }}>
                                 {getDateAct()}
@@ -397,7 +397,7 @@ const ReporteSolicitud = () => {
                         <div className="input-box col-md-4">
                             <label className="label-input">Solicitante : </label>
                             <div className="input-box2">
-                                <select name="id_solicitante" onChange={(e) => selectedItem(e)}>
+                                <select name="id_solicitante" className="inputform" onChange={(e) => selectedItem(e)}>
                                     <option value="0">Seleccione...</option>
                                     {users.map((item) => (
                                         <option key={item.id} value={item.id}>
@@ -429,6 +429,7 @@ const ReporteSolicitud = () => {
                             <label className="label-input">Org. Ventas - Descripción :</label>
                             <div className="input-box2">
                                 <input
+                                    className="inputform"
                                     type="search"
                                     name="orgventasdesc"
                                     value={orgVentas1 != "" ? orgVentasName : ""}
@@ -461,7 +462,7 @@ const ReporteSolicitud = () => {
                         <div className="input-box col-md-3 mt-1 pt-2">
                             <label className="label-input">Aprobador : </label>
                             <div className="">
-                                <select id="id_aprobador" name="id_aprobador" onChange={(e) => selectedItem(e)}>
+                                <select id="id_aprobador" className="inputform" name="id_aprobador" onChange={(e) => selectedItem(e)}>
                                     <option value="0">Seleccione...</option>
                                     {usersG.map((item) => (
                                         <option key={item.id} value={item.id}>
@@ -523,7 +524,7 @@ const ReporteSolicitud = () => {
                         <div className="input-box col-md-2 mt-1 pt-2">
                             <label className="label-input">Estado : </label>
                             <div className="">
-                                <select id="id_estado" name="id_estado" onChange={(e) => selectedFiltro(e)}>
+                                <select id="id_estado" name="id_estado" className="inputform" onChange={(e) => selectedFiltro(e)}>
                                     <option value="0" selected="selected">TODOS</option>
                                     <option value="1">APROBADO</option>
                                     <option value="2">PENDIENTE</option>
@@ -550,7 +551,7 @@ const ReporteSolicitud = () => {
                                 onChange={(e) => handleChange(e)}
                             />
                         </div>
-                        <div className="input-box col-md-3"
+                        <div className="input-box2 mt-4 col-md-3"
                             style={{
                                 flex: 1,
                                 alignSelf: "center",
@@ -564,7 +565,7 @@ const ReporteSolicitud = () => {
                                 onClick={(e) => clear(e)}
                             />
                         </div>
-                        <div className="input-box col-md-3"
+                        <div className="input-box2 mt-4 col-md-3"
                             style={{
                                 flex: 1,
                                 alignSelf: "center",

@@ -9,18 +9,14 @@ import { ConsultarEventos } from "../../Services/ServiceEvent";
 import "./Auditoria.css";
 import ExcelSheet from "react-data-export/dist/ExcelPlugin/elements/ExcelSheet";
 import { getRoleState } from "../../Services/ServiceRol";
-import { MultiSelect } from "react-multi-select-component";
 
 const Auditoria = () => {
-
-  const [selected, setSelected] = useState([]);
-  const [selected1, setSelected1] = useState([]);
-
   //FILTRO
   const [filtro, setFiltro] = useState({
+    id_rol: 0,
     search: "",
+    id_event: 0,
     created_at: "",
-    created_up: "",
   });
   //DATOS DE AUDITORÍA
   const [dataAuditoria, setdataAuditoria] = useState([]);
@@ -33,12 +29,9 @@ const Auditoria = () => {
   //ACTIVAR SECCION DE PAGINADO
   const [valuepagination, setvaluepagination] = useState(false);
   //LISTA DE EVENTOS
-  const [events, setEventos] = useState([]);
+  const [eventos, setEventos] = useState([]);
   //LISTA DE ROLES
   const [roles, setRoles] = useState([]);
-  const [options2, setOptions2] = useState([])
-  const [options3, setOptions3] = useState([])
-
   //para check de cabecera
   const [stateChecboxHeader, setstateChecboxHeader] = useState(false);
   //ALMACENA CHECKBOX MARCADOS INDIVIDUALMENTE PARA COMPARARLOS POR PAGINA BUSCADA Y MARCARLOS CON CHECK
@@ -94,7 +87,7 @@ const Auditoria = () => {
   ]);
 
   useEffect(() => {
-    listarAuditoria("", "", "", 1, 0, 0);
+    listarAuditoria(0, "", 0, "", 1, 0, 0);
     listarEventos();
     listarRoles();
   }, []);
@@ -102,20 +95,6 @@ const Auditoria = () => {
   const listarRoles = () => {
     getRoleState().then((res) => {
       setRoles(res.data);
-
-      // console.log("LISTAR ROLES", res.data);
-
-      let data = []
-      res.data.map(e => {
-        data.push(
-          {
-            label: e.name,
-            value: e.id
-          }
-        )
-      })
-      setOptions2(data)
-      //console.log("OPTION 2",options2);
     });
   };
 
@@ -123,111 +102,34 @@ const Auditoria = () => {
     exportar();
     ConsultarEventos().then((res) => {
       setEventos(res.data);
-      // console.log("LISTAR EVENTOS", res.data);
-      // console.log(exportar)
-
-      let data = []
-      res.data.map(e => {
-        data.push(
-          {
-            label: e.name,
-            value: e.id
-          }
-        )
-      })
-      setOptions3(data)
-      //console.log("OPTION 3",options3);
     });
   };
-
-  // meti esto a una función
-
-  const filtroRolEvento = () => {
-    let roles = []
-
-    if (selected.length == 0) {
-      roles.push({
-        id_role: 0
-      })
-    }
-    else {
-      selected.map(s => {
-        roles.push({
-          id_role: s.value
-        })
-      })
-    }
-    //setFiltro({ ...filtro, "roles": roles });
-    //  console.log(
-    //   "HOLA ROLES",filtro.roles
-    // );
-
-    ////////////
-
-    let events = []
-    if (selected1.length == 0) {
-      events.push({
-        id_event: 0
-      })
-    } else {
-      selected1.map(s => {
-        events.push({
-          id_event: s.value
-        })
-      })
-    }
-
-    //setFiltro({ ...filtro, "events": events });
-    const modelAuditoria = {
-      roles: roles,
-      events: events
-    }
-    // setModelAuditoria2(modelAuditoria);
-
-    return modelAuditoria;
-
-    // esto es lo que no setea a tiempo y lo pasa con retraso
-    //ajá
-
-
-    
-    // console.log('MODEL', modelAuditoria)
-    // console.log('MODEL AUDITORIA', modelAuditoria2)
-
-    // console.log(
-    //   "HOLA EVENTOS",filtro.events
-    // );
-  }
-
   //listar auditoría
   const listarAuditoria = (
+    id_rol,
     search,
+    id_event,
     created_at,
-    created_up,
     offset,
     exp,
     ind
   ) => {
-    let model_auditoria = filtroRolEvento();
-    //console.log('first')
     setspinner(true);
     setdataAuditoria([]);
-    //console.log(Limit, ' ', offset);
     if (ind == 0) {
-      // console.log('MODEL_AUDITORIA', model_auditoria)
       arraycheckbox_export[0].data = [];
       ConsultarAuditoria(
-        model_auditoria,
+        id_rol,
         search,
+        id_event,
         created_at,
-        created_up,
         Limit,
         offset,
         exp,
         0
       )
         .then((result) => {
-          console.log("DATA TABLA", result);
+          console.log(result);
           setdataAuditoria(
             result.data.map((d) => {
               return {
@@ -253,13 +155,13 @@ const Auditoria = () => {
         .catch((err) => console.log(err));
     } else {
       ConsultarAuditoria(
-        model_auditoria,
+        id_rol,
         search,
+        id_event,
         created_at,
-        created_up,
         Limit,
         offset,
-        exp,
+        1,
         0
       )
         .then((result) => {
@@ -336,19 +238,18 @@ const Auditoria = () => {
   };
 
   const exportar = () => {
-    //console.log("exportar")
     setDataSet([{ columns: [], data: [] }]);
-    let model_auditoria = filtroRolEvento();
     ConsultarAuditoria(
-      model_auditoria,
+      filtro.id_rol,
       filtro.search,
+      filtro.id_event,
       filtro.created_at,
-      filtro.created_up,
       1,
       Limit,
-      1)
+      1
+    )
       .then((result) => {
-        console.log("EXPORTAR", result);
+        console.log(result);
         setDataSet([
           {
             columns: [
@@ -485,9 +386,10 @@ const Auditoria = () => {
   // seleccionar pagina
   const changePage = (pageNumber) => {
     listarAuditoria(
+      filtro.id_rol,
       filtro.search,
+      filtro.id_event,
       filtro.created_at,
-      filtro.created_up,
       pageNumber,
       0,
       0
@@ -496,9 +398,10 @@ const Auditoria = () => {
   // siguiente pagina
   const prevPage = (value) => {
     listarAuditoria(
+      filtro.id_rol,
       filtro.search,
+      filtro.id_event,
       filtro.created_at,
-      filtro.created_up,
       value - 1,
       0,
       0
@@ -507,9 +410,10 @@ const Auditoria = () => {
   //pagina anterior
   const nextPage = (value) => {
     listarAuditoria(
+      filtro.id_rol,
       filtro.search,
+      filtro.id_event,
       filtro.created_at,
-      filtro.created_up,
       value + 1,
       0,
       0
@@ -520,66 +424,17 @@ const Auditoria = () => {
     setFiltro({ ...filtro, [e.target.name]: e.target.value });
   };
 
-  /* const handleChangeCustom = (e) => {
-   console.log(e);
-   let roles=[]
-   e.map(s=>{      
-     roles.push({
-       id_rol: e.value
-     })
-   })
-
-   setFiltro({ ...filtro, "id_rol": roles });
-
-   console.log(
-     filtro.id_rol
-   );
-
- }*/
-
-  const filtrosRoles = () => {
-    let roles = []
-    selected.map(s => {
-      roles.push({
-        id_role: s.value
-      })
-    })
-
-    setFiltro({ ...filtro, "roles": roles });
-
-    //  console.log(
-    //    "HOLA ROLES",filtro.roles
-    //  );
-  }
-
-  const filtrosEventos = () => {
-    let events = []
-    selected1.map(s => {
-      events.push({
-        id_event: s.value
-      })
-    })
-
-    setFiltro({ ...filtro, "events": events });
-
-    //  console.log(
-    //    "HOLA EVENTOS",filtro.events
-    //  );
-  }
-
   const onClickSearch = () => {
     exportar();
     listarAuditoria(
+      filtro.id_rol,
       filtro.search,
+      filtro.id_event,
       filtro.created_at,
-      filtro.created_up,
       1,
       0,
       0
     );
-    filtrosRoles();
-    filtrosEventos();
-    //console.log("FILTRO", filtro);
   };
 
   //formateo de la hora
@@ -599,17 +454,6 @@ const Auditoria = () => {
     return day + "-" + month + "-" + year;
   }
 
-  const customValueRendererRol = (selected, _options) => {
-    return selected.length
-      ? selected.map(({ label }) => "✔️ " + label)
-      : "Seleccionar Rol(es)...";
-  };
-  const customValueRendererEvento = (selected, _options) => {
-    return selected.length
-      ? selected.map(({ label }) => "✔️ " + label)
-      : "Seleccionar Evento(s)...";
-  };
-
   return (
     <React.Fragment>
       <div className="container-view">
@@ -621,7 +465,6 @@ const Auditoria = () => {
           <div className="input-box col-md-4">
             <label className="label-input">Buscar</label>
             <input
-              className="inputcustom"
               type="search"
               name="search"
               placeholder="Buscar por nombres, apellidos o usuario ..."
@@ -637,7 +480,7 @@ const Auditoria = () => {
               <option value="2">COMERCIAL</option>
             </select>
           </div> */}
-          {/* <div className="input-box col-md-3">
+          <div className="input-box col-md-2">
             <label className="label-input">Rol</label>
             <select name="id_rol" onChange={(e) => handleChange(e)}>
               <option value="0">TODOS</option>
@@ -647,8 +490,8 @@ const Auditoria = () => {
                 </option>
               ))}
             </select>
-          </div> */}
-          {/* <div className="input-box col-md-2">
+          </div>
+          <div className="input-box col-md-2">
             <label className="label-input">Evento</label>
             <select name="id_event" onChange={(e) => handleChange(e)}>
               <option value="0">TODOS</option>
@@ -658,66 +501,13 @@ const Auditoria = () => {
                 </option>
               ))}
             </select>
-          </div> */}
-
-          <div className="input-box col-md-3">
-            <label className="label-input">Fecha (Desde)</label>
+          </div>
+          <div className="input-box col-md-2">
+            <label className="label-input">Fecha</label>
             <input
-              className="inputcustom"
               type="date"
               name="created_at"
               onChange={(e) => handleChange(e)}
-            />
-          </div>
-          <div className="input-box col-md-3">
-            <label className="label-input">Fecha (Hasta)</label>
-            <input
-              className="inputcustom"
-              type="date"
-              name="created_up"
-              onChange={(e) => handleChange(e)}
-            />
-          </div>
-
-          <div className="input-box col-md-5">
-            {/* <pre>{JSON.stringify(selected)}</pre> */}
-            <label className="label-input">Rol</label>
-            <MultiSelect
-              options={options2}
-              value={selected}
-              onChange={setSelected}
-              labelledBy="Seleccionar Rol"
-              valueRenderer={customValueRendererRol}
-              overrideStrings={{
-                selectSomeItems: "Seleccionar Rol...",
-                allItemsAreSelected: "Seleccionó todos los roles",
-                selectAll: "SELECCIONAR TODO",
-                selectAllFiltered: "SELECCIONAR TODO (FILTRADO)",
-                search: "Buscar",
-                noOptions: "No encontrado",
-              }}
-              disableSearch="false"
-            />
-          </div>
-
-          <div className="input-box col-md-5">
-            {/* <pre>{JSON.stringify(selected1)}</pre> */}
-            <label className="label-input">Evento</label>
-            <MultiSelect
-              options={options3}
-              value={selected1}
-              onChange={setSelected1}
-              labelledBy="Seleccionar Evento"
-              valueRenderer={customValueRendererEvento}
-              overrideStrings={{
-                selectSomeItems: "Seleccionar Evento...",
-                allItemsAreSelected: "Seleccionó todos los eventos",
-                selectAll: "SELECCIONAR TODO",
-                selectAllFiltered: "SELECCIONAR TODO (FILTRADO)",
-                search: "Buscar",
-                noOptions: "No encontrado",
-              }}
-              disableSearch="true"
             />
           </div>
           <div className="col-md-6 p-1">
@@ -782,64 +572,64 @@ const Auditoria = () => {
                 <tbody>
                   {dataAuditoria.length >= 1
                     ? dataAuditoria.map((item, key) => (
-                      <tr key={key}>
-                        <th>
-                          <input
-                            type="checkbox"
-                            id={`checkbox-body-` + item.id}
-                            onChange={(e) => {
-                              setdataAuditoria(
-                                dataAuditoria.map((d) => {
-                                  if (d.id == item.id) {
-                                    d.select = e.target.checked;
-                                    if (e.target.checked == true) {
-                                      setarraycheckbox([
-                                        ...arraycheckbox,
-                                        { id: d.id },
-                                      ]);
-                                      ordenamiento(d);
-                                    } else if (e.target.checked == false) {
-                                      for (
-                                        let i = 0;
-                                        i < arraycheckbox.length;
-                                        i++
-                                      ) {
-                                        if (d.id == arraycheckbox[i].id) {
-                                          arraycheckbox.splice(i, 1);
-                                          arraycheckbox_export[0].data.splice(
-                                            i,
-                                            1
-                                          );
+                        <tr key={key}>
+                          <th>
+                            <input
+                              type="checkbox"
+                              id={`checkbox-body-` + item.id}
+                              onChange={(e) => {
+                                setdataAuditoria(
+                                  dataAuditoria.map((d) => {
+                                    if (d.id == item.id) {
+                                      d.select = e.target.checked;
+                                      if (e.target.checked == true) {
+                                        setarraycheckbox([
+                                          ...arraycheckbox,
+                                          { id: d.id },
+                                        ]);
+                                        ordenamiento(d);
+                                      } else if (e.target.checked == false) {
+                                        for (
+                                          let i = 0;
+                                          i < arraycheckbox.length;
+                                          i++
+                                        ) {
+                                          if (d.id == arraycheckbox[i].id) {
+                                            arraycheckbox.splice(i, 1);
+                                            arraycheckbox_export[0].data.splice(
+                                              i,
+                                              1
+                                            );
+                                          }
                                         }
                                       }
                                     }
-                                  }
-                                  return d;
-                                })
-                              );
-                            }}
-                          />
-                        </th>
-                        <th>{item.name_user}</th>
-                        <th>
-                          {item.ape_pat} {item.ape_mat}
-                        </th>
-                        <th>{item.username}</th>
-                        <th>{item.email}</th>
-                        <th>{item.name_role}</th>
-                        <th>{item.name_event}</th>
-                        <th style={{ textAlign: "center" }}>
-                          {formatDate(item.created_at)}
-                        </th>
-                        <th style={{ textAlign: "center" }}>
-                          {formatTime(item.created_at)}
-                        </th>
-                        <th>{item.sales_ofi}</th>
-                        <th style={{ textAlign: "center" }}>
-                          {item.indicator}
-                        </th>
-                      </tr>
-                    ))
+                                    return d;
+                                  })
+                                );
+                              }}
+                            />
+                          </th>
+                          <th>{item.name_user}</th>
+                          <th>
+                            {item.ape_pat} {item.ape_mat}
+                          </th>
+                          <th>{item.username}</th>
+                          <th>{item.email}</th>
+                          <th>{item.name_role}</th>
+                          <th>{item.name_event}</th>
+                          <th style={{ textAlign: "center" }}>
+                            {formatDate(item.created_at)}
+                          </th>
+                          <th style={{ textAlign: "center" }}>
+                            {formatTime(item.created_at)}
+                          </th>
+                          <th>{item.sales_ofi}</th>
+                          <th style={{ textAlign: "center" }}>
+                            {item.indicator}
+                          </th>
+                        </tr>
+                      ))
                     : null}
                 </tbody>
               </table>

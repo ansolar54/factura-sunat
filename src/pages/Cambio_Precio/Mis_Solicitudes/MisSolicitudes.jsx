@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import BtnSearch from "../../../components/BtnSearch";
 import InputForm from "../../../components/InputForm";
 import McCliente from "../Modals_General/McCliente";
@@ -16,6 +16,7 @@ import Pagination from "../../../components/Pagination";
 import ModalDetailSolicitud from "./Modals/ModalDetailSolicitud";
 import toast, { Toaster } from "react-hot-toast";
 import jwt from "jwt-decode";
+import Dialog from "../Dialog";
 import { getMailGerents } from "../../../Services/ServiceUser";
 
 const MisSolicitudes = () => {
@@ -26,9 +27,16 @@ const MisSolicitudes = () => {
     { Sign: "I", Option: "EQ", Low: "", High: "" },
   ]);
   const [showOrgVentas, setShowOrgVentas] = useState(false);
+  // NUEVOS PARAMETROS PARA FILTRAR SOLICITUD
+  const [nroSolicitud, setNroSolicitud] = useState(0);
+  const [filtroFechas, setFiltroFechas] = useState({
+    created_at: "",
+    created_up: "",
+  });
 
   // ORG VENTAS FOR MODAL EDIT MATERIAL
   const [orgVentasForModal, setOrgVentasForModal] = useState("");
+  const [orgVentasDescForModal, setOrgVentasDescForModal] = useState("");
 
   // CLIENTE
   const [IsCliente, setIsCliente] = useState("");
@@ -59,6 +67,7 @@ const MisSolicitudes = () => {
 
   // PARA OBTENER CANAL DE DIST. DE MATCH CLIENTE
   const [canalDistValue, setCanalDistValue] = useState("");
+  const [CanalDistDescValue, setCanalDistDescValue] = useState("");
 
   // OBTENER OFICINA DE VENTAS PARA REGISTRAR EN TB_REQUEST
   const [ofiVentas, setOfiVentas] = useState("");
@@ -82,10 +91,14 @@ const MisSolicitudes = () => {
       orgVentasValue,
       IsCliente,
       state,
+      nroSolicitud,
+      filtroFechas.created_at,
+      filtroFechas.created_up,
       limit,
-      page
+      page,
+      console.log(filtroFechas.created_up)
     ).then((result) => {
-      // console.log(result);
+      console.log("TABLA MIS SOLICITUDES", result);
       setSolicitudes(result.data);
       setTotalData(result.totalItems);
       setspinner(false);
@@ -124,7 +137,7 @@ const MisSolicitudes = () => {
   const validateState = (state) => {
     if (state == "1") {
       return "APROBADO";
-    } else if (state == "2") {
+    } else if (state == "2" || state == "5" || state == "6") {
       return "PENDIENTE";
     } else if (state == "3") {
       return "RECHAZADO";
@@ -133,17 +146,58 @@ const MisSolicitudes = () => {
     }
   };
 
+  const handleChange1 = (e) => {
+    setFiltroFechas({ ...filtroFechas, [e.target.name]: e.target.value });
+  };
+
   function handleChange(name, value) {
     // console.log(value);
     switch (name) {
       case "org_ventas":
         setOrgVentasValue(value);
         break;
+      case "nroSolicitud":
+        setNroSolicitud(Number(value));
+        break;
       default:
         setIsCliente(value);
         break;
     }
   }
+
+  //ANULAR SOLICITUD DIALOG
+  const [dialog, setDialog] = useState({
+    message: "",
+    isLoading: false,
+    //Update
+    nameProduct: "",
+  });
+  const itemRef = useRef();
+  const handleDialog = (message, isLoading, nameProduct) => {
+    setDialog({
+      message,
+      isLoading,
+      //Update
+      nameProduct,
+    });
+  };
+  const handleDelete = (item) => {
+    //Update
+    // const index = data.findIndex((p) => p.id === id);
+
+    handleDialog("¿Seguro de anular la solicitud?", true, "");
+    itemRef.current = item;
+  };
+
+  const areUSureDelete = (choose) => {
+    console.log(choose);
+    if (choose) {
+      anularSolicitud(4, itemRef.current)
+      handleDialog("", false);
+    } else {
+      handleDialog("", false);
+    }
+  };
 
   // PAGINATION
   const changePage = (pageNumber) => {
@@ -162,12 +216,15 @@ const MisSolicitudes = () => {
   };
 
   const openDetalle = (item) => {
-    // console.log(item);
+    console.log("ITEM SOLICITUD", item);
     setOrgVentasForModal(item.sales_org);
+    setOrgVentasDescForModal(item.sales_org_desc);
     setIdSolicitud(item.id);
     setStateSolicitud(item.state);
     setShowModalDetail((prev) => !prev);
   };
+
+
 
   const formatFechaForCorreo = (fecha) => {
     let parts = fecha.split("-");
@@ -255,6 +312,7 @@ const MisSolicitudes = () => {
                 // provisional
                 let mails = {
                   email: "amendozac@farmex.com.pe",
+                  // email: "ansolar54@gmail.com",
                 };
 
                 // notificacion de correo - llamado a servicio
@@ -339,6 +397,7 @@ const MisSolicitudes = () => {
           setIsClientName={setIsClientName}
           orgVentasValue={orgVentasValue}
           setCanalDistValue={setCanalDistValue}
+          setCanalDistDescValue={setCanalDistDescValue}
           setOfiVentas={setOfiVentas}
         />
         <ModalDetailSolicitud
@@ -348,6 +407,7 @@ const MisSolicitudes = () => {
           extraeFecha={extraeFecha}
           stateSolicitud={stateSolicitud}
           orgVentas={orgVentasForModal}
+          orgVentasDesc={orgVentasDescForModal}
         />
 
         <div className="title-section">
@@ -361,10 +421,10 @@ const MisSolicitudes = () => {
               </label>{" "}
             </label>
           </div>
-          <div style={{justifyContent: "flex-end", display: "flex"}} className="col-md-12">
-          <label>
+          <div style={{ justifyContent: "flex-end", display: "flex" }} className="col-md-12">
+            <label>
               {" "}
-              Fecha (hoy) :{" "}
+              Fecha :{" "}
               {/* <i class="fas fa-dollar-sign"></i> {" "}:{" "} */}
               <label style={{ color: "#008040" }}>
                 {getDateAct()}
@@ -398,6 +458,7 @@ const MisSolicitudes = () => {
               <div className="align-items-center">
                 <label>{orgVentasValue != "" ? orgVentasName : ""}</label>
               </div>
+
             </div>
             <div>
               <div className="col-sm-2 d-flex align-items-center">
@@ -424,7 +485,7 @@ const MisSolicitudes = () => {
             </div>
             <div>
               <div className="col-sm-2 d-flex align-items-center">
-                <label>Filtro : </label>
+                <label>Estado : </label>
               </div>
               <div className="input-box1">
                 <select name="id_state" onChange={(e) => selectedFiltro(e)}>
@@ -440,7 +501,56 @@ const MisSolicitudes = () => {
                   ))} */}
                 </select>
               </div>
+              <div className="col-md-6">
+                {/* style={{ fontWeight: "bold" }} */}
+                <div className="col-sm-4 d-flex align-items-center">
+                  <label>N° Solicitud :</label>
+                </div>
+
+                <div className="">
+                  <InputForm
+                    attribute={{
+                      name: "nroSolicitud",
+                      type: "text",
+                      value: nroSolicitud,
+                      disabled: false,
+                      checked: false,
+
+                    }}
+                    handleChange={handleChange}
+                    onChange={(e) => handleChange(e)}
+                  />
+                </div>
+
+              </div>
             </div>
+            <div >
+              <div className="col-sm-2 d-flex align-items-center">
+                <label>Fecha (Desde) : </label>
+              </div>
+              <div className="input-box1">
+                <input
+                  className="inputcustom"
+                  type="date"
+                  name="created_at"
+                  onChange={(e) => handleChange1(e)}
+                />
+              </div>
+              <div className=" col-sm-2 d-flex align-items-center">
+                <label>Fecha (Hasta) : </label>
+              </div>
+              <div className="input-box1">
+                <input
+                  className="inputcustom"
+                  type="date"
+                  name="created_up"
+                  onChange={(e) => handleChange1(e)}
+                />
+              </div>
+            </div>
+
+
+
           </div>
           <div
             style={{
@@ -483,7 +593,7 @@ const MisSolicitudes = () => {
                         <th style={{ textAlign: "center" }}>
                           {item.sales_org}
                         </th>
-                        <th style={{ textAlign: "center" }}>
+                        <th style={{ textAlign: "left" }}>
                           {item.client_name}
                         </th>
                         <th
@@ -517,7 +627,9 @@ const MisSolicitudes = () => {
                                 style={{ cursor: "pointer", margin: "6px" }}
                                 title="Anular solicitud"
                                 className="fas fa-trash-alt fa-lg"
-                                onClick={() => anularSolicitud(4, item)}
+                                onClick={() => handleDelete(item)
+                                  //anularSolicitud(4, item)
+                                }
                               ></i>
                             </>
                           )}
@@ -554,6 +666,14 @@ const MisSolicitudes = () => {
               nextPage={nextPage}
             />
           )}
+          {dialog.isLoading && (
+          <Dialog
+            //Update
+            nameProduct={dialog.nameProduct}
+            onDialog={areUSureDelete}
+            message={dialog.message}
+          />
+        )}
         </div>
       </div>
       ;

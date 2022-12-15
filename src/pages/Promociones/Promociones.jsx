@@ -73,6 +73,8 @@ const Promociones = () => {
   const [f_vkorgField, setf_vkorgField] = useState("");
   const [f_knrmatField, setf_knrmatField] = useState("");
   const [f_nrmaktxtField, setf_nrmaktxtField] = useState("");
+  const [f_databField, setf_databField] = useState("");
+  const [f_datbiField, setf_datbiField] = useState("");
 
   const [col_1, setcol_1] = useState(0);
   const [col_2, setcol_2] = useState(0);
@@ -84,6 +86,8 @@ const Promociones = () => {
   const [col_8, setcol_8] = useState(0);
   const [col_9, setcol_9] = useState(0);
   const [col_10, setcol_10] = useState(0);
+  const [col_11, setcol_11] = useState(0);
+  const [col_12, setcol_12] = useState(0);
 
   //PARA ACCESO A RUTA
   const [accesoruta, setaccesoruta] = useState(false);
@@ -278,6 +282,8 @@ const Promociones = () => {
     setcol_8(0);
     setcol_9(0);
     setcol_10(0);
+    setcol_11(0);
+    setcol_12(0);
   }
 
   function buscar_filtro_fila(pageNumber, IsCampo, IsOrden) {
@@ -668,6 +674,74 @@ const Promociones = () => {
           }
         }
         break;
+      case 11:
+        clearColumnsIcon(11);
+        if (col_11 === 0) {
+          setcol_11(col_11 + 1);
+          // Search(1, 0, "WAERK", "0");
+          setIsCampo("DATAB");
+          setIsOrden("0");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "DATAB", "0");
+          } else {
+            Search(1, "DATAB", "0");
+          }
+        } else if (col_11 === 1) {
+          setcol_11(col_11 + 1);
+          // Search(1, 0, "WAERK", "1");
+          setIsCampo("DATAB");
+          setIsOrden("1");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "DATAB", "1");
+          } else {
+            Search(1, "DATAB", "1");
+          }
+        } else {
+          setcol_11(0);
+          // Search(1, 0, "", "");
+          setIsCampo("");
+          setIsOrden("");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "", "");
+          } else {
+            Search(1, "", "");
+          }
+        }
+        break;
+      case 12:
+        clearColumnsIcon(12);
+        if (col_12 === 0) {
+          setcol_12(col_12 + 1);
+          // Search(1, 0, "WAERK", "0");
+          setIsCampo("DATBI");
+          setIsOrden("0");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "DATBI", "0");
+          } else {
+            Search(1, "DATBI", "0");
+          }
+        } else if (col_12 === 1) {
+          setcol_12(col_12 + 1);
+          // Search(1, 0, "WAERK", "1");
+          setIsCampo("DATBI");
+          setIsOrden("1");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "DATBI", "1");
+          } else {
+            Search(1, "DATBI", "1");
+          }
+        } else {
+          setcol_12(0);
+          // Search(1, 0, "", "");
+          setIsCampo("");
+          setIsOrden("");
+          if (indicadorfiltro == true) {
+            buscar_filtro_fila(1, "", "");
+          } else {
+            Search(1, "", "");
+          }
+        }
+        break;
     }
   }
 
@@ -683,6 +757,8 @@ const Promociones = () => {
         setcol_8(0);
         setcol_9(0);
         setcol_10(0);
+        setcol_11(0);
+        setcol_12(0);
         break;
       case 2:
         setcol_1(0);
@@ -694,6 +770,8 @@ const Promociones = () => {
         setcol_8(0);
         setcol_9(0);
         setcol_10(0);
+        setcol_11(0);
+        setcol_12(0);
         break;
       case 3:
         setcol_1(0);
@@ -705,6 +783,8 @@ const Promociones = () => {
         setcol_8(0);
         setcol_9(0);
         setcol_10(0);
+        setcol_11(0);
+        setcol_12(0);
         break;
       case 4:
         setcol_1(0);
@@ -716,6 +796,8 @@ const Promociones = () => {
         setcol_8(0);
         setcol_9(0);
         setcol_10(0);
+        setcol_11(0);
+        setcol_12(0);
         break;
       case 5:
         setcol_1(0);
@@ -727,6 +809,8 @@ const Promociones = () => {
         setcol_8(0);
         setcol_9(0);
         setcol_10(0);
+        setcol_11(0);
+        setcol_12(0);
         break;
       case 6:
         setcol_1(0);
@@ -738,6 +822,8 @@ const Promociones = () => {
         setcol_8(0);
         setcol_9(0);
         setcol_10(0);
+        setcol_11(0);
+        setcol_12(0);
         break;
       case 7:
         setcol_1(0);
@@ -749,6 +835,8 @@ const Promociones = () => {
         setcol_8(0);
         setcol_9(0);
         setcol_10(0);
+        setcol_11(0);
+        setcol_12(0);
         break;
       case 8:
         setcol_1(0);
@@ -760,6 +848,8 @@ const Promociones = () => {
         setcol_7(0);
         setcol_9(0);
         setcol_10(0);
+        setcol_11(0);
+        setcol_12(0);
         break;
       case 9:
         setcol_1(0);
@@ -771,6 +861,8 @@ const Promociones = () => {
         setcol_7(0);
         setcol_8(0);
         setcol_10(0);
+        setcol_11(0);
+        setcol_12(0);
         break;
       case 10:
         setcol_1(0);
@@ -782,6 +874,34 @@ const Promociones = () => {
         setcol_7(0);
         setcol_8(0);
         setcol_9(0);
+        setcol_11(0);
+        setcol_12(0);
+        break;
+      case 11:
+        setcol_1(0);
+        setcol_2(0);
+        setcol_3(0);
+        setcol_4(0);
+        setcol_5(0);
+        setcol_6(0);
+        setcol_7(0);
+        setcol_8(0);
+        setcol_9(0);
+        setcol_10(0);
+        setcol_12(0);
+        break;
+      case 12:
+        setcol_1(0);
+        setcol_2(0);
+        setcol_3(0);
+        setcol_4(0);
+        setcol_5(0);
+        setcol_6(0);
+        setcol_7(0);
+        setcol_8(0);
+        setcol_9(0);
+        setcol_10(0);
+        setcol_11(0);
         break;
       default:
         break;
@@ -799,6 +919,8 @@ const Promociones = () => {
     setf_vkorgField("");
     setf_knrmatField("");
     setf_nrmaktxtField("");
+    setf_databField("");
+    setf_datbiField("");
   }
 
   function ModalFiltro() {
@@ -849,6 +971,12 @@ const Promociones = () => {
         break;
       case "f_nrmaktxtField":
         setf_nrmaktxtField(value);
+        break;
+      case "f_databField":
+        setf_databField(value);
+        break;
+      case "f_datbiField":
+        setf_datbiField(value);
         break;
       default:
         break;
@@ -983,7 +1111,7 @@ const Promociones = () => {
               <div style={{ justifyContent: "flex-end", display: "flex" }} className="col-md-12">
                 <label>
                   {" "}
-                  Fecha (hoy) :{" "}
+                  Fecha :{" "}
                   {/* <i class="fas fa-dollar-sign"></i> {" "}:{" "} */}
                   <label style={{ color: "#008040" }}>
                     {getDateAct()}
@@ -1092,7 +1220,7 @@ const Promociones = () => {
                       type: "date",
                       id: "valido_el",
                       value: filtroInicial.valido_el[0].Low,
-                      disabled: false,
+                      disabled: true,
                       checked: false,
                       matchcode: false,
                       maxlength: 10,
@@ -1418,6 +1546,54 @@ const Promociones = () => {
                             ></i>
                           ) : null}
                         </th>
+                        <th style={{ textAlign: "left" }}>
+                          Fecha Inicio |{" "}
+                          {col_11 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(11)}
+                            ></i>
+                          ) : null}
+                          {col_11 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(11)}
+                            ></i>
+                          ) : null}
+                          {col_11 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(11)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th style={{ textAlign: "left" }}>
+                          Fecha Fin |{" "}
+                          {col_12 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(12)}
+                            ></i>
+                          ) : null}
+                          {col_12 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(12)}
+                            ></i>
+                          ) : null}
+                          {col_12 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(12)}
+                            ></i>
+                          ) : null}
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1609,6 +1785,12 @@ const Promociones = () => {
                                 </th>
                                 <th style={{ textAlign: "left" }}>
                                   {response.nrmaktxtField}
+                                </th>
+                                <th style={{ textAlign: "left" }}>
+                                  {response.databField}
+                                </th>
+                                <th style={{ textAlign: "left" }}>
+                                  {response.datbiField}
                                 </th>
                               </tr>
                             );

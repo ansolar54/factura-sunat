@@ -3,23 +3,25 @@
     flex-wrap: wrap;
     justify-content: space-between;
 }
+
 .input-box {
     margin: 8px;
 }
-.container-form input{
-    outline: none;
+
+.inputcustom{
     background:#ffffff;
     border: 1px solid #dddddd;
     border-radius: 5px;
-    width: 100%;
     padding: 6px 8px;
+    outline: none;
+    width: 100%;
 }
 
-.container-form select{
-    outline: none;
-    background:#ffffff;
-    border: 1px solid #dddddd;
-    border-radius: 5px;
-    width: 100%;
-    padding: 7px 8px;
+
+
+.clear-selected-button{
+    margin-bottom: 20px !important;
+}
+.clear-search-button{
+    margin-bottom: 20px !important;
 }

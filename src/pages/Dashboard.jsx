@@ -172,6 +172,22 @@ const Dashboard = () => {
     }
   }, []);
 
+  const getDateAct = () => {
+    let date = new Date();
+
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+
+    if (month < 10) {
+      return `${day}/0${month}/${year}`;
+      // console.log(`${day}-0${month}-${year}`);
+    } else {
+      return `${day}/${month}/${year}`;
+      // console.log(`${day}-${month}-${year}`);
+    }
+  };
+
   return (
     <>
       {show_status_password ? (
@@ -179,6 +195,30 @@ const Dashboard = () => {
           setshow_status_password={setshow_status_password}
         />
       ) : null}
+      <div className="title-section m-3 me-5">
+          <div>
+            <label></label>
+            <label >
+              Tipo de cambio :{" "}
+              <i style={{ color: "#008040" }} class="fas fa-dollar-sign"></i>{" "}
+              <label style={{ color: "#008040", fontSize: "17px" }}>
+                {localStorage.getItem("_tipoCambio")}
+              </label>{" "}
+            </label>
+          </div>
+          <div style={{ justifyContent: "flex-end", display: "flex" }} className="col-md-12">
+            <label>
+              {" "}
+              Fecha :{" "}
+              {/* <i class="fas fa-dollar-sign"></i> {" "}:{" "} */}
+              <label style={{ color: "#008040" }}>
+                {getDateAct()}
+              </label>{" "}
+            </label>
+          </div>
+          <hr />
+        </div>
+
       <div className="container-dashboard">
         {usuarios && (
           <div className="dasboard-grid">
