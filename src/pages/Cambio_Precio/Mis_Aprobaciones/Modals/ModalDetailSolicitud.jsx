@@ -12,7 +12,14 @@ const ModalDetailSolicitud = ({
   stateSolicitud,
   idUser,
   salesOfi,
+  orgVentasDesc,
+  codi_client,
+  org_ventas,
+  itMatAprob,
 }) => {
+  // console.log("CODI CLIENT", codi_client);
+  // console.log("ORG_VENTAS", org_ventas);
+  // console.log("ITMAT_APROB");
   const modalRef = useRef();
   const closeModal = (e) => {
     if (modalRef.current === e.target) {
@@ -114,6 +121,10 @@ const ModalDetailSolicitud = ({
             setDetalle={setDetalle}
             idUser={idUser}
             salesOfi={salesOfi}
+            orgVentasDesc={orgVentasDesc}
+            codi_client={codi_client}
+            org_ventas={org_ventas}
+            //itMatAprob={itMatAprob}
           />
           <div className="modal-wrapper modal-wrapper-bg">
             {/* <div className="modal-header">
@@ -146,14 +157,21 @@ const ModalDetailSolicitud = ({
                             <th style={{ textAlign: "center" }}>CODIGO</th>
                             <th style={{ textAlign: "center" }}>MATERIAL</th>
                             <th style={{ textAlign: "center" }}>
+                              MONEDA
+                            </th>
+                            <th style={{ textAlign: "center" }}>
                               PRECIO ACTUAL
                             </th>
-                            <th style={{ textAlign: "center" }}>
-                              PRECIO SUGERIDO
-                            </th>
-                            <th style={{ textAlign: "center" }}>
-                              LIMITE INFERIOR
-                            </th>
+                            {(stateSolicitud == "1") && (
+                              <th style={{ textAlign: "center" }}>PRECIO APROBADO</th>
+                            )}
+                            {(stateSolicitud != "1") && (
+                              <th style={{ textAlign: "center" }}>LIMITE INFERIOR</th>
+                            )}
+                            {(stateSolicitud != "1") && (
+                              <th style={{ textAlign: "center" }}>PRECIO SUGERIDO</th>
+                            )}
+
                             {/* <th style={{ textAlign: "center" }}>
                               LIMITE SUPERIOR
                             </th> */}
@@ -171,26 +189,31 @@ const ModalDetailSolicitud = ({
                           {detalle.data.map((response, key) => (
                             <tr
                               key={key}
-                              // onClick={() => clickcelda(response)}
+                            // onClick={() => clickcelda(response)}
                             >
                               <th style={{ textAlign: "center" }}>
                                 {response.material}
                               </th>
                               <th>{response.material_name}</th>
-                              <th style={{ textAlign: "right" }}>
+                              <th style={{ textAlign: "center" }}>
+                                {(response.currency)}
+                              </th>
+                              <th style={{ textAlign: "center" }}>
                                 {convertDecimal(response.actual_price)}
                               </th>
-                              <th style={{ textAlign: "right" }}>
-                                {convertDecimal(response.suggested_price)}
-                              </th>
-                              <th style={{ textAlign: "right" }}>
+                              <th style={{ textAlign: "center" }}>
                                 {convertDecimal(response.lower_limit)}
                               </th>
+                              {(stateSolicitud != "1") && (
+                                <th style={{ textAlign: "center" }}>
+                                  {convertDecimal(response.suggested_price)}
+                                </th>)}
+
                               {/* <th style={{ textAlign: "right" }}>
                                 {convertDecimal(response.upper_limit)}
                               </th> */}
-                              <th style={{ textAlign: "right" }}>
-                                {convertDecimal(response.margin*100)} %
+                              <th style={{ textAlign: "center" }}>
+                                {convertDecimal(response.margin)} %
                               </th>
                               <th style={{ textAlign: "center" }}>
                                 {extraeFecha(response.start_date)}

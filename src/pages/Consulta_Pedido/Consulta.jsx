@@ -2798,7 +2798,7 @@ const Consulta = () => {
               <div style={{ justifyContent: "flex-end", display: "flex" }} className="col-md-12">
                 <label>
                   {" "}
-                  Fecha (hoy) :{" "}
+                  Fecha :{" "}
                   {/* <i class="fas fa-dollar-sign"></i> {" "}:{" "} */}
                   <label style={{ color: "#008040" }}>
                     {getDateAct()}

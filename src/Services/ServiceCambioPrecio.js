@@ -50,6 +50,9 @@ export function ListadoSolicitudes(
   sales_org,
   client,
   state,
+  id_request,
+  created_at,
+  created_up,
   limit,
   offset
 ) {
@@ -64,11 +67,17 @@ export function ListadoSolicitudes(
     client +
     "&state=" +
     state +
+    "&id_request="+
+    id_request +
+    "&created_at="+
+    created_at +
+    "&created_up="+
+    created_up +
     "&limit=" +
     limit +
     "&offset=" +
     offset;
-
+    console.log('URL', BaseUrl);
   return new Promise((resolve, reject) => {
     fetch(BaseUrl, {
       method: "GET",
@@ -182,6 +191,9 @@ export function ListadoSolicitudesForAprob(
   id_user,
   state,
   sales_org,
+  id_request,
+  created_at,
+  created_up,
   limit,
   offset
 ) {
@@ -194,11 +206,17 @@ export function ListadoSolicitudesForAprob(
     state +
     "&sales_org=" +
     sales_org +
+    "&id_request=" +
+    id_request +
+    "&created_at=" +
+    created_at +
+    "&created_up=" +
+    created_up +
     "&limit=" +
     limit +
     "&offset=" +
     offset;
-
+  console.log("URL", BaseUrl);
   return new Promise((resolve, reject) => {
     fetch(BaseUrl, {
       method: "GET",

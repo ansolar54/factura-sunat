@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import BtnSearch from "../../../components/BtnSearch";
 import Pagination from "../../../components/Pagination";
 import Spinner from "../../../components/Spinner";
+import InputForm from "../../../components/InputForm";
+import Dialog from "../Dialog";
 import {
   AprobSolicitud,
   EnviarCorreoAprob,
@@ -20,7 +22,9 @@ import {
 } from "../../../Services/ServiceUser";
 import jwtDecode from "jwt-decode";
 import ModalDetailSolicitud from "./Modals/ModalDetailSolicitud";
+import McOrgVentas from "../Modals_General/McOrgVentas";
 import jwt from "jwt-decode";
+import ModalEditMaterial from "./Modals/ModalEditMaterial";
 
 const MisAprobaciones = () => {
   // PAGINATION
@@ -51,11 +55,35 @@ const MisAprobaciones = () => {
   const [idUserForModal, setIdUserForModal] = useState(0);
   //const [orgVentasName, setOrgVentasName] = useState("");
   const [salesOfi, setSalesOfi] = useState("");
+  const [orgVentasDescForModal, setOrgVentasDescForModal] = useState("");
+
+  // PARAMETROS PARA APROBAR - MODIFICAR
+
+  const [codi_clientForModal, setcodi_clientForModal] = useState(0);
+  const [org_ventasForModal, setorg_ventasForModal] = useState("");
+  const [itMatAprobForModal, setitMatAprobForModal] = useState([]);
+
+  // NUEVOS PARAMETROS PARA FILTRAR SOLICITUD
+  const [nroSolicitud, setNroSolicitud] = useState(0);
+  const [filtroFechas, setFiltroFechas] = useState({
+    created_at: "",
+    created_up: "",
+  });
+  const [orgVentasValue, setOrgVentasValue] = useState("");
+  const [orgVentasName, setOrgVentasName] = useState("");
+  const [showOrgVentas, setShowOrgVentas] = useState(false);
+  const [orgVentas, setOrgVentas] = useState([
+    { Sign: "I", Option: "EQ", Low: "", High: "" },
+  ]);
 
   useEffect(() => {
     obtenerSolicitudes(1);
     getUsers();
   }, []);
+
+  const openMcOrgVentas = () => {
+    setShowOrgVentas((prev) => !prev);
+  };
 
   const getUsers = () => {
     getDistinctUser(jwtDecode(localStorage.getItem("_token")).nameid, 2).then(
@@ -71,7 +99,11 @@ const MisAprobaciones = () => {
     ListadoSolicitudesForAprob(
       idUser,
       state,
-      jwt(localStorage.getItem("_token")).sales_org,
+      orgVentasValue,
+      // jwt(localStorage.getItem("_token")).sales_org,
+      nroSolicitud,
+      filtroFechas.created_at,
+      filtroFechas.created_up,
       limit,
       page
     ).then((result) => {
@@ -176,16 +208,19 @@ const MisAprobaciones = () => {
       state: state.toString(),
       id_manager: Number(jwt(localStorage.getItem("_token")).nameid)
     };
+
     // let nro_solicitud = '';
     ModificarStateRequest(model).then((result) => {
       // console.log(result);
       setspinner(true);
+
       if (result.indicator == 1) {
         GetDetalleSolicitud(item.id).then((result) => {
           // console.log(result);
 
           if (result.indicator == 1) {
             let itMatAprob = [];
+
             let detalleCorreo = []; // para llenar tabla detalle de correo de aprobacion
             let detailMaterial = []; // ARREGLO DE DETALLE MATERIAL PARA SU MODIFICACION EN BD
             for (let i = 0; i < result.data.length; i++) {
@@ -204,6 +239,10 @@ const MisAprobaciones = () => {
                 Gkwrt: element.upper_limit,
               };
               itMatAprob.push(matAprob);
+              //setitMatAprobForModal(matAprob);
+
+              //console.log("itMatAprob222222",itMatAprobForModal);
+
 
               // mapeamos los campos para detalle de correo
               let detalle = {
@@ -226,13 +265,15 @@ const MisAprobaciones = () => {
               detailMaterial.push(material);
             }
 
+
+
             if (state == 1) {
               let model_aprob = {
                 IsKunnr: item.client,
                 IsVkorg: item.sales_org,
                 ItMatAprobacion: itMatAprob,
               };
-              console.log(model_aprob);
+              console.log("MODEL CORREOOOOOO", model_aprob);
               AprobSolicitud(model_aprob).then((result) => {
                 console.log(result);
                 if (result.etMsgReturnField[0].successField == "X") {
@@ -276,6 +317,7 @@ const MisAprobaciones = () => {
                           // provisional
                           let mails = {
                             email: "gnieri@farmex.com.pe",
+                            // email: "ansolar54@gmail.com",
                           };
                           let model_email_aprob = {
                             state: state, // para identificar aprobacion o rechazo de solicitud en backend
@@ -358,6 +400,8 @@ const MisAprobaciones = () => {
                       // provisional
                       let mails = {
                         email: "gnieri@farmex.com.pe",
+                        // email: "ansolar54@gmail.com",
+
                       };
 
                       let model_email_aprob = {
@@ -431,12 +475,101 @@ const MisAprobaciones = () => {
     }
   };
 
+  const handleChange1 = (e) => {
+    setFiltroFechas({ ...filtroFechas, [e.target.name]: e.target.value });
+  };
+
+  function handleChange(name, value) {
+    // console.log(value);
+    switch (name) {
+      case "nroSolicitud":
+        setNroSolicitud(Number(value));
+        break;
+      case "org_ventas":
+        setOrgVentasValue(value);
+        break;
+    }
+  }
+
+  //RECHAZAR SOLICITUD DIALOG
+  const [dialog, setDialog] = useState({
+    message: "",
+    isLoading: false,
+    //Update
+    nameProduct: "",
+  });
+  const itemRef = useRef();
+  const handleDialog = (message, isLoading, nameProduct) => {
+    setDialog({
+      message,
+      isLoading,
+      //Update
+      nameProduct,
+    });
+  };
+  const handleDelete = (item) => {
+    //Update
+    // const index = data.findIndex((p) => p.id === id);
+
+    handleDialog("¿Seguro de rechazar la solicitud?", true, "");
+    itemRef.current = item;
+  };
+  const areUSureDelete = (choose) => {
+    console.log(choose);
+    if (choose) {
+      updateStateRequest(3, itemRef.current)
+      //anularSolicitud(4, itemRef.current)
+      handleDialog("", false);
+    } else {
+      handleDialog("", false);
+    }
+  };
+
+  //APROBAR SOLICITUD DIALOG
+  const [dialog1, setDialog1] = useState({
+    message: "",
+    isLoading: false,
+    //Update
+    nameProduct: "",
+  });
+  const itemRef1 = useRef();
+  const handleDialog1 = (message, isLoading, nameProduct) => {
+    setDialog1({
+      message,
+      isLoading,
+      //Update
+      nameProduct,
+    });
+  };
+  const handleApprove = (item) => {
+    //Update
+    // const index = data.findIndex((p) => p.id === id);
+
+    handleDialog1("¿Seguro de aprobar la solicitud?", true, "");
+    itemRef1.current = item;
+  };
+  const areUSureApprove = (choose) => {
+    console.log(choose);
+    if (choose) {
+      updateStateRequest(1, itemRef1.current)
+      //anularSolicitud(4, itemRef.current)
+      handleDialog1("", false);
+    } else {
+      handleDialog1("", false);
+    }
+  };
+
   const openDetalle = (item) => {
     setIdSolicitud(item.id);
     setStateSolicitud(item.state);
     setIdUserForModal(item.id_user);
     setSalesOfi(item.sales_ofi);
+    setOrgVentasDescForModal(item.sales_org_desc);
     setShowModalDetail((prev) => !prev);
+    setcodi_clientForModal(item.client);
+    setorg_ventasForModal(item.sales_org);
+    //setitMatAprobForModal(itMatAprob);
+    setitMatAprobForModal(itMatAprobForModal);
   };
 
   const getDateAct = () => {
@@ -467,6 +600,18 @@ const MisAprobaciones = () => {
           stateSolicitud={stateSolicitud}
           idUser={idUserForModal}
           salesOfi={salesOfi}
+          orgVentasDesc={orgVentasDescForModal}
+          codi_client={codi_clientForModal}
+          org_ventas={org_ventasForModal}
+          itMatAprob={itMatAprobForModal}
+        />
+        <McOrgVentas
+          orgVentasValue={orgVentasValue}
+          setOrgVentas={setOrgVentas}
+          setOrgVentasValue={setOrgVentasValue}
+          setShowOrgVentas={setShowOrgVentas}
+          showOrgVentas={showOrgVentas}
+          setOrgVentasName={setOrgVentasName}
         />
         <div className="title-section">
           <div>
@@ -483,7 +628,7 @@ const MisAprobaciones = () => {
           <div style={{ justifyContent: "flex-end", display: "flex" }} className="col-md-12">
             <label>
               {" "}
-              Fecha (hoy) :{" "}
+              Fecha :{" "}
               {/* <i class="fas fa-dollar-sign"></i> {" "}:{" "} */}
               <label style={{ color: "#008040" }}>
                 {getDateAct()}
@@ -512,8 +657,6 @@ const MisAprobaciones = () => {
                   ))} */}
                 </select>
               </div>
-            </div>
-            <div>
               <div className="col-sm-2 d-flex align-items-center">
                 <label>Usuario : </label>
               </div>
@@ -527,12 +670,101 @@ const MisAprobaciones = () => {
                   ))}
                 </select>
               </div>
+
             </div>
+            <div >
+              <div className="col-sm-2 d-flex align-items-center">
+                <label>Fecha (Desde) : </label>
+              </div>
+              <div className="input-box1">
+                <input
+                  className="inputcustom"
+                  type="date"
+                  name="created_at"
+                  onChange={(e) => handleChange1(e)}
+                />
+              </div>
+              <div className=" col-sm-2 d-flex align-items-center">
+                <label>Fecha (Hasta) : </label>
+              </div>
+              <div className="input-box2">
+                <input
+                  className="inputcustom"
+                  type="date"
+                  name="created_up"
+                  onChange={(e) => handleChange1(e)}
+                />
+              </div>
+            </div>
+            <div>
+              <div className="col-sm-2 d-flex align-items-center">
+                <label>Organización de ventas : </label>
+              </div>
+              <div>
+                <InputForm
+                  attribute={{
+                    name: "org_ventas",
+                    type: "text",
+                    value: orgVentasValue,
+                    disabled: true,
+                    checked: false,
+                    matchcode: true,
+                    maxlength: 4,
+                  }}
+                  handleChange={handleChange}
+                  onClick={() => openMcOrgVentas()}
+                />
+              </div>
+              {/* <div className="align-items-center">
+                <label>{orgVentasValue != "" ? orgVentasName : ""}</label>
+              </div> */}
+
+              <div className="col-sm-2 d-flex align-items-center">
+                <label>O. V. Descripción : </label>
+              </div>
+              <div className="input-box2">
+                <input
+                  className="inputcustom"
+                  type="search"
+                  name="orgventasdesc"
+                  value={orgVentasValue != "" ? orgVentasName : ""}
+                  readOnly="disabled"
+                  placeholder="--"
+                  onChange={(e) => handleChange(e)}
+                />
+              </div>
+            </div>
+            <div>
+              {/* style={{ fontWeight: "bold" }} */}
+              <div className="col-sm-2 d-flex align-items-center">
+                <label>N° Solicitud :</label>
+              </div>
+              <div className="">
+                <InputForm
+                  attribute={{
+                    name: "nroSolicitud",
+                    type: "text",
+                    value: nroSolicitud,
+                    disabled: false,
+                    checked: false,
+
+                  }}
+                  handleChange={handleChange}
+                  onChange={(e) => handleChange(e)}
+                />
+              </div>
+              <div className="col-md-5 input-box2 mt-0">
+
+              </div>
+
+            </div>
+
           </div>
           <div
             style={{
               flex: 1,
               alignSelf: "center",
+              marginTop: "0px"
             }}
           >
             <BtnSearch
@@ -543,6 +775,7 @@ const MisAprobaciones = () => {
               onClick={() => obtenerSolicitudes(1)}
             />
           </div>
+
         </div>
         <section>
           <div className="container-table">
@@ -574,7 +807,7 @@ const MisAprobaciones = () => {
                           {item.sales_org}
                         </th>
 
-                        <th style={{ textAlign: "center" }}>
+                        <th style={{ textAlign: "left" }}>
                           {item.client_name}
                         </th>
                         <th
@@ -602,13 +835,17 @@ const MisAprobaciones = () => {
                                 style={{ cursor: "pointer", margin: "6px" }}
                                 title="Aprobar solicitud"
                                 className="fa fa-check-circle fa-lg"
-                                onClick={() => updateStateRequest(1, item)}
+                                onClick={() => handleApprove(item)
+                                  //updateStateRequest(1, item)
+                                }
                               ></i>
                               <i
                                 style={{ cursor: "pointer", margin: "6px" }}
                                 title="Rechazar solicitud"
                                 className="fa fa-minus-circle fa-lg"
-                                onClick={() => updateStateRequest(3, item)}
+                                onClick={() => handleDelete(item)
+                                  //updateStateRequest(3, item)
+                                }
                               ></i>
                             </>
                           )}
@@ -643,6 +880,22 @@ const MisAprobaciones = () => {
               changePage={changePage}
               prevPage={prevPage}
               nextPage={nextPage}
+            />
+          )}
+          {dialog.isLoading && (
+            <Dialog
+              //Update
+              nameProduct={dialog.nameProduct}
+              onDialog={areUSureDelete}
+              message={dialog.message}
+            />
+          )}
+          {dialog1.isLoading && (
+            <Dialog
+              //Update
+              nameProduct={dialog1.nameProduct}
+              onDialog={areUSureApprove}
+              message={dialog1.message}
             />
           )}
         </div>

@@ -23,9 +23,10 @@ const ModalEditMaterial = ({
   dataMaterial,
   setDetalle,
   orgVentas,
+  orgVentasDesc,
 }) => {
   // console.log("MATERIAL", dataMaterial);
-  console.log(orgVentas);
+  //console.log("ORGA. VENTAS",orgVentasDesc);
 
   const [showMcMaterial, setShowMcMaterial] = useState(false);
 
@@ -94,13 +95,13 @@ const ModalEditMaterial = ({
             ? material.margin
             : Number(material.margin.replaceAll(",", "")),
       };
-      console.log(model);
+      //console.log(model);
       // llamado a servicio parar modificar request detail
       let detalle_mat = [];
       ModificarRequestDetail(model).then((result) => {
         console.log(result);
         GetDetalleSolicitud(dataMaterial.id_request).then((result) => {
-          // console.log("RESULTADO", result);
+           //console.log("RESULTADO MODIFICACION", result);
           setDetalle(result.data);
           // detalle_mat = result.data;
           for (let i = 0; i < result.data.length; i++) {
@@ -123,7 +124,7 @@ const ModalEditMaterial = ({
             if (result.indicator == 1) {
               let client = result.data[0].client_name;
               let nro_solicitud = result.data[0].id.toString();
-              // console.log(result.data[0].id_user);
+               //console.log(result.data[0].id_user);
               let model_usua_notifi = {
                 IsNotif: "1",
                 IsUser: "",
@@ -143,17 +144,19 @@ const ModalEditMaterial = ({
 
                   let mails = {
                     email: "amendozac@farmex.com.pe",
+                        // email: "ansolar54@gmail.com",
                   };
 
                   let model_email_aprob = {
-                    state: 0, // para identificar aprobacion o rechazo de solicitud en backend
+                    state: 5, // para identificar aprobacion o rechazo de solicitud en backend
                     nro_solicitud: nro_solicitud,
                     cliente: client,
+                    org_ventas: orgVentasDesc,
                     aprobador: jwt(localStorage.getItem("_token")).user, // se obtiene nombre de usuario de token vendedor = aprobador
                     correos: [mails],
                     detalle: detalle_mat,
                   };
-                  console.log(model_email_aprob);
+                  console.log("model_correo", model_email_aprob);
                   EnviarCorreoAprob(model_email_aprob).then((result) => {
                     console.log(result);
                     let model = {
@@ -225,6 +228,7 @@ const ModalEditMaterial = ({
         {
           Matnr: material.material,
           Werks: material.center, // guardar centro en bd
+          LimInfer: material.lower_limit,
           PreSuge: material.suggested_price,
           Margen: 0.0,
         },
@@ -246,8 +250,8 @@ const ModalEditMaterial = ({
 
   const guardar = () => {
     console.log("guardar", material.suggested_price, material.lower_limit);
-    if (material.suggested_price > material.lower_limit) {
-      toast.error("Precio sugerido debe ser menor a " + material.lower_limit, {
+    if (Number(material.suggested_price.replaceAll(",", "")) > material.lower_limit) {
+      toast.error("Precio sugerido debe ser menor a " + convertDecimal(material.lower_limit) + " "+ material.currency, {
         position: "top-center",
         autoClose: 5000,
         style: {
@@ -255,7 +259,28 @@ const ModalEditMaterial = ({
           color: "#fff",
         },
       });
-    } else {
+    }
+    else if (material.suggested_price == "" || material.suggested_price == 0.00) {
+      toast.error("Debe ingresar un precio sugerido mayor a 0.00 " + material.currency, {
+        position: "top-center",
+        autoClose: 5000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        },
+      });
+    }
+    else if (material.end_date == "" || material.end_date == "dd/mm/aaaa") {
+      toast.error("Debe ingresar una \"Fecha fin\" válida", {
+        position: "top-center",
+        autoClose: 5000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        },
+      });
+    } 
+    else {
       calcularMargen();
     }
   };
@@ -309,6 +334,7 @@ const ModalEditMaterial = ({
         break;
     }
   }
+
 
   function convertDecimal(num) {
     // console.log(num);
@@ -431,8 +457,8 @@ const ModalEditMaterial = ({
                     <InputForm
                       attribute={{
                         name: "precio_sugerido",
-                        type: "text",
-                        value: convertDecimal(material.suggested_price),
+                        type: "search",
+                        value: (material.suggested_price),
                         disabled: false,
                         checked: false,
                       }}

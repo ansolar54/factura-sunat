@@ -71,9 +71,23 @@ const GenerarSolicitud = () => {
     //Update
     nameProduct: "",
   });
+  const [dialog1, setDialog1] = useState({
+    message: "",
+    isLoading: false,
+    //Update
+    nameProduct: "",
+  });
   const idProductRef = useRef();
   const handleDialog = (message, isLoading, nameProduct) => {
     setDialog({
+      message,
+      isLoading,
+      //Update
+      nameProduct,
+    });
+  };
+  const handleDialog1 = (message, isLoading, nameProduct) => {
+    setDialog1({
       message,
       isLoading,
       //Update
@@ -85,8 +99,31 @@ const GenerarSolicitud = () => {
     //Update
     // const index = data.findIndex((p) => p.id === id);
 
-    handleDialog("¿Seguro de eliminar el registro?", true, "");
+    handleDialog1("¿Seguro de eliminar el registro?", true, "");
     idProductRef.current = id;
+  };
+
+  const handleEnviarSolicitud = () => {
+    //Update
+    // const index = data.findIndex((p) => p.id === id);
+
+    handleDialog("¿Seguro de enviar esta solicitud?", true, "");
+    //idProductRef.current = id;
+  };
+
+  const areUSureSend = (choose) => {
+    console.log(choose);
+    if (choose) {
+      // SE PASA A ELIMINAR REGISTRO
+      // setProducts(products.filter((p) => p.id !== idProductRef.current));
+      enviarSolicitud();
+      // setDataMaterial(
+      //   dataMaterial.filter((p) => p.cod_mat !== idProductRef.current)
+      // );
+      handleDialog("", false);
+    } else {
+      handleDialog("", false);
+    }
   };
 
   const areUSureDelete = (choose) => {
@@ -97,9 +134,9 @@ const GenerarSolicitud = () => {
       setDataMaterial(
         dataMaterial.filter((p) => p.cod_mat !== idProductRef.current)
       );
-      handleDialog("", false);
+      handleDialog1("", false);
     } else {
-      handleDialog("", false);
+      handleDialog1("", false);
     }
   };
 
@@ -145,7 +182,7 @@ const GenerarSolicitud = () => {
     const openAddMaterial = () => {
       setShowModalMaterial((prev) => !prev);
     };
-    if (dataMaterial.length != 0 ) {
+    if (dataMaterial.length != 0) {
       toast.error("Solo se puede seleccionar un material.", {
         position: "top-center",
         autoClose: 1000,
@@ -155,7 +192,7 @@ const GenerarSolicitud = () => {
         }
       })
     }
-    else{
+    else {
       return openAddMaterial();
     }
   }
@@ -175,6 +212,7 @@ const GenerarSolicitud = () => {
       setspinner(false);
     } else {
       let data_detail = [];
+      let detalleCorreo = []
       for (let i = 0; i < dataMaterial.length; i++) {
         const element = dataMaterial[i];
         // console.log(Number(element.prec_sug.replaceAll(",", "")));
@@ -212,6 +250,19 @@ const GenerarSolicitud = () => {
               : Number(element.cant_base.replaceAll(",", "")),
         };
         data_detail.push(model_detail);
+
+        let detalle = {
+          producto: element.name_mat,
+          moneda: element.moneda,
+          precio: convertDecimal(element.prec_sug.toString()),
+          // typeof element.prec_act == "String"
+          //   ? element.prec_act
+          //   : (element.prec_act.replaceAll(",", "")).toString,
+          fec_ini: formatFechaMysql(element.fec_ini),
+          fec_fin: formatFechaMysql(element.fec_fin),
+        };
+
+        detalleCorreo.push(detalle);
       }
 
       // console.log(data_detail);
@@ -223,6 +274,9 @@ const GenerarSolicitud = () => {
         IsVkorg: orgVentasValue,
       };
       let correos = [];
+
+
+
       UsuarioNotifi(model_usua_notifi).then((result) => {
         console.log("SAP", result.etListusuariosField.length);
         if (result.etListusuariosField.length > 0) {
@@ -237,7 +291,10 @@ const GenerarSolicitud = () => {
           // provisional
           let mails = {
             email: "amendozac@farmex.com.pe",
+            //email: "ansolar54@gmail.com",
           };
+
+
 
           // correos = result.data; // se pasa lista de correo de gerentes
           // se debe de enviar canal de Distribución (Canal de Venta)
@@ -248,9 +305,9 @@ const GenerarSolicitud = () => {
             id_user: Number(jwt(localStorage.getItem("_token")).nameid),
             sales_ofi: ofiVentas,
             sales_org_desc: orgVentasName,
-            detail: data_detail,
             sales_channel: canalDistValue,
-            sales_channel_desc: CanalDistDescValue
+            sales_channel_desc: CanalDistDescValue,
+            detail: data_detail,
           };
           //console.log("generando solicitud",model);
           GuardarSolicitud(model).then((result) => {
@@ -266,6 +323,7 @@ const GenerarSolicitud = () => {
                     vendedor: jwt(localStorage.getItem("_token")).user,
                     org_ventas: orgVentasName,
                     correos: [mails],
+                    detalle: detalleCorreo,
                   };
                   console.log("MODEL CORREO", model_correo);
                   EnviarCorreo(model_correo).then((result) => {
@@ -434,7 +492,7 @@ const GenerarSolicitud = () => {
           <div style={{ justifyContent: "flex-end", display: "flex" }} className="col-md-12">
             <label>
               {" "}
-              Fecha (hoy) :{" "}
+              Fecha :{" "}
               {/* <i class="fas fa-dollar-sign"></i> {" "}:{" "} */}
               <label style={{ color: "#008040" }}>
                 {getDateAct()}
@@ -532,15 +590,15 @@ const GenerarSolicitud = () => {
                       <tr key={item.cod_mat}>
                         <th>{item.cod_mat}</th>
                         <th>{item.name_mat}</th>
-                        <th>{item.moneda}</th>
+                        <th style={{ textAlign: "center" }}>{item.moneda}</th>
                         <th style={{ textAlign: "center" }}>
                           {convertDecimal(item.prec_act)}
                         </th>
                         <th style={{ textAlign: "center" }}>
                           {convertDecimal(item.prec_sug)}
                         </th>
-                        <th>{formatFecha(item.fec_ini)}</th>
-                        <th>{formatFecha(item.fec_fin)}</th>
+                        <th style={{ textAlign: "center" }}>{formatFecha(item.fec_ini)}</th>
+                        <th style={{ textAlign: "center" }}>{formatFecha(item.fec_fin)}</th>
                         <th>
                           <i
                             style={{ cursor: "pointer", margin: "6px" }}
@@ -585,15 +643,23 @@ const GenerarSolicitud = () => {
               name: "Enviar solicitud",
               classNamebtn: "btn_material",
             }}
-            onClick={() => enviarSolicitud()}
+            onClick={() => handleEnviarSolicitud()}
           />
         </div>
         {dialog.isLoading && (
           <Dialog
             //Update
             nameProduct={dialog.nameProduct}
-            onDialog={areUSureDelete}
+            onDialog={areUSureSend}
             message={dialog.message}
+          />
+        )}
+        {dialog1.isLoading && (
+          <Dialog
+            //Update
+            nameProduct={dialog1.nameProduct}
+            onDialog={areUSureDelete}
+            message={dialog1.message}
           />
         )}
       </div>

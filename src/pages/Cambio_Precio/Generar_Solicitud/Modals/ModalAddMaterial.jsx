@@ -105,7 +105,8 @@ const ModalAddMaterial = ({
         {
           Matnr: material.cod_mat,
           Werks: material.centro,
-          PreSuge: material.prec_sug,
+          LimInfer: material.lim_inf,
+          PreSuge: (material.prec_sug),
           Margen: 0.0,
         },
       ],
@@ -131,9 +132,10 @@ const ModalAddMaterial = ({
   // console.log(material);
 
   const guardar = () => {
-    // console.log("pre_sug ", material.prec_sug, " limit ", material.lim_inf);
-    if (material.prec_sug > material.lim_inf) {
-      toast.error("Precio sugerido debe ser menor a " + material.lim_inf, {
+     console.log( material.prec_sug, material.lim_inf);
+     console.log( typeof material.prec_sug,typeof material.lim_inf);
+    if ((material.prec_sug) > material.lim_inf) {
+      toast.error("Precio sugerido debe ser menor a " + convertDecimal(material.lim_inf) + " "+ material.moneda, {
         position: "top-center",
         autoClose: 5000,
         style: {
@@ -141,12 +143,43 @@ const ModalAddMaterial = ({
           color: "#fff",
         },
       });
-    } else {
+    }
+    else if ((material.prec_sug) == "" && material.prec_act=="" && material.margen =="" && material.cod_mat=="") {
+      toast.error("Debe seleccionar algún material.", {
+        position: "top-center",
+        autoClose: 5000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        },
+      });
+    }
+    else if ((material.prec_sug) == "" || (material.prec_sug) == 0.00) {
+      toast.error("Debe ingresar un \"Precio sugerido\" mayor a 0.00 " + material.moneda, {
+        position: "top-center",
+        autoClose: 5000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        },
+      });
+    }
+    else if (material.fec_fin == "" || material.fec_fin == "dd/mm/aaaa") {
+      toast.error("Debe ingresar una \"Fecha fin\" válida", {
+        position: "top-center",
+        autoClose: 5000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        },
+      });
+    }  
+    else {
       // obtener margen
       calcularMargen();
       // -------------------
       // setActivateButton(false);
-      // dataMaterial = [...dataMaterial];
+      //  dataMaterial = [...dataMaterial];
       // console.log(dataMaterial);
     }
   };
@@ -171,7 +204,7 @@ const ModalAddMaterial = ({
       case "precio_sugerido":
         setMaterial((prevState) => ({
           ...prevState,
-          prec_sug: value,
+          prec_sug : Number(value),
         }));
         // setActivateButton(true); // activar boton calcular margen
         break;
@@ -325,9 +358,10 @@ const ModalAddMaterial = ({
                       attribute={{
                         name: "precio_sugerido",
                         type: "text",
-                        value: convertDecimal(material.prec_sug),
+                        // value: Number(material.prec_sug),
                         disabled: false,
                         checked: false,
+                        placeholder: "0.00"
                       }}
                       handleChange={handleChange}
                     />

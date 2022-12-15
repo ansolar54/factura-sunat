@@ -3,6 +3,7 @@ import BtnCancel from "../../../../components/BtnCancel";
 import BtnSave from "../../../../components/BtnSave";
 import InputForm from "../../../../components/InputForm";
 import McMaterial from "../../Modals_General/McMaterial";
+import Dialog from "../../Dialog";
 import toast, { Toaster } from "react-hot-toast";
 import {
   AprobMargen,
@@ -12,6 +13,8 @@ import {
   ModificarRequestDetail,
   UsuarioNotifi,
   ModificarStateRequest,
+  AprobSolicitud,
+  UpdateDetailRequestLastAprobRequest,
 } from "../../../../Services/ServiceCambioPrecio";
 import Spinner from "../../../../components/Spinner";
 import { getUser } from "../../../../Services/ServiceUser";
@@ -24,8 +27,16 @@ const ModalEditMaterial = ({
   setDetalle,
   idUser,
   salesOfi,
+  orgVentasDesc,
+  codi_client,
+  org_ventas,
+  itMatAprob,
 }) => {
-  // console.log("MATERIAL", dataMaterial);
+
+  console.log("CODI CLIENT", codi_client);
+  console.log("ORG_VENTAS", org_ventas);
+  // console.log("ITMAT_APROB", itMatAprob);
+  //console.log("ORG VENTAS DESC", orgVentasDesc);
 
   const [showMcMaterial, setShowMcMaterial] = useState(false);
 
@@ -95,6 +106,8 @@ const ModalEditMaterial = ({
       console.log(model);
       // llamado a servicio parar modificar request detail
       let detalle_mat = [];
+      let itMatAprob = [];
+      let detailMaterial = [];
       ModificarRequestDetail(model).then((result) => {
         console.log(result);
         GetDetalleSolicitud(dataMaterial.id_request).then((result) => {
@@ -113,6 +126,31 @@ const ModalEditMaterial = ({
             };
 
             detalle_mat.push(detalle);
+
+
+            let matAprob = {
+              Matnr: element.material,
+              Maktx: element.material_name,
+              Kbetr: element.actual_price, // reemplazo de suggested_price
+              Konwa: element.currency,
+              Kpein: element.base_amount,
+              Kmein: element.measure_unit,
+              Datab: formatoFechaForAprob(element.start_date), // yyyymmdd - formatear
+              Datbi: formatoFechaForAprob(element.end_date), // yyyymmdd - formatear
+              Mxwrt: element.suggested_price, // reeplazo de lower_limit
+              Gkwrt: element.upper_limit,
+            };
+            itMatAprob.push(matAprob);
+
+            console.log(matAprob)
+
+            let material = {
+              id: element.id,
+              suggested_price: element.actual_price,
+              lower_limit: element.suggested_price,
+            };
+            detailMaterial.push(material);
+
           }
           // IMPLEMENTACION PARA NOTIFICAR POR CORREO LA MODIFICACION DE DETALLE DE SOLICITUD
           // IMPLEMENTAR SERVICIO EN C# QUE CUANDO LE ENVIE material.id_request DEVUELVA LA SOLICITUD CABECERA DE TB_REQUEST
@@ -147,40 +185,68 @@ const ModalEditMaterial = ({
 
                       // provisional
                       let mails = {
-                        email: "amendozac@farmex.com.pe",
+                        email: "gnieri@farmex.com.pe",
+                        // email: "ansolar54@gmail.com",
                       };
 
                       let model_email_aprob = {
-                        state: 0, // para identificar aprobacion o rechazo de solicitud en backend
+                        state: 6, // para identificar aprobacion o rechazo de solicitud en backend
                         nro_solicitud: nro_solicitud,
                         cliente: client,
+                        org_ventas: orgVentasDesc,
                         aprobador: jwt(localStorage.getItem("_token")).user, // se obtiene nombre de usuario de token vendedor = aprobador
                         correos: [mails],
                         detalle: detalle_mat,
                       };
-                      console.log(model_email_aprob);
+                      console.log("MODEL EMAIL APROB", model_email_aprob);
                       EnviarCorreoAprob(model_email_aprob).then((result) => {
                         console.log(result);
                         let model = {
                           id: Number(nro_solicitud),
-                          state: "2",
+                          state: "1",
                           id_manager: Number(jwt(localStorage.getItem("_token")).nameid),
                         };
                         if (result.indicator == 1) {
                           ModificarStateRequest(model).then((result) => {
-                            console.log("estado - modificado",result);
+                            console.log("estado - modificado", result);
                           });
-                          toast.success("Solicitud modificada correctamente.", {
-                            position: "top-center",
-                            autoClose: 1000,
-                            style: {
-                              backgroundColor: "#212121",
-                              color: "#fff",
-                            },
-                          });
-                          setShowModalEditMaterial(false);
-                          setIndicator(false);
-                          setspinner(false);
+
+                          let model_aprob = {
+                            // REVISAR CODI_CLIENT
+                            IsKunnr: codi_client,
+                            IsVkorg: org_ventas,
+                            ItMatAprobacion: itMatAprob,
+                          };
+                          console.log('MODEL APROB ', model_aprob);
+                          AprobSolicitud(model_aprob).then((result) => {
+                            console.log(result);
+                            if (result.etMsgReturnField[0].successField == "X") {
+                              // let email_solicitante = "";
+                              // modificacion de detalle de solicitud en base de datos
+                              console.log('DETAIL', detailMaterial)
+                              UpdateDetailRequestLastAprobRequest({
+                                detailMaterial: detailMaterial,
+                              }).then((result) => {
+                                console.log("result modify detail", result);
+                                setIndicator(false);
+                                //setIsLoading(false)
+                                toast.success("Solicitud modificada y aprobada correctamente.", {
+                                  position: "top-center",
+                                  autoClose: 1000,
+                                  style: {
+                                    backgroundColor: "#212121",
+                                    color: "#fff",
+                                  },
+                                });
+                                setShowModalEditMaterial(false);
+                                setspinner(false);
+                              });
+                            }
+                          })
+
+
+
+
                         } else {
                           setspinner(false);
                         }
@@ -194,8 +260,8 @@ const ModalEditMaterial = ({
         });
       });
 
-      // setShowModalEditMaterial(false);
-      // setIndicator(false);
+      //setShowModalEditMaterial(false);
+      //setIndicator(false);
     }
   }, [indicator]);
 
@@ -221,6 +287,12 @@ const ModalEditMaterial = ({
     return parts[2] + "-" + parts[1] + "-" + parts[0];
   };
 
+  const formatoFechaForAprob = (fecha) => {
+    let parts = fecha.split("T");
+    let newDate = parts[0].split("-");
+    return newDate[0] + newDate[1] + newDate[2];
+  };
+
   const cancelar = () => {
     setShowModalEditMaterial(false);
   };
@@ -231,6 +303,7 @@ const ModalEditMaterial = ({
         {
           Matnr: material.material,
           Werks: material.center, // guardar centro en bd
+          LimInfer: material.lower_limit,
           PreSuge: material.suggested_price,
           Margen: 0.0,
         },
@@ -252,6 +325,42 @@ const ModalEditMaterial = ({
     // console.log("guardar");
     calcularMargen();
   };
+
+  //APROBAR SOLICITUD DIALOG
+  const [dialog1, setDialog1] = useState({
+    message: "",
+    isLoading: false,
+    //Update
+    nameProduct: "",
+  });
+  //const itemRef1 = useRef();
+  const handleDialog1 = (message, isLoading, nameProduct) => {
+    setDialog1({
+      message,
+      isLoading,
+      //Update
+      nameProduct,
+    });
+  };
+  const handleApprove = () => {
+    //Update
+    // const index = data.findIndex((p) => p.id === id);
+
+    handleDialog1("Desea aprobar el nuevo precio?", true, "");
+    //itemRef1.current = item;
+  };
+  const areUSureApprove = (choose) => {
+    console.log(choose);
+    if (choose) {
+      guardar();
+      //anularSolicitud(4, itemRef.current)
+      handleDialog1("", false);
+    } else {
+      handleDialog1("", false);
+    }
+  };
+
+
 
   function handleChange(name, value) {
     // console.log(name, " : ", value);
@@ -501,7 +610,7 @@ const ModalEditMaterial = ({
                       checked: false,
                     }}
                     handleChange={handleChange}
-                    onClick={() => {}}
+                    onClick={() => { }}
                   />
                 </div>
               </div>
@@ -520,7 +629,7 @@ const ModalEditMaterial = ({
                       min: extraeFecha(material.start_date),
                     }}
                     handleChange={handleChange}
-                    onClick={() => {}}
+                    onClick={() => { }}
                   />
                 </div>
               </div>
@@ -553,8 +662,18 @@ const ModalEditMaterial = ({
                   value: "Guardar",
                   classNamebtn: "btn_save",
                 }}
-                onClick={() => guardar()}
+                onClick={() => handleApprove()
+                  // guardar()
+                }
               />
+              {dialog1.isLoading && (
+                <Dialog
+                  //Update
+                  nameProduct={dialog1.nameProduct}
+                  onDialog={areUSureApprove}
+                  message={dialog1.message}
+                />
+              )}
             </div>
           </div>
         </div>
