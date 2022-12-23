@@ -259,7 +259,7 @@ const MisAprobaciones = () => {
               //  MODEL FROM EDIT DETAIL MATERIAL
               let material = {
                 id: element.id,
-                suggested_price: element.actual_price,
+                suggested_price: Number(element.actual_price),
                 lower_limit: element.suggested_price,
               };
               detailMaterial.push(material);
@@ -317,7 +317,7 @@ const MisAprobaciones = () => {
                           // provisional
                           let mails = {
                             email: "gnieri@farmex.com.pe",
-                            // email: "ansolar54@gmail.com",
+                            //email: "ansolar54@gmail.com",
                           };
                           let model_email_aprob = {
                             state: state, // para identificar aprobacion o rechazo de solicitud en backend
@@ -334,10 +334,10 @@ const MisAprobaciones = () => {
                               console.log(result);
                               if (result.indicator == 1) {
                                 toast.success(
-                                  "Solicitud aprobada correctamente.",
+                                  "Solicitud N° " + model_email_aprob.nro_solicitud +" aprobada correctamente.",
                                   {
                                     position: "top-center",
-                                    autoClose: 1000,
+                                    autoClose: 6000,
                                     style: {
                                       backgroundColor: "#212121",
                                       color: "#fff",
@@ -400,7 +400,7 @@ const MisAprobaciones = () => {
                       // provisional
                       let mails = {
                         email: "gnieri@farmex.com.pe",
-                        // email: "ansolar54@gmail.com",
+                        //email: "ansolar54@gmail.com",
 
                       };
 
@@ -417,9 +417,9 @@ const MisAprobaciones = () => {
                       EnviarCorreoAprob(model_email_aprob).then((result) => {
                         console.log(result);
                         if (result.indicator == 1) {
-                          toast.success("Solicitud rechazada.", {
+                          toast.success("Solicitud N° " + model_email_aprob.nro_solicitud +" rechazada.", {
                             position: "top-center",
-                            autoClose: 1000,
+                            autoClose: 6000,
                             style: {
                               backgroundColor: "#212121",
                               color: "#fff",

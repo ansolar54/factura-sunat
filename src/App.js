@@ -23,6 +23,7 @@ import ChangeStatusPassword from "./components/ChangeStatusPassword/ChangeStatus
 import jwt from "jwt-decode";
 import { getUser } from "./Services/ServiceUser";
 import Promociones from "./pages/Promociones/Promociones";
+import Reporte_Despacho from "./pages/Reporte_Despacho/Reporte_Despacho";
 import { ActualizarPasswordStatus } from "./Services/ServiceConfiguracion";
 import Rol from "./pages/Rol/Rol";
 import GenerarSolicitud from "./pages/Cambio_Precio/Generar_Solicitud/GenerarSolicitud";
@@ -108,10 +109,14 @@ const App = () => {
                 <Slidebar />
                 <Configuracion />
               </Route>
+
+              {/* MODULO DE REPORTES */}
+
               <Route exact strict path="/consulta_pedido" component={Consulta}>
                 <Slidebar />
                 <Consulta />
               </Route>
+
               <Route
                 exact
                 strict
@@ -121,6 +126,7 @@ const App = () => {
                 <Slidebar />
                 <Info_Cliente />
               </Route>
+
               <Route
                 exact
                 strict
@@ -130,6 +136,7 @@ const App = () => {
                 <Slidebar />
                 <ConsultaStock />
               </Route>
+
               <Route
                 exact
                 strict
@@ -139,10 +146,22 @@ const App = () => {
                 <Slidebar />
                 <Deuda_Cliente />
               </Route>
+
+              <Route
+                exact
+                strict
+                path="/reporte_despacho"
+                component={Reporte_Despacho}
+              >
+                <Slidebar />
+                <Reporte_Despacho />
+              </Route>
+
               <Route exact strict path="/promociones" component={Promociones}>
                 <Slidebar />
                 <Promociones />
               </Route>
+
               {/* MODULO: cambio precio */}
               <Route
                 exact

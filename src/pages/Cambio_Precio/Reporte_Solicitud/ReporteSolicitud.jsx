@@ -634,7 +634,7 @@ const ReporteSolicitud = () => {
                                                     {item.moneda}
                                                 </th>
                                                 <th style={{ textAlign: "center" }}>
-                                                    {item.precio}
+                                                    {convertDecimal(item.precio)}
                                                 </th>
                                                 <th style={{ textAlign: "center" }}>
                                                     {(item.margen) * 100} %

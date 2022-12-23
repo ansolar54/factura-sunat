@@ -22,6 +22,7 @@ const GenerarSolicitud = () => {
   const [showModalMaterial, setShowModalMaterial] = useState(false);
   const [showModalEditMaterial, setShowModalEditMaterial] = useState(false);
   const [idMaterial, setIdMaterial] = useState();
+  const [precioSugeridoMaterial, setprecioSugeridoMaterial] = useState();
 
   // DATA MATERIAL
   const [dataMaterial, setDataMaterial] = useState([]);
@@ -48,10 +49,13 @@ const GenerarSolicitud = () => {
   //CARGA DE SPINNER
   const [spinner, setspinner] = useState(false);
 
+  console.log("DATA MATERIAL GENERAR SOLICITUD",dataMaterial);
 
 
-  const openEditMaterial = (id_material) => {
+
+  const openEditMaterial = (id_material,precio_sugerido) => {
     setIdMaterial(id_material);
+    setprecioSugeridoMaterial(precio_sugerido);
     setShowModalEditMaterial((prev) => !prev);
   };
 
@@ -265,7 +269,7 @@ const GenerarSolicitud = () => {
         detalleCorreo.push(detalle);
       }
 
-      // console.log(data_detail);
+     console.log("DATA DETAILS GENERAR SOLI",data_detail);
 
       let model_usua_notifi = {
         IsNotif: "1",
@@ -311,7 +315,8 @@ const GenerarSolicitud = () => {
           };
           //console.log("generando solicitud",model);
           GuardarSolicitud(model).then((result) => {
-            console.log(result);
+            let mensajedialog = result;
+            console.log("DATOS GUARDAR SOLICITUD",result);
             if (result.indicator == 1) {
               // OBTENER SOLICITUD CREADA - se necesita el id generado
               GetSolicitudLimit().then((result) => {
@@ -329,9 +334,9 @@ const GenerarSolicitud = () => {
                   EnviarCorreo(model_correo).then((result) => {
                     console.log(result);
                     if (result.indicator == 1) {
-                      toast.success("Solicitud creada correctamente.", {
+                      toast.success(mensajedialog.message,{
                         position: "top-center",
-                        autoClose: 1000,
+                        autoClose: 3000,
                         style: {
                           backgroundColor: "#212121",
                           color: "#fff",
@@ -457,6 +462,7 @@ const GenerarSolicitud = () => {
           setShowModalEditMaterial={setShowModalEditMaterial}
           dataMaterial={dataMaterial}
           idMaterial={idMaterial}
+          precioSugeridoMaterial={precioSugeridoMaterial}
         />
         <McOrgVentas
           orgVentasValue={orgVentasValue}
@@ -604,7 +610,7 @@ const GenerarSolicitud = () => {
                             style={{ cursor: "pointer", margin: "6px" }}
                             title="Editar material"
                             className="fas fa-edit fa-lg"
-                            onClick={() => openEditMaterial(item.cod_mat)}
+                            onClick={() => openEditMaterial(item.cod_mat,convertDecimal(item.prec_sug))}
                           ></i>
                           <i
                             style={{ cursor: "pointer", margin: "6px" }}

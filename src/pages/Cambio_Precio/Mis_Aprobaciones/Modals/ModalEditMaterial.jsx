@@ -186,7 +186,7 @@ const ModalEditMaterial = ({
                       // provisional
                       let mails = {
                         email: "gnieri@farmex.com.pe",
-                        // email: "ansolar54@gmail.com",
+                        //email: "ansolar54@gmail.com",
                       };
 
                       let model_email_aprob = {
@@ -219,7 +219,7 @@ const ModalEditMaterial = ({
                           };
                           console.log('MODEL APROB ', model_aprob);
                           AprobSolicitud(model_aprob).then((result) => {
-                            console.log(result);
+                            console.log("MODIFICADA Y APROBADA",result);
                             if (result.etMsgReturnField[0].successField == "X") {
                               // let email_solicitante = "";
                               // modificacion de detalle de solicitud en base de datos
@@ -230,9 +230,9 @@ const ModalEditMaterial = ({
                                 console.log("result modify detail", result);
                                 setIndicator(false);
                                 //setIsLoading(false)
-                                toast.success("Solicitud modificada y aprobada correctamente.", {
+                                toast.success("Solicitud N° " + model_email_aprob.nro_solicitud+" modificada y aprobada correctamente.", {
                                   position: "top-center",
-                                  autoClose: 1000,
+                                  autoClose: 6000,
                                   style: {
                                     backgroundColor: "#212121",
                                     color: "#fff",
@@ -303,7 +303,7 @@ const ModalEditMaterial = ({
         {
           Matnr: material.material,
           Werks: material.center, // guardar centro en bd
-          LimInfer: material.lower_limit,
+          //LimInfer: material.lower_limit,
           PreSuge: material.suggested_price,
           Margen: 0.0,
         },
