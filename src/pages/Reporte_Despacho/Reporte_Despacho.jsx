@@ -2322,7 +2322,7 @@ const Reporte_Despacho = () => {
                 RangosOrganizacionVentas() : [],
             ItVstel: [],
             // Hola
-            // hi hellou - ICA
+            // hi hellou
             ItFilter: [
                 {
                     Knnur: "",
