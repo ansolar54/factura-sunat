@@ -1370,11 +1370,11 @@ const Reporte_Despacho = () => {
 
                     // CAMBIAR EL "vbelnField"
 
-                    for (let i = 0; i < result.etPedidosField.length; i++) {
-                        document.getElementById(
-                            "checkbox-body-" + result.etPedidosField[i].name1Field
-                        ).checked = true;
-                    }
+                    // for (let i = 0; i < result.etPedidosField.length; i++) {
+                    //     document.getElementById(
+                    //         "checkbox-body-" + result.etPedidosField[i].name1Field
+                    //     ).checked = true;
+                    // }
                 } else {
                     setresponse_reporte_despacho(
                         result.etPedidosField.map((d) => {
@@ -1405,11 +1405,11 @@ const Reporte_Despacho = () => {
 
                     // CORREGIR vbelnField
 
-                    for (let i = 0; i < result.etPedidosField.length; i++) {
-                        document.getElementById(
-                            "checkbox-body-" + result.etPedidosField[i].name1Field
-                        ).checked = false;
-                    }
+                    // for (let i = 0; i < result.etPedidosField.length; i++) {
+                    //     document.getElementById(
+                    //         "checkbox-body-" + result.etPedidosField[i].name1Field
+                    //     ).checked = false;
+                    // }
                 }
 
                 for (let y = 0; y < result.etPedidosField.length; y++) {
@@ -1624,7 +1624,29 @@ const Reporte_Despacho = () => {
             ItVkorg: org_ventas[0].Low !== "" ?
                 RangosOrganizacionVentas() : [],
             ItVstel: [],
-            ItFilter: [],
+            ItFilter: mostrar_filtro_fila == true ? [
+                {
+                    Knnur: "",
+                    Name1: f_name1Field,
+                    Bstkd: f_bstkdField,
+                    Erdat: formatDateSAP(f_erdatField),
+                    Aubel: f_aubelField,
+                    Xblnr: f_xblnrField,
+                    Xblnr1: f_xblnr1Field,
+                    Ctrans: "",
+                    Ntrans: f_ntransField,
+                    Vkorg: f_vkorgField,
+                    Arktx: f_arktxField,
+                    Werks: f_werksField,
+                    Charg: f_chargField,
+                    Lfimg: (f_lfimgField),
+                    Vkbur: "",
+                    Vkburbezei: f_vkburbezeiField,
+                    Vkgrp: "",
+                    Vkgrpbezei: f_vkgrpbezeiField,
+                    Sname: f_snameField,
+                },
+            ] : [],
         };
         console.log("MODEL REPORTE EXPORTAR", model_reporte_exportar);
 
@@ -1739,7 +1761,7 @@ const Reporte_Despacho = () => {
                                     { value: data.kunnrField, style: { font: { sz: "14" } } },
                                     { value: data.name1Field, style: { font: { sz: "14" } } },
                                     { value: data.bstkdField, style: { font: { sz: "14" } } },
-                                    { value: formatDate(data.erdatField), style: { font: { sz: "14" } } },
+                                    { value: formatFecha(data.erdatField), style: { font: { sz: "14" } } },
                                     { value: data.aubelField, style: { font: { sz: "14" } } },
                                     { value: data.xblnrField, style: { font: { sz: "14" } } },
                                     { value: data.xblnr1Field, style: { font: { sz: "14" } } },
@@ -2016,13 +2038,37 @@ const Reporte_Despacho = () => {
     }
     //formateo de la fecha para enviar a SAP YYYYMMDD
     function formatDateSAP(value) {
-        var datePart = value.match(/\d+/g),
+        if(value == ""){
+            return ""
+          }else{
+            var datePart = value.match(/\d+/g),
             year = datePart[0],
             month = datePart[1],
             day = datePart[2];
-
-        return year + "" + month + "" + day;
+      
+          return year + "" + month + "" + day;
+          }
+      
     }
+
+    const formatFecha = (fecha) => {
+        // console.log(fecha);
+        let newDate = "";
+        if (fecha != null || fecha != undefined || fecha != "") {
+          if (fecha.length == 10) {
+            newDate = fecha.split("-");
+            return newDate[2] + "-" + newDate[1] + "-" + newDate[0];
+          } else {
+            return (
+              fecha.substr(6, 2) +
+              "-" +
+              fecha.substr(4, 2) +
+              "-" +
+              fecha.substr(0, 4)
+            );
+          }
+        }
+      };
 
     //completar decimal de 2 digitos
     function convertDecimal(num) {
@@ -2173,7 +2219,7 @@ const Reporte_Despacho = () => {
                 },
             },
             {
-                value: formatDate(d.erdatField),
+                value: formatFecha(d.erdatField),
                 style: {
                     font: { sz: "14" },
                 },
@@ -2321,13 +2367,12 @@ const Reporte_Despacho = () => {
             ItVkorg: org_ventas[0].Low !== "" ?
                 RangosOrganizacionVentas() : [],
             ItVstel: [],
-            //HOLI
             ItFilter: [
                 {
                     Knnur: "",
                     Name1: f_name1Field,
                     Bstkd: f_bstkdField,
-                    Erdat: f_erdatField,
+                    Erdat: formatDateSAP(f_erdatField),
                     Aubel: f_aubelField,
                     Xblnr: f_xblnrField,
                     Xblnr1: f_xblnr1Field,
@@ -2337,7 +2382,7 @@ const Reporte_Despacho = () => {
                     Arktx: f_arktxField,
                     Werks: f_werksField,
                     Charg: f_chargField,
-                    Lfimg: parseFloat((f_lfimgField)),
+                    Lfimg: (f_lfimgField),
                     Vkbur: "",
                     Vkburbezei: f_vkburbezeiField,
                     Vkgrp: "",
@@ -2396,7 +2441,24 @@ const Reporte_Despacho = () => {
     }
 
     function buscar_filtro_icono_btn() {
-        buscar_filtro_fila(1, "", "");
+        if((f_name1Field  || f_bstkdField || f_erdatField  || f_aubelField  ||
+        f_xblnrField  || f_xblnr1Field  || f_ntransField  || f_vkorgField  ||
+        f_arktxField || f_werksField  || f_chargField  || f_lfimgField  ||
+        f_vkburbezeiField || f_vkgrpbezeiField  || f_snameField ) != ""){
+            buscar_filtro_fila(1, "", "");
+            Exportar();    
+        }
+        else{
+            toast.error("Debe seleccionar algún filtro por columna.", {
+                position: "top-center",
+                autoClose: 6000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                },
+            });
+        }
+        
     }
 
     const closeModal = (e) => {
@@ -3257,6 +3319,7 @@ const Reporte_Despacho = () => {
                                                         <input
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
+                                                            id="f_name1Field"
                                                             name="f_name1Field"
                                                             maxLength="30"
                                                             onChange={(e) =>
@@ -3682,14 +3745,14 @@ const Reporte_Despacho = () => {
                                                                 /> 
                                                             </th> */}
                                                             <th></th>
-                                                            <th style={{ textAlign: "center" }}>
+                                                            <th style={{ textAlign: "left" }}>
                                                                 {response.name1Field}
                                                             </th>
                                                             <th style={{ textAlign: "center" }}>
                                                                 {response.bstkdField}
                                                             </th>
                                                             <th style={{ textAlign: "center" }}>
-                                                                {formatDate(response.erdatField)}
+                                                                {formatFecha(response.erdatField)}
                                                             </th>
                                                             <th style={{ textAlign: "center" }}>
                                                                 {response.aubelField}
