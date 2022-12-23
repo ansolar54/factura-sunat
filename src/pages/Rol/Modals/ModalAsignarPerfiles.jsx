@@ -101,6 +101,8 @@ const ModalAsignarPerfiles = ({
         return "Información de cliente";
       case "R05":
         return "Estado de cuenta";
+      case "R06":
+        return "Reporte de despacho";
       case "ROL":
         return "Roles";
       default:
@@ -116,7 +118,7 @@ const ModalAsignarPerfiles = ({
           onClick={closeModal}
           ref={modalRef}
         >
-          <div className="modal-wrapper modal-wrapper-30-40">
+          <div className="modal-wrapper modal-wrapper-35-40">
             <div className="modal-header">
               <div className="modal-title">
                 <h5>Asignar Perfil</h5>
@@ -180,7 +182,7 @@ const ModalAsignarPerfiles = ({
               </div>
             </div>
             {/* {spinner && <Spinner />} */}
-            <div className="modal-footer">
+            <div className="modal-footer" style={{alignContent: "center"}}>
               <BtnCancel
                 attribute={{
                   name: "btnCancelar",

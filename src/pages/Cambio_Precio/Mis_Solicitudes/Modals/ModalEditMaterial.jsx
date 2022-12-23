@@ -25,7 +25,7 @@ const ModalEditMaterial = ({
   orgVentas,
   orgVentasDesc,
 }) => {
-  // console.log("MATERIAL", dataMaterial);
+   console.log("MATERIAL EDITAR MIS SOLICITUDES", dataMaterial);
   //console.log("ORGA. VENTAS",orgVentasDesc);
 
   const [showMcMaterial, setShowMcMaterial] = useState(false);
@@ -144,7 +144,7 @@ const ModalEditMaterial = ({
 
                   let mails = {
                     email: "amendozac@farmex.com.pe",
-                        // email: "ansolar54@gmail.com",
+                    //email: "ansolar54@gmail.com",
                   };
 
                   let model_email_aprob = {
@@ -168,9 +168,9 @@ const ModalEditMaterial = ({
                       ModificarStateRequest(model).then((result) => {
                         console.log("estado - modificado",result);
                       });
-                      toast.success("Solicitud modificada correctamente.", {
+                      toast.success("Solicitud N° " + model_email_aprob.nro_solicitud+ " modificada correctamente.", {
                         position: "top-center",
-                        autoClose: 1000,
+                        autoClose: 6000,
                         style: {
                           backgroundColor: "#212121",
                           color: "#fff",
@@ -228,7 +228,7 @@ const ModalEditMaterial = ({
         {
           Matnr: material.material,
           Werks: material.center, // guardar centro en bd
-          LimInfer: material.lower_limit,
+          //LimInfer: material.lower_limit,
           PreSuge: material.suggested_price,
           Margen: 0.0,
         },

@@ -501,7 +501,7 @@ const Consulta = () => {
         setcol_8(0);
         setcol_10(0);
         break;
-      case 9:
+      case 10:
         setcol_1(0);
         setcol_2(0);
         setcol_3(0);
@@ -2520,6 +2520,8 @@ const Consulta = () => {
         },
       ],
     };
+
+    console.log("FILTRO MODEL CONSULTAS",model)
     setmostrar_filtro_fila(false);
     arraycheckbox_export[0].data = [];
     setresponse_consulta_pedido([]);
@@ -3452,8 +3454,27 @@ const Consulta = () => {
                                 }
                               />
                             </th> */}
-                          <th>
-                            <input
+                          <th style={{ textAlign: "center" }}>
+                            <div >
+                            <select style={{ paddingTop: "2px", paddingBottom: "2px" }} className="px-1" name="f_vkorgField"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              //onChange={(e) => selectedFiltro(e)}
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            >
+                              <option value="">TODOS</option>
+                              <option value="AGRO">AGRO</option>
+                              <option value="ESPE">ESPE</option>
+                              <option value="SALU">SALU</option>
+                              <option value="SEMI">SEMI</option>
+                            </select>
+                            </div>
+                            
+                            {/* <input
                               type="text"
                               onKeyUp={(e) => buscar_filtro_enter(e)}
                               name="f_vkorgField"
@@ -3464,7 +3485,7 @@ const Consulta = () => {
                                   e.target.value
                                 )
                               }
-                            />
+                            /> */}
                           </th>
                           <th>
                             <input

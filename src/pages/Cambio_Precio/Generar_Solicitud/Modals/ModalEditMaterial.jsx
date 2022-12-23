@@ -12,8 +12,10 @@ const ModalEditMaterial = ({
   setShowModalEditMaterial,
   dataMaterial,
   idMaterial,
+  precioSugeridoMaterial
 }) => {
-  // console.log(material.cod_mat);
+  console.log("DATA MATERIAL EDITAR SOLICITUD",dataMaterial)
+   console.log("PRECIO SUGERIDO MATERIAL EDITAR SOLICITUD",precioSugeridoMaterial);
 
   const [showMcMaterial, setShowMcMaterial] = useState(false);
 
@@ -101,7 +103,7 @@ const ModalEditMaterial = ({
         {
           Matnr: material.cod_mat,
           Werks: material.centro,
-          LimInfer: material.lim_inf,
+          //LimInfer: material.lim_inf,
           PreSuge: material.prec_sug,
           Margen: 0.0,
         },
@@ -122,7 +124,6 @@ const ModalEditMaterial = ({
 
   const guardar = () => {
     // console.log("guardar");
-    //Number(material.prec_sug);
     if (Number(material.prec_sug.replaceAll(",", "")) > material.lim_inf) {
       toast.error("Precio sugerido debe ser menor a " + convertDecimal(material.lim_inf) + " "+ material.moneda, {
         position: "top-center",
@@ -180,7 +181,7 @@ const ModalEditMaterial = ({
       case "precio_sugerido":
         setMaterial((prevState) => ({
           ...prevState,
-          prec_sug: (value),
+          prec_sug: value,
         }));
         // setActivateButton(true);
         break;

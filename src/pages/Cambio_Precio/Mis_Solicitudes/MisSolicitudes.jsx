@@ -312,7 +312,7 @@ const MisSolicitudes = () => {
                 // provisional
                 let mails = {
                   email: "amendozac@farmex.com.pe",
-                  // email: "ansolar54@gmail.com",
+                  //email: "ansolar54@gmail.com",
                 };
 
                 // notificacion de correo - llamado a servicio
@@ -329,9 +329,9 @@ const MisSolicitudes = () => {
                 EnviarCorreoAprob(model_email_aprob).then((result) => {
                   console.log(result);
                   if (result.indicator == 1) {
-                    toast.success("Solicitud anulada.", {
+                    toast.success("Solicitud N° " +model_email_aprob.nro_solicitud + " anulada.", {
                       position: "top-center",
-                      autoClose: 1000,
+                      autoClose: 6000,
                       style: {
                         backgroundColor: "#212121",
                         color: "#fff",

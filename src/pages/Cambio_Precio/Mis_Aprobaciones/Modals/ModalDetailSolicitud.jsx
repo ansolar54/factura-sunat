@@ -201,10 +201,11 @@ const ModalDetailSolicitud = ({
                               <th style={{ textAlign: "center" }}>
                                 {convertDecimal(response.actual_price)}
                               </th>
+                              {(stateSolicitud != "1") && (
                               <th style={{ textAlign: "center" }}>
                                 {convertDecimal(response.lower_limit)}
-                              </th>
-                              {(stateSolicitud != "1") && (
+                              </th>)}
+                              {(
                                 <th style={{ textAlign: "center" }}>
                                   {convertDecimal(response.suggested_price)}
                                 </th>)}
@@ -213,7 +214,7 @@ const ModalDetailSolicitud = ({
                                 {convertDecimal(response.upper_limit)}
                               </th> */}
                               <th style={{ textAlign: "center" }}>
-                                {convertDecimal(response.margin)} %
+                                {convertDecimal(response.margin)*100} %
                               </th>
                               <th style={{ textAlign: "center" }}>
                                 {extraeFecha(response.start_date)}

@@ -105,8 +105,8 @@ const ModalAddMaterial = ({
         {
           Matnr: material.cod_mat,
           Werks: material.centro,
-          LimInfer: material.lim_inf,
-          PreSuge: (material.prec_sug),
+          //LimInfer: material.lim_inf,
+          PreSuge: material.prec_sug,
           Margen: 0.0,
         },
       ],
@@ -127,13 +127,15 @@ const ModalAddMaterial = ({
       setspinner(false);
       setIndicator(true);
     });
+    
   };
 
   // console.log(material);
 
   const guardar = () => {
-     console.log( material.prec_sug, material.lim_inf);
-     console.log( typeof material.prec_sug,typeof material.lim_inf);
+    //  console.log( material.prec_sug, material.lim_inf);
+    //  console.log( typeof material.prec_sug,typeof material.lim_inf);
+    
     if ((material.prec_sug) > material.lim_inf) {
       toast.error("Precio sugerido debe ser menor a " + convertDecimal(material.lim_inf) + " "+ material.moneda, {
         position: "top-center",
@@ -177,6 +179,8 @@ const ModalAddMaterial = ({
     else {
       // obtener margen
       calcularMargen();
+      //convertDecimal(material.prec_sug);
+      
       // -------------------
       // setActivateButton(false);
       //  dataMaterial = [...dataMaterial];
@@ -204,7 +208,7 @@ const ModalAddMaterial = ({
       case "precio_sugerido":
         setMaterial((prevState) => ({
           ...prevState,
-          prec_sug : Number(value),
+          prec_sug : value,
         }));
         // setActivateButton(true); // activar boton calcular margen
         break;
@@ -357,8 +361,8 @@ const ModalAddMaterial = ({
                     <InputForm
                       attribute={{
                         name: "precio_sugerido",
-                        type: "text",
-                        // value: Number(material.prec_sug),
+                        type: "search",
+                        //value: material.prec_sug,
                         disabled: false,
                         checked: false,
                         placeholder: "0.00"

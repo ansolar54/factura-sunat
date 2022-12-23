@@ -134,12 +134,20 @@ const Promociones = () => {
 
   //formateo de la fecha para enviar a SAP YYYYMMDD
   function formatDateSAP(value) {
-    var datePart = value.match(/\d+/g),
+
+    if(value == ""){
+      return ""
+    }else{
+      var datePart = value.match(/\d+/g),
       year = datePart[0],
       month = datePart[1],
       day = datePart[2];
 
     return year + "" + month + "" + day;
+    }
+
+
+   
   }
 
   function handleChange(name, value) {
@@ -150,8 +158,54 @@ const Promociones = () => {
     });
   }
 
+  // const formatFecha = (fecha) => {
+  //   let newDate = "";
+  //   if (fecha != null || fecha != undefined || fecha != "") {
+  //     newDate = fecha.split("-");
+  //   }
+  //   return newDate[2] + "-" + newDate[1] + "-" + newDate[0];
+  // };
+
+  // const extraeFecha = (fecha) => {
+  //   if (fecha.includes("T")) {
+  //     let parts = fecha.split("T");
+  //     return formatFecha(parts[0]);
+  //   } else {
+  //     return formatFecha(fecha);
+  //   }
+  // };
+
+  // function formatDate(value) {
+  //   var datePart = value.match(/\d+/g),
+  //     year = datePart[0],
+  //     month = datePart[1],
+  //     day = datePart[2];
+  //   return day + "-" + month + "-" + year;
+  // }
+
+  // FORMATEO FECHA CUANDO ENVIAN LA FECHA '20221204'
+  const formatFecha = (fecha) => {
+    // console.log(fecha);
+    let newDate = "";
+    if (fecha != null || fecha != undefined || fecha != "") {
+      if (fecha.length == 10) {
+        newDate = fecha.split("-");
+        return newDate[2] + "-" + newDate[1] + "-" + newDate[0];
+      } else {
+        return (
+          fecha.substr(6, 2) +
+          "-" +
+          fecha.substr(4, 2) +
+          "-" +
+          fecha.substr(0, 4)
+        );
+      }
+    }
+  };
+
   function Search(page, IsCampo, IsOrden) {
-    console.log(IsCampo);
+    console.log("CAMPO SELECCIONADO",IsCampo);
+    console.log("ORDEN",IsOrden)
     setspinner(true);
     setindicadorfiltro(false);
     setTotalData(0);
@@ -229,6 +283,8 @@ const Promociones = () => {
       ItVkorg: filtroInicial.org_ventas,
       ItVtweg: filtroInicial.canal_distri,
     };
+
+    console.log("MODEL CONSULTA PROMOCIONES",model_consulta_promociones)
 
     ConsuPromocionesBuscar(model_consulta_promociones).then((result) => {
       setspinner(false);
@@ -320,6 +376,8 @@ const Promociones = () => {
           Knrzm: f_knrzmField,
           Knrez: f_knrezField,
           Nrmaktxt: f_nrmaktxtField,
+          Datab:  formatDateSAP(f_databField),
+          Datbi: formatDateSAP(f_datbiField),
         },
       ],
       ItDatam:
@@ -338,6 +396,8 @@ const Promociones = () => {
       ItVkorg: filtroInicial.org_ventas,
       ItVtweg: filtroInicial.canal_distri,
     };
+
+    console.log("FILTRO MODEL PROMOCIONES",model)
 
     ConsuPromocionesBuscarFiltro(model).then((result) => {
       setspinner(false);
@@ -1607,8 +1667,24 @@ const Promociones = () => {
                               <i className="fas fa-filter"></i>
                             </button>
                           </th>
-                          <th>
-                            <input
+                          <th style={{ textAlign: "center" }}>
+                            <select style={{ paddingTop: "2px", paddingBottom: "2px" }} className="px-1" name="f_vkorgField"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              //onChange={(e) => selectedFiltro(e)}
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            >
+                              <option value="">TODOS</option>
+                              <option value="AGRO">AGRO</option>
+                              <option value="ESPE">ESPE</option>
+                              <option value="SALU">SALU</option>
+                              <option value="SEMI">SEMI</option>
+                            </select>
+                            {/* <input
                               type="text"
                               onKeyUp={(e) => buscar_filtro_enter(e)}
                               name="f_vkorgField"
@@ -1619,7 +1695,7 @@ const Promociones = () => {
                                   e.target.value
                                 )
                               }
-                            />
+                            /> */}
                           </th>
                           <th>
                             <input
@@ -1747,6 +1823,32 @@ const Promociones = () => {
                               }
                             />
                           </th>
+                          <th>
+                            <input
+                              type="date"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_databField"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
+                          <th>
+                            <input
+                              type="date"
+                              onKeyUp={(e) => buscar_filtro_enter(e)}
+                              name="f_datbiField"
+                              onChange={(e) =>
+                                handleChangeFiltro(
+                                  e.target.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </th>
                         </tr>
                       ) : null}
 
@@ -1787,10 +1889,10 @@ const Promociones = () => {
                                   {response.nrmaktxtField}
                                 </th>
                                 <th style={{ textAlign: "left" }}>
-                                  {response.databField}
+                                  {formatFecha(response.databField)}
                                 </th>
                                 <th style={{ textAlign: "left" }}>
-                                  {response.datbiField}
+                                  {formatFecha(response.datbiField)}
                                 </th>
                               </tr>
                             );

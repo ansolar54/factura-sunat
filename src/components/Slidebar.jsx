@@ -26,6 +26,9 @@ const Slidebar = () => {
   const [promociones, setPromociones] = useState(false);
   const [infoCliente, setInfoCliente] = useState(false);
   const [estadoCuenta, setEstadoCuenta] = useState(false);
+  const [reporteDespacho, setReporteDespacho] = useState(false);
+
+
   const [generarSolicitud, setGenerarSolicitud] = useState(false);
   const [misSolicitudes, setMisSolicitudes] = useState(false);
   const [misAprobaciones, setMisAprobaciones] = useState(false);
@@ -164,6 +167,14 @@ const Slidebar = () => {
                   setEstadoCuenta(true);
                   setModReportes(true);
                 }
+
+                if (
+                  element.idModuloField == "R06" &&
+                  element.activeField == "X"
+                ) {
+                  setReporteDespacho(true);
+                  setModReportes(true);
+                }
               }
 
               if (element.grupoField == "3") {
@@ -199,16 +210,16 @@ const Slidebar = () => {
                 }
               }
             }
-            console.log("mensajito",result);
+            console.log("mensajito", result);
           }
-          
+
           setspinner(false);
         });
       });
     }
   }, []);
 
- 
+
 
   function activeSlide() {
     document.getElementById("slidebar").classList.add("expand-slidebar");
@@ -240,7 +251,8 @@ const Slidebar = () => {
       <div className="navbar-container">
         <i className="fas fa-bars" onClick={() => activeSlide()}></i>
       </div>
-      <div className="slidebar-container" id="slidebar">
+
+      <div className="slidebar-container scroll pb-4" id="slidebar">
         <div className="slidebar-header-user">
           <div className="close-slidebar">
             <i
@@ -363,6 +375,14 @@ const Slidebar = () => {
                   <li className="slidebar-categories-child">
                     <i className="fas fa-digital-tachograph"></i>
                     <Link to="estado_cuenta">Estado de Cuenta</Link>
+                    {/* <Link to="reporte_despacho">Reporte de Despacho</Link> */}
+                  </li>
+                )}
+
+                {reporteDespacho && (
+                  <li className="slidebar-categories-child">
+                    <i className="fas fa-id-card"></i>
+                    <Link to="reporte_despacho">Reporte de Despacho</Link>
                   </li>
                 )}
               </ul>
@@ -383,7 +403,7 @@ const Slidebar = () => {
             </div>
             <div className="slidebar-subcategories" id="subcat-03">
               {spinner && <Spinner />}
-              <ul>                
+              <ul>
                 {generarSolicitud && (
                   <li className="slidebar-categories-child">
                     <i className="fa fa-book"></i>

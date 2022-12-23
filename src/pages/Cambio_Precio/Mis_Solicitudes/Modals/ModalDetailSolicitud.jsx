@@ -35,7 +35,7 @@ const ModalDetailSolicitud = ({
     if (showModalDetail == true) {
       setViewInfo(false);
       GetDetalleSolicitud(idSolicitud).then((result) => {
-        console.log(result);
+        console.log("DATOS SOLICITUD DETALLE",result);
         setDetalle(result.data);
         setViewInfo(true);
       });
@@ -189,13 +189,15 @@ const ModalDetailSolicitud = ({
                               <th style={{ textAlign: "center" }}>
                                 {convertDecimal(response.actual_price)}
                               </th>
+                              {(stateSolicitud != "1") && (
                               <th style={{ textAlign: "center" }}>
                                 {convertDecimal(response.lower_limit)}
                               </th>
-                              {(stateSolicitud != "1") && (
+                              )}
+                              
                               <th style={{ textAlign: "center" }}>
                                 {convertDecimal(response.suggested_price)}
-                              </th>)}
+                              </th>
                               {/* <th style={{ textAlign: "right" }}>
                                 {convertDecimal(response.upper_limit)}
                               </th> */}
