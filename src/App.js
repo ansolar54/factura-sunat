@@ -24,6 +24,7 @@ import jwt from "jwt-decode";
 import { getUser } from "./Services/ServiceUser";
 import Promociones from "./pages/Promociones/Promociones";
 import Reporte_Despacho from "./pages/Reporte_Despacho/Reporte_Despacho";
+import Lista_Precio from "./pages/Lista_Precio/Lista_Precio"
 import { ActualizarPasswordStatus } from "./Services/ServiceConfiguracion";
 import Rol from "./pages/Rol/Rol";
 import GenerarSolicitud from "./pages/Cambio_Precio/Generar_Solicitud/GenerarSolicitud";
@@ -155,6 +156,16 @@ const App = () => {
               >
                 <Slidebar />
                 <Reporte_Despacho />
+              </Route>
+
+              <Route
+                exact
+                strict
+                path="/lista_precio"
+                component={Lista_Precio}
+              >
+                <Slidebar />
+                <Lista_Precio/>
               </Route>
 
               <Route exact strict path="/promociones" component={Promociones}>

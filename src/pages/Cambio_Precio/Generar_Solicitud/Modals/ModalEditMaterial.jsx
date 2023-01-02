@@ -330,12 +330,14 @@ const ModalEditMaterial = ({
                     <InputForm
                       attribute={{
                         name: "precio_sugerido",
-                        type: "search",
+                        id: "precio_sugerido",
+                        type: "text",
                         value: (material.prec_sug),
                         disabled: false,
                         checked: false,
                       }}
                       handleChange={handleChange}
+                      //onKeyUp={formatoMexico()}
                     />
                   </div>
                 </div>

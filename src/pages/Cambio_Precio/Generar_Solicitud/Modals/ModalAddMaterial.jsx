@@ -15,6 +15,7 @@ const ModalAddMaterial = ({
   cliente,
   canalDistValue,
 }) => {
+
   const [showMcMaterial, setShowMcMaterial] = useState(false);
 
   const [activateButton, setActivateButton] = useState(false);
@@ -127,17 +128,17 @@ const ModalAddMaterial = ({
       setspinner(false);
       setIndicator(true);
     });
-    
+
   };
 
   // console.log(material);
 
   const guardar = () => {
-    //  console.log( material.prec_sug, material.lim_inf);
-    //  console.log( typeof material.prec_sug,typeof material.lim_inf);
-    
+    console.log(material.prec_sug, material.lim_inf);
+    console.log(typeof material.prec_sug, typeof material.lim_inf);
+
     if ((material.prec_sug) > material.lim_inf) {
-      toast.error("Precio sugerido debe ser menor a " + convertDecimal(material.lim_inf) + " "+ material.moneda, {
+      toast.error("Precio sugerido debe ser menor a " + convertDecimal(material.lim_inf) + " " + material.moneda, {
         position: "top-center",
         autoClose: 5000,
         style: {
@@ -146,7 +147,7 @@ const ModalAddMaterial = ({
         },
       });
     }
-    else if ((material.prec_sug) == "" && material.prec_act=="" && material.margen =="" && material.cod_mat=="") {
+    else if ((material.prec_sug) == "" && material.prec_act == "" && material.margen == "" && material.cod_mat == "") {
       toast.error("Debe seleccionar algún material.", {
         position: "top-center",
         autoClose: 5000,
@@ -175,12 +176,12 @@ const ModalAddMaterial = ({
           color: "#fff",
         },
       });
-    }  
+    }
     else {
       // obtener margen
       calcularMargen();
       //convertDecimal(material.prec_sug);
-      
+
       // -------------------
       // setActivateButton(false);
       //  dataMaterial = [...dataMaterial];
@@ -208,7 +209,7 @@ const ModalAddMaterial = ({
       case "precio_sugerido":
         setMaterial((prevState) => ({
           ...prevState,
-          prec_sug : value,
+          prec_sug: value,
         }));
         // setActivateButton(true); // activar boton calcular margen
         break;
@@ -238,6 +239,98 @@ const ModalAddMaterial = ({
         break;
     }
   }
+
+  // 2da VERSION SEPARADOR DE MILES
+
+  // const [comadecimal, setComaDecimal] = useState('');
+
+  // function formatoComaDecimal2(name, value) {
+  //   switch (name) {
+  //     case "precio_sugerido":
+  //       setComaDecimal(value);
+  //       const value2 = (valor) => {
+  //         valor = comadecimal;
+  //         const exp = /(\d)(?=(\d{3})+(?!\d))/g;
+  //         const rep = '$1,';
+  //         let arr = valor.toString().split('.');
+  //         arr[0] = arr[0].replace(exp, rep);
+  //         return arr[1] ? arr.join('.') : arr[0];
+  //       }
+  //       break;
+  //   }
+  //   console.log("COMA DE MILESSSS",comadecimal)
+  // }
+
+
+  // PRIMERA VERSIÓN SEPARADOR COMA DE MILES
+
+   let number1 = document.getElementById('precio_sugerido');
+   const value1 = number1?.value || '';
+   console.log("OBTENER VALUE", value1)
+
+  function formatoComaDecimal(valor) {
+    
+      if (valor.toString().split(",").length == 3) {
+        // console.log( valor.toString().split(".")[0].replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") + "."+valor.toString().split(".")[1]);
+        return (          
+            // const exp = /(\d)(?=(\d{3})+(?!\d))/g;
+            // const rep = '$1,';
+            // let arr = valor.toString().split('.');
+            // arr[0] = arr[0].replace(exp, rep);
+          valor
+            .toString()
+            .split(".")[0]
+            .replace(/\D/g, "")
+            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") +
+          "." +
+          // valor.toString().split(".")[1].padStart(2, "0")
+          valor.toString().split(".")[1].padEnd(2, "0")
+        );
+      } else {
+        // console.log( valor.toString().split(".")[0].replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") + ".00");
+        return (
+          valor
+            .toString()
+            .split(".")[0]
+            .replace(/\D/g, "")
+            .replace(/(\d)(?=(\d{3})+(?!\d))/g, ",") + ".00"
+        );
+      }
+    
+
+    //console.log("ENTRA ONKEYUP")
+    // const value2 = (valor) => {
+    // const exp = /(\d)(?=(\d{3})+(?!\d))/g;
+    // const rep = '$1,';
+    // let arr = valor.toString().split('.');
+    // arr[0] = arr[0].replace(exp, rep);
+    // return arr[1] ? arr.join('.') : arr[0];
+    // }
+    // number1.value = value2(value1)
+    // return (value2(value1));
+  }
+
+  // let modal1 = formatoComaDecimal();
+  // console.log("SEPARADOR MILES", modal1)
+
+
+  ///////////////////
+  // let separador = document.getElementsByName('precio_sugerido');
+  // // const value1 = separador[0] || '';
+  // // console.log("OBTENER VALUE", value1)
+
+  // separador.addEventListener('input', (e) => {
+  //   var entrada = e.target.value.split(','),
+  //     parteEntera = entrada[0].replace(/\./g, ''),
+  //     parteDecimal = entrada[1],
+  //     salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+
+  //   e.target.value = salida + (parteDecimal !== undefined ? ',' + parteDecimal : '');
+  // }, false);
+
+
+
+
 
   function convertDecimal(num) {
     // return num.toFixed(Math.max(((num+'').split(".")[1]||"").length, 2));
@@ -341,6 +434,7 @@ const ModalAddMaterial = ({
                     <label>Precio actual : </label>
                   </div>
                   <div>
+
                     <InputForm
                       attribute={{
                         name: "precio_actual",
@@ -361,11 +455,14 @@ const ModalAddMaterial = ({
                     <InputForm
                       attribute={{
                         name: "precio_sugerido",
-                        type: "search",
-                        //value: material.prec_sug,
+                        id: "precio_sugerido",
+                        type: "text",
+                        // value: comadecimal,
+                        //value: (material.prec_sug),
+                        value: (material.prec_sug),
                         disabled: false,
                         checked: false,
-                        placeholder: "0.00"
+                        placeholder: "0.00",
                       }}
                       handleChange={handleChange}
                     />
@@ -439,7 +536,7 @@ const ModalAddMaterial = ({
                       checked: false,
                     }}
                     handleChange={handleChange}
-                    onClick={() => {}}
+                    onClick={() => { }}
                   />
                 </div>
               </div>
@@ -458,7 +555,7 @@ const ModalAddMaterial = ({
                       min: formatFecha(material.fec_ini),
                     }}
                     handleChange={handleChange}
-                    onClick={() => {}}
+                    onClick={() => { }}
                   />
                 </div>
               </div>

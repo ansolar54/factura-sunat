@@ -15,6 +15,7 @@ import {
   ModificarStateRequest,
   AprobSolicitud,
   UpdateDetailRequestLastAprobRequest,
+  
 } from "../../../../Services/ServiceCambioPrecio";
 import Spinner from "../../../../components/Spinner";
 import { getUser } from "../../../../Services/ServiceUser";
@@ -30,11 +31,12 @@ const ModalEditMaterial = ({
   orgVentasDesc,
   codi_client,
   org_ventas,
+  obtenerSolicitudesF,
   itMatAprob,
 }) => {
 
-  console.log("CODI CLIENT", codi_client);
-  console.log("ORG_VENTAS", org_ventas);
+  console.log("OBTENER SOLI EDITAR", obtenerSolicitudesF);
+  //console.log("ORG_VENTAS", org_ventas);
   // console.log("ITMAT_APROB", itMatAprob);
   //console.log("ORG VENTAS DESC", orgVentasDesc);
 
@@ -240,6 +242,7 @@ const ModalEditMaterial = ({
                                 });
                                 setShowModalEditMaterial(false);
                                 setspinner(false);
+                                obtenerSolicitudesF(1);
                               });
                             }
                           })

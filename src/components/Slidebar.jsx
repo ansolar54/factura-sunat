@@ -27,6 +27,7 @@ const Slidebar = () => {
   const [infoCliente, setInfoCliente] = useState(false);
   const [estadoCuenta, setEstadoCuenta] = useState(false);
   const [reporteDespacho, setReporteDespacho] = useState(false);
+  const [listaPrecio, setListaPrecio] = useState(false);
 
 
   const [generarSolicitud, setGenerarSolicitud] = useState(false);
@@ -173,6 +174,13 @@ const Slidebar = () => {
                   element.activeField == "X"
                 ) {
                   setReporteDespacho(true);
+                  setModReportes(true);
+                }
+                if (
+                  element.idModuloField == "R07" &&
+                  element.activeField == "X"
+                ) {
+                  setListaPrecio(true);
                   setModReportes(true);
                 }
               }
@@ -375,14 +383,21 @@ const Slidebar = () => {
                   <li className="slidebar-categories-child">
                     <i className="fas fa-digital-tachograph"></i>
                     <Link to="estado_cuenta">Estado de Cuenta</Link>
-                    {/* <Link to="reporte_despacho">Reporte de Despacho</Link> */}
+                    {/* <Link to="lista_precio">Lista de Precios</Link> */}
                   </li>
                 )}
 
                 {reporteDespacho && (
                   <li className="slidebar-categories-child">
-                    <i className="fas fa-id-card"></i>
+                    <i className="fas fa-money-check"></i>
                     <Link to="reporte_despacho">Reporte de Despacho</Link>
+                  </li>
+                )}
+
+                {listaPrecio && (
+                  <li className="slidebar-categories-child">
+                    <i className="fas fa-money-check"></i>
+                    <Link to="lista_precio">Lista de Precios</Link>
                   </li>
                 )}
               </ul>

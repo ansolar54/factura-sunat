@@ -604,6 +604,7 @@ const MisAprobaciones = () => {
           codi_client={codi_clientForModal}
           org_ventas={org_ventasForModal}
           itMatAprob={itMatAprobForModal}
+          obtenerSolicitudesF = {obtenerSolicitudes}
         />
         <McOrgVentas
           orgVentasValue={orgVentasValue}

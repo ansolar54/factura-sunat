@@ -11,6 +11,8 @@ import Mc_Org_Ventas_desde from "./Matchcode_Organ_Ventas/Mc_Org_Ventas_desde";
 import Mc_Org_Ventas_hasta from "./Matchcode_Organ_Ventas/Mc_Org_Ventas_hasta";
 import Mc_Cliente_desde_v2 from "./Matchcode_Cliente/Mc_Cliente_desde_v2";
 import Mc_Cliente_hasta_v2 from "./Matchcode_Cliente/Mc_Cliente_hasta_v2";
+import Mc_Punto_Exp_desde from "./Matchcode_Punto_Exp/Mc_Punto_Exp_desde";
+import Mc_Punto_Exp_hasta from "./Matchcode_Punto_Exp/Mc_Punto_Exp_hasta";
 import InputForm from "../../components/InputForm";
 import BtnSearch from "../../components/BtnSearch";
 import BtnExportar from "../../components/BtnExport";
@@ -109,25 +111,30 @@ const Reporte_Despacho = () => {
         { Sign: "I", Option: "EQ", Low: "", High: "" },
     ]);
 
-    //----------------------------------------------------------------------------------------------------------------------------------
-    //INPUT Documento comercial
-    const [docu_comercial, setdocu_comercial] = useState([
+    // rangos punto exp
+    const [rangos_puntoexp, setrangos_puntoexp] = useState([
         { Sign: "I", Option: "EQ", Low: "", High: "" },
     ]);
-    const [docu_comercial_desde, setdocu_comercial_desde] = useState("");
-    const [docu_comercial_hasta, setdocu_comercial_hasta] = useState("");
+
+    //----------------------------------------------------------------------------------------------------------------------------------
+    // //INPUT Documento comercial
+    // const [docu_comercial, setdocu_comercial] = useState([
+    //     { Sign: "I", Option: "EQ", Low: "", High: "" },
+    // ]);
+    // const [docu_comercial_desde, setdocu_comercial_desde] = useState("");
+    // const [docu_comercial_hasta, setdocu_comercial_hasta] = useState("");
     //INPUT Organización ventas
     const [org_ventas, setorg_ventas] = useState([
         { Sign: "I", Option: "EQ", Low: "", High: "" },
     ]);
     const [org_ventas_desde, setorg_ventas_desde] = useState("");
     const [org_ventas_hasta, setorg_ventas_hasta] = useState("");
-    //INPUT Oficina de ventas
-    const [ofi_ventas, setofi_ventas] = useState([
-        { Sign: "I", Option: "EQ", Low: "", High: "" },
-    ]);
-    const [ofi_ventas_desde, setofi_ventas_desde] = useState("");
-    const [ofi_ventas_hasta, setofi_ventas_hasta] = useState("");
+    // //INPUT Oficina de ventas
+    // const [ofi_ventas, setofi_ventas] = useState([
+    //     { Sign: "I", Option: "EQ", Low: "", High: "" },
+    // ]);
+    // const [ofi_ventas_desde, setofi_ventas_desde] = useState("");
+    // const [ofi_ventas_hasta, setofi_ventas_hasta] = useState("");
     //INPUT Cliente
     const [cliente, setcliente] = useState([
         { Sign: "I", Option: "EQ", Low: "", High: "" },
@@ -140,7 +147,12 @@ const Reporte_Despacho = () => {
     ]);
     const [creado_el_desde, setcreado_el_desde] = useState("");
     const [creado_el_hasta, setcreado_el_hasta] = useState("");
-
+    //INPUT PUNTO EXP
+    const [puntoexp, setpuntoexp] = useState([
+        { Sign: "I", Option: "EQ", Low: "", High: "" },
+    ]);
+    const [puntoexp_desde, setpuntoexp_desde] = useState("");
+    const [puntoexp_hasta, setpuntoexp_hasta] = useState("");
 
     //RESPONSE CONSULTA PEDIDO
     const [response_consulta_pedido, setresponse_consulta_pedido] = useState([]);
@@ -160,6 +172,9 @@ const Reporte_Despacho = () => {
     //ACTIVAR MODAL MATCHCODE CLIENTE
     const [showcliente_desde, setshowcliente_desde] = useState(false);
     const [showcliente_hasta, setshowcliente_hasta] = useState(false);
+    //ACTIVAR MODAL MATCHCODE PUNTO EXP.
+    const [showpuntoexp_desde, setshowpuntoexp_desde] = useState(false);
+    const [showpuntoexp_hasta, setshowpuntoexp_hasta] = useState(false);
 
     const modalRef = useRef();
 
@@ -295,6 +310,7 @@ const Reporte_Despacho = () => {
         // 1: creado el
         // 2: organizacion de ventas
         // 3: cliente
+        // 4: punto exp
         switch (ind_rang.num) {
             case 1:
                 setrangos_creado_el(rangos);
@@ -308,6 +324,10 @@ const Reporte_Despacho = () => {
             case 3:
                 setrangos_cliente(rangos);
                 RangosCliente();
+                break;
+            case 4:
+                setrangos_puntoexp(rangos);
+                RangosPuntoExp();
                 break;
             default:
                 break;
@@ -1191,6 +1211,27 @@ const Reporte_Despacho = () => {
         }
     }
 
+    // Funcion Rangos punto exp
+    function RangosPuntoExp() {
+        console.log("rangos punto exp");
+        if (rangos_puntoexp.length === 1) {
+            if (
+                rangos_puntoexp[0].Low.trim() === "" &&
+                rangos_puntoexp[0].High.trim() === ""
+            ) {
+                return puntoexp;
+            } else {
+                setpuntoexp_desde(rangos_puntoexp[0].Low);
+                setpuntoexp_hasta(rangos_puntoexp[0].High);
+                return rangos_puntoexp;
+            }
+        } else {
+            setpuntoexp_desde(rangos_puntoexp[0].Low);
+            setpuntoexp_hasta(rangos_puntoexp[0].High);
+            return rangos_puntoexp;
+        }
+    }
+
     // Funcion Rangos Creado El
     function RangosCreadoEl() {
         if (rangos_creado_el.length === 1) {
@@ -1281,14 +1322,16 @@ const Reporte_Despacho = () => {
             IsExport: "",
             // IsUser: jwt(localStorage.getItem("_token")).username,
             IsBukrs: "FRMX",
-            ItErdat: RangosCreadoEl(),
-            ItKunnr: cliente[0].Low !== "" ?
+            ItErdat: (creado_el[0].Low || creado_el[0].High) !== "" ?
+            RangosCreadoEl() : [],
+            ItKunnr: (cliente[0].Low || cliente[0].High) !== "" ?
                 RangosCliente() : [],
             ItVbeln: [],
             //RangosDocuComercial(), //NÚMERO DE PEDIDO
-            ItVkorg: org_ventas[0].Low !== "" ?
+            ItVkorg: (org_ventas[0].Low || org_ventas[0].High) !== "" ?
                 RangosOrganizacionVentas() : [],
-            ItVstel: [],
+            ItVstel: (puntoexp[0].Low || puntoexp[0].High) !== "" ?
+                RangosPuntoExp() : [],
             ItFilter: [],
 
 
@@ -1457,14 +1500,16 @@ const Reporte_Despacho = () => {
             IsExport: "",
             // IsUser: jwt(localStorage.getItem("_token")).username,
             IsBukrs: "FRMX",
-            ItErdat: RangosCreadoEl(),
-            ItKunnr: cliente[0].Low !== "" ?
+            ItErdat: (creado_el[0].Low || creado_el[0].High) !== "" ?
+            RangosCreadoEl() : [],
+            ItKunnr: (cliente[0].Low || cliente[0].High) !== "" ?
                 RangosCliente() : [],
             ItVbeln: [],
             //RangosDocuComercial(), //NÚMERO DE PEDIDO
-            ItVkorg: org_ventas[0].Low !== "" ?
+            ItVkorg: (org_ventas[0].Low || org_ventas[0].High) !== "" ?
                 RangosOrganizacionVentas() : [],
-            ItVstel: [],
+            ItVstel: (puntoexp[0].Low || puntoexp[0].High) !== "" ?
+                RangosPuntoExp() : [],
             ItFilter: [],
         };
         console.log(model_repor_despacho)
@@ -1616,14 +1661,16 @@ const Reporte_Despacho = () => {
             IsRegxpag: "",
             IsExport: "X",
             IsBukrs: "FRMX",
-            ItErdat: RangosCreadoEl(),
-            ItKunnr: cliente[0].Low !== "" ?
+            ItErdat: (creado_el[0].Low || creado_el[0].High) !== "" ?
+            RangosCreadoEl() : [],
+            ItKunnr: (cliente[0].Low || cliente[0].High) !== "" ?
                 RangosCliente() : [],
             ItVbeln: [],
             //RangosDocuComercial(), //NÚMERO DE PEDIDO
-            ItVkorg: org_ventas[0].Low !== "" ?
+            ItVkorg: (org_ventas[0].Low || org_ventas[0].High) !== "" ?
                 RangosOrganizacionVentas() : [],
-            ItVstel: [],
+            ItVstel: (puntoexp[0].Low || puntoexp[0].High) !== "" ?
+                RangosPuntoExp() : [],
             ItFilter: mostrar_filtro_fila == true ? [
                 {
                     Knnur: "",
@@ -1639,7 +1686,7 @@ const Reporte_Despacho = () => {
                     Arktx: f_arktxField,
                     Werks: f_werksField,
                     Charg: f_chargField,
-                    Lfimg: (f_lfimgField),
+                    Lfimg: Number(f_lfimgField).toFixed(1),
                     Vkbur: "",
                     Vkburbezei: f_vkburbezeiField,
                     Vkgrp: "",
@@ -1771,7 +1818,7 @@ const Reporte_Despacho = () => {
                                     { value: data.arktxField, style: { font: { sz: "14" } } },
                                     { value: data.werksField, style: { font: { sz: "14" } } },
                                     { value: data.chargField, style: { font: { sz: "14" } } },
-                                    { value: convertDecimal(data.lfimgField, 2), style: { font: { sz: "14" } } },
+                                    { value: Number(data.lfimgField).toFixed(1), style: { font: { sz: "14" } } },
                                     { value: data.vkburField, style: { font: { sz: "14" } } },
                                     { value: data.vkburbezeiField, style: { font: { sz: "14" } } },
                                     { value: data.vkgrpField, style: { font: { sz: "14" } } },
@@ -1802,6 +1849,14 @@ const Reporte_Despacho = () => {
     }
     function mc_cliente_hasta() {
         setshowcliente_hasta((prev) => !prev);
+    }
+
+    // INPUT punto exp
+    function mc_puntoexp_desde() {
+        setshowpuntoexp_desde((prev) => !prev);
+    }
+    function mc_puntoexp_hasta() {
+        setshowpuntoexp_hasta((prev) => !prev);
     }
 
     function handleChange(name, value) {
@@ -1945,6 +2000,64 @@ const Reporte_Despacho = () => {
                 }
                 break;
 
+
+
+            //punto exp
+            case "puntoexp":
+                setpuntoexp([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
+                //setcliente([]);
+                break;
+            case "puntoexp_desde":
+                setpuntoexp_desde(value);
+                if (value.trim() != "") {
+                    if (puntoexp_hasta == "") {
+                        setpuntoexp([{ Sign: "I", Option: "EQ", Low: value, High: "" }]);
+                    } else {
+                        setpuntoexp([
+                            {
+                                Sign: "I",
+                                Option: "BT",
+                                Low: value,
+                                High: puntoexp_hasta,
+                            },
+                        ]);
+                    }
+                } else {
+                    if (puntoexp_hasta != "") {
+                        setpuntoexp([
+                            { Sign: "I", Option: "EQ", Low: "", High: puntoexp_hasta },
+                        ]);
+                    } else {
+                        setpuntoexp([{ Sign: "", Option: "", Low: "", High: "" }]);
+                    }
+                }
+                break;
+            case "puntoexp_hasta":
+                setpuntoexp_hasta(value);
+                if (value.trim() != "") {
+                    if (puntoexp_desde == "") {
+                        setpuntoexp([{ Sign: "I", Option: "EQ", Low: "", High: value }]);
+                    } else {
+                        setpuntoexp([
+                            {
+                                Sign: "I",
+                                Option: "BT",
+                                Low: puntoexp_desde,
+                                High: value,
+                            },
+                        ]);
+                    }
+                } else {
+                    if (puntoexp_desde != "") {
+                        setpuntoexp([
+                            { Sign: "I", Option: "EQ", Low: puntoexp_desde, High: "" },
+                        ]);
+                    } else {
+                        setpuntoexp([{ Sign: "", Option: "", Low: "", High: "" }]);
+                    }
+                }
+                break;
+
             //creado el
             case "creado_el":
                 setcreado_el([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
@@ -2038,37 +2151,37 @@ const Reporte_Despacho = () => {
     }
     //formateo de la fecha para enviar a SAP YYYYMMDD
     function formatDateSAP(value) {
-        if(value == ""){
+        if (value == "") {
             return ""
-          }else{
+        } else {
             var datePart = value.match(/\d+/g),
-            year = datePart[0],
-            month = datePart[1],
-            day = datePart[2];
-      
-          return year + "" + month + "" + day;
-          }
-      
+                year = datePart[0],
+                month = datePart[1],
+                day = datePart[2];
+
+            return year + "" + month + "" + day;
+        }
+
     }
 
     const formatFecha = (fecha) => {
         // console.log(fecha);
         let newDate = "";
         if (fecha != null || fecha != undefined || fecha != "") {
-          if (fecha.length == 10) {
-            newDate = fecha.split("-");
-            return newDate[2] + "-" + newDate[1] + "-" + newDate[0];
-          } else {
-            return (
-              fecha.substr(6, 2) +
-              "-" +
-              fecha.substr(4, 2) +
-              "-" +
-              fecha.substr(0, 4)
-            );
-          }
+            if (fecha.length == 10) {
+                newDate = fecha.split("-");
+                return newDate[2] + "-" + newDate[1] + "-" + newDate[0];
+            } else {
+                return (
+                    fecha.substr(6, 2) +
+                    "-" +
+                    fecha.substr(4, 2) +
+                    "-" +
+                    fecha.substr(0, 4)
+                );
+            }
         }
-      };
+    };
 
     //completar decimal de 2 digitos
     function convertDecimal(num) {
@@ -2158,6 +2271,13 @@ const Reporte_Despacho = () => {
         setshowBusMult(true);
     };
 
+    const ChangeBusquedaMult_PuntoExp = () => {
+        setrangos(rangos_puntoexp);
+        settype_input("text");
+        setind_rang({ num: 4, bool: true });
+        setshowBusMult(true);
+    };
+
     function Clear() {
         setmostrar_filtro_fila(false);
         setrangos_cliente([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
@@ -2177,6 +2297,10 @@ const Reporte_Despacho = () => {
         handleChange("cliente", "");
         setcliente_desde("");
         setcliente_hasta("");
+
+        handleChange("puntoexp", "");
+        setpuntoexp_desde("");
+        setpuntoexp_hasta("");
     }
 
     function onClickHeaderCheckbox(e) {
@@ -2359,14 +2483,16 @@ const Reporte_Despacho = () => {
             IsExport: "",
             // IsUser: jwt(localStorage.getItem("_token")).username,
             IsBukrs: "FRMX",
-            ItErdat: RangosCreadoEl(),
-            ItKunnr: cliente[0].Low !== "" ?
+            ItErdat: (creado_el[0].Low || creado_el[0].High) !== "" ?
+            RangosCreadoEl() : [],
+            ItKunnr: (cliente[0].Low || cliente[0].High) !== "" ?
                 RangosCliente() : [],
             ItVbeln: [],
             //RangosDocuComercial(), //NÚMERO DE PEDIDO
-            ItVkorg: org_ventas[0].Low !== "" ?
+            ItVkorg: (org_ventas[0].Low || org_ventas[0].High) !== "" ?
                 RangosOrganizacionVentas() : [],
-            ItVstel: [],
+            ItVstel: (puntoexp[0].Low || puntoexp[0].High) !== "" ?
+                RangosPuntoExp() : [],
             ItFilter: [
                 {
                     Knnur: "",
@@ -2382,7 +2508,7 @@ const Reporte_Despacho = () => {
                     Arktx: f_arktxField,
                     Werks: f_werksField,
                     Charg: f_chargField,
-                    Lfimg: (f_lfimgField),
+                    Lfimg: Number(f_lfimgField).toFixed(1),
                     Vkbur: "",
                     Vkburbezei: f_vkburbezeiField,
                     Vkgrp: "",
@@ -2441,14 +2567,14 @@ const Reporte_Despacho = () => {
     }
 
     function buscar_filtro_icono_btn() {
-        if((f_name1Field  || f_bstkdField || f_erdatField  || f_aubelField  ||
-        f_xblnrField  || f_xblnr1Field  || f_ntransField  || f_vkorgField  ||
-        f_arktxField || f_werksField  || f_chargField  || f_lfimgField  ||
-        f_vkburbezeiField || f_vkgrpbezeiField  || f_snameField ) != ""){
+        if ((f_name1Field || f_bstkdField || f_erdatField || f_aubelField ||
+            f_xblnrField || f_xblnr1Field || f_ntransField || f_vkorgField ||
+            f_arktxField || f_werksField || f_chargField || f_lfimgField ||
+            f_vkburbezeiField || f_vkgrpbezeiField || f_snameField) != "") {
             buscar_filtro_fila(1, "", "");
-            Exportar();    
+            Exportar();
         }
-        else{
+        else {
             toast.error("Debe seleccionar algún filtro por columna.", {
                 position: "top-center",
                 autoClose: 6000,
@@ -2458,7 +2584,7 @@ const Reporte_Despacho = () => {
                 },
             });
         }
-        
+
     }
 
     const closeModal = (e) => {
@@ -2490,7 +2616,7 @@ const Reporte_Despacho = () => {
     };
 
     const ValidacionSearch = () => {
-        if (creado_el_desde == "" && org_ventas_desde == "") {
+        if ((creado_el_desde == "" && creado_el_hasta == "") && (org_ventas_desde == "" && org_ventas_hasta == "")) {
             toast.error("Debe seleccionar una \"Fecha Registro\" y \"Org. Ventas\"", {
                 position: "top-center",
                 autoClose: 6000,
@@ -2500,7 +2626,7 @@ const Reporte_Despacho = () => {
                 },
             });
         }
-        else if (creado_el_desde == "") {
+        else if (creado_el_desde == "" && creado_el_hasta == "") {
             toast.error("Debe seleccionar una \"Fecha Registro\"", {
                 position: "top-center",
                 autoClose: 6000,
@@ -2510,7 +2636,7 @@ const Reporte_Despacho = () => {
                 },
             });
         }
-        else if (org_ventas_desde == "") {
+        else if (org_ventas_desde == "" && org_ventas_hasta == "") {
             toast.error("Debe seleccionar una \"Org. Ventas\"", {
                 position: "top-center",
                 autoClose: 6000,
@@ -2520,10 +2646,10 @@ const Reporte_Despacho = () => {
                 },
             });
         }
-        else {
-            Search(1, 0, "", "");
+         else {
+        Search(1, 0, "", "");
 
-        }
+         }
     }
 
     return (
@@ -2614,6 +2740,24 @@ const Reporte_Despacho = () => {
                             cliente_hasta={cliente_hasta}
                             cliente_desde={cliente_desde}
                             setcliente={setcliente}
+                        />
+                        {/* MODAL MATCHCODE PUNTO EXP */}
+                        <Mc_Punto_Exp_desde
+                            showpuntoexp={showpuntoexp_desde}
+                            setshowpuntoexp={setshowpuntoexp_desde}
+                            setpuntoexp_desde={setpuntoexp_desde}
+                            puntoexp_desde={puntoexp_desde}
+                            puntoexp_hasta={puntoexp_hasta}
+                            setpuntoexp={setpuntoexp}
+                        />
+
+                        <Mc_Punto_Exp_hasta
+                            showpuntoexp={showpuntoexp_hasta}
+                            setshowpuntoexp={setshowpuntoexp_hasta}
+                            setpuntoexp_hasta={setpuntoexp_hasta}
+                            puntoexp_hasta={puntoexp_hasta}
+                            puntoexp_desde={puntoexp_desde}
+                            setpuntoexp={setpuntoexp}
                         />
                         <Toaster />
 
@@ -2731,42 +2875,42 @@ const Reporte_Despacho = () => {
                                 {/* PUNTO DE EXP */}
                                 {/* FALTA AJUSTAR PUNTO DE EXP */}
                                 <div className="col-sm-4 d-flex align-items-center">
-                                    <label>Punto de Exp.</label>
+                                    <label>Puesto de Expedición</label>
                                 </div>
                                 <div className="col-sm-3">
                                     <InputForm
                                         attribute={{
-                                            name: "ofi_ventas_desde",
+                                            name: "puntoexp_desde",
                                             type: "text",
-                                            //value: ofi_ventas_desde,
+                                            value: puntoexp_desde,
                                             disabled: true,
                                             checked: false,
                                             matchcode: true,
                                             maxlength: 4,
                                         }}
                                         handleChange={handleChange}
-                                    //onClick={() => mc_ofi_ventas_desde()}
+                                        onClick={() => mc_puntoexp_desde()}
                                     />
                                 </div>
                                 <div className="col-sm-3">
                                     <InputForm
                                         attribute={{
-                                            name: "ofi_ventas_hasta",
+                                            name: "puntoexp_hasta",
                                             type: "text",
-                                            //value: ofi_ventas_hasta,
+                                            value: puntoexp_hasta,
                                             disabled: true,
                                             checked: false,
                                             matchcode: true,
                                             maxlength: 4,
                                         }}
                                         handleChange={handleChange}
-                                    //onClick={() => mc_ofi_ventas_hasta()}
+                                        onClick={() => mc_puntoexp_hasta()}
                                     />
                                 </div>
                                 <div className="col-sm-2 d-flex align-items-center">
                                     <i
                                         className="fas fa-file-export icon-matchcode-2"
-                                    //onClick={ChangeBusquedaMult_OficinaVentas}
+                                        onClick={ChangeBusquedaMult_PuntoExp}
                                     ></i>
                                 </div>
 
@@ -3349,6 +3493,7 @@ const Reporte_Despacho = () => {
                                                             type="date"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_erdatField"
+                                                            style={{ paddingTop: "1.5px", paddingBottom: "1px" }} className="px-2"
                                                             onChange={(e) =>
                                                                 handleChangeFiltro(
                                                                     e.target.name,
@@ -3415,7 +3560,7 @@ const Reporte_Despacho = () => {
                                                     </th>
                                                     <th style={{ textAlign: "center" }}>
                                                         <div >
-                                                            <select style={{ paddingTop: "2px", paddingBottom: "2px" }} className="px-1" name="f_vkorgField"
+                                                            <select style={{ paddingTop: "4px", paddingBottom: "3px" }} className="px-2" name="f_vkorgField"
                                                                 onKeyUp={(e) => buscar_filtro_enter(e)}
                                                                 //onChange={(e) => selectedFiltro(e)}
                                                                 onChange={(e) =>

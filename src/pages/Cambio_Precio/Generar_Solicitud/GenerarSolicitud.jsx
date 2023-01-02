@@ -196,6 +196,36 @@ const GenerarSolicitud = () => {
         }
       })
     }
+    else if(IsCliente == "" && orgVentasValue == ""){
+      toast.error("Debe seleccionar una \"Org. Ventas\" y un \"Cliente\".", {
+        position: "top-center",
+        autoClose: 1000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        }
+      })
+    }
+    else if(IsCliente == ""){
+      toast.error("Debe seleccionar un \"Cliente\".", {
+        position: "top-center",
+        autoClose: 1000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        }
+      })
+    }
+    else if(orgVentasValue == ""){
+      toast.error("Debe seleccionar una \"Org. Ventas\".", {
+        position: "top-center",
+        autoClose: 1000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        }
+      })
+    }
     else {
       return openAddMaterial();
     }

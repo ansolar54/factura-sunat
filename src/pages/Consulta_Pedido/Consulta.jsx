@@ -42,6 +42,7 @@ import Mc_Cliente_hasta_v2 from "./Matchcode_Cliente/Mc_Cliente_hasta_v2";
 import Mc_Comercial_desde from "./Matchcode_Comercial/Mc_Comercial_desde";
 import Mc_Comercial_hasta from "./Matchcode_Comercial/Mc_Comercial_hasta";
 import SelectFormMd from "../../components/SelectFormModal";
+import toast, { Toaster } from "react-hot-toast";
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -1219,8 +1220,8 @@ const Consulta = () => {
             result.itConsultaPedidosField.map((d) => {
               return {
                 select: false,
-                bezeiField: d.bezeiField,
                 bstdkField: d.bstdkField,
+                bezeiField: d.bezeiField,
                 erdatField: d.erdatField,
                 kunnrField: d.kunnrField,
                 motivoField: d.motivoField,
@@ -2257,6 +2258,7 @@ const Consulta = () => {
 
   //Limpiar Campos
   function Clear() {
+    setmostrar_filtro_fila(false);
     setrangos_ofi_ventas([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
     setrangos_cliente([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
     setrangos_comercial([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
@@ -2564,7 +2566,19 @@ const Consulta = () => {
   }
 
   function buscar_filtro_icono_btn() {
-    buscar_filtro_fila(1, "", "");
+    if(( f_bezeiField || f_erdatField || f_kunnrField || f_name1Field || f_netwrField ||
+      f_statusField || f_text1Field || f_vbelnField || f_vkorgField || f_waerkField)!= ""){
+        buscar_filtro_fila(1, "", "");
+    }else{
+      toast.error("Debe seleccionar algún filtro por columna.", {
+        position: "top-center",
+        autoClose: 6000,
+        style: {
+            backgroundColor: "#212121",
+            color: "#fff",
+        },
+    });
+    }
   }
 
   const closeModal = (e) => {
@@ -2785,6 +2799,7 @@ const Consulta = () => {
               setcomercial={setcomercial}
               setcomercial_hasta_value={setcomercial_hasta_value}
             />
+            <Toaster />
             <div className="title-section">
               <div>
                 <label> Reportes / Consulta de Pedidos </label>

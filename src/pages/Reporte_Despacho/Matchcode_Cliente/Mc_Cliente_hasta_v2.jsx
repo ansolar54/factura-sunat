@@ -66,13 +66,13 @@ const [spinner, setspinner] = useState(false);
     // SearchCliente(1);
     //--------------------- para actualizar valor org_ventas
     if (cliente_hasta != "") {
-      if (cliente_hasta == "") {
+      if (cliente_desde == "") {
         setcliente([
           {
             Sign: "I",
             Option: "EQ",
-            Low: cliente_hasta,
-            High: "",
+            Low: "",
+            High: cliente_hasta,
           },
         ]);
       } else {
@@ -86,7 +86,7 @@ const [spinner, setspinner] = useState(false);
         ]);
       }
     } else {
-      if (cliente_hasta != "") {
+      if (cliente_desde != "") {
         setcliente([{ Sign: "I", Option: "EQ", Low: "", High: cliente_hasta }]);
       } else {
         setcliente([{ Sign: "", Option: "", Low: "", High: "" }]);

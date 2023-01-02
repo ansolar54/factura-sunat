@@ -1,7 +1,7 @@
 import React from "react";
 import "./InputForm.css";
 
-const InputForm = ({ attribute, handleChange, onClick }) => {
+const InputForm = ({ attribute, handleChange, onClick}) => {
   return (
     <div className="content-inputform">
       <input
@@ -16,6 +16,7 @@ const InputForm = ({ attribute, handleChange, onClick }) => {
         onChange={(e) => handleChange(e.target.name, e.target.value)}
         min={attribute.min}
         placeholder={attribute.placeholder}
+        onKeyUp={attribute.onKeyUp}
       />
       {
         attribute.matchcode && (
@@ -25,6 +26,7 @@ const InputForm = ({ attribute, handleChange, onClick }) => {
             <i
               className="far fa-clone icon-matchcode-1"
               onClick={() => onClick()}
+              //onKeyUp={() => onKeyUp()}
             ></i>
           </>
         )
