@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
-import { Mc_InfoCliente_Cliente } from "../../../Services/ServiceCliente";
+import { ClienteListaPrecio } from "../../../Services/ServiceCliente";
 import Pagination from "../../../components/Pagination";
 import InputForm from "../../../components/InputForm";
 import BtnSearch from "../../../components/BtnSearch";
@@ -13,14 +13,17 @@ const Mc_Cliente_hasta_v2 = ({
   cliente_hasta,
   cliente_desde,
   setcliente,
+  org_ventas,
+  ofi_ventas,
+  lista_precio
 }) => {
   const [IsRegxpag] = useState(15); // cantidad de datos por página
 
   const [PKunnr, setPKunnr] = useState("");
   const [IsName1, setIsName1] = useState("");
   const [IsStcd1, setIsStcd1] = useState("");
-//CARGA DE SPINNER
-const [spinner, setspinner] = useState(false);
+  //CARGA DE SPINNER
+  const [spinner, setspinner] = useState(false);
   const [responseCliente, setresponseCliente] = useState({
     esRegtotField: "",
     etClientesField: [],
@@ -41,15 +44,15 @@ const [spinner, setspinner] = useState(false);
     [setshowcliente, showcliente]
   );
 
-  useEffect(()=>{
-    if(showcliente==true){
+  useEffect(() => {
+    if (showcliente == true) {
       setPKunnr("");
       setIsName1("");
       setIsStcd1("");
-      setresponseCliente({etClientesField:[]});
+      setresponseCliente({ etClientesField: [] });
     }
-    
-  },[showcliente]);
+
+  }, [showcliente]);
 
   useEffect(() => {
     // setItKunnr([{ Sign: "", Option: "", Low: "", High: "" }]);
@@ -131,16 +134,18 @@ const [spinner, setspinner] = useState(false);
     let modal_mc_infocliente_cliente = {
       IsKunnr: PKunnr,
       IsName1: IsName1,
-      IsNpag: page,
-      IsRegxpag: IsRegxpag,
       IsStcd1: IsStcd1,
       IsUser: jwt(localStorage.getItem("_token")).username,
-      IsDuplicate:''
+      IsNpag: page,
+      IsRegxpag: IsRegxpag,
+      IsVkorg: org_ventas,
+      IsVkbur: ofi_ventas,
+      IsPltyp: lista_precio,
     };
 
-    Mc_InfoCliente_Cliente(modal_mc_infocliente_cliente).then((result) => {
+    ClienteListaPrecio(modal_mc_infocliente_cliente).then((result) => {
       setresponseCliente(result);
-    
+
       setTotalData(result.esRegtotField);
       setspinner(false);
       setvaluepagination(true);
@@ -220,7 +225,7 @@ const [spinner, setspinner] = useState(false);
                     disabled: false,
                     checked: false,
                     matchcode: false,
-                    maxlength:10
+                    maxlength: 10
                   }}
                   handleChange={handleChange}
                 />
@@ -238,7 +243,7 @@ const [spinner, setspinner] = useState(false);
                     disabled: false,
                     checked: false,
                     matchcode: false,
-                    maxlength:35
+                    maxlength: 35
                   }}
                   handleChange={handleChange}
                 />
@@ -256,7 +261,7 @@ const [spinner, setspinner] = useState(false);
                     disabled: false,
                     checked: false,
                     matchcode: false,
-                    maxlength:16
+                    maxlength: 16
                   }}
                   handleChange={handleChange}
                 />
@@ -278,42 +283,40 @@ const [spinner, setspinner] = useState(false);
             </section>
             <section className="section-table-modal">
               <div className="container-table responsive-table-all">
-              {spinner && <Spinner />}
+                {spinner && <Spinner />}
                 <table className="content-table ">
                   <thead>
                     <tr>
-                      <th>Cod. Cliente</th>
+                      <th>Cliente</th>
                       <th>Nombre Cliente</th>
-                      <th>Zona del Cliente</th>
-                      <th>RUC</th>
-
-                      {/* <th>Canal distrib.</th> */}
-                      {/* <th>Sector</th> */}
-                      <th>USD Línea Cred. Disp</th>
-                      {/* <th>Tiene Doc. vencidos</th> */}
+                      <th>Ciudad del Cliente</th>
+                      <th>Identificación</th>
+                      <th>Org. Ventas</th>
+                      <th>Centro</th>
+                      <th>Oficina de Ventas</th>
                     </tr>
                   </thead>
                   <tbody>
                     {
-                      responseCliente.etClientesField.length>=1 ?
-                      responseCliente.etClientesField.map(
-                      (response, key) => (
-                        <tr key={key} onClick={() => clickcelda(response)}>
-                          <th style={{textAlign:"center"}}>{response.kunnrField}</th>
-                          <th style={{textAlign:"center"}}>{response.name1Field}</th>
-                          <th style={{textAlign:"center"}}>{response.zonaField}</th>
-                          <th style={{textAlign:"center"}}>{response.stcd1Field}</th>
-                          {/* <th style={{textAlign:"center"}}>{response.vtwegField}</th> */}
-                          {/* <th style={{textAlign:"center"}}>{response.spartField}</th> */}
-                          <th style={{textAlign:"end"}}>{convertDecimal(response.klimkField)}</th>
-                          {/* <th style={{textAlign:"center"}}>{response.docValField}</th> */}
-                        </tr>
-                      )
-                    ):null
+                      responseCliente.etClientesField.length >= 1 ?
+                        responseCliente.etClientesField.map(
+                          (response, key) => (
+                            <tr key={key} onClick={() => clickcelda(response)}>
+                              <th style={{ textAlign: "center" }}>{response.kunnrField}</th>
+                              <th style={{ textAlign: "center" }}>{response.name1Field}</th>
+                              <th style={{ textAlign: "center" }}>{response.zonaField}</th>
+                              <th style={{ textAlign: "center" }}>{response.stcd1Field}</th>
+                              <th style={{ textAlign: "center" }}>{response.vkorgField}</th>
+                              <th style={{ textAlign: "center" }}>{response.spartField}</th>
+                              <th style={{ textAlign: "center" }}>{response.vkburField}</th>
+                              {/* <th style={{textAlign:"center"}}>{response.docValField}</th> */}
+                            </tr>
+                          )
+                        ) : null
                     }
                   </tbody>
                 </table>
-               
+
               </div>
             </section>
 

@@ -5,6 +5,10 @@ import Spinner from "../../components/Spinner";
 import toast, { Toaster } from "react-hot-toast";
 import BusquedaMult from "../../components/BusquedaMultiple/BusquedaMult";
 import Mc_Org_Ventas_desde from "./Matchcode_Organ_Ventas/Mc_Org_Ventas_desde";
+import Mc_Ofi_Ventas_desde from "./Matchcode_Ofi_Ventas/Mc_Ofi_Ventas_desde";
+import Mc_Lista_Precio_desde from "./Matchcode_Lista_Precios/Mc_Lista_Precio_desde";
+import Mc_Material_desde from "./Matchcode_Material_v2/Mc_Material_desde";
+import Mc_Material_hasta from "./Matchcode_Material_v2/Mc_Material_hasta";
 import Mc_Cliente_desde_v2 from "./Matchcode_Cliente/Mc_Cliente_desde_v2";
 import Mc_Cliente_hasta_v2 from "./Matchcode_Cliente/Mc_Cliente_hasta_v2";
 import InputForm from "../../components/InputForm";
@@ -14,6 +18,19 @@ import Pagination from "../../components/Pagination";
 
 
 const Lista_Precio = () => {
+    var n = new Date();
+    //Año
+    var y = n.getFullYear();
+    //Mes
+    var m = ("0" + (n.getMonth() + 1)).slice(-2);
+    //Día
+    var d = ("0" + n.getDate()).slice(-2);
+
+    const [filtroInicial, setFiltroInicial] = useState({
+        valido_el: [
+            { Sign: "I", Option: "EQ", Low: y + "-" + m + "-" + d, High: "" },
+        ],
+    });
 
     const [mostrar_filtro_fila, setmostrar_filtro_fila] = useState(false);
     const [ind_pagina, setind_pagina] = useState(1);
@@ -66,6 +83,17 @@ const Lista_Precio = () => {
 
     //ACTIVAR MODAL MATCHCODE ORGANIZACIÓN DE VENTAS
     const [showorgventa_desde, setshoworgventa_desde] = useState(false);
+
+    //ACTIVAR MODAL MATCHCODE OFICINA DE VENTAS
+    const [showofiventa_desde, setshowofiventa_desde] = useState(false);
+
+    //ACTIVAR MODAL MATCHCODE LISTA DE PRECIOS
+    const [showlistaprecio_desde, setshowlistaprecio_desde] = useState(false);
+
+    //ACTIVAR MODAL MATCHCODE MATERIAL
+    const [showmaterial_desde, setshowmaterial_desde] = useState(false);
+    const [showmaterial_hasta, setshowmaterial_hasta] = useState(false);
+
     //ACTIVAR MODAL MATCHCODE CLIENTE
     const [showcliente_desde, setshowcliente_desde] = useState(false);
     const [showcliente_hasta, setshowcliente_hasta] = useState(false);
@@ -76,6 +104,31 @@ const Lista_Precio = () => {
     ]);
     const [org_ventas_desde, setorg_ventas_desde] = useState("");
     const [org_ventas_hasta, setorg_ventas_hasta] = useState("");
+    const [orgVentasName, setOrgVentasName] = useState("");
+
+    //INPUT Oficina de ventas
+    const [ofi_ventas, setofi_ventas] = useState([
+        { Sign: "I", Option: "EQ", Low: "", High: "" },
+    ]);
+    const [ofi_ventas_desde, setofi_ventas_desde] = useState("");
+    const [ofi_ventas_hasta, setofi_ventas_hasta] = useState("");
+    const [ofiVentasName, setofi_ventas_name] = useState("");
+
+    //INPUT Lista de Precios
+    const [lista_precio, setlista_precio] = useState([
+        { Sign: "I", Option: "EQ", Low: "", High: "" },
+    ]);
+    const [lista_precio_desde, setlista_precio_desde] = useState("");
+    const [lista_precio_hasta, setlista_precio_hasta] = useState("");
+    const [listaPrecioName, setlista_precio_name] = useState("");
+
+    //INPUT Material
+    const [material, setmaterial] = useState([
+        { Sign: "I", Option: "EQ", Low: "", High: "" },
+    ]);
+    const [material_desde, setmaterial_desde] = useState("");
+    const [material_hasta, setmaterial_hasta] = useState("");
+
     //INPUT Cliente
     const [cliente, setcliente] = useState([
         { Sign: "I", Option: "EQ", Low: "", High: "" },
@@ -155,9 +208,9 @@ const Lista_Precio = () => {
         }
     }
 
-    function Search(page, ind, IsCampo, IsOrden) {}
+    function Search(page, ind, IsCampo, IsOrden) { }
 
-    function buscar_filtro_fila(pageNumber, IsCampo, IsOrden) {}
+    function buscar_filtro_fila(pageNumber, IsCampo, IsOrden) { }
 
     function handleChangeColumna(num_col) { }
 
@@ -184,12 +237,177 @@ const Lista_Precio = () => {
         setshoworgventa_desde((prev) => !prev);
     }
 
+    //INPUT oficina de ventas
+    function mc_ofi_ventas_desde() {
+        setshowofiventa_desde((prev) => !prev);
+    }
+
+    //INPUT lista de precios
+    function mc_lista_precio_desde() {
+        setshowlistaprecio_desde((prev) => !prev);
+    }
+
+    //INPUT material
+    function mc_material_desde() {
+        setshowmaterial_desde((prev) => !prev);
+    }
+    function mc_material_hasta() {
+        setshowmaterial_hasta((prev) => !prev);
+    }
+
     //INPUT cliente
     function mc_cliente_desde() {
-        setshowcliente_desde((prev) => !prev);
+        if (org_ventas_desde != "" && ofi_ventas_desde != "" && lista_precio_desde != "") {
+            setshowcliente_desde((prev) => !prev);
+        }
+        else if (org_ventas_desde == "" && lista_precio_desde == "" && ofi_ventas_desde == "") {
+            toast.error("Debe seleccionar una \"Org. Ventas\", \"Oficina de Ventas\" y \"Lista de Precios\".", {
+                position: "top-center",
+                autoClose: 1000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                }
+            })
+        }
+        else if (lista_precio_desde == "" && ofi_ventas_desde == "") {
+            toast.error("Debe seleccionar una \"Oficina de Ventas\" y \"Lista de Precios\".", {
+                position: "top-center",
+                autoClose: 1000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                }
+            })
+        }
+        else if (org_ventas_desde == "" && lista_precio_desde == "") {
+            toast.error("Debe seleccionar una \"Org. Ventas\" y \"Lista de Precios\".", {
+                position: "top-center",
+                autoClose: 1000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                }
+            })
+        }
+        else if (org_ventas_desde == "" && ofi_ventas_desde == "") {
+            toast.error("Debe seleccionar una \"Org. Ventas\" y \"Oficina de Ventas\".", {
+                position: "top-center",
+                autoClose: 1000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                }
+            })
+        }
+        else if (org_ventas_desde == "") {
+            toast.error("Debe seleccionar una Org. Ventas.", {
+                position: "top-center",
+                autoClose: 1000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                }
+            })
+        }
+        else if (ofi_ventas_desde == "") {
+            toast.error("Debe seleccionar una Oficina Ventas.", {
+                position: "top-center",
+                autoClose: 1000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                }
+            })
+        }
+        else if (lista_precio_desde == "") {
+            toast.error("Debe seleccionar una Lista de Precios.", {
+                position: "top-center",
+                autoClose: 1000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                }
+            })
+        }
+
+
     }
     function mc_cliente_hasta() {
-        setshowcliente_hasta((prev) => !prev);
+        if (org_ventas_desde != "" && ofi_ventas_desde != "" && lista_precio_desde != "") {
+            setshowcliente_hasta((prev) => !prev);
+        }
+        else if (org_ventas_desde == "" && lista_precio_desde == "" && ofi_ventas_desde == "") {
+            toast.error("Debe seleccionar una \"Org. Ventas\", \"Oficina de Ventas\" y \"Lista de Precios\".", {
+                position: "top-center",
+                autoClose: 1000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                }
+            })
+        }
+        else if (lista_precio_desde == "" && ofi_ventas_desde == "") {
+            toast.error("Debe seleccionar una \"Oficina de Ventas\" y \"Lista de Precios\".", {
+                position: "top-center",
+                autoClose: 1000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                }
+            })
+        }
+        else if (org_ventas_desde == "" && lista_precio_desde == "") {
+            toast.error("Debe seleccionar una \"Org. Ventas\" y \"Lista de Precios\".", {
+                position: "top-center",
+                autoClose: 1000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                }
+            })
+        }
+        else if (org_ventas_desde == "" && ofi_ventas_desde == "") {
+            toast.error("Debe seleccionar una \"Org. Ventas\" y \"Oficina de Ventas\".", {
+                position: "top-center",
+                autoClose: 1000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                }
+            })
+        }
+        else if (org_ventas_desde == "") {
+            toast.error("Debe seleccionar una Org. Ventas.", {
+                position: "top-center",
+                autoClose: 1000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                }
+            })
+        }
+        else if (ofi_ventas_desde == "") {
+            toast.error("Debe seleccionar una Oficina Ventas.", {
+                position: "top-center",
+                autoClose: 1000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                }
+            })
+        }
+        else if (lista_precio_desde == "") {
+            toast.error("Debe seleccionar una Lista de Precios.", {
+                position: "top-center",
+                autoClose: 1000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                }
+            })
+        }
+        
     }
 
     return (
@@ -255,7 +473,46 @@ const Lista_Precio = () => {
                             org_ventas_desde={org_ventas_desde}
                             org_ventas_hasta={org_ventas_hasta}
                             setorg_ventas={setorg_ventas}
+                            setOrgVentasName={setOrgVentasName}
                         />
+                        {/* MODAL MATCHCODE OFICINA DE VENTAS */}
+                        <Mc_Ofi_Ventas_desde
+                            showofiventa={showofiventa_desde}
+                            setshowofiventa={setshowofiventa_desde}
+                            setofi_ventas_desde={setofi_ventas_desde}
+                            ofi_ventas_desde={ofi_ventas_desde}
+                            ofi_ventas_hasta={ofi_ventas_hasta}
+                            setofi_ventas={setofi_ventas}
+                            setofi_ventas_name={setofi_ventas_name}
+                        />
+                        {/* MODAL MATCHCODE LISTA DE PRECIOS */}
+                        <Mc_Lista_Precio_desde
+                            showlistaprecio={showlistaprecio_desde}
+                            setshowlistaprecio={setshowlistaprecio_desde}
+                            setlista_precio_desde={setlista_precio_desde}
+                            lista_precio_desde={lista_precio_desde}
+                            lista_precio_hasta={lista_precio_hasta}
+                            setlista_precio={setlista_precio}
+                            setlista_precio_name={setlista_precio_name}
+                        />
+                        {/* MODAL MATCHCODE MATERIAL */}
+                        <Mc_Material_desde
+                            showmaterial={showmaterial_desde}
+                            setshowmaterial={setshowmaterial_desde}
+                            setmaterial_desde={setmaterial_desde}
+                            material_desde={material_desde}
+                            material_hasta={material_hasta}
+                            setmaterial={setmaterial}
+                        />
+                        <Mc_Material_hasta
+                            showmaterial={showmaterial_hasta}
+                            setshowmaterial={setshowmaterial_hasta}
+                            setmaterial_hasta={setmaterial_hasta}
+                            material_hasta={material_hasta}
+                            material_desde={material_desde}
+                            setmaterial={setmaterial}
+                        />
+
                         {/* MODAL MATCHCODE CLIENTE */}
                         <Mc_Cliente_desde_v2
                             showcliente={showcliente_desde}
@@ -264,6 +521,9 @@ const Lista_Precio = () => {
                             cliente_desde={cliente_desde}
                             cliente_hasta={cliente_hasta}
                             setcliente={setcliente}
+                            org_ventas={org_ventas_desde}
+                            ofi_ventas={ofi_ventas_desde}
+                            lista_precio={lista_precio_desde}
                         />
                         <Mc_Cliente_hasta_v2
                             showcliente={showcliente_hasta}
@@ -272,6 +532,9 @@ const Lista_Precio = () => {
                             cliente_hasta={cliente_hasta}
                             cliente_desde={cliente_desde}
                             setcliente={setcliente}
+                            org_ventas={org_ventas_desde}
+                            ofi_ventas={ofi_ventas_desde}
+                            lista_precio={lista_precio_desde}
                         />
                         <Toaster />
 
@@ -301,7 +564,7 @@ const Lista_Precio = () => {
                         </div>
                         <section>
                             <div style={{ margin: "10px" }} className="row">
-                            
+
                                 {/* Org. Ventas */}
                                 <div className="col-sm-4 d-flex align-items-center">
                                     <label>
@@ -325,19 +588,9 @@ const Lista_Precio = () => {
                                     />
                                 </div>
                                 <div className="col-sm-3">
-                                    {/* <InputForm
-                                        attribute={{
-                                            name: "org_ventas_hasta",
-                                            type: "text",
-                                            value: org_ventas_hasta,
-                                            disabled: true,
-                                            checked: false,
-                                            matchcode: true,
-                                            maxlength: 4,
-                                        }}
-                                        handleChange={handleChange}
-                                    //onClick={() => mc_org_ventas_hasta()}
-                                    /> */}
+                                    <label className="py-2">
+                                        {org_ventas_desde != "" ? orgVentasName : ""}
+                                    </label>
                                 </div>
 
                                 {/* Oficina de Ventas */}
@@ -350,32 +603,23 @@ const Lista_Precio = () => {
                                 <div className="col-sm-3">
                                     <InputForm
                                         attribute={{
-                                            name: "org_ventas_desde",
+                                            name: "ofi_ventas_desde",
                                             type: "text",
-                                            //value: org_ventas_desde,
+                                            value: ofi_ventas_desde,
                                             disabled: true,
                                             checked: false,
                                             matchcode: true,
                                             maxlength: 4,
                                         }}
                                         handleChange={handleChange}
-                                        //onClick={() => mc_org_ventas_desde()}
+                                        onClick={() => mc_ofi_ventas_desde()}
                                     />
                                 </div>
                                 <div className="col-sm-3">
-                                    {/* <InputForm
-                                        attribute={{
-                                            name: "org_ventas_hasta",
-                                            type: "text",
-                                            value: org_ventas_hasta,
-                                            disabled: true,
-                                            checked: false,
-                                            matchcode: true,
-                                            maxlength: 4,
-                                        }}
-                                        handleChange={handleChange}
-                                    //onClick={() => mc_org_ventas_hasta()}
-                                    /> */}
+
+                                    <label className="py-2">
+                                        {ofi_ventas_desde != "" ? ofiVentasName : ""}
+                                    </label>
                                 </div>
 
                                 {/* Lista de Precios */}
@@ -388,32 +632,22 @@ const Lista_Precio = () => {
                                 <div className="col-sm-3">
                                     <InputForm
                                         attribute={{
-                                            name: "org_ventas_desde",
+                                            name: "lista_precio_desde",
                                             type: "text",
-                                            //value: org_ventas_desde,
+                                            value: lista_precio_desde,
                                             disabled: true,
                                             checked: false,
                                             matchcode: true,
                                             maxlength: 4,
                                         }}
                                         handleChange={handleChange}
-                                        //onClick={() => mc_org_ventas_desde()}
+                                        onClick={() => mc_lista_precio_desde()}
                                     />
                                 </div>
                                 <div className="col-sm-3">
-                                    {/* <InputForm
-                                        attribute={{
-                                            name: "org_ventas_hasta",
-                                            type: "text",
-                                            value: org_ventas_hasta,
-                                            disabled: true,
-                                            checked: false,
-                                            matchcode: true,
-                                            maxlength: 4,
-                                        }}
-                                        handleChange={handleChange}
-                                    //onClick={() => mc_org_ventas_hasta()}
-                                    /> */}
+                                    <label className="py-2">
+                                        {lista_precio_desde != "" ? listaPrecioName : ""}
+                                    </label>
                                 </div>
 
                                 {/* MATERIAL */}
@@ -423,31 +657,31 @@ const Lista_Precio = () => {
                                 <div className="col-sm-3">
                                     <InputForm
                                         attribute={{
-                                            name: "cliente_desde",
+                                            name: "material_desde",
                                             type: "text",
-                                            //value: cliente_desde,
+                                            value: material_desde,
                                             disabled: true,
                                             checked: false,
                                             matchcode: true,
                                             maxlength: 10,
                                         }}
                                         handleChange={handleChange}
-                                        //onClick={() => mc_cliente_desde()}
+                                        onClick={() => mc_material_desde()}
                                     />
                                 </div>
                                 <div className="col-sm-3">
                                     <InputForm
                                         attribute={{
-                                            name: "cliente_hasta",
+                                            name: "material_hasta",
                                             type: "text",
-                                            value: cliente_hasta,
+                                            value: material_hasta,
                                             disabled: true,
                                             checked: false,
                                             matchcode: true,
                                             maxlength: 10,
                                         }}
                                         handleChange={handleChange}
-                                        //onClick={() => mc_cliente_hasta()}
+                                        onClick={() => mc_material_hasta()}
                                     />
                                 </div>
                                 <div className="col-sm-2 d-flex align-items-center">
@@ -505,16 +739,16 @@ const Lista_Precio = () => {
                                 <div className="col-sm-3">
                                     <InputForm
                                         attribute={{
-                                            name: "cliente_desde",
-                                            type: "text",
-                                            //value: cliente_desde,
+                                            name: "valido_el",
+                                            type: "date",
+                                            value: filtroInicial.valido_el[0].Low,
                                             disabled: true,
                                             checked: false,
-                                            matchcode: true,
-                                            maxlength: 10,
+                                            matchcode: false,
+                                            //maxlength: 10,
                                         }}
                                         handleChange={handleChange}
-                                        onClick={() => mc_cliente_desde()}
+                                    //onClick={() => mc_cliente_desde()}
                                     />
                                 </div>
                                 <div className="col-sm-3">
@@ -533,13 +767,13 @@ const Lista_Precio = () => {
                                     /> */}
                                 </div>
                                 <div className="col-sm-2 d-flex align-items-center">
-                                    <i
+                                    {/* <i
                                         className="fas fa-file-export icon-matchcode-2"
                                     //onClick={ChangeBusquedaMult_Cliente}
-                                    ></i>
+                                    ></i> */}
                                 </div>
 
-                                
+
                             </div>
                         </section>
                         <section>
@@ -632,7 +866,7 @@ const Lista_Precio = () => {
                                                 </th> */}
                                                 <th></th>
                                                 <th>
-                                                    Cliente |{" "}
+                                                    Org. Venta |{" "}
                                                     {col_1 === 0 ? (
                                                         <i
                                                             className="fas fa-arrows-alt-v"
@@ -656,7 +890,7 @@ const Lista_Precio = () => {
                                                     ) : null}
                                                 </th>
                                                 <th>
-                                                    N° OC |{" "}
+                                                    Cod. Mat |{" "}
                                                     {col_2 === 0 ? (
                                                         <i
                                                             className="fas fa-arrows-alt-v"
@@ -680,7 +914,7 @@ const Lista_Precio = () => {
                                                     ) : null}
                                                 </th>
                                                 <th>
-                                                    Fecha Ent. |{" "}
+                                                    Material |{" "}
                                                     {col_3 === 0 ? (
                                                         <i
                                                             className="fas fa-arrows-alt-v"
@@ -704,7 +938,7 @@ const Lista_Precio = () => {
                                                     ) : null}
                                                 </th>
                                                 <th>
-                                                    Pedido |{" "}
+                                                    Precio LP |{" "}
                                                     {col_4 === 0 ? (
                                                         <i
                                                             className="fas fa-arrows-alt-v"
@@ -728,7 +962,7 @@ const Lista_Precio = () => {
                                                     ) : null}
                                                 </th>
                                                 <th style={{ textAlign: "center" }}>
-                                                    Guía Remisión |{" "}
+                                                    Mon. |{" "}
                                                     {col_5 === 0 ? (
                                                         <i
                                                             className="fas fa-arrows-alt-v"
@@ -752,7 +986,7 @@ const Lista_Precio = () => {
                                                     ) : null}
                                                 </th>
                                                 <th style={{ textAlign: "center" }}>
-                                                    Fac / Bol. Vta |{" "}
+                                                    Precio Min. |{" "}
                                                     {col_6 === 0 ? (
                                                         <i
                                                             className="fas fa-arrows-alt-v"
@@ -776,7 +1010,7 @@ const Lista_Precio = () => {
                                                     ) : null}
                                                 </th>
                                                 <th>
-                                                    Transporte |{" "}
+                                                    Mon. |{" "}
                                                     {col_7 === 0 ? (
                                                         <i
                                                             className="fas fa-arrows-alt-v"
@@ -800,7 +1034,7 @@ const Lista_Precio = () => {
                                                     ) : null}
                                                 </th>
                                                 <th>
-                                                    Org. Venta |{" "}
+                                                    Fecha Inicio |{" "}
                                                     {col_8 === 0 ? (
                                                         <i
                                                             className="fas fa-arrows-alt-v"
@@ -824,7 +1058,7 @@ const Lista_Precio = () => {
                                                     ) : null}
                                                 </th>
                                                 <th>
-                                                    Denominación |{" "}
+                                                    Fecha Fin |{" "}
                                                     {col_9 === 0 ? (
                                                         <i
                                                             className="fas fa-arrows-alt-v"
@@ -844,150 +1078,6 @@ const Lista_Precio = () => {
                                                             className="fas fa-sort-amount-down-alt"
                                                             style={{ cursor: "pointer" }}
                                                             onClick={() => handleChangeColumna(9)}
-                                                        ></i>
-                                                    ) : null}
-                                                </th>
-                                                <th>
-                                                    Centro |{" "}
-                                                    {col_10 === 0 ? (
-                                                        <i
-                                                            className="fas fa-arrows-alt-v"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => handleChangeColumna(10)}
-                                                        ></i>
-                                                    ) : null}
-                                                    {col_10 === 1 ? (
-                                                        <i
-                                                            className="fas fa-sort-amount-up"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => handleChangeColumna(10)}
-                                                        ></i>
-                                                    ) : null}
-                                                    {col_10 === 2 ? (
-                                                        <i
-                                                            className="fas fa-sort-amount-down-alt"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => handleChangeColumna(10)}
-                                                        ></i>
-                                                    ) : null}
-                                                </th>
-                                                <th>
-                                                    Lote |{" "}
-                                                    {col_11 === 0 ? (
-                                                        <i
-                                                            className="fas fa-arrows-alt-v"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => handleChangeColumna(11)}
-                                                        ></i>
-                                                    ) : null}
-                                                    {col_11 === 1 ? (
-                                                        <i
-                                                            className="fas fa-sort-amount-up"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => handleChangeColumna(11)}
-                                                        ></i>
-                                                    ) : null}
-                                                    {col_11 === 2 ? (
-                                                        <i
-                                                            className="fas fa-sort-amount-down-alt"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => handleChangeColumna(11)}
-                                                        ></i>
-                                                    ) : null}
-                                                </th>
-                                                <th>
-                                                    Ctd. Ent. |{" "}
-                                                    {col_12 === 0 ? (
-                                                        <i
-                                                            className="fas fa-arrows-alt-v"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => handleChangeColumna(12)}
-                                                        ></i>
-                                                    ) : null}
-                                                    {col_12 === 1 ? (
-                                                        <i
-                                                            className="fas fa-sort-amount-up"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => handleChangeColumna(12)}
-                                                        ></i>
-                                                    ) : null}
-                                                    {col_12 === 2 ? (
-                                                        <i
-                                                            className="fas fa-sort-amount-down-alt"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => handleChangeColumna(12)}
-                                                        ></i>
-                                                    ) : null}
-                                                </th>
-                                                <th>
-                                                    Denom. Ofi. |{" "}
-                                                    {col_13 === 0 ? (
-                                                        <i
-                                                            className="fas fa-arrows-alt-v"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => handleChangeColumna(13)}
-                                                        ></i>
-                                                    ) : null}
-                                                    {col_13 === 1 ? (
-                                                        <i
-                                                            className="fas fa-sort-amount-up"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => handleChangeColumna(13)}
-                                                        ></i>
-                                                    ) : null}
-                                                    {col_13 === 2 ? (
-                                                        <i
-                                                            className="fas fa-sort-amount-down-alt"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => handleChangeColumna(13)}
-                                                        ></i>
-                                                    ) : null}
-                                                </th>
-                                                <th>
-                                                    Grup. Ventas |{" "}
-                                                    {col_14 === 0 ? (
-                                                        <i
-                                                            className="fas fa-arrows-alt-v"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => handleChangeColumna(14)}
-                                                        ></i>
-                                                    ) : null}
-                                                    {col_14 === 1 ? (
-                                                        <i
-                                                            className="fas fa-sort-amount-up"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => handleChangeColumna(14)}
-                                                        ></i>
-                                                    ) : null}
-                                                    {col_14 === 2 ? (
-                                                        <i
-                                                            className="fas fa-sort-amount-down-alt"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => handleChangeColumna(14)}
-                                                        ></i>
-                                                    ) : null}
-                                                </th>
-                                                <th>
-                                                    Vendedor |{" "}
-                                                    {col_15 === 0 ? (
-                                                        <i
-                                                            className="fas fa-arrows-alt-v"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => handleChangeColumna(15)}
-                                                        ></i>
-                                                    ) : null}
-                                                    {col_15 === 1 ? (
-                                                        <i
-                                                            className="fas fa-sort-amount-up"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => handleChangeColumna(15)}
-                                                        ></i>
-                                                    ) : null}
-                                                    {col_15 === 2 ? (
-                                                        <i
-                                                            className="fas fa-sort-amount-down-alt"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => handleChangeColumna(15)}
                                                         ></i>
                                                     ) : null}
                                                 </th>

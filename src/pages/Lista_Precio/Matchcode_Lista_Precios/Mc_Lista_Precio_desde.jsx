@@ -1,51 +1,55 @@
 import React,{useRef,useEffect,useCallback,useState} from 'react';
-import { OrgVentas } from '../../../Services/ServiceOrgVentas';
+import { ListaPrecios } from '../../../Services/ServiceListaPrecio';
 import Spinner from '../../../components/Spinner';
-import './Mc_Org_Ventas_desde.css';
+import './Mc_Lista_Precio_desde.css';
+import jwt from "jwt-decode";
 
-const Mc_Org_Ventas_desde = ({showorgventa, setshoworgventa, setorg_ventas_desde,setOrgVentasName,
-    org_ventas_desde,org_ventas_hasta,setorg_ventas}) => {
+const Mc_Lista_Precio_desde = ({showlistaprecio, setshowlistaprecio, setlista_precio_desde,setlista_precio_name,
+    lista_precio_desde,lista_precio_hasta,setlista_precio}) => {
 
     const [ViewInfo, setViewInfo] = useState(false);
-    const [responseOrgVentas, setresponseOrgVentas] = useState({etOrgVentasField:[]});
+    const [responseListaPrecio, setresponseListaPrecio] = useState({etListaPreciosField:[]});
 
     const modalRef = useRef();
     const closeModal = e => {
         if (modalRef.current === e.target) {
-            setshoworgventa(false);
+            setshowlistaprecio(false);
         }
     };
 
     const keyPress = useCallback(
         e => {
-            if (e.key === 'Escape' && showorgventa) {
-                setshoworgventa(false);
+            if (e.key === 'Escape' && showlistaprecio) {
+                setshowlistaprecio(false);
             }
         },
-        [setshoworgventa, showorgventa]
+        [setshowlistaprecio, showlistaprecio]
     );
 
     useEffect(
         () => {
-            if(showorgventa==true){
+            if(showlistaprecio==true){
                 setViewInfo(false);
-                OrgVentas().then((result)=>{
-                    setresponseOrgVentas(result);
+                var model={
+                    IsUser:jwt(localStorage.getItem("_token")).username
+                }
+                ListaPrecios(model).then((result)=>{
+                    setresponseListaPrecio(result);
                     setViewInfo(true);
                 });
             }
             //--------------------- para actualizar valor org_ventas
-            if(org_ventas_desde != ''){
-                if(org_ventas_hasta==''){
-                    setorg_ventas([{Sign:"I",Option:"EQ",Low:org_ventas_desde,High:""}]);
+            if(lista_precio_desde != ''){
+                if(lista_precio_hasta==''){
+                    setlista_precio([{Sign:"I",Option:"EQ",Low:lista_precio_desde,High:""}]);
                 }else{
-                    setorg_ventas([{Sign:"I",Option:"BT",Low:org_ventas_desde,High:org_ventas_hasta}]);
+                    setlista_precio([{Sign:"I",Option:"BT",Low:lista_precio_desde,High:lista_precio_hasta}]);
                 }
             }else{
-                if(org_ventas_hasta!=''){
-                    setorg_ventas([{Sign:"I",Option:"EQ",Low:"",High:org_ventas_hasta}]);
+                if(lista_precio_hasta!=''){
+                    setlista_precio([{Sign:"I",Option:"EQ",Low:"",High:lista_precio_hasta}]);
                 }else{
-                    setorg_ventas([{Sign:"",Option:"",Low:"",High:""}]);
+                    setlista_precio([{Sign:"",Option:"",Low:"",High:""}]);
                 }
             }
             //---------------------
@@ -56,15 +60,15 @@ const Mc_Org_Ventas_desde = ({showorgventa, setshoworgventa, setorg_ventas_desde
     )
 
     function clickcelda(param) {
-        setorg_ventas_desde(param.vkorgField);
-        setOrgVentasName(param.vtextField);
-        setshoworgventa(prev => !prev)
+        setlista_precio_desde(param.pltypField);
+        setlista_precio_name(param.ptextField);
+        setshowlistaprecio(prev => !prev)
     }
 
     return(
         <>
             {
-                showorgventa ? (
+                showlistaprecio ? (
                     <div className='container-modal-background' onClick={closeModal} ref={modalRef}>
                         <div className='modal-wrapper modal-wrapper-sm' >
                             <div className='modal-content'>
@@ -75,16 +79,16 @@ const Mc_Org_Ventas_desde = ({showorgventa, setshoworgventa, setorg_ventas_desde
                                                 <table className="content-table ">
                                                     <thead>
                                                         <tr>
-                                                            <th>Organiz. ventas</th>
-                                                            <th>Denominación</th>
+                                                            <th>Lista de Precios</th>
+                                                            <th>Denominación Lista Precios</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         {
-                                                            responseOrgVentas.etOrgVentasField.map((response,key)=>(
+                                                            responseListaPrecio.etListaPreciosField.map((response,key)=>(
                                                                 <tr key={key} onClick={()=>clickcelda(response)}>
-                                                                    <th>{response.vkorgField}</th>
-                                                                    <th>{response.vtextField}</th>
+                                                                    <th>{response.pltypField}</th>
+                                                                    <th>{response.ptextField}</th>
                                                                 </tr>
                                                             ))   
                                                         }
@@ -97,7 +101,7 @@ const Mc_Org_Ventas_desde = ({showorgventa, setshoworgventa, setorg_ventas_desde
                                     <Spinner/>
                                 </div>}
                             </div>
-                            <div className='close-modal-button' onClick={() => setshoworgventa(prev => !prev)}>
+                            <div className='close-modal-button' onClick={() => setshowlistaprecio(prev => !prev)}>
                                 <i className="fas fa-times"></i> 
                             </div>
                         </div>
@@ -110,4 +114,4 @@ const Mc_Org_Ventas_desde = ({showorgventa, setshoworgventa, setorg_ventas_desde
 
 }
 
-export default Mc_Org_Ventas_desde;
+export default Mc_Lista_Precio_desde;

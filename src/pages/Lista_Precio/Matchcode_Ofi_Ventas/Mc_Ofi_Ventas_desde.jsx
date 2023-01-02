@@ -1,51 +1,54 @@
 import React,{useRef,useEffect,useCallback,useState} from 'react';
-import { OrgVentas } from '../../../Services/ServiceOrgVentas';
+import { OfiVentas } from '../../../Services/ServiceOfiVentas';
 import Spinner from '../../../components/Spinner';
-import './Mc_Org_Ventas_desde.css';
+import jwt from "jwt-decode";
+import './Mc_Ofi_Ventas_desde.css';
 
-const Mc_Org_Ventas_desde = ({showorgventa, setshoworgventa, setorg_ventas_desde,setOrgVentasName,
-    org_ventas_desde,org_ventas_hasta,setorg_ventas}) => {
+const Mc_Org_Ventas_desde = ({showofiventa, setshowofiventa,setofi_ventas_name, setofi_ventas_desde,ofi_ventas_desde,ofi_ventas_hasta,setofi_ventas}) => {
 
     const [ViewInfo, setViewInfo] = useState(false);
-    const [responseOrgVentas, setresponseOrgVentas] = useState({etOrgVentasField:[]});
+    const [responseOfiVentas, setresponseOfiVentas] = useState({etOfiVentasField:[]});
 
     const modalRef = useRef();
     const closeModal = e => {
         if (modalRef.current === e.target) {
-            setshoworgventa(false);
+            setshowofiventa(false);
         }
     };
 
     const keyPress = useCallback(
         e => {
-            if (e.key === 'Escape' && showorgventa) {
-                setshoworgventa(false);
+            if (e.key === 'Escape' && showofiventa) {
+                setshowofiventa(false);
             }
         },
-        [setshoworgventa, showorgventa]
+        [setshowofiventa, showofiventa]
     );
 
     useEffect(
         () => {
-            if(showorgventa==true){
+            if(showofiventa==true){
                 setViewInfo(false);
-                OrgVentas().then((result)=>{
-                    setresponseOrgVentas(result);
+                var model={
+                    IsUser:jwt(localStorage.getItem("_token")).username
+                }
+                OfiVentas(model).then((result)=>{
+                    setresponseOfiVentas(result);
                     setViewInfo(true);
                 });
             }
             //--------------------- para actualizar valor org_ventas
-            if(org_ventas_desde != ''){
-                if(org_ventas_hasta==''){
-                    setorg_ventas([{Sign:"I",Option:"EQ",Low:org_ventas_desde,High:""}]);
+            if(ofi_ventas_desde != ''){
+                if(ofi_ventas_hasta==''){
+                    setofi_ventas([{Sign:"I",Option:"EQ",Low:ofi_ventas_desde,High:""}]);
                 }else{
-                    setorg_ventas([{Sign:"I",Option:"BT",Low:org_ventas_desde,High:org_ventas_hasta}]);
+                    setofi_ventas([{Sign:"I",Option:"BT",Low:ofi_ventas_desde,High:ofi_ventas_hasta}]);
                 }
             }else{
-                if(org_ventas_hasta!=''){
-                    setorg_ventas([{Sign:"I",Option:"EQ",Low:"",High:org_ventas_hasta}]);
+                if(ofi_ventas_hasta!=''){
+                    setofi_ventas([{Sign:"I",Option:"EQ",Low:"",High:ofi_ventas_hasta}]);
                 }else{
-                    setorg_ventas([{Sign:"",Option:"",Low:"",High:""}]);
+                    setofi_ventas([{Sign:"",Option:"",Low:"",High:""}]);
                 }
             }
             //---------------------
@@ -56,15 +59,15 @@ const Mc_Org_Ventas_desde = ({showorgventa, setshoworgventa, setorg_ventas_desde
     )
 
     function clickcelda(param) {
-        setorg_ventas_desde(param.vkorgField);
-        setOrgVentasName(param.vtextField);
-        setshoworgventa(prev => !prev)
+        setofi_ventas_desde(param.vkburField);
+        setofi_ventas_name(param.bezeiField)
+        setshowofiventa(prev => !prev)
     }
 
     return(
         <>
             {
-                showorgventa ? (
+                showofiventa ? (
                     <div className='container-modal-background' onClick={closeModal} ref={modalRef}>
                         <div className='modal-wrapper modal-wrapper-sm' >
                             <div className='modal-content'>
@@ -81,10 +84,10 @@ const Mc_Org_Ventas_desde = ({showorgventa, setshoworgventa, setorg_ventas_desde
                                                     </thead>
                                                     <tbody>
                                                         {
-                                                            responseOrgVentas.etOrgVentasField.map((response,key)=>(
+                                                            responseOfiVentas.etOfiVentasField.map((response,key)=>(
                                                                 <tr key={key} onClick={()=>clickcelda(response)}>
-                                                                    <th>{response.vkorgField}</th>
-                                                                    <th>{response.vtextField}</th>
+                                                                    <th>{response.vkburField}</th>
+                                                                    <th>{response.bezeiField}</th>
                                                                 </tr>
                                                             ))   
                                                         }
@@ -97,7 +100,7 @@ const Mc_Org_Ventas_desde = ({showorgventa, setshoworgventa, setorg_ventas_desde
                                     <Spinner/>
                                 </div>}
                             </div>
-                            <div className='close-modal-button' onClick={() => setshoworgventa(prev => !prev)}>
+                            <div className='close-modal-button' onClick={() => setshowofiventa(prev => !prev)}>
                                 <i className="fas fa-times"></i> 
                             </div>
                         </div>
