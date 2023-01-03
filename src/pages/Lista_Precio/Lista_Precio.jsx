@@ -2310,13 +2310,13 @@ const Lista_Precio = () => {
                                                                 /> 
                                                             </th> */}
                                                             <th></th>
-                                                            <th style={{ textAlign: "left" }}>
+                                                            <th style={{ textAlign: "center" }}>
                                                                 {response.vkorgField}
                                                             </th>
                                                             <th style={{ textAlign: "center" }}>
                                                                 {response.matnrField}
                                                             </th>
-                                                            <th style={{ textAlign: "center" }}>
+                                                            <th style={{ textAlign: "left" }}>
                                                                 {response.maktxField}
                                                             </th>
                                                             <th style={{ textAlign: "center" }}>

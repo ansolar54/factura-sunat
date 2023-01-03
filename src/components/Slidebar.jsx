@@ -396,7 +396,7 @@ const Slidebar = () => {
 
                 {listaPrecio && (
                   <li className="slidebar-categories-child">
-                    <i className="fas fa-money-check"></i>
+                    <i className="fas fa-list"></i>
                     <Link to="lista_precio">Lista de Precios</Link>
                   </li>
                 )}
