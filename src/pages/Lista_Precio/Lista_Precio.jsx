@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import jwt from "jwt-decode";
 import ChangeStatusPassword from "../../components/ChangeStatusPassword/ChangeStatusPassword";
 import Spinner from "../../components/Spinner";
+import { getUser } from "../../Services/ServiceUser";
 import toast, { Toaster } from "react-hot-toast";
 import BusquedaMult from "../../components/BusquedaMultiple/BusquedaMult";
 import Mc_Org_Ventas_desde from "./Matchcode_Organ_Ventas/Mc_Org_Ventas_desde";
@@ -14,6 +15,7 @@ import Mc_Cliente_hasta_v2 from "./Matchcode_Cliente/Mc_Cliente_hasta_v2";
 import InputForm from "../../components/InputForm";
 import BtnSearch from "../../components/BtnSearch";
 import Pagination from "../../components/Pagination";
+import { ConsultaListaPrecios } from "../../Services/ServiceListaPrecios";
 
 
 
@@ -26,27 +28,27 @@ const Lista_Precio = () => {
     //Día
     var d = ("0" + n.getDate()).slice(-2);
 
-    const [filtroInicial, setFiltroInicial] = useState({
-        valido_el: [
-            { Sign: "I", Option: "EQ", Low: y + "-" + m + "-" + d, High: "" },
-        ],
-    });
-
-    const [mostrar_filtro_fila, setmostrar_filtro_fila] = useState(false);
+    // const [filtroInicial, setFiltroInicial] = useState({
+    //     // valido_el: [
+    //     //     { Sign: "I", Option: "EQ", Low: y + "-" + m + "-" + d, High: "" },
+    //     // ],
+    //     valido_el: y + "-" + m + "-" + d,
+    // });
+    const [valido_el, setvalido_el] = useState(y + "-" + m + "-" + d)
+    // para mostrar fila de filtros
     const [ind_pagina, setind_pagina] = useState(1);
+    const [mostrar_filtro_fila, setmostrar_filtro_fila] = useState(false);
+    const [text_btn_filtro, settext_btn_filtro] = useState("Filtrar");
 
-    const [type_input, settype_input] = useState("text");
-    const [response_reporte_despacho, setresponse_reporte_despacho] = useState([]);
-
-    //NUMERO TOTAL DE DATOS
-    const [TotalData, setTotalData] = useState();
-
-    //ACTIVAR SECCION DE PAGINADO
-    const [valuepagination, setvaluepagination] = useState(false);
-    const [IsRegxpag, setIsRegxpag] = useState(10); // cantidad de datos por página
-    const [pageNumber, setpageNumber] = useState(1);
-    const [indicadorfiltro, setindicadorfiltro] = useState(false);
-    const [model_filtro, setmodel_filtro] = useState({});
+    const [f_vkorgField, setf_vkorgField] = useState("");
+    const [f_matnrField, setf_matnrField] = useState("");
+    const [f_maktxField, setf_maktxField] = useState("");
+    const [f_kbetrField, setf_kbetrField] = useState("");
+    const [f_konwaField, setf_konwaField] = useState("");
+    const [f_mxwrtField, setf_mxwrtField] = useState("");
+    const [f_konwa2Field, setf_konwa2Field] = useState("");
+    const [f_databField, setf_databField] = useState("");
+    const [f_datbiField, setf_datbiField] = useState("");
 
     const [col_1, setcol_1] = useState(0);
     const [col_2, setcol_2] = useState(0);
@@ -57,22 +59,30 @@ const Lista_Precio = () => {
     const [col_7, setcol_7] = useState(0);
     const [col_8, setcol_8] = useState(0);
     const [col_9, setcol_9] = useState(0);
-    const [col_10, setcol_10] = useState(0);
-    const [col_11, setcol_11] = useState(0);
-    const [col_12, setcol_12] = useState(0);
-    const [col_13, setcol_13] = useState(0);
-    const [col_14, setcol_14] = useState(0);
-    const [col_15, setcol_15] = useState(0);
 
-    //CARGA DE SPINNER
-    const [spinner, setspinner] = useState(false);
-    //CARGA DE SPINNER DE ACCESO DE RUTA
-    const [spinnerroute, setspinnerroute] = useState(false);
     //para el cambio de contraseña
     const [show_status_password, setshow_status_password] = useState(false);
 
     const [IsCampo, setIsCampo] = useState("");
     const [IsOrden, setIsOrden] = useState("");
+
+    //RESPONSE LISTA DE PRECIOS
+    const [response_lista_precios, setresponse_lista_precios] = useState([]);
+
+    //NUMERO TOTAL DE DATOS
+    const [TotalData, setTotalData] = useState();
+
+    //ACTIVAR SECCION DE PAGINADO
+    const [valuepagination, setvaluepagination] = useState(false);
+
+    // para el paginado
+    const [IsRegxpag, setIsRegxpag] = useState(10); // cantidad de datos por página
+    const [pageNumber, setpageNumber] = useState(1);
+    const [indicadorfiltro, setindicadorfiltro] = useState(false);
+    const [model_filtro, setmodel_filtro] = useState({});
+    const [type_input, settype_input] = useState("text");
+    const [model_listaprecio, setmodel_listaprecio] = useState();
+
     // usestate de rangos
     const [rangos, setrangos] = useState([
         { Sign: "I", Option: "EQ", Low: "", High: "" },
@@ -81,6 +91,55 @@ const Lista_Precio = () => {
     //MODAL para rango (busqueda multiple)
     const [showBusMult, setshowBusMult] = useState(false);
 
+    //CARGA DE SPINNER
+    const [spinner, setspinner] = useState(false);
+    //CARGA DE SPINNER DE ACCESO DE RUTA
+    const [spinnerroute, setspinnerroute] = useState(false);
+
+    //----------------------------------------------------
+
+    // rangos material
+    const [rangos_material, setrangos_material] = useState([
+        { Sign: "I", Option: "EQ", Low: "", High: "" },
+    ]);
+
+    // rangos cliente
+    const [rangos_cliente, setrangos_cliente] = useState([
+        { Sign: "I", Option: "EQ", Low: "", High: "" },
+    ]);
+
+    //----------------------------------------------------
+
+    //INPUT Organización ventas
+    const [org_ventas, setorg_ventas] = useState("");
+    const [org_ventas_desde, setorg_ventas_desde] = useState("");
+    const [orgVentasName, setOrgVentasName] = useState("");
+
+    //INPUT Oficina de ventas
+    const [ofi_ventas, setofi_ventas] = useState("");
+    const [ofi_ventas_desde, setofi_ventas_desde] = useState("");
+    const [ofiVentasName, setofi_ventas_name] = useState("");
+
+    //INPUT Lista de Precios
+    const [lista_precio, setlista_precio] = useState("");
+    const [lista_precio_desde, setlista_precio_desde] = useState("");
+    const [listaPrecioName, setlista_precio_name] = useState("");
+
+    //INPUT Material
+    const [material, setmaterial] = useState([
+        { Sign: "I", Option: "EQ", Low: "", High: "" },
+    ]);
+    const [material_desde, setmaterial_desde] = useState("");
+    const [material_hasta, setmaterial_hasta] = useState("");
+
+    //INPUT Cliente
+    const [cliente, setcliente] = useState([
+        { Sign: "I", Option: "EQ", Low: "", High: "" },
+    ]);
+    const [cliente_desde, setcliente_desde] = useState("");
+    const [cliente_hasta, setcliente_hasta] = useState("");
+
+    //----------------------------------------------------
     //ACTIVAR MODAL MATCHCODE ORGANIZACIÓN DE VENTAS
     const [showorgventa_desde, setshoworgventa_desde] = useState(false);
 
@@ -98,153 +157,605 @@ const Lista_Precio = () => {
     const [showcliente_desde, setshowcliente_desde] = useState(false);
     const [showcliente_hasta, setshowcliente_hasta] = useState(false);
 
-    //INPUT Organización ventas
-    const [org_ventas, setorg_ventas] = useState([
-        { Sign: "I", Option: "EQ", Low: "", High: "" },
-    ]);
-    const [org_ventas_desde, setorg_ventas_desde] = useState("");
-    const [org_ventas_hasta, setorg_ventas_hasta] = useState("");
-    const [orgVentasName, setOrgVentasName] = useState("");
-
-    //INPUT Oficina de ventas
-    const [ofi_ventas, setofi_ventas] = useState([
-        { Sign: "I", Option: "EQ", Low: "", High: "" },
-    ]);
-    const [ofi_ventas_desde, setofi_ventas_desde] = useState("");
-    const [ofi_ventas_hasta, setofi_ventas_hasta] = useState("");
-    const [ofiVentasName, setofi_ventas_name] = useState("");
-
-    //INPUT Lista de Precios
-    const [lista_precio, setlista_precio] = useState([
-        { Sign: "I", Option: "EQ", Low: "", High: "" },
-    ]);
-    const [lista_precio_desde, setlista_precio_desde] = useState("");
-    const [lista_precio_hasta, setlista_precio_hasta] = useState("");
-    const [listaPrecioName, setlista_precio_name] = useState("");
-
-    //INPUT Material
-    const [material, setmaterial] = useState([
-        { Sign: "I", Option: "EQ", Low: "", High: "" },
-    ]);
-    const [material_desde, setmaterial_desde] = useState("");
-    const [material_hasta, setmaterial_hasta] = useState("");
-
-    //INPUT Cliente
-    const [cliente, setcliente] = useState([
-        { Sign: "I", Option: "EQ", Low: "", High: "" },
-    ]);
-    const [cliente_desde, setcliente_desde] = useState("");
-    const [cliente_hasta, setcliente_hasta] = useState("");
-
-
-    const getDateAct = () => {
-        let date = new Date();
-
-        let day = date.getDate();
-        let month = date.getMonth() + 1;
-        let year = date.getFullYear();
-
-        if (month < 10) {
-            return `${day}/0${month}/${year}`;
-            // console.log(`${day}-0${month}-${year}`);
-        } else {
-            return `${day}/${month}/${year}`;
-            // console.log(`${day}-${month}-${year}`);
-        }
-    };
-
-    const formatFecha = (fecha) => {
-        // console.log(fecha);
-        let newDate = "";
-        if (fecha != null || fecha != undefined || fecha != "") {
-            if (fecha.length == 10) {
-                newDate = fecha.split("-");
-                return newDate[2] + "-" + newDate[1] + "-" + newDate[0];
+    useEffect(() => {
+        //valida para el nuevo cambio de contraseña
+        getUser(jwt(localStorage.getItem("_token")).nameid).then((result) => {
+            if (result.data[0].status_password === "1") {
+                setshow_status_password(true);
             } else {
-                return (
-                    fecha.substr(6, 2) +
-                    "-" +
-                    fecha.substr(4, 2) +
-                    "-" +
-                    fecha.substr(0, 4)
-                );
+                setshow_status_password(false);
             }
-        }
-    };
+        });
+    }, []);
 
-    // seleccionar pagina
-    function changePage(pageNumber) {
-        setresponse_reporte_despacho([]);
-        if (indicadorfiltro == false) {
-            Search(pageNumber, 1, IsCampo, IsOrden);
+
+
+    useEffect(() => {
+        // ind_rang.num
+        // 1: cliente
+        // 2: material
+        switch (ind_rang.num) {
+            case 1:
+                setrangos_cliente(rangos);
+                RangosCliente();
+                break;
+            case 2:
+                setrangos_material(rangos);
+                RangosMaterial();
+                break;
+            default:
+                break;
+        }
+    }, [ind_rang]);
+
+    function clearColumnsIcon(num_col) {
+        switch (num_col) {
+            case 1:
+                setcol_2(0);
+                setcol_3(0);
+                setcol_4(0);
+                setcol_5(0);
+                setcol_6(0);
+                setcol_7(0);
+                setcol_8(0);
+                setcol_9(0);
+                break;
+            case 2:
+                setcol_1(0);
+                setcol_3(0);
+                setcol_4(0);
+                setcol_5(0);
+                setcol_6(0);
+                setcol_7(0);
+                setcol_8(0);
+                setcol_9(0);
+                break;
+            case 3:
+                setcol_1(0);
+                setcol_2(0);
+                setcol_4(0);
+                setcol_5(0);
+                setcol_6(0);
+                setcol_7(0);
+                setcol_8(0);
+                setcol_9(0);
+                break;
+            case 4:
+                setcol_1(0);
+                setcol_2(0);
+                setcol_3(0);
+                setcol_5(0);
+                setcol_6(0);
+                setcol_7(0);
+                setcol_8(0);
+                setcol_9(0);
+                break;
+            case 5:
+                setcol_1(0);
+                setcol_2(0);
+                setcol_3(0);
+                setcol_4(0);
+                setcol_6(0);
+                setcol_7(0);
+                setcol_8(0);
+                setcol_9(0);
+                break;
+            case 6:
+                setcol_1(0);
+                setcol_2(0);
+                setcol_3(0);
+                setcol_4(0);
+                setcol_5(0);
+                setcol_7(0);
+                setcol_8(0);
+                setcol_9(0);
+                break;
+            case 7:
+                setcol_1(0);
+                setcol_2(0);
+                setcol_3(0);
+                setcol_4(0);
+                setcol_5(0);
+                setcol_6(0);
+                setcol_8(0);
+                setcol_9(0);
+                break;
+            case 8:
+                setcol_1(0);
+                setcol_2(0);
+                setcol_3(0);
+                setcol_4(0);
+                setcol_5(0);
+                setcol_6(0);
+                setcol_7(0);
+                setcol_9(0);
+                break;
+            case 9:
+                setcol_1(0);
+                setcol_2(0);
+                setcol_3(0);
+                setcol_4(0);
+                setcol_5(0);
+                setcol_6(0);
+                setcol_7(0);
+                setcol_8(0);
+                break;
+            default:
+                break;
+        }
+    }
+
+    function handleChangeColumna(num_col) {
+        switch (num_col) {
+            // 1: ascendente
+            // 0: descendente
+            case 1:
+                clearColumnsIcon(1);
+                if (col_1 === 0) {
+                    setcol_1(col_1 + 1);
+                    setIsCampo("VKORG");
+                    setIsOrden("0");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "VKORG", "0");
+                    } else {
+                        Search(1, "VKORG", "0");
+                    }
+                } else if (col_1 === 1) {
+                    setcol_1(col_1 + 1);
+                    setIsCampo("VKORG");
+                    setIsOrden("1");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "VKORG", "1");
+                    } else {
+                        Search(1, "VKORG", "1");
+                    }
+                } else {
+                    setcol_1(0);
+                    // Search(1, 0, "", "");
+                    setIsCampo("");
+                    setIsOrden("");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "", "");
+                    } else {
+                        Search(1, "", "");
+                    }
+                }
+                break;
+            case 2:
+                clearColumnsIcon(2);
+                if (col_2 === 0) {
+                    setcol_2(col_2 + 1);
+                    // Search(1, 0, "VKORG", "0");
+                    setIsCampo("MATNR");
+                    setIsOrden("0");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "MATNR", "0");
+                    } else {
+                        Search(1, "MATNR", "0");
+                    }
+                } else if (col_2 === 1) {
+                    setcol_2(col_2 + 1);
+                    // Search(1, 0, "VKORG", "1");
+                    setIsCampo("MATNR");
+                    setIsOrden("1");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "MATNR", "1");
+                    } else {
+                        Search(1, "MATNR", "1");
+                    }
+                } else {
+                    setcol_2(0);
+                    // Search(1, 0, "", "");
+                    setIsCampo("");
+                    setIsOrden("");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "", "");
+                    } else {
+                        Search(1, "", "");
+                    }
+                }
+                break;
+            case 3:
+                clearColumnsIcon(3);
+                if (col_3 === 0) {
+                    setcol_3(col_3 + 1);
+                    // Search(1, 0, "ERDAT", "0");
+                    setIsCampo("MAKTX");
+                    setIsOrden("0");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "MAKTX", "1");
+                    } else {
+                        Search(1, "MAKTX", "0");
+                    }
+                } else if (col_3 === 1) {
+                    setcol_3(col_3 + 1);
+                    // Search(1, 0, "ERDAT", "1");
+                    setIsCampo("MAKTX");
+                    setIsOrden("1");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "MAKTX", "1");
+                    } else {
+                        Search(1, "MAKTX", "1");
+                    }
+                } else {
+                    setcol_3(0);
+                    // Search(1, 0, "", "");
+                    setIsCampo("");
+                    setIsOrden("");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "", "");
+                    } else {
+                        Search(1, "", "");
+                    }
+                }
+                break;
+            case 4:
+                clearColumnsIcon(4);
+                if (col_4 === 0) {
+                    setcol_4(col_4 + 1);
+                    // Search(1, 0, "KUNNR", "0");
+                    setIsCampo("KBETR");
+                    setIsOrden("0");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "KBETR", "0");
+                    } else {
+                        Search(1, "KBETR", "0");
+                    }
+                } else if (col_4 === 1) {
+                    setcol_4(col_4 + 1);
+                    // Search(1, 0, "KUNNR", "1");
+                    setIsCampo("KBETR");
+                    setIsOrden("1");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "KBETR", "1");
+                    } else {
+                        Search(1, "KBETR", "1");
+                    }
+                } else {
+                    setcol_4(0);
+                    // Search(1, 0, "", "");
+                    setIsCampo("");
+                    setIsOrden("");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "", "");
+                    } else {
+                        Search(1, "", "");
+                    }
+                }
+                break;
+            case 5:
+                clearColumnsIcon(5);
+                if (col_5 === 0) {
+                    setcol_5(col_5 + 1);
+                    // Search(1, 0, "NAME1", "0");
+                    setIsCampo("KONWA");
+                    setIsOrden("0");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "KONWA", "0");
+                    } else {
+                        Search(1, "KONWA", "0");
+                    }
+                } else if (col_5 === 1) {
+                    setcol_5(col_5 + 1);
+                    // Search(1, 0, "NAME1", "1");
+                    setIsCampo("KONWA");
+                    setIsOrden("1");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "KONWA", "1");
+                    } else {
+                        Search(1, "KONWA", "1");
+                    }
+                } else {
+                    setcol_5(0);
+                    // Search(1, 0, "", "");
+                    setIsCampo("");
+                    setIsOrden("");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "", "");
+                    } else {
+                        Search(1, "", "");
+                    }
+                }
+                break;
+            case 6:
+                clearColumnsIcon(6);
+                if (col_6 === 0) {
+                    setcol_6(col_6 + 1);
+                    // Search(1, 0, "NETWR", "0");
+                    setIsCampo("MXWRT");
+                    setIsOrden("0");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "MXWRT", "0");
+                    } else {
+                        Search(1, "MXWRT", "0");
+                    }
+                } else if (col_6 === 1) {
+                    setcol_6(col_6 + 1);
+                    // Search(1, 0, "NETWR", "1");
+                    setIsCampo("MXWRT");
+                    setIsOrden("1");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "MXWRT", "1");
+                    } else {
+                        Search(1, "MXWRT", "1");
+                    }
+                } else {
+                    setcol_6(0);
+                    // Search(1, 0, "", "");
+                    setIsCampo("");
+                    setIsOrden("");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "", "");
+                    } else {
+                        Search(1, "", "");
+                    }
+                }
+                break;
+            case 7:
+                clearColumnsIcon(7);
+                if (col_7 === 0) {
+                    setcol_7(col_7 + 1);
+                    // Search(1, 0, "NTRANS", "0");
+                    setIsCampo("KONWA2");
+                    setIsOrden("0");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "KONWA2", "0");
+                    } else {
+                        Search(1, "KONWA2", "0");
+                    }
+                } else if (col_7 === 1) {
+                    setcol_7(col_7 + 1);
+                    // Search(1, 0, "NTRANS", "1");
+                    setIsCampo("KONWA2");
+                    setIsOrden("1");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "KONWA2", "1");
+                    } else {
+                        Search(1, "KONWA2", "1");
+                    }
+                } else {
+                    setcol_7(0);
+                    // Search(1, 0, "", "");
+                    setIsCampo("");
+                    setIsOrden("");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "", "");
+                    } else {
+                        Search(1, "", "");
+                    }
+                }
+                break;
+            case 8:
+                clearColumnsIcon(8);
+                if (col_8 === 0) {
+                    setcol_8(col_8 + 1);
+                    // Search(1, 0, "TEXT1", "0");
+                    setIsCampo("DATAB");
+                    setIsOrden("0");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "DATAB", "0");
+                    } else {
+                        Search(1, "DATAB", "0");
+                    }
+                } else if (col_8 === 1) {
+                    setcol_8(col_8 + 1);
+                    // Search(1, 0, "TEXT1", "1");
+                    setIsCampo("DATAB");
+                    setIsOrden("1");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "DATAB", "1");
+                    } else {
+                        Search(1, "DATAB", "1");
+                    }
+                } else {
+                    setcol_8(0);
+                    // Search(1, 0, "", "");
+                    setIsCampo("");
+                    setIsOrden("");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "", "");
+                    } else {
+                        Search(1, "", "");
+                    }
+                }
+                break;
+            case 9:
+                clearColumnsIcon(9);
+                if (col_9 === 0) {
+                    setcol_9(col_9 + 1);
+                    // Search(1, 0, "ARKTX", "0");
+                    setIsCampo("DATBI");
+                    setIsOrden("0");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "DATBI", "0");
+                    } else {
+                        Search(1, "DATBI", "0");
+                    }
+                } else if (col_9 === 1) {
+                    setcol_9(col_9 + 1);
+                    // Search(1, 0, "ARKTX", "1");
+                    setIsCampo("DATBI");
+                    setIsOrden("1");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "DATBI", "1");
+                    } else {
+                        Search(1, "DATBI", "1");
+                    }
+                } else {
+                    setcol_9(0);
+                    // Search(1, 0, "", "");
+                    setIsCampo("");
+                    setIsOrden("");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "", "");
+                    } else {
+                        Search(1, "", "");
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    function handleChangeFiltro(name, value) {
+        switch (name) {
+            case "f_vkorgField":
+                setf_vkorgField(value);
+                break;
+            case "f_matnrField":
+                setf_matnrField(value);
+                break;
+            case "f_maktxField":
+                setf_maktxField(value);
+                break;
+            case "f_kbetrField":
+                setf_kbetrField(value);
+                break;
+            case "f_konwaField":
+                setf_konwaField(value);
+                break;
+            case "f_mxwrtField":
+                setf_mxwrtField(value);
+                break;
+            case "f_konwa2Field":
+                setf_konwa2Field(value);
+                break;
+            case "f_databField":
+                setf_databField(value);
+                break;
+            case "f_datbiField":
+                setf_datbiField(value);
+                break;
+            default:
+                break;
+        }
+    }
+
+    function ModalFiltro() {
+        clear_filtro_fila();
+        if (mostrar_filtro_fila == true) {
+            settext_btn_filtro("Filtrar");
+            setmostrar_filtro_fila(false);
         } else {
-            setpageNumber(pageNumber);
-            buscar_filtro_fila(pageNumber, IsCampo, IsOrden);
-            // SearchFiltro();
+            settext_btn_filtro("Borrar filtros");
+            setmostrar_filtro_fila(true);
         }
+        setindicadorfiltro(true);
+        // setshowFiltroConsultaPedido(true);
     }
-    // siguiente pagina
-    function prevPage(value) {
-        setresponse_reporte_despacho([]);
 
-        if (indicadorfiltro == false) {
-            Search(value - 1, 1, IsCampo, IsOrden);
+    // Funcion Material
+    function RangosMaterial() {
+        if (rangos_material.length === 1) {
+            if (
+                rangos_material[0].Low.trim() === "" &&
+                rangos_material[0].High.trim() === ""
+            ) {
+                return material;
+            } else {
+                setmaterial_desde(rangos_material[0].Low);
+                setmaterial_hasta(rangos_material[0].High);
+                return rangos_material;
+            }
         } else {
-            setmodel_filtro({ ...model_filtro, IsNpag: value - 1 });
-            // SearchFiltro();
-            buscar_filtro_fila(value - 1, IsCampo, IsOrden);
+            setmaterial_desde(rangos_material[0].Low);
+            setmaterial_hasta(rangos_material[0].High);
+            return rangos_material;
         }
     }
-    //pagina anterior
-    function nextPage(value) {
-        setresponse_reporte_despacho([]);
 
-        if (indicadorfiltro == false) {
-            Search(value + 1, 1, IsCampo, IsOrden);
+    // Funcion Rangos cliente
+    function RangosCliente() {
+        //console.log("rangos cliente");
+        if (rangos_cliente.length === 1) {
+            if (
+                rangos_cliente[0].Low.trim() === "" &&
+                rangos_cliente[0].High.trim() === ""
+            ) {
+                return cliente;
+            } else {
+                setcliente_desde(rangos_cliente[0].Low);
+                setcliente_hasta(rangos_cliente[0].High);
+                return rangos_cliente;
+            }
         } else {
-            setmodel_filtro({ ...model_filtro, IsNpag: value + 1 });
-            // SearchFiltro();
-            buscar_filtro_fila(value + 1, IsCampo, IsOrden);
+            setcliente_desde(rangos_cliente[0].Low);
+            setcliente_hasta(rangos_cliente[0].High);
+            return rangos_cliente;
         }
     }
 
-    function Search(page, ind, IsCampo, IsOrden) { }
-
-    function buscar_filtro_fila(pageNumber, IsCampo, IsOrden) { }
-
-    function handleChangeColumna(num_col) { }
-
-    function Clear() {
-
+    function clear_icons_colum() {
+        setcol_1(0);
+        setcol_2(0);
+        setcol_3(0);
+        setcol_4(0);
+        setcol_5(0);
+        setcol_6(0);
+        setcol_7(0);
+        setcol_8(0);
+        setcol_9(0);
     }
 
-    // function buscar_filtro_icono_btn() {
-    //     buscar_filtro_fila(1, "", "");
-    // }
+    function Search(page, IsCampo, IsOrden) {
+        setTotalData(0);
+        if (page == 1) {
+            setind_pagina(1);
+        } else {
+            setind_pagina(0);
+        }
+        if (IsCampo === "" && IsOrden === "") {
+            clear_icons_colum();
+        }
+        settext_btn_filtro("Filtrar");
+        setmostrar_filtro_fila(false);
+        setspinner(true);
+        setindicadorfiltro(false);
 
-    const ValidacionSearch = () => { }
+        let model_lista_precios = {
+            IsCampo: IsCampo,
+            IsFecha: formatDateSAP(valido_el),
+            IsNpag: page,
+            IsOrden: IsOrden,
+            IsPltyp: lista_precio_desde,
+            IsRegxpag: IsRegxpag,
+            IsUser: jwt(localStorage.getItem("_token")).username,
+            IsVkbur: ofi_ventas_desde,
+            IsVkorg: org_ventas_desde,
+            ItFilter: [],
+            ItMatnr: (material[0].Low || material[0].High) !== "" ?
+                RangosMaterial() : [],
+            ItKunnr: (cliente[0].Low || cliente[0].High) !== "" ?
+                RangosCliente() : [],
+        };
+        console.log("BUSCAR DETALLE LISTA PRECIO", model_lista_precios);
+        setmodel_listaprecio(model_lista_precios);
 
-    function handleChange(name, value) {
+        //arraycheckbox_export[0].data = [];
+        setresponse_lista_precios([]);
+        ConsultaListaPrecios(model_lista_precios).then((result) => {
+            setresponse_lista_precios(
+                result.etListaDetailField.map((d) => {
+                    return {
+                        select: true,
+                        vkorgField: d.vkorgField,
+                        matnrField: d.matnrField,
+                        maktxField: d.maktxField,
+                        kbetrField: d.kbetrField,
+                        konwaField: d.konwaField,
+                        mxwrtField: d.mxwrtField,
+                        konwa2Field: d.konwa2Field,
+                        databField: d.databField,
+                        datbiField: d.datbiField
+                    };
+                })
+            );
+            setTotalData(result.esRegtotField);
+            setspinner(false);
+            setvaluepagination(true);
+        });
 
-    }
-
-    function handleChangeFiltro(name, value) { }
-
-    function buscar_filtro_enter(event) { }
-
-    //INPUT organización de ventas
-    function mc_org_ventas_desde() {
-        setshoworgventa_desde((prev) => !prev);
-    }
-
-    //INPUT oficina de ventas
-    function mc_ofi_ventas_desde() {
-        setshowofiventa_desde((prev) => !prev);
-    }
-
-    //INPUT lista de precios
-    function mc_lista_precio_desde() {
-        setshowlistaprecio_desde((prev) => !prev);
     }
 
     //INPUT material
@@ -407,42 +918,462 @@ const Lista_Precio = () => {
                 }
             })
         }
-        
+
+    }
+
+    function handleChange(name, value) {
+        console.log(name, value)
+        switch (name) {
+            //cliente
+            case "cliente":
+                setcliente([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
+                //setcliente([]);
+                break;
+            case "cliente_desde":
+                setcliente_desde(value);
+                if (value.trim() != "") {
+                    if (cliente_hasta == "") {
+                        setcliente([{ Sign: "I", Option: "EQ", Low: value, High: "" }]);
+                    } else {
+                        setcliente([
+                            {
+                                Sign: "I",
+                                Option: "BT",
+                                Low: value,
+                                High: cliente_hasta,
+                            },
+                        ]);
+                    }
+                } else {
+                    if (cliente_hasta != "") {
+                        setcliente([
+                            { Sign: "I", Option: "EQ", Low: "", High: cliente_hasta },
+                        ]);
+                    } else {
+                        setcliente([{ Sign: "", Option: "", Low: "", High: "" }]);
+                    }
+                }
+                break;
+            case "cliente_hasta":
+                setcliente_hasta(value);
+                if (value.trim() != "") {
+                    if (cliente_desde == "") {
+                        setcliente([{ Sign: "I", Option: "EQ", Low: "", High: value }]);
+                    } else {
+                        setcliente([
+                            {
+                                Sign: "I",
+                                Option: "BT",
+                                Low: cliente_desde,
+                                High: value,
+                            },
+                        ]);
+                    }
+                } else {
+                    if (cliente_desde != "") {
+                        setcliente([
+                            { Sign: "I", Option: "EQ", Low: cliente_desde, High: "" },
+                        ]);
+                    } else {
+                        setcliente([{ Sign: "", Option: "", Low: "", High: "" }]);
+                    }
+                }
+                break;
+
+            //material
+            case "material":
+                setmaterial([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
+                break;
+            case "material_desde":
+                setmaterial_desde(value);
+                if (value.trim() != "") {
+                    if (material_hasta == "") {
+                        setmaterial([{ Sign: "I", Option: "EQ", Low: value, High: "" }]);
+                    } else {
+                        setmaterial([
+                            {
+                                Sign: "I",
+                                Option: "BT",
+                                Low: value,
+                                High: material_hasta,
+                            },
+                        ]);
+                    }
+                } else {
+                    if (material_hasta != "") {
+                        setmaterial([
+                            { Sign: "I", Option: "EQ", Low: "", High: material_hasta },
+                        ]);
+                    } else {
+                        setmaterial([{ Sign: "", Option: "", Low: "", High: "" }]);
+                    }
+                }
+                break;
+            case "material_hasta":
+                setmaterial_hasta(value);
+                if (value.trim() != "") {
+                    if (material_desde == "") {
+                        setmaterial([{ Sign: "I", Option: "EQ", Low: "", High: value }]);
+                    } else {
+                        setmaterial([
+                            {
+                                Sign: "I",
+                                Option: "BT",
+                                Low: material_desde,
+                                High: value,
+                            },
+                        ]);
+                    }
+                } else {
+                    if (material_desde != "") {
+                        setmaterial([
+                            { Sign: "I", Option: "EQ", Low: material_desde, High: "" },
+                        ]);
+                    } else {
+                        setmaterial([{ Sign: "", Option: "", Low: "", High: "" }]);
+                    }
+                }
+                break;
+        }
+
+    }
+
+    function formatDateSAP(value) {
+        if (value == "") {
+            return ""
+        } else {
+            var datePart = value.match(/\d+/g),
+                year = datePart[0],
+                month = datePart[1],
+                day = datePart[2];
+
+            return year + "" + month + "" + day;
+        }
+
+    }
+
+    const formatFecha = (fecha) => {
+        // console.log(fecha);
+        let newDate = "";
+        if (fecha != null || fecha != undefined || fecha != "") {
+            if (fecha.length == 10) {
+                newDate = fecha.split("-");
+                return newDate[2] + "-" + newDate[1] + "-" + newDate[0];
+            } else {
+                return (
+                    fecha.substr(6, 2) +
+                    "-" +
+                    fecha.substr(4, 2) +
+                    "-" +
+                    fecha.substr(0, 4)
+                );
+            }
+        }
+    };
+
+    const getDateAct = () => {
+        let date = new Date();
+
+        let day = date.getDate();
+        let month = date.getMonth() + 1;
+        let year = date.getFullYear();
+
+        if (month < 10) {
+            return `${day}/0${month}/${year}`;
+            // console.log(`${day}-0${month}-${year}`);
+        } else {
+            return `${day}/${month}/${year}`;
+            // console.log(`${day}-${month}-${year}`);
+        }
+    };
+
+
+
+    // seleccionar pagina
+    function changePage(pageNumber) {
+        setresponse_lista_precios([]);
+        if (indicadorfiltro == false) {
+            Search(pageNumber, 1, IsCampo, IsOrden);
+        } else {
+            setpageNumber(pageNumber);
+            buscar_filtro_fila(pageNumber, IsCampo, IsOrden);
+            // SearchFiltro();
+        }
+    }
+    // siguiente pagina
+    function prevPage(value) {
+        setresponse_lista_precios([]);
+
+        if (indicadorfiltro == false) {
+            Search(value - 1, 1, IsCampo, IsOrden);
+        } else {
+            setmodel_filtro({ ...model_filtro, IsNpag: value - 1 });
+            // SearchFiltro();
+            buscar_filtro_fila(value - 1, IsCampo, IsOrden);
+        }
+    }
+    //pagina anterior
+    function nextPage(value) {
+        setresponse_lista_precios([]);
+
+        if (indicadorfiltro == false) {
+            Search(value + 1, 1, IsCampo, IsOrden);
+        } else {
+            setmodel_filtro({ ...model_filtro, IsNpag: value + 1 });
+            // SearchFiltro();
+            buscar_filtro_fila(value + 1, IsCampo, IsOrden);
+        }
+    }
+
+    const ChangeBusquedaMult_Cliente = () => {
+        setrangos(rangos_cliente);
+        settype_input("text");
+        setind_rang({ num: 1, bool: true });
+        setshowBusMult(true);
+    };
+    const ChangeBusquedaMult_Material = () => {
+        setrangos(rangos_material);
+        settype_input("text");
+        setind_rang({ num: 2, bool: true });
+        setshowBusMult(true);
+    };
+
+    //INPUT organización de ventas
+    function mc_org_ventas_desde() {
+        setshoworgventa_desde((prev) => !prev);
+    }
+
+    //INPUT oficina de ventas
+    function mc_ofi_ventas_desde() {
+        setshowofiventa_desde((prev) => !prev);
+    }
+
+    //INPUT lista de precios
+    function mc_lista_precio_desde() {
+        setshowlistaprecio_desde((prev) => !prev);
+    }
+
+    function Clear() {
+        setmostrar_filtro_fila(false);
+        setvaluepagination(false);
+        setresponse_lista_precios([]);
+        setrangos_cliente([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
+        setrangos_material([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
+        setorg_ventas_desde("");
+        setofi_ventas_desde("");
+        setlista_precio_desde("");
+
+        handleChange("cliente", "");
+        setcliente_desde("");
+        setcliente_hasta("");
+
+        handleChange("material", "");
+        setmaterial_desde("");
+        setmaterial_hasta("");
+
+    }
+
+    function clear_filtro_fila() {
+        setf_vkorgField("");
+        setf_matnrField("");
+        setf_maktxField("");
+        setf_kbetrField("");
+        setf_konwaField("");
+        setf_mxwrtField("");
+        setf_konwa2Field("");
+        setf_databField("");
+        setf_datbiField("");
+    }
+
+    function buscar_filtro_fila(pageNumber, IsCampo, IsOrden) {
+        setTotalData(0);
+        if (pageNumber == 1) {
+            setind_pagina(1);
+        } else {
+            setind_pagina(0);
+        }
+        if (IsCampo === "" && IsOrden === "") {
+            clear_icons_colum();
+        }
+        settext_btn_filtro("Filtrar");
+        setmostrar_filtro_fila(false);
+
+        let model_lista_precios_filtro = {
+            IsCampo: IsCampo,
+            IsFecha: formatDateSAP(valido_el),
+            IsNpag: pageNumber,
+            IsOrden: IsOrden,
+            IsPltyp: lista_precio_desde,
+            IsRegxpag: IsRegxpag,
+            IsUser: jwt(localStorage.getItem("_token")).username,
+            IsVkbur: ofi_ventas_desde,
+            IsVkorg: org_ventas_desde,
+            ItFilter: [{
+                Vkorg: f_vkorgField,
+                Matnr: f_matnrField,
+                Maktx: f_maktxField,
+                Kbetr: Number(f_kbetrField),
+                Konwa: f_konwaField,
+                Mxwrt: Number(f_mxwrtField),
+                Konwa2: f_konwa2Field,
+                Datab: formatDateSAP(f_databField),
+                Datib: formatDateSAP(f_datbiField)
+            }],
+            ItMatnr: (material[0].Low || material[0].High) !== "" ?
+                RangosMaterial() : [],
+            ItKunnr: (cliente[0].Low || cliente[0].High) !== "" ?
+                RangosCliente() : [],
+        };
+        console.log("FILTRO DETALLE LISTA PRECIO", model_lista_precios_filtro);
+        setmostrar_filtro_fila(false);
+        //arraycheckbox_export[0].data = [];
+        setresponse_lista_precios([]);
+        setspinner(true);
+        ConsultaListaPrecios(model_lista_precios_filtro).then((result) => {
+            setspinner(false);
+            setresponse_lista_precios(
+                result.etListaDetailField.map((d) => {
+                    return {
+                        select: true,
+                        vkorgField: d.vkorgField,
+                        matnrField: d.matnrField,
+                        maktxField: d.maktxField,
+                        kbetrField: d.kbetrField,
+                        konwaField: d.konwaField,
+                        mxwrtField: d.mxwrtField,
+                        konwa2Field: d.konwa2Field,
+                        databField: d.databField,
+                        datbiField: d.datbiField
+                    };
+                })
+            );
+            setTotalData(result.esRegtotField);
+        })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    function buscar_filtro_enter(event) {
+        var keycode = event.keyCode;
+        if (keycode == "13") {
+            buscar_filtro_fila(1, "", "");
+        }
+    }
+
+    function buscar_filtro_icono_btn() {
+        if ((f_vkorgField || f_matnrField || f_maktxField || f_kbetrField || f_konwaField
+            || f_mxwrtField || f_konwa2Field || f_databField || f_datbiField) != "") {
+            buscar_filtro_fila(1, "", "");
+        }
+        else {
+            toast.error("Debe seleccionar algún filtro por columna.", {
+                position: "top-center",
+                autoClose: 6000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                },
+            });
+        }
+
+
+    }
+
+    function ModalFiltro() {
+        clear_filtro_fila();
+        if (mostrar_filtro_fila == true) {
+            settext_btn_filtro("Filtrar");
+            setmostrar_filtro_fila(false);
+        } else {
+            settext_btn_filtro("Borrar filtros");
+            setmostrar_filtro_fila(true);
+        }
+        setindicadorfiltro(true);
+        // setshowFiltroConsultaPedido(true);
+    }
+
+
+
+    const ValidacionSearch = () => { 
+        if ((org_ventas_desde == "" && ofi_ventas_desde == "" && lista_precio_desde == "")) {
+            toast.error("Debe seleccionar una \"Org. Ventas.\", \"Oficina de Ventas.\" y \"Lista de Precio.\"", {
+                position: "top-center",
+                autoClose: 6000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                },
+            });
+        }
+        else if ((ofi_ventas_desde == "" && lista_precio_desde == "")) {
+            toast.error("Debe seleccionar una \"Oficina de Ventas.\" y \"Lista de Precios.\"", {
+                position: "top-center",
+                autoClose: 6000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                },
+            });
+        }
+        else if ((org_ventas_desde == "" && lista_precio_desde == "")) {
+            toast.error("Debe seleccionar una \"Org. Ventas.\" y \"Lista de Precios.\"", {
+                position: "top-center",
+                autoClose: 6000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                },
+            });
+        }
+        else if ((org_ventas_desde == "" && ofi_ventas_desde == "")) {
+            toast.error("Debe seleccionar una \"Org. Ventas.\" y \"Oficina de Ventas.\"", {
+                position: "top-center",
+                autoClose: 6000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                },
+            });
+        }
+        else if ((org_ventas_desde == "")) {
+            toast.error("Debe seleccionar una \"Org. Ventas.\"", {
+                position: "top-center",
+                autoClose: 6000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                },
+            });
+        }
+        else if ((ofi_ventas_desde == "")) {
+            toast.error("Debe seleccionar una \"Oficina de Ventas.\"", {
+                position: "top-center",
+                autoClose: 6000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                },
+            });
+        }
+        else if ((lista_precio_desde == "")) {
+            toast.error("Debe seleccionar una \"Lista de Precios.\"", {
+                position: "top-center",
+                autoClose: 6000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                },
+            });
+        }
+        else {
+            Search(1, 0, "", "");
+    
+             }
     }
 
     return (
         <React.Fragment>
-            {/* {showModalPagina ? (
-                // <React.Fragment>
-                //     <div
-                //         className="container-modal-background"
-                //         //onClick={closeModal}
-                //         ref={modalRef}
-                //     >
-                //         <div className="modal-wrapper modal-wrapper-paginate p-5">
-                //             <div className="col-sm-12 d-flex align-items-center">
-                //                 <label>Número de datos por página</label>
-                //             </div>
-                //             <div className="col-sm-12">
-                //                 <SelectFormMd
-                //                     attribute={{ name: "id_role", disabled: false, default: 0 }}
-                //                     values={ItemsNumberDates}
-                //                     handleChange={handleChange}
-                //                 ></SelectFormMd>
-                //             </div>
-                //             <div
-                //                 className="close-modal-button"
-                //                 onClick={() => {
-                //                     setshowModalPagina((prev) => !prev);
-                //                     setDatosxpagina(IsRegxpag);
-                //                 }}
-                //             >
-                //                 <i className="fas fa-times"></i>
-                //             </div>
-                //         </div>
-                //     </div>
-                // </React.Fragment>
-            ) : null} */}
             {show_status_password ? (
                 <ChangeStatusPassword
                     setshow_status_password={setshow_status_password}
@@ -471,7 +1402,6 @@ const Lista_Precio = () => {
                             setshoworgventa={setshoworgventa_desde}
                             setorg_ventas_desde={setorg_ventas_desde}
                             org_ventas_desde={org_ventas_desde}
-                            org_ventas_hasta={org_ventas_hasta}
                             setorg_ventas={setorg_ventas}
                             setOrgVentasName={setOrgVentasName}
                         />
@@ -481,7 +1411,6 @@ const Lista_Precio = () => {
                             setshowofiventa={setshowofiventa_desde}
                             setofi_ventas_desde={setofi_ventas_desde}
                             ofi_ventas_desde={ofi_ventas_desde}
-                            ofi_ventas_hasta={ofi_ventas_hasta}
                             setofi_ventas={setofi_ventas}
                             setofi_ventas_name={setofi_ventas_name}
                         />
@@ -491,7 +1420,6 @@ const Lista_Precio = () => {
                             setshowlistaprecio={setshowlistaprecio_desde}
                             setlista_precio_desde={setlista_precio_desde}
                             lista_precio_desde={lista_precio_desde}
-                            lista_precio_hasta={lista_precio_hasta}
                             setlista_precio={setlista_precio}
                             setlista_precio_name={setlista_precio_name}
                         />
@@ -687,7 +1615,7 @@ const Lista_Precio = () => {
                                 <div className="col-sm-2 d-flex align-items-center">
                                     <i
                                         className="fas fa-file-export icon-matchcode-2"
-                                    //onClick={ChangeBusquedaMult_Cliente}
+                                    onClick={ChangeBusquedaMult_Material}
                                     ></i>
                                 </div>
 
@@ -728,7 +1656,7 @@ const Lista_Precio = () => {
                                 <div className="col-sm-2 d-flex align-items-center">
                                     <i
                                         className="fas fa-file-export icon-matchcode-2"
-                                    //onClick={ChangeBusquedaMult_Cliente}
+                                    onClick={ChangeBusquedaMult_Cliente}
                                     ></i>
                                 </div>
 
@@ -741,7 +1669,7 @@ const Lista_Precio = () => {
                                         attribute={{
                                             name: "valido_el",
                                             type: "date",
-                                            value: filtroInicial.valido_el[0].Low,
+                                            value: valido_el,
                                             disabled: true,
                                             checked: false,
                                             matchcode: false,
@@ -752,27 +1680,11 @@ const Lista_Precio = () => {
                                     />
                                 </div>
                                 <div className="col-sm-3">
-                                    {/* <InputForm
-                                        attribute={{
-                                            name: "cliente_hasta",
-                                            type: "text",
-                                            value: cliente_hasta,
-                                            disabled: true,
-                                            checked: false,
-                                            matchcode: true,
-                                            maxlength: 10,
-                                        }}
-                                        handleChange={handleChange}
-                                        onClick={() => mc_cliente_hasta()}
-                                    /> */}
+                                    
                                 </div>
                                 <div className="col-sm-2 d-flex align-items-center">
-                                    {/* <i
-                                        className="fas fa-file-export icon-matchcode-2"
-                                    //onClick={ChangeBusquedaMult_Cliente}
-                                    ></i> */}
+                                    
                                 </div>
-
 
                             </div>
                         </section>
@@ -793,52 +1705,7 @@ const Lista_Precio = () => {
                                     onClick={() => Clear()}
                                 />
                             </div>
-                            {/* <div className="col-sm-12 col-md-2 p-1">
-                                {arraycheckbox_export[0].data.length > 0 ? (
-                                    <ExcelFile
-                                        filename="Reporte de Despachos"
-                                        element={
-                                            <BtnExportar
-                                                attribute={{
-                                                    name: "Descargar Excel",
-                                                    classNamebtn: "btn_export",
-                                                    disabled: false,
-                                                }}
-                                            />
-                                        }
-                                    >
-                                        <ExcelSheet
-                                            dataSet={arraycheckbox_export}
-                                            name="exportacion"
-                                        />
-                                    </ExcelFile>
-                                ) : (
-                                    <ExcelFile
-                                        filename="Reporte de Despachos"
-                                        element={
-                                            <BtnExportar
-                                                attribute={{
-                                                    name: "Descargar Excel",
-                                                    classNamebtn: "btn_export",
-                                                    disabled: false,
-                                                }}
-                                            />
-                                        }
-                                    >
-                                        <ExcelSheet dataSet={DataSet} name="exportacion" />
-                                    </ExcelFile>
-                                )}
-                            </div> */}
-                            {/* <div className="col-sm-12 col-md-2 p-1">
-                                <BtnSearch
-                                    attribute={{
-                                        name: "Cantidad de documentos",
-                                        classNamebtn: "btn_search",
-                                    }}
-                                    onClick={() => openDatosPagina()}
-                                />
-                            </div> */}
-                            {/* {response_reporte_despacho.length ? (
+                            {response_lista_precios.length ? (
                                 <div className="col-sm-12 col-md-2 p-1">
                                     <BtnSearch
                                         attribute={{
@@ -848,7 +1715,7 @@ const Lista_Precio = () => {
                                         onClick={() => ModalFiltro()}
                                     />
                                 </div>
-                            ) : null} */}
+                            ) : null}
                         </section>
                         <section>
                             <div className="container-table">
@@ -1090,113 +1957,15 @@ const Lista_Precio = () => {
                                                     <th>
                                                         <button
                                                             className="btn_search_filter"
-                                                        //onClick={() => buscar_filtro_icono_btn()}
+                                                            onClick={() => buscar_filtro_icono_btn()}
                                                         >
                                                             <i className="fas fa-filter"></i>
                                                         </button>
                                                     </th>
-                                                    <th>
-                                                        <input
-                                                            type="text"
-                                                            onKeyUp={(e) => buscar_filtro_enter(e)}
-                                                            id="f_name1Field"
-                                                            name="f_name1Field"
-                                                            maxLength="30"
-                                                            onChange={(e) =>
-                                                                handleChangeFiltro(
-                                                                    e.target.name,
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                        />
-                                                    </th>
-                                                    <th>
-                                                        <input
-                                                            type="text"
-                                                            onKeyUp={(e) => buscar_filtro_enter(e)}
-                                                            name="f_bstkdField"
-                                                            maxLength="30"
-                                                            onChange={(e) =>
-                                                                handleChangeFiltro(
-                                                                    e.target.name,
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                        />
-                                                    </th>
-                                                    <th>
-                                                        <input
-                                                            type="date"
-                                                            onKeyUp={(e) => buscar_filtro_enter(e)}
-                                                            name="f_erdatField"
-                                                            style={{ paddingTop: "1.5px", paddingBottom: "1px" }} className="px-2"
-                                                            onChange={(e) =>
-                                                                handleChangeFiltro(
-                                                                    e.target.name,
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                        />
-                                                    </th>
-                                                    <th>
-                                                        <input
-                                                            type="text"
-                                                            onKeyUp={(e) => buscar_filtro_enter(e)}
-                                                            name="f_aubelField"
-                                                            maxLength="20"
-                                                            onChange={(e) =>
-                                                                handleChangeFiltro(
-                                                                    e.target.name,
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                        />
-                                                    </th>
-                                                    <th>
-                                                        <input
-                                                            type="text"
-                                                            onKeyUp={(e) => buscar_filtro_enter(e)}
-                                                            name="f_xblnrField"
-                                                            maxLength="30"
-                                                            onChange={(e) =>
-                                                                handleChangeFiltro(
-                                                                    e.target.name,
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                        />
-                                                    </th>
-                                                    <th>
-                                                        <input
-                                                            type="text"
-                                                            onKeyUp={(e) => buscar_filtro_enter(e)}
-                                                            name="f_xblnr1Field"
-                                                            maxLength="15"
-                                                            onChange={(e) =>
-                                                                handleChangeFiltro(
-                                                                    e.target.name,
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                        />
-                                                    </th>
-                                                    <th>
-                                                        <input
-                                                            type="text"
-                                                            onKeyUp={(e) => buscar_filtro_enter(e)}
-                                                            name="f_ntransField"
-                                                            maxLength="50"
-                                                            onChange={(e) =>
-                                                                handleChangeFiltro(
-                                                                    e.target.name,
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                        />
-                                                    </th>
                                                     <th style={{ textAlign: "center" }}>
                                                         <div >
-                                                            <select style={{ paddingTop: "4px", paddingBottom: "3px" }} className="px-2" name="f_vkorgField"
+                                                            <select style={{ paddingTop: "4px", paddingBottom: "3px" }} className="px-2"
+                                                                name="f_vkorgField"
                                                                 onKeyUp={(e) => buscar_filtro_enter(e)}
                                                                 //onChange={(e) => selectedFiltro(e)}
                                                                 onChange={(e) =>
@@ -1218,63 +1987,7 @@ const Lista_Precio = () => {
                                                         <input
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
-                                                            name="f_arktxField"
-                                                            maxLength="50"
-                                                            onChange={(e) =>
-                                                                handleChangeFiltro(
-                                                                    e.target.name,
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                        />
-                                                    </th>
-                                                    <th>
-                                                        <input
-                                                            type="text"
-                                                            onKeyUp={(e) => buscar_filtro_enter(e)}
-                                                            name="f_werksField"
-                                                            maxLength="10"
-                                                            onChange={(e) =>
-                                                                handleChangeFiltro(
-                                                                    e.target.name,
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                        />
-                                                    </th>
-                                                    <th>
-                                                        <input
-                                                            type="text"
-                                                            onKeyUp={(e) => buscar_filtro_enter(e)}
-                                                            name="f_chargField"
-                                                            maxLength="20"
-                                                            onChange={(e) =>
-                                                                handleChangeFiltro(
-                                                                    e.target.name,
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                        />
-                                                    </th>
-                                                    <th>
-                                                        <input
-                                                            type="text"
-                                                            onKeyUp={(e) => buscar_filtro_enter(e)}
-                                                            name="f_lfimgField"
-                                                            maxLength="20"
-                                                            onChange={(e) =>
-                                                                handleChangeFiltro(
-                                                                    e.target.name,
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                        />
-                                                    </th>
-                                                    <th>
-                                                        <input
-                                                            type="text"
-                                                            onKeyUp={(e) => buscar_filtro_enter(e)}
-                                                            name="f_vkburbezeiField"
+                                                            name="f_matnrField"
                                                             maxLength="30"
                                                             onChange={(e) =>
                                                                 handleChangeFiltro(
@@ -1288,8 +2001,8 @@ const Lista_Precio = () => {
                                                         <input
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
-                                                            name="f_vkgrpbezeiField"
-                                                            maxLength="25"
+                                                            name="f_maktxField"
+                                                            maxLength="30"
                                                             onChange={(e) =>
                                                                 handleChangeFiltro(
                                                                     e.target.name,
@@ -1302,8 +2015,8 @@ const Lista_Precio = () => {
                                                         <input
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
-                                                            name="f_snameField"
-                                                            maxLength="40"
+                                                            name="f_kbetrField"
+                                                            maxLength="30"
                                                             onChange={(e) =>
                                                                 handleChangeFiltro(
                                                                     e.target.name,
@@ -1312,12 +2025,83 @@ const Lista_Precio = () => {
                                                             }
                                                         />
                                                     </th>
+                                                    <th>
+                                                        <input
+                                                            type="text"
+                                                            onKeyUp={(e) => buscar_filtro_enter(e)}
+                                                            name="f_konwaField"
+                                                            maxLength="30"
+                                                            onChange={(e) =>
+                                                                handleChangeFiltro(
+                                                                    e.target.name,
+                                                                    e.target.value
+                                                                )
+                                                            }
+                                                        />
+                                                    </th>
+                                                    <th>
+                                                        <input
+                                                            type="text"
+                                                            onKeyUp={(e) => buscar_filtro_enter(e)}
+                                                            name="f_mxwrtField"
+                                                            maxLength="30"
+                                                            onChange={(e) =>
+                                                                handleChangeFiltro(
+                                                                    e.target.name,
+                                                                    e.target.value
+                                                                )
+                                                            }
+                                                        />
+                                                    </th>
+                                                    <th>
+                                                        <input
+                                                            type="text"
+                                                            onKeyUp={(e) => buscar_filtro_enter(e)}
+                                                            name="f_konwa2Field"
+                                                            maxLength="30"
+                                                            onChange={(e) =>
+                                                                handleChangeFiltro(
+                                                                    e.target.name,
+                                                                    e.target.value
+                                                                )
+                                                            }
+                                                        />
+                                                    </th>
+                                                    <th>
+                                                        <input
+                                                            type="date"
+                                                            onKeyUp={(e) => buscar_filtro_enter(e)}
+                                                            name="f_databField"
+                                                            style={{ paddingTop: "1.5px", paddingBottom: "1px" }} className="px-2"
+                                                            onChange={(e) =>
+                                                                handleChangeFiltro(
+                                                                    e.target.name,
+                                                                    e.target.value
+                                                                )
+                                                            }
+                                                        />
+                                                    </th>
+                                                    <th>
+                                                        <input
+                                                            type="date"
+                                                            onKeyUp={(e) => buscar_filtro_enter(e)}
+                                                            name="f_datbiField"
+                                                            style={{ paddingTop: "1.5px", paddingBottom: "1px" }} className="px-2"
+                                                            onChange={(e) =>
+                                                                handleChangeFiltro(
+                                                                    e.target.name,
+                                                                    e.target.value
+                                                                )
+                                                            }
+                                                        />
+                                                    </th>
+
                                                 </tr>
                                             ) : null}
 
-                                            {response_reporte_despacho != null &&
-                                                response_reporte_despacho.length > 0
-                                                ? response_reporte_despacho.map((response, key) => {
+                                            {response_lista_precios != null &&
+                                                response_lista_precios.length > 0
+                                                ? response_lista_precios.map((response, key) => {
                                                     return (
                                                         <tr key={key}>
                                                             {/* <th>
@@ -1527,55 +2311,31 @@ const Lista_Precio = () => {
                                                             </th> */}
                                                             <th></th>
                                                             <th style={{ textAlign: "left" }}>
-                                                                {response.name1Field}
-                                                            </th>
-                                                            <th style={{ textAlign: "center" }}>
-                                                                {response.bstkdField}
-                                                            </th>
-                                                            <th style={{ textAlign: "center" }}>
-                                                                {formatFecha(response.erdatField)}
-                                                            </th>
-                                                            <th style={{ textAlign: "center" }}>
-                                                                {response.aubelField}
-                                                            </th>
-                                                            <th
-                                                                style={{ textAlign: "center" }}
-                                                            >
-                                                                {response.xblnrField}
-                                                            </th>
-                                                            <th
-                                                                style={{ textAlign: "center" }}
-                                                            >
-                                                                {response.xblnr1Field}
-                                                            </th>
-                                                            <th style={{ textAlign: "left" }}>
-                                                                {response.ntransField}
-                                                            </th>
-                                                            <th
-                                                                style={{ textAlign: "center" }}
-                                                            >
                                                                 {response.vkorgField}
                                                             </th>
-                                                            <th style={{ textAlign: "left" }}>
-                                                                {response.arktxField}
+                                                            <th style={{ textAlign: "center" }}>
+                                                                {response.matnrField}
                                                             </th>
                                                             <th style={{ textAlign: "center" }}>
-                                                                {response.werksField}
+                                                                {response.maktxField}
                                                             </th>
                                                             <th style={{ textAlign: "center" }}>
-                                                                {response.chargField}
+                                                                {response.kbetrField}
                                                             </th>
                                                             <th style={{ textAlign: "center" }}>
-                                                                {response.lfimgField}
+                                                                {response.konwaField}
                                                             </th>
                                                             <th style={{ textAlign: "center" }}>
-                                                                {response.vkburbezeiField}
+                                                                {response.mxwrtField}
                                                             </th>
                                                             <th style={{ textAlign: "center" }}>
-                                                                {response.vkgrpbezeiField}
+                                                                {response.konwa2Field}
                                                             </th>
-                                                            <th style={{ textAlign: "left" }}>
-                                                                {response.snameField}
+                                                            <th style={{ textAlign: "center" }}>
+                                                                {formatFecha(response.databField)}
+                                                            </th>
+                                                            <th style={{ textAlign: "center" }}>
+                                                                {formatFecha(response.datbiField)}
                                                             </th>
                                                             {/* <th
                                                             //onClick={() => verPedido(response.vbelnField)}
@@ -1592,7 +2352,7 @@ const Lista_Precio = () => {
                                         </tbody>
                                     </table>
                                 </div>
-                                {response_reporte_despacho == 0 && spinner == false ? (
+                                {response_lista_precios == 0 && spinner == false ? (
                                     <div
                                         style={{
                                             margin: "10px",

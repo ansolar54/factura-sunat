@@ -4,7 +4,7 @@ import Spinner from '../../../components/Spinner';
 import jwt from "jwt-decode";
 import './Mc_Ofi_Ventas_desde.css';
 
-const Mc_Org_Ventas_desde = ({showofiventa, setshowofiventa,setofi_ventas_name, setofi_ventas_desde,ofi_ventas_desde,ofi_ventas_hasta,setofi_ventas}) => {
+const Mc_Org_Ventas_desde = ({showofiventa, setshowofiventa,setofi_ventas_name, setofi_ventas_desde,ofi_ventas_desde,setofi_ventas}) => {
 
     const [ViewInfo, setViewInfo] = useState(false);
     const [responseOfiVentas, setresponseOfiVentas] = useState({etOfiVentasField:[]});
@@ -39,18 +39,26 @@ const Mc_Org_Ventas_desde = ({showofiventa, setshowofiventa,setofi_ventas_name, 
             }
             //--------------------- para actualizar valor org_ventas
             if(ofi_ventas_desde != ''){
-                if(ofi_ventas_hasta==''){
-                    setofi_ventas([{Sign:"I",Option:"EQ",Low:ofi_ventas_desde,High:""}]);
-                }else{
-                    setofi_ventas([{Sign:"I",Option:"BT",Low:ofi_ventas_desde,High:ofi_ventas_hasta}]);
-                }
+                setofi_ventas(ofi_ventas_desde);
+                
             }else{
-                if(ofi_ventas_hasta!=''){
-                    setofi_ventas([{Sign:"I",Option:"EQ",Low:"",High:ofi_ventas_hasta}]);
-                }else{
-                    setofi_ventas([{Sign:"",Option:"",Low:"",High:""}]);
-                }
+                setofi_ventas(ofi_ventas_desde);
             }
+
+
+            // if(ofi_ventas_desde != ''){
+            //     if(ofi_ventas_hasta==''){
+            //         setofi_ventas([{Sign:"I",Option:"EQ",Low:ofi_ventas_desde,High:""}]);
+            //     }else{
+            //         setofi_ventas([{Sign:"I",Option:"BT",Low:ofi_ventas_desde,High:ofi_ventas_hasta}]);
+            //     }
+            // }else{
+            //     if(ofi_ventas_hasta!=''){
+            //         setofi_ventas([{Sign:"I",Option:"EQ",Low:"",High:ofi_ventas_hasta}]);
+            //     }else{
+            //         setofi_ventas([{Sign:"",Option:"",Low:"",High:""}]);
+            //     }
+            // }
             //---------------------
             document.addEventListener('keydown', keyPress);
             return () => document.removeEventListener('keydown', keyPress);    

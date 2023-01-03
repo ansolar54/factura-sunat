@@ -5,7 +5,7 @@ import './Mc_Lista_Precio_desde.css';
 import jwt from "jwt-decode";
 
 const Mc_Lista_Precio_desde = ({showlistaprecio, setshowlistaprecio, setlista_precio_desde,setlista_precio_name,
-    lista_precio_desde,lista_precio_hasta,setlista_precio}) => {
+    lista_precio_desde,setlista_precio}) => {
 
     const [ViewInfo, setViewInfo] = useState(false);
     const [responseListaPrecio, setresponseListaPrecio] = useState({etListaPreciosField:[]});
@@ -40,18 +40,25 @@ const Mc_Lista_Precio_desde = ({showlistaprecio, setshowlistaprecio, setlista_pr
             }
             //--------------------- para actualizar valor org_ventas
             if(lista_precio_desde != ''){
-                if(lista_precio_hasta==''){
-                    setlista_precio([{Sign:"I",Option:"EQ",Low:lista_precio_desde,High:""}]);
-                }else{
-                    setlista_precio([{Sign:"I",Option:"BT",Low:lista_precio_desde,High:lista_precio_hasta}]);
-                }
+                    setlista_precio(lista_precio_desde);
+                
             }else{
-                if(lista_precio_hasta!=''){
-                    setlista_precio([{Sign:"I",Option:"EQ",Low:"",High:lista_precio_hasta}]);
-                }else{
-                    setlista_precio([{Sign:"",Option:"",Low:"",High:""}]);
-                }
+                setlista_precio(lista_precio_desde);
             }
+
+            // if(lista_precio_desde != ''){
+            //     if(lista_precio_hasta==''){
+            //         setlista_precio([{Sign:"I",Option:"EQ",Low:lista_precio_desde,High:""}]);
+            //     }else{
+            //         setlista_precio([{Sign:"I",Option:"BT",Low:lista_precio_desde,High:lista_precio_hasta}]);
+            //     }
+            // }else{
+            //     if(lista_precio_hasta!=''){
+            //         setlista_precio([{Sign:"I",Option:"EQ",Low:"",High:lista_precio_hasta}]);
+            //     }else{
+            //         setlista_precio([{Sign:"",Option:"",Low:"",High:""}]);
+            //     }
+            // }
             //---------------------
             document.addEventListener('keydown', keyPress);
             return () => document.removeEventListener('keydown', keyPress);    

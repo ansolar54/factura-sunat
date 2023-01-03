@@ -159,7 +159,7 @@ const Mc_Cliente_desde_v2 = ({
       IsPltyp: lista_precio,
       // IsDuplicate: ''
     };
-    console.log("BUSCAR CLIENTE", modal_mc_infocliente_cliente)
+    console.log("MATCH CODE BUSCAR CLIENTE", modal_mc_infocliente_cliente)
 
     ClienteListaPrecio(modal_mc_infocliente_cliente).then((result) => {
       setresponseCliente(result);

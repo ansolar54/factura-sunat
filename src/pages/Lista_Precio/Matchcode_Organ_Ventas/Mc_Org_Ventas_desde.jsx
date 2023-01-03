@@ -4,7 +4,7 @@ import Spinner from '../../../components/Spinner';
 import './Mc_Org_Ventas_desde.css';
 
 const Mc_Org_Ventas_desde = ({showorgventa, setshoworgventa, setorg_ventas_desde,setOrgVentasName,
-    org_ventas_desde,org_ventas_hasta,setorg_ventas}) => {
+    org_ventas_desde,setorg_ventas}) => {
 
     const [ViewInfo, setViewInfo] = useState(false);
     const [responseOrgVentas, setresponseOrgVentas] = useState({etOrgVentasField:[]});
@@ -36,18 +36,26 @@ const Mc_Org_Ventas_desde = ({showorgventa, setshoworgventa, setorg_ventas_desde
             }
             //--------------------- para actualizar valor org_ventas
             if(org_ventas_desde != ''){
-                if(org_ventas_hasta==''){
-                    setorg_ventas([{Sign:"I",Option:"EQ",Low:org_ventas_desde,High:""}]);
-                }else{
-                    setorg_ventas([{Sign:"I",Option:"BT",Low:org_ventas_desde,High:org_ventas_hasta}]);
-                }
+                    setorg_ventas(org_ventas_desde);
             }else{
-                if(org_ventas_hasta!=''){
-                    setorg_ventas([{Sign:"I",Option:"EQ",Low:"",High:org_ventas_hasta}]);
-                }else{
-                    setorg_ventas([{Sign:"",Option:"",Low:"",High:""}]);
-                }
+                setorg_ventas(org_ventas_desde);
             }
+
+
+
+            // if(org_ventas_desde != ''){
+            //     if(org_ventas_hasta==''){
+            //         setorg_ventas([{Sign:"I",Option:"EQ",Low:org_ventas_desde,High:""}]);
+            //     }else{
+            //         setorg_ventas([{Sign:"I",Option:"BT",Low:org_ventas_desde,High:org_ventas_hasta}]);
+            //     }
+            // }else{
+            //     if(org_ventas_hasta!=''){
+            //         setorg_ventas([{Sign:"I",Option:"EQ",Low:"",High:org_ventas_hasta}]);
+            //     }else{
+            //         setorg_ventas([{Sign:"",Option:"",Low:"",High:""}]);
+            //     }
+            // }
             //---------------------
             document.addEventListener('keydown', keyPress);
             return () => document.removeEventListener('keydown', keyPress);    
