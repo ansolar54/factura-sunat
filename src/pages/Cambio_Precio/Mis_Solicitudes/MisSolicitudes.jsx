@@ -18,6 +18,7 @@ import toast, { Toaster } from "react-hot-toast";
 import jwt from "jwt-decode";
 import Dialog from "../Dialog";
 import { getMailGerents } from "../../../Services/ServiceUser";
+import InputForm1 from "../../../components/InputForm1";
 
 const MisSolicitudes = () => {
   // ORG VENTAS
@@ -440,8 +441,8 @@ const MisSolicitudes = () => {
               <div className="col-sm-2 d-flex align-items-center">
                 <label>Organización de ventas : </label>
               </div>
-              <div>
-                <InputForm
+              <div style={{ marginRight: "40px" }}>
+                <InputForm1
                   attribute={{
                     name: "org_ventas",
                     type: "text",
@@ -464,13 +465,13 @@ const MisSolicitudes = () => {
               <div className="col-sm-2 d-flex align-items-center">
                 <label>Cliente : </label>
               </div>
-              <div>
-                <InputForm
+              <div style={{ marginRight: "40px" }}>
+                <InputForm1
                   attribute={{
                     name: "cliente",
                     type: "text",
                     value: IsCliente,
-                    disabled: false,
+                    disabled: true,
                     checked: false,
                     matchcode: true,
                     maxlength: 4,
@@ -487,7 +488,7 @@ const MisSolicitudes = () => {
               <div className="col-sm-2 d-flex align-items-center">
                 <label>Estado : </label>
               </div>
-              <div className="input-box1">
+              <div className="input-box1" style={{ marginRight: "40px" }}>
                 <select name="id_state" onChange={(e) => selectedFiltro(e)}>
                   <option value="0">TODOS</option>
                   <option value="1">APROBADO</option>
@@ -508,7 +509,7 @@ const MisSolicitudes = () => {
                 </div>
 
                 <div className="">
-                  <InputForm
+                  <InputForm1
                     attribute={{
                       name: "nroSolicitud",
                       type: "text",
@@ -528,7 +529,7 @@ const MisSolicitudes = () => {
               <div className="col-sm-2 d-flex align-items-center">
                 <label>Fecha (Desde) : </label>
               </div>
-              <div className="input-box1">
+              <div className="input-box1" style={{ marginRight: "40px" }}>
                 <input
                   className="inputcustom"
                   type="date"

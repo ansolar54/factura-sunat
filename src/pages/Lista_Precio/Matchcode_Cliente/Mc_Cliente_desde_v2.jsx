@@ -5,7 +5,6 @@ import InputForm from "../../../components/InputForm";
 import BtnSearch from "../../../components/BtnSearch";
 import Spinner from "../../../components/Spinner";
 import jwt from "jwt-decode";
-import Mc_Org_Ventas_desde from "../Matchcode_Organ_Ventas/Mc_Org_Ventas_desde";
 const Mc_Cliente_desde_v2 = ({
   showcliente,
   setshowcliente,
@@ -14,10 +13,11 @@ const Mc_Cliente_desde_v2 = ({
   cliente_hasta,
   setcliente,
   org_ventas,
-  ofi_ventas,
-  lista_precio
+   ofi_ventas,
+   lista_precio,
+  setclienteName
 }) => {
-  //  console.log(org_ventas)
+    console.log(org_ventas)
   //  console.log(ofi_ventas)
   //  console.log(lista_precio)
   const [IsRegxpag] = useState(15); // cantidad de datos por página
@@ -80,33 +80,40 @@ const Mc_Cliente_desde_v2 = ({
     // setViewInfo(true);
     // SearchCliente(1);
     //--------------------- para actualizar valor org_ventas
-    if (cliente_desde != "") {
-      if (cliente_hasta == "") {
-        setcliente([
-          {
-            Sign: "I",
-            Option: "EQ",
-            Low: cliente_desde,
-            High: "",
-          },
-        ]);
-      } else {
-        setcliente([
-          {
-            Sign: "I",
-            Option: "BT",
-            Low: cliente_desde,
-            High: cliente_hasta,
-          },
-        ]);
-      }
-    } else {
-      if (cliente_hasta != "") {
-        setcliente([{ Sign: "I", Option: "EQ", Low: "", High: cliente_hasta }]);
-      } else {
-        setcliente([{ Sign: "", Option: "", Low: "", High: "" }]);
-      }
+
+    if(cliente_desde != ''){
+      setcliente(cliente_desde);
     }
+    else{
+      setcliente(cliente_desde)
+    }
+    // if (cliente_desde != "") {
+    //   if (cliente_hasta == "") {
+    //     setcliente([
+    //       {
+    //         Sign: "I",
+    //         Option: "EQ",
+    //         Low: cliente_desde,
+    //         High: "",
+    //       },
+    //     ]);
+    //   } else {
+    //     setcliente([
+    //       {
+    //         Sign: "I",
+    //         Option: "BT",
+    //         Low: cliente_desde,
+    //         High: cliente_hasta,
+    //       },
+    //     ]);
+    //   }
+    // } else {
+    //   if (cliente_hasta != "") {
+    //     setcliente([{ Sign: "I", Option: "EQ", Low: "", High: cliente_hasta }]);
+    //   } else {
+    //     setcliente([{ Sign: "", Option: "", Low: "", High: "" }]);
+    //   }
+    // }
     //---------------------
     document.addEventListener("keydown", keyPress);
     return () => document.removeEventListener("keydown", keyPress);
@@ -173,6 +180,7 @@ const Mc_Cliente_desde_v2 = ({
   function clickcelda(value) {
     // setPKunnr(value.kunnrField);
     setcliente_desde(value.kunnrField);
+    setclienteName(value.name1Field)
     // setetClientesField(value);
     setshowcliente((prev) => !prev);
   }

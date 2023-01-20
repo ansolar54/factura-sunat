@@ -21,7 +21,7 @@ export function OrgVentas(){
     });
 }
 //Para Matchcode de Consultar Stock
-export function ConsultarStockOrgVentas(){
+export function ConsultarStockOrgVentas(req){
 
     const base=process.env.REACT_APP_BASE_URL_SAP;
     let BaseUrl = base + 'ConsStock_OrgVentas/ConsStock_OrgVentas';
@@ -32,7 +32,8 @@ export function ConsultarStockOrgVentas(){
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            }
+            },
+            body:JSON.stringify(req)
         })
         .then((response)=>response.json())
         .then((responseJson)=>{

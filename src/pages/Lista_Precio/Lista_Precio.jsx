@@ -5,18 +5,24 @@ import Spinner from "../../components/Spinner";
 import { getUser } from "../../Services/ServiceUser";
 import toast, { Toaster } from "react-hot-toast";
 import BusquedaMult from "../../components/BusquedaMultiple/BusquedaMult";
-import Mc_Org_Ventas_desde from "./Matchcode_Organ_Ventas/Mc_Org_Ventas_desde";
-import Mc_Ofi_Ventas_desde from "./Matchcode_Ofi_Ventas/Mc_Ofi_Ventas_desde";
 import Mc_Lista_Precio_desde from "./Matchcode_Lista_Precios/Mc_Lista_Precio_desde";
 import Mc_Material_desde from "./Matchcode_Material_v2/Mc_Material_desde";
 import Mc_Material_hasta from "./Matchcode_Material_v2/Mc_Material_hasta";
 import Mc_Cliente_desde_v2 from "./Matchcode_Cliente/Mc_Cliente_desde_v2";
-import Mc_Cliente_hasta_v2 from "./Matchcode_Cliente/Mc_Cliente_hasta_v2";
+// import Mc_Cliente_hasta_v2 from "./Matchcode_Cliente/Mc_Cliente_hasta_v2";
 import InputForm from "../../components/InputForm";
 import BtnSearch from "../../components/BtnSearch";
 import Pagination from "../../components/Pagination";
-import { ConsultaListaPrecios } from "../../Services/ServiceListaPrecios";
-
+import { ConsultaListaPrecios, ParamEnter } from "../../Services/ServiceListaPrecios";
+import {
+    getOficinaVentasSAP,
+    RegistrarAuditoria,
+} from "../../Services/ServiceAuditoria";
+import InputFormKeyUp from "../../components/InputFormKeyUp";
+import InputFormKeyUp1 from "../../components/InputFormKeyUp1";
+import { MatchcodePromociones } from '../../Services/ServicePromociones';
+import Mc_Org_Ventas_desde from "./Matchcode_Organ_Ventas/Mc_Org_Ventas_desde"
+import Mc_Ofi_Ventas_desde from "./Matchcode_Ofi_Ventas/Mc_Ofi_Ventas_desde"
 
 
 const Lista_Precio = () => {
@@ -49,6 +55,8 @@ const Lista_Precio = () => {
     const [f_konwa2Field, setf_konwa2Field] = useState("");
     const [f_databField, setf_databField] = useState("");
     const [f_datbiField, setf_datbiField] = useState("");
+    const [f_name1Field, setf_name1Field] = useState("");
+    const [f_namepltypField, setf_namepltypField] = useState("");
 
     const [col_1, setcol_1] = useState(0);
     const [col_2, setcol_2] = useState(0);
@@ -59,6 +67,8 @@ const Lista_Precio = () => {
     const [col_7, setcol_7] = useState(0);
     const [col_8, setcol_8] = useState(0);
     const [col_9, setcol_9] = useState(0);
+    const [col_10, setcol_10] = useState(0);
+    const [col_11, setcol_11] = useState(0);
 
     //para el cambio de contraseña
     const [show_status_password, setshow_status_password] = useState(false);
@@ -80,14 +90,10 @@ const Lista_Precio = () => {
     const [pageNumber, setpageNumber] = useState(1);
     const [indicadorfiltro, setindicadorfiltro] = useState(false);
     const [model_filtro, setmodel_filtro] = useState({});
-    const [type_input, settype_input] = useState("text");
     const [model_listaprecio, setmodel_listaprecio] = useState();
 
-    // usestate de rangos
-    const [rangos, setrangos] = useState([
-        { Sign: "I", Option: "EQ", Low: "", High: "" },
-    ]);
-    const [ind_rang, setind_rang] = useState({ num: 1, bool: false });
+    const [type_input, settype_input] = useState("text");
+
     //MODAL para rango (busqueda multiple)
     const [showBusMult, setshowBusMult] = useState(false);
 
@@ -97,14 +103,13 @@ const Lista_Precio = () => {
     const [spinnerroute, setspinnerroute] = useState(false);
 
     //----------------------------------------------------
-
-    // rangos material
-    const [rangos_material, setrangos_material] = useState([
+    // usestate de rangos
+    const [rangos, setrangos] = useState([
         { Sign: "I", Option: "EQ", Low: "", High: "" },
     ]);
-
-    // rangos cliente
-    const [rangos_cliente, setrangos_cliente] = useState([
+    const [ind_rang, setind_rang] = useState({ num: 1, bool: false });
+    // rangos material
+    const [rangos_material, setrangos_material] = useState([
         { Sign: "I", Option: "EQ", Low: "", High: "" },
     ]);
 
@@ -125,6 +130,13 @@ const Lista_Precio = () => {
     const [lista_precio_desde, setlista_precio_desde] = useState("");
     const [listaPrecioName, setlista_precio_name] = useState("");
 
+    //INPUT Cliente
+    const [cliente, setcliente] = useState("");
+    const [cliente_desde, setcliente_desde] = useState("");
+    const [clienteName, setclienteName] = useState("");
+
+    // const [cliente_hasta, setcliente_hasta] = useState("");
+
     //INPUT Material
     const [material, setmaterial] = useState([
         { Sign: "I", Option: "EQ", Low: "", High: "" },
@@ -132,12 +144,7 @@ const Lista_Precio = () => {
     const [material_desde, setmaterial_desde] = useState("");
     const [material_hasta, setmaterial_hasta] = useState("");
 
-    //INPUT Cliente
-    const [cliente, setcliente] = useState([
-        { Sign: "I", Option: "EQ", Low: "", High: "" },
-    ]);
-    const [cliente_desde, setcliente_desde] = useState("");
-    const [cliente_hasta, setcliente_hasta] = useState("");
+
 
     //----------------------------------------------------
     //ACTIVAR MODAL MATCHCODE ORGANIZACIÓN DE VENTAS
@@ -155,9 +162,17 @@ const Lista_Precio = () => {
 
     //ACTIVAR MODAL MATCHCODE CLIENTE
     const [showcliente_desde, setshowcliente_desde] = useState(false);
-    const [showcliente_hasta, setshowcliente_hasta] = useState(false);
+    //const [showcliente_hasta, setshowcliente_hasta] = useState(false);
 
     useEffect(() => {
+
+
+
+
+
+
+
+
         //valida para el nuevo cambio de contraseña
         getUser(jwt(localStorage.getItem("_token")).nameid).then((result) => {
             if (result.data[0].status_password === "1") {
@@ -166,20 +181,33 @@ const Lista_Precio = () => {
                 setshow_status_password(false);
             }
         });
+
+        // OBTENER OFICINA DE VENTAS DE USUARIO DESDE SAP
+        let ofi_ventas = "";
+        getOficinaVentasSAP({
+            IsUser: jwt(localStorage.getItem("_token")).username,
+        }).then((result) => {
+            if (result.etOfiVentasField.length) {
+                ofi_ventas =
+                    result.etOfiVentasField[0].codOfventaField +
+                    " - " +
+                    result.etOfiVentasField[0].descripcionField;
+                //REGISTRO DE AUDITORÍA
+                RegistrarAuditoria({
+                    id_user: Number(jwt(localStorage.getItem("_token")).nameid),
+                    id_event: 8,
+                    sales_ofi: ofi_ventas,
+                    indicator: "WEB",
+                });
+            }
+        });
     }, []);
-
-
 
     useEffect(() => {
         // ind_rang.num
-        // 1: cliente
-        // 2: material
+        // 1: material
         switch (ind_rang.num) {
             case 1:
-                setrangos_cliente(rangos);
-                RangosCliente();
-                break;
-            case 2:
                 setrangos_material(rangos);
                 RangosMaterial();
                 break;
@@ -593,6 +621,74 @@ const Lista_Precio = () => {
                     }
                 }
                 break;
+            case 10:
+                clearColumnsIcon(10);
+                if (col_10 === 0) {
+                    setcol_10(col_10 + 1);
+                    // Search(1, 0, "ARKTX", "0");
+                    setIsCampo("NAME1");
+                    setIsOrden("0");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "NAME1", "0");
+                    } else {
+                        Search(1, "NAME1", "0");
+                    }
+                } else if (col_10 === 1) {
+                    setcol_10(col_10 + 1);
+                    // Search(1, 0, "ARKTX", "1");
+                    setIsCampo("NAME1");
+                    setIsOrden("1");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "NAME1", "1");
+                    } else {
+                        Search(1, "NAME1", "1");
+                    }
+                } else {
+                    setcol_10(0);
+                    // Search(1, 0, "", "");
+                    setIsCampo("");
+                    setIsOrden("");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "", "");
+                    } else {
+                        Search(1, "", "");
+                    }
+                }
+                break;
+            case 11:
+                clearColumnsIcon(11);
+                if (col_11 === 0) {
+                    setcol_11(col_11 + 1);
+                    // Search(1, 0, "ARKTX", "0");
+                    setIsCampo("NAMEPLTYP");
+                    setIsOrden("0");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "NAMEPLTYP", "0");
+                    } else {
+                        Search(1, "NAMEPLTYP", "0");
+                    }
+                } else if (col_11 === 1) {
+                    setcol_11(col_11 + 1);
+                    // Search(1, 0, "ARKTX", "1");
+                    setIsCampo("NAMEPLTYP");
+                    setIsOrden("1");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "NAMEPLTYP", "1");
+                    } else {
+                        Search(1, "NAMEPLTYP", "1");
+                    }
+                } else {
+                    setcol_11(0);
+                    // Search(1, 0, "", "");
+                    setIsCampo("");
+                    setIsOrden("");
+                    if (indicadorfiltro == true) {
+                        buscar_filtro_fila(1, "", "");
+                    } else {
+                        Search(1, "", "");
+                    }
+                }
+                break;
             default:
                 break;
         }
@@ -626,6 +722,12 @@ const Lista_Precio = () => {
                 break;
             case "f_datbiField":
                 setf_datbiField(value);
+                break;
+            case "f_name1Field":
+                setf_name1Field(value);
+                break;
+            case "f_namepltypField":
+                setf_namepltypField(value);
                 break;
             default:
                 break;
@@ -665,27 +767,6 @@ const Lista_Precio = () => {
         }
     }
 
-    // Funcion Rangos cliente
-    function RangosCliente() {
-        //console.log("rangos cliente");
-        if (rangos_cliente.length === 1) {
-            if (
-                rangos_cliente[0].Low.trim() === "" &&
-                rangos_cliente[0].High.trim() === ""
-            ) {
-                return cliente;
-            } else {
-                setcliente_desde(rangos_cliente[0].Low);
-                setcliente_hasta(rangos_cliente[0].High);
-                return rangos_cliente;
-            }
-        } else {
-            setcliente_desde(rangos_cliente[0].Low);
-            setcliente_hasta(rangos_cliente[0].High);
-            return rangos_cliente;
-        }
-    }
-
     function clear_icons_colum() {
         setcol_1(0);
         setcol_2(0);
@@ -696,6 +777,8 @@ const Lista_Precio = () => {
         setcol_7(0);
         setcol_8(0);
         setcol_9(0);
+        setcol_10(0);
+        setcol_11(0);
     }
 
     function Search(page, IsCampo, IsOrden) {
@@ -724,16 +807,16 @@ const Lista_Precio = () => {
             IsVkbur: ofi_ventas_desde,
             IsVkorg: org_ventas_desde,
             ItFilter: [],
-            ItMatnr: (material[0].Low || material[0].High) !== "" ?
+            ItMatnr: (material_desde || material_hasta) !== "" ?
                 RangosMaterial() : [],
-            ItKunnr: (cliente[0].Low || cliente[0].High) !== "" ?
-                RangosCliente() : [],
+            IsKunnr: cliente_desde,
+            //ItKunnr: []
         };
-        console.log("BUSCAR DETALLE LISTA PRECIO", model_lista_precios);
+        console.log("BUSCAR FILTRO INICIAL", model_lista_precios);
         setmodel_listaprecio(model_lista_precios);
 
         //arraycheckbox_export[0].data = [];
-        setresponse_lista_precios([]);
+        //setresponse_lista_precios([]);
         ConsultaListaPrecios(model_lista_precios).then((result) => {
             setresponse_lista_precios(
                 result.etListaDetailField.map((d) => {
@@ -747,7 +830,9 @@ const Lista_Precio = () => {
                         mxwrtField: d.mxwrtField,
                         konwa2Field: d.konwa2Field,
                         databField: d.databField,
-                        datbiField: d.datbiField
+                        datbiField: d.datbiField,
+                        name1Field: d.name1Field,
+                        namepltypField: d.namepltypField
                     };
                 })
             );
@@ -756,6 +841,9 @@ const Lista_Precio = () => {
             setvaluepagination(true);
         });
 
+        // COMENTAR CLEAR PARA QUE FUNCIONE ORDENAMIENTO
+
+        //Clear();
     }
 
     //INPUT material
@@ -764,6 +852,21 @@ const Lista_Precio = () => {
     }
     function mc_material_hasta() {
         setshowmaterial_hasta((prev) => !prev);
+    }
+
+    //INPUT organización de ventas
+    function mc_org_ventas_desde() {
+        setshoworgventa_desde((prev) => !prev);
+    }
+
+    //INPUT oficina de ventas
+    function mc_ofi_ventas_desde() {
+        setshowofiventa_desde((prev) => !prev);
+    }
+
+    //INPUT lista de precios
+    function mc_lista_precio_desde() {
+        setshowlistaprecio_desde((prev) => !prev);
     }
 
     //INPUT cliente
@@ -844,139 +947,57 @@ const Lista_Precio = () => {
 
 
     }
-    function mc_cliente_hasta() {
-        if (org_ventas_desde != "" && ofi_ventas_desde != "" && lista_precio_desde != "") {
-            setshowcliente_hasta((prev) => !prev);
-        }
-        else if (org_ventas_desde == "" && lista_precio_desde == "" && ofi_ventas_desde == "") {
-            toast.error("Debe seleccionar una \"Org. Ventas\", \"Oficina de Ventas\" y \"Lista de Precios\".", {
-                position: "top-center",
-                autoClose: 1000,
-                style: {
-                    backgroundColor: "#212121",
-                    color: "#fff",
-                }
-            })
-        }
-        else if (lista_precio_desde == "" && ofi_ventas_desde == "") {
-            toast.error("Debe seleccionar una \"Oficina de Ventas\" y \"Lista de Precios\".", {
-                position: "top-center",
-                autoClose: 1000,
-                style: {
-                    backgroundColor: "#212121",
-                    color: "#fff",
-                }
-            })
-        }
-        else if (org_ventas_desde == "" && lista_precio_desde == "") {
-            toast.error("Debe seleccionar una \"Org. Ventas\" y \"Lista de Precios\".", {
-                position: "top-center",
-                autoClose: 1000,
-                style: {
-                    backgroundColor: "#212121",
-                    color: "#fff",
-                }
-            })
-        }
-        else if (org_ventas_desde == "" && ofi_ventas_desde == "") {
-            toast.error("Debe seleccionar una \"Org. Ventas\" y \"Oficina de Ventas\".", {
-                position: "top-center",
-                autoClose: 1000,
-                style: {
-                    backgroundColor: "#212121",
-                    color: "#fff",
-                }
-            })
-        }
-        else if (org_ventas_desde == "") {
-            toast.error("Debe seleccionar una Org. Ventas.", {
-                position: "top-center",
-                autoClose: 1000,
-                style: {
-                    backgroundColor: "#212121",
-                    color: "#fff",
-                }
-            })
-        }
-        else if (ofi_ventas_desde == "") {
-            toast.error("Debe seleccionar una Oficina Ventas.", {
-                position: "top-center",
-                autoClose: 1000,
-                style: {
-                    backgroundColor: "#212121",
-                    color: "#fff",
-                }
-            })
-        }
-        else if (lista_precio_desde == "") {
-            toast.error("Debe seleccionar una Lista de Precios.", {
-                position: "top-center",
-                autoClose: 1000,
-                style: {
-                    backgroundColor: "#212121",
-                    color: "#fff",
-                }
-            })
-        }
 
-    }
+    //ESCRIBIR EN MAYUSCULA
+
+
 
     function handleChange(name, value) {
-        console.log(name, value)
+        //console.log(name, value)
         switch (name) {
-            //cliente
-            case "cliente":
-                setcliente([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
-                //setcliente([]);
+            //org. ventas
+            case "org_ventas_desde":
+                setorg_ventas_desde(value);
+                // setFiltroInicial({
+                //     org_ventas: value
+                // })
+                // let hola = document.getElementById('org_ventas_desde');
+                // const hola1 = hola?.value || ''
+                // console.log("PRUEBITA",hola1)
+                // let separador = document.getElementById('org_ventas_desde');
+                // if (separador) {
+                //     separador.addEventListener('keyup', (e) => {
+                //         e.target.value = e.target.value.toUpperCase();
+                //     }, false);
+                // }
+
+                if (org_ventas_desde == "") {
+                    setOrgVentasName("")
+                }
+
                 break;
-            case "cliente_desde":
-                setcliente_desde(value);
-                if (value.trim() != "") {
-                    if (cliente_hasta == "") {
-                        setcliente([{ Sign: "I", Option: "EQ", Low: value, High: "" }]);
-                    } else {
-                        setcliente([
-                            {
-                                Sign: "I",
-                                Option: "BT",
-                                Low: value,
-                                High: cliente_hasta,
-                            },
-                        ]);
-                    }
-                } else {
-                    if (cliente_hasta != "") {
-                        setcliente([
-                            { Sign: "I", Option: "EQ", Low: "", High: cliente_hasta },
-                        ]);
-                    } else {
-                        setcliente([{ Sign: "", Option: "", Low: "", High: "" }]);
-                    }
+            //ofi. ventas
+            case "ofi_ventas_desde":
+                // setFiltroInicial({
+                //     ofi_ventas: value
+                // })
+                setofi_ventas_desde(value);
+                if (ofi_ventas_desde == "") {
+                    setofi_ventas_name("")
                 }
                 break;
-            case "cliente_hasta":
-                setcliente_hasta(value);
-                if (value.trim() != "") {
-                    if (cliente_desde == "") {
-                        setcliente([{ Sign: "I", Option: "EQ", Low: "", High: value }]);
-                    } else {
-                        setcliente([
-                            {
-                                Sign: "I",
-                                Option: "BT",
-                                Low: cliente_desde,
-                                High: value,
-                            },
-                        ]);
-                    }
-                } else {
-                    if (cliente_desde != "") {
-                        setcliente([
-                            { Sign: "I", Option: "EQ", Low: cliente_desde, High: "" },
-                        ]);
-                    } else {
-                        setcliente([{ Sign: "", Option: "", Low: "", High: "" }]);
-                    }
+            //lista precio
+            case "lista_precio_desde":
+                setlista_precio_desde(value);
+                if (lista_precio_desde == "") {
+                    setlista_precio_name("")
+                }
+                break;
+            //cliente
+            case "cliente_desde":
+                setcliente_desde(value);
+                if (cliente_desde == "") {
+                    setclienteName("");
                 }
                 break;
 
@@ -1071,6 +1092,36 @@ const Lista_Precio = () => {
         }
     };
 
+    function convertDecimal(num) {
+        // return num.toFixed(Math.max(((num+'').split(".")[1]||"").length, 2));
+        if (num == null || num == "" || num == "0") {
+            return "0.00";
+        } else {
+            if (num.toString().split(".").length == 2) {
+                // console.log( num.toString().split(".")[0].replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") + "."+num.toString().split(".")[1]);
+                return (
+                    num
+                        .toString()
+                        .split(".")[0]
+                        .replace(/\D/g, "")
+                        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") +
+                    "." +
+                    // num.toString().split(".")[1].padStart(2, "0")
+                    num.toString().split(".")[1].padEnd(2, "0")
+                );
+            } else {
+                // console.log( num.toString().split(".")[0].replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") + ".00");
+                return (
+                    num
+                        .toString()
+                        .split(".")[0]
+                        .replace(/\D/g, "")
+                        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") + ".00"
+                );
+            }
+        }
+    }
+
     const getDateAct = () => {
         let date = new Date();
 
@@ -1093,7 +1144,7 @@ const Lista_Precio = () => {
     function changePage(pageNumber) {
         setresponse_lista_precios([]);
         if (indicadorfiltro == false) {
-            Search(pageNumber, 1, IsCampo, IsOrden);
+            Search(pageNumber, IsCampo, IsOrden);
         } else {
             setpageNumber(pageNumber);
             buscar_filtro_fila(pageNumber, IsCampo, IsOrden);
@@ -1105,7 +1156,7 @@ const Lista_Precio = () => {
         setresponse_lista_precios([]);
 
         if (indicadorfiltro == false) {
-            Search(value - 1, 1, IsCampo, IsOrden);
+            Search(value - 1, IsCampo, IsOrden);
         } else {
             setmodel_filtro({ ...model_filtro, IsNpag: value - 1 });
             // SearchFiltro();
@@ -1117,7 +1168,7 @@ const Lista_Precio = () => {
         setresponse_lista_precios([]);
 
         if (indicadorfiltro == false) {
-            Search(value + 1, 1, IsCampo, IsOrden);
+            Search(value + 1, IsCampo, IsOrden);
         } else {
             setmodel_filtro({ ...model_filtro, IsNpag: value + 1 });
             // SearchFiltro();
@@ -1125,39 +1176,19 @@ const Lista_Precio = () => {
         }
     }
 
-    const ChangeBusquedaMult_Cliente = () => {
-        setrangos(rangos_cliente);
+    const ChangeBusquedaMult_Material = () => {
+        setrangos(rangos_material);
         settype_input("text");
         setind_rang({ num: 1, bool: true });
         setshowBusMult(true);
     };
-    const ChangeBusquedaMult_Material = () => {
-        setrangos(rangos_material);
-        settype_input("text");
-        setind_rang({ num: 2, bool: true });
-        setshowBusMult(true);
-    };
 
-    //INPUT organización de ventas
-    function mc_org_ventas_desde() {
-        setshoworgventa_desde((prev) => !prev);
-    }
 
-    //INPUT oficina de ventas
-    function mc_ofi_ventas_desde() {
-        setshowofiventa_desde((prev) => !prev);
-    }
-
-    //INPUT lista de precios
-    function mc_lista_precio_desde() {
-        setshowlistaprecio_desde((prev) => !prev);
-    }
 
     function Clear() {
         setmostrar_filtro_fila(false);
         setvaluepagination(false);
         setresponse_lista_precios([]);
-        setrangos_cliente([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
         setrangos_material([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
         setorg_ventas_desde("");
         setofi_ventas_desde("");
@@ -1165,11 +1196,17 @@ const Lista_Precio = () => {
 
         handleChange("cliente", "");
         setcliente_desde("");
-        setcliente_hasta("");
 
         handleChange("material", "");
         setmaterial_desde("");
         setmaterial_hasta("");
+
+        // DESCRIPCIÓN
+
+        setOrgVentasName("");
+        setclienteName("");
+        setofi_ventas_name("");
+        setlista_precio_name("");
 
     }
 
@@ -1183,6 +1220,8 @@ const Lista_Precio = () => {
         setf_konwa2Field("");
         setf_databField("");
         setf_datbiField("");
+        setf_name1Field("");
+        setf_namepltypField("");
     }
 
     function buscar_filtro_fila(pageNumber, IsCampo, IsOrden) {
@@ -1212,19 +1251,20 @@ const Lista_Precio = () => {
                 Vkorg: f_vkorgField,
                 Matnr: f_matnrField,
                 Maktx: f_maktxField,
-                Kbetr: Number(f_kbetrField),
+                Kbetr: Number(Number((f_kbetrField).replace(",", '')).toFixed(1)),
                 Konwa: f_konwaField,
-                Mxwrt: Number(f_mxwrtField),
+                Mxwrt: Number(Number((f_mxwrtField).replace(",", '')).toFixed(1)),
                 Konwa2: f_konwa2Field,
                 Datab: formatDateSAP(f_databField),
-                Datib: formatDateSAP(f_datbiField)
+                Datib: formatDateSAP(f_datbiField),
+                Name1: f_name1Field,
+                Namepltyp: f_namepltypField
             }],
-            ItMatnr: (material[0].Low || material[0].High) !== "" ?
+            ItMatnr: (material_desde || material_hasta) !== "" ?
                 RangosMaterial() : [],
-            ItKunnr: (cliente[0].Low || cliente[0].High) !== "" ?
-                RangosCliente() : [],
+            IsKunnr: cliente_desde,
         };
-        console.log("FILTRO DETALLE LISTA PRECIO", model_lista_precios_filtro);
+        console.log("FILTRO TABLA LISTA PRECIO", model_lista_precios_filtro);
         setmostrar_filtro_fila(false);
         //arraycheckbox_export[0].data = [];
         setresponse_lista_precios([]);
@@ -1243,7 +1283,9 @@ const Lista_Precio = () => {
                         mxwrtField: d.mxwrtField,
                         konwa2Field: d.konwa2Field,
                         databField: d.databField,
-                        datbiField: d.datbiField
+                        datbiField: d.datbiField,
+                        name1Field: d.name1Field,
+                        namepltypField: d.namepltypField
                     };
                 })
             );
@@ -1263,7 +1305,7 @@ const Lista_Precio = () => {
 
     function buscar_filtro_icono_btn() {
         if ((f_vkorgField || f_matnrField || f_maktxField || f_kbetrField || f_konwaField
-            || f_mxwrtField || f_konwa2Field || f_databField || f_datbiField) != "") {
+            || f_mxwrtField || f_konwa2Field || f_databField || f_datbiField || f_name1Field || f_namepltypField) != "") {
             buscar_filtro_fila(1, "", "");
         }
         else {
@@ -1276,8 +1318,6 @@ const Lista_Precio = () => {
                 },
             });
         }
-
-
     }
 
     function ModalFiltro() {
@@ -1293,9 +1333,7 @@ const Lista_Precio = () => {
         // setshowFiltroConsultaPedido(true);
     }
 
-
-
-    const ValidacionSearch = () => { 
+    const ValidacionSearch = () => {
         if ((org_ventas_desde == "" && ofi_ventas_desde == "" && lista_precio_desde == "")) {
             toast.error("Debe seleccionar una \"Org. Ventas.\", \"Oficina de Ventas.\" y \"Lista de Precio.\"", {
                 position: "top-center",
@@ -1367,9 +1405,93 @@ const Lista_Precio = () => {
             });
         }
         else {
-            Search(1, 0, "", "");
-    
-             }
+            Search(1, "", "");
+
+        }
+    }
+
+    function onKeyUpOrgVentas(e) {
+        var keycode = e.keyCode;
+        console.log("KEYCODE ORG", keycode);
+        let model = {
+            IsParametro: "VKORG",
+            PVkbur: "",
+            PVkorg: org_ventas_desde,
+            IsUser: jwt(localStorage.getItem("_token")).username,
+        };
+        if (keycode == "13") {
+            MatchcodePromociones(model).then((result) => {
+                if (result.etOrgVentasField.length == 1) {
+                    setOrgVentasName(
+                        result.etOrgVentasField[0].vtextField,
+                    )
+                    // setDescFiltroInicial({
+                    //     ...descFiltroInicial,
+                    //     org_ventas: result.etOrgVentasField[0].vtextField,
+                    // });
+                }
+            });
+
+
+        }
+    }
+
+    function onKeyUpOfiVentas(e) {
+        var keycode = e.keyCode;
+
+        let model = {
+            IsParametro: "VKBUR",
+            PVkbur: ofi_ventas_desde,
+            PVkorg: "",
+            IsUser: jwt(localStorage.getItem("_token")).username,
+        };
+        if (keycode == "13") {
+            MatchcodePromociones(model).then((result) => {
+                if (result.etOfiVentasField.length == 1) {
+                    setofi_ventas_name(
+                        result.etOfiVentasField[0].bezeiField,
+                    )
+                }
+            });
+        }
+    }
+
+    function onKeyUpLPrecios(e) {
+        var keycode = e.keyCode;
+        console.log("KEY CODE", keycode)
+        let model = {
+            IsParametro: "PLTYP",
+            PKunnr: "",
+            PPltyp: lista_precio_desde,
+        };
+        if (keycode == "13") {
+            ParamEnter(model).then((result) => {
+                if (result.etListaPreciosField.length == 1) {
+                    setlista_precio_name(
+                        result.etListaPreciosField[0].ptextField,
+                    )
+                }
+            });
+        }
+    }
+
+    function onKeyUpClientes(e) {
+        var keycode = e.keyCode;
+        console.log("KEY CODE", keycode)
+        let model = {
+            IsParametro: "KUNNR",
+            PKunnr: cliente_desde,
+            PPltyp: "",
+        };
+        if (keycode == "13") {
+            ParamEnter(model).then((result) => {
+                if (result.etClientesField.length == 1) {
+                    setclienteName(
+                        result.etClientesField[0].name1Field,
+                    )
+                }
+            });
+        }
     }
 
     return (
@@ -1397,6 +1519,7 @@ const Lista_Precio = () => {
                             settype_input={settype_input}
                         />
                         {/* MODAL MATCHCODE ORGANIZACION DE VENTAS */}
+                        {/* /////////// */}
                         <Mc_Org_Ventas_desde
                             showorgventa={showorgventa_desde}
                             setshoworgventa={setshoworgventa_desde}
@@ -1414,6 +1537,7 @@ const Lista_Precio = () => {
                             setofi_ventas={setofi_ventas}
                             setofi_ventas_name={setofi_ventas_name}
                         />
+
                         {/* MODAL MATCHCODE LISTA DE PRECIOS */}
                         <Mc_Lista_Precio_desde
                             showlistaprecio={showlistaprecio_desde}
@@ -1447,22 +1571,12 @@ const Lista_Precio = () => {
                             setshowcliente={setshowcliente_desde}
                             setcliente_desde={setcliente_desde}
                             cliente_desde={cliente_desde}
-                            cliente_hasta={cliente_hasta}
+                            //cliente_hasta={cliente_hasta}
                             setcliente={setcliente}
                             org_ventas={org_ventas_desde}
                             ofi_ventas={ofi_ventas_desde}
                             lista_precio={lista_precio_desde}
-                        />
-                        <Mc_Cliente_hasta_v2
-                            showcliente={showcliente_hasta}
-                            setshowcliente={setshowcliente_hasta}
-                            setcliente_hasta={setcliente_hasta}
-                            cliente_hasta={cliente_hasta}
-                            cliente_desde={cliente_desde}
-                            setcliente={setcliente}
-                            org_ventas={org_ventas_desde}
-                            ofi_ventas={ofi_ventas_desde}
-                            lista_precio={lista_precio_desde}
+                            setclienteName={setclienteName}
                         />
                         <Toaster />
 
@@ -1496,25 +1610,33 @@ const Lista_Precio = () => {
                                 {/* Org. Ventas */}
                                 <div className="col-sm-4 d-flex align-items-center">
                                     <label>
-                                        <label>Organización Ventas</label>{" "}
+                                        <label>Organización Ventas : </label>{" "}
                                         <label style={{ color: "red" }}>(*)</label>
                                     </label>
                                 </div>
                                 <div className="col-sm-3">
-                                    <InputForm
+                                    <InputFormKeyUp1
                                         attribute={{
                                             name: "org_ventas_desde",
+                                            id: "org_ventas_desde",
                                             type: "text",
                                             value: org_ventas_desde,
-                                            disabled: true,
+                                            disabled: false,
                                             checked: false,
                                             matchcode: true,
                                             maxlength: 4,
                                         }}
                                         handleChange={handleChange}
                                         onClick={() => mc_org_ventas_desde()}
+                                        onKeyUp={(e) => onKeyUpOrgVentas(e)}
                                     />
                                 </div>
+                                {/* <div className="col-sm-3">
+                                    <label className="py-2" id="lblorgventas">
+                                        {descFiltroInicial.org_ventas}
+                                    </label>
+                                </div> */}
+
                                 <div className="col-sm-3">
                                     <label className="py-2">
                                         {org_ventas_desde != "" ? orgVentasName : ""}
@@ -1524,27 +1646,27 @@ const Lista_Precio = () => {
                                 {/* Oficina de Ventas */}
                                 <div className="col-sm-4 d-flex align-items-center">
                                     <label>
-                                        <label>Oficina de Ventas</label>{" "}
+                                        <label>Oficina de Ventas : </label>{" "}
                                         <label style={{ color: "red" }}>(*)</label>
                                     </label>
                                 </div>
                                 <div className="col-sm-3">
-                                    <InputForm
+                                    <InputFormKeyUp
                                         attribute={{
                                             name: "ofi_ventas_desde",
                                             type: "text",
                                             value: ofi_ventas_desde,
-                                            disabled: true,
+                                            disabled: false,
                                             checked: false,
                                             matchcode: true,
                                             maxlength: 4,
                                         }}
                                         handleChange={handleChange}
                                         onClick={() => mc_ofi_ventas_desde()}
+                                        onKeyUp={(e) => onKeyUpOfiVentas(e)}
                                     />
                                 </div>
                                 <div className="col-sm-3">
-
                                     <label className="py-2">
                                         {ofi_ventas_desde != "" ? ofiVentasName : ""}
                                     </label>
@@ -1553,34 +1675,38 @@ const Lista_Precio = () => {
                                 {/* Lista de Precios */}
                                 <div className="col-sm-4 d-flex align-items-center">
                                     <label>
-                                        <label>Lista de Precios</label>{" "}
+                                        <label>Lista de Precios : </label>{" "}
                                         <label style={{ color: "red" }}>(*)</label>
                                     </label>
                                 </div>
                                 <div className="col-sm-3">
-                                    <InputForm
+                                    <InputFormKeyUp
                                         attribute={{
                                             name: "lista_precio_desde",
                                             type: "text",
                                             value: lista_precio_desde,
-                                            disabled: true,
+                                            disabled: false,
                                             checked: false,
                                             matchcode: true,
                                             maxlength: 4,
                                         }}
                                         handleChange={handleChange}
                                         onClick={() => mc_lista_precio_desde()}
+                                        onKeyUp={(e) => onKeyUpLPrecios(e)}
                                     />
                                 </div>
                                 <div className="col-sm-3">
-                                    <label className="py-2">
+                                    {/* <label className="py-2">
                                         {lista_precio_desde != "" ? listaPrecioName : ""}
+                                    </label> */}
+                                    <label className="py-2">
+                                        {lista_precio_desde != "" ? listaPrecioName : ''}
                                     </label>
                                 </div>
 
                                 {/* MATERIAL */}
                                 <div className="col-sm-4 d-flex align-items-center">
-                                    <label>Material</label>
+                                    <label>Material : </label>
                                 </div>
                                 <div className="col-sm-3">
                                     <InputForm
@@ -1588,7 +1714,7 @@ const Lista_Precio = () => {
                                             name: "material_desde",
                                             type: "text",
                                             value: material_desde,
-                                            disabled: true,
+                                            disabled: false,
                                             checked: false,
                                             matchcode: true,
                                             maxlength: 10,
@@ -1603,7 +1729,7 @@ const Lista_Precio = () => {
                                             name: "material_hasta",
                                             type: "text",
                                             value: material_hasta,
-                                            disabled: true,
+                                            disabled: false,
                                             checked: false,
                                             matchcode: true,
                                             maxlength: 10,
@@ -1615,36 +1741,42 @@ const Lista_Precio = () => {
                                 <div className="col-sm-2 d-flex align-items-center">
                                     <i
                                         className="fas fa-file-export icon-matchcode-2"
-                                    onClick={ChangeBusquedaMult_Material}
+                                        onClick={ChangeBusquedaMult_Material}
                                     ></i>
                                 </div>
 
                                 {/* CLIENTE */}
                                 <div className="col-sm-4 d-flex align-items-center">
-                                    <label>Cliente</label>
+                                    <label>Cliente : </label>
                                 </div>
                                 <div className="col-sm-3">
-                                    <InputForm
+                                    <InputFormKeyUp
                                         attribute={{
                                             name: "cliente_desde",
                                             type: "text",
                                             value: cliente_desde,
-                                            disabled: true,
+                                            disabled: false,
                                             checked: false,
                                             matchcode: true,
                                             maxlength: 10,
                                         }}
                                         handleChange={handleChange}
                                         onClick={() => mc_cliente_desde()}
+                                        onKeyUp={(e) => onKeyUpClientes(e)}
                                     />
                                 </div>
                                 <div className="col-sm-3">
+                                    <label className="py-2">
+                                        {cliente_desde != '' ? clienteName : ''}
+                                    </label>
+                                </div>
+                                {/* <div className="col-sm-3">
                                     <InputForm
                                         attribute={{
                                             name: "cliente_hasta",
                                             type: "text",
                                             value: cliente_hasta,
-                                            disabled: true,
+                                            disabled: false,
                                             checked: false,
                                             matchcode: true,
                                             maxlength: 10,
@@ -1658,11 +1790,11 @@ const Lista_Precio = () => {
                                         className="fas fa-file-export icon-matchcode-2"
                                     onClick={ChangeBusquedaMult_Cliente}
                                     ></i>
-                                </div>
+                                </div> */}
 
                                 {/* FECHA VALIDO EL */}
                                 <div className="col-sm-4 d-flex align-items-center">
-                                    <label>Valido el</label>
+                                    <label>Fecha de Consulta : </label>
                                 </div>
                                 <div className="col-sm-3">
                                     <InputForm
@@ -1680,10 +1812,10 @@ const Lista_Precio = () => {
                                     />
                                 </div>
                                 <div className="col-sm-3">
-                                    
+
                                 </div>
                                 <div className="col-sm-2 d-flex align-items-center">
-                                    
+
                                 </div>
 
                             </div>
@@ -1948,6 +2080,56 @@ const Lista_Precio = () => {
                                                         ></i>
                                                     ) : null}
                                                 </th>
+                                                {(cliente_desde != "") && (
+                                                    <th>
+                                                        Cliente |{" "}
+                                                        {col_10 === 0 ? (
+                                                            <i
+                                                                className="fas fa-arrows-alt-v"
+                                                                style={{ cursor: "pointer" }}
+                                                                onClick={() => handleChangeColumna(10)}
+                                                            ></i>
+                                                        ) : null}
+                                                        {col_10 === 1 ? (
+                                                            <i
+                                                                className="fas fa-sort-amount-up"
+                                                                style={{ cursor: "pointer" }}
+                                                                onClick={() => handleChangeColumna(10)}
+                                                            ></i>
+                                                        ) : null}
+                                                        {col_10 === 2 ? (
+                                                            <i
+                                                                className="fas fa-sort-amount-down-alt"
+                                                                style={{ cursor: "pointer" }}
+                                                                onClick={() => handleChangeColumna(10)}
+                                                            ></i>
+                                                        ) : null}
+                                                    </th>
+                                                )}
+                                                <th>
+                                                    Lista de Precios |{" "}
+                                                    {col_11 === 0 ? (
+                                                        <i
+                                                            className="fas fa-arrows-alt-v"
+                                                            style={{ cursor: "pointer" }}
+                                                            onClick={() => handleChangeColumna(11)}
+                                                        ></i>
+                                                    ) : null}
+                                                    {col_11 === 1 ? (
+                                                        <i
+                                                            className="fas fa-sort-amount-up"
+                                                            style={{ cursor: "pointer" }}
+                                                            onClick={() => handleChangeColumna(11)}
+                                                        ></i>
+                                                    ) : null}
+                                                    {col_11 === 2 ? (
+                                                        <i
+                                                            className="fas fa-sort-amount-down-alt"
+                                                            style={{ cursor: "pointer" }}
+                                                            onClick={() => handleChangeColumna(11)}
+                                                        ></i>
+                                                    ) : null}
+                                                </th>
                                                 {/* <th>Acción</th> */}
                                             </tr>
                                         </thead>
@@ -1956,7 +2138,7 @@ const Lista_Precio = () => {
                                                 <tr>
                                                     <th>
                                                         <button
-                                                            className="btn_search_filter"
+                                                            className="btn_search_filter mt-0"
                                                             onClick={() => buscar_filtro_icono_btn()}
                                                         >
                                                             <i className="fas fa-filter"></i>
@@ -1984,11 +2166,11 @@ const Lista_Precio = () => {
                                                         </div>
                                                     </th>
                                                     <th>
-                                                        <input
+                                                        <input style={{ width: "100px" }}
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_matnrField"
-                                                            maxLength="30"
+                                                            maxLength="10"
                                                             onChange={(e) =>
                                                                 handleChangeFiltro(
                                                                     e.target.name,
@@ -1998,7 +2180,7 @@ const Lista_Precio = () => {
                                                         />
                                                     </th>
                                                     <th>
-                                                        <input
+                                                        <input style={{ width: "270px" }}
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_maktxField"
@@ -2012,7 +2194,7 @@ const Lista_Precio = () => {
                                                         />
                                                     </th>
                                                     <th>
-                                                        <input
+                                                        <input style={{ width: "110px" }}
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_kbetrField"
@@ -2026,11 +2208,11 @@ const Lista_Precio = () => {
                                                         />
                                                     </th>
                                                     <th>
-                                                        <input
+                                                        <input style={{ width: "60px" }}
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_konwaField"
-                                                            maxLength="30"
+                                                            maxLength="3"
                                                             onChange={(e) =>
                                                                 handleChangeFiltro(
                                                                     e.target.name,
@@ -2040,7 +2222,7 @@ const Lista_Precio = () => {
                                                         />
                                                     </th>
                                                     <th>
-                                                        <input
+                                                        <input style={{ width: "110px" }}
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_mxwrtField"
@@ -2054,11 +2236,11 @@ const Lista_Precio = () => {
                                                         />
                                                     </th>
                                                     <th>
-                                                        <input
+                                                        <input style={{ width: "60px" }}
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_konwa2Field"
-                                                            maxLength="30"
+                                                            maxLength="3"
                                                             onChange={(e) =>
                                                                 handleChangeFiltro(
                                                                     e.target.name,
@@ -2087,6 +2269,34 @@ const Lista_Precio = () => {
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_datbiField"
                                                             style={{ paddingTop: "1.5px", paddingBottom: "1px" }} className="px-2"
+                                                            onChange={(e) =>
+                                                                handleChangeFiltro(
+                                                                    e.target.name,
+                                                                    e.target.value
+                                                                )
+                                                            }
+                                                        />
+                                                    </th>
+                                                    <th>
+                                                        <input style={{ width: "300px" }}
+                                                            type="text"
+                                                            onKeyUp={(e) => buscar_filtro_enter(e)}
+                                                            name="f_name1Field"
+                                                            maxLength="40"
+                                                            onChange={(e) =>
+                                                                handleChangeFiltro(
+                                                                    e.target.name,
+                                                                    e.target.value
+                                                                )
+                                                            }
+                                                        />
+                                                    </th>
+                                                    <th>
+                                                        <input
+                                                            type="text"
+                                                            onKeyUp={(e) => buscar_filtro_enter(e)}
+                                                            name="f_namepltypField"
+                                                            maxLength="40"
                                                             onChange={(e) =>
                                                                 handleChangeFiltro(
                                                                     e.target.name,
@@ -2320,13 +2530,13 @@ const Lista_Precio = () => {
                                                                 {response.maktxField}
                                                             </th>
                                                             <th style={{ textAlign: "center" }}>
-                                                                {response.kbetrField}
+                                                                {convertDecimal(response.kbetrField)}
                                                             </th>
                                                             <th style={{ textAlign: "center" }}>
                                                                 {response.konwaField}
                                                             </th>
                                                             <th style={{ textAlign: "center" }}>
-                                                                {response.mxwrtField}
+                                                                {convertDecimal(response.mxwrtField)}
                                                             </th>
                                                             <th style={{ textAlign: "center" }}>
                                                                 {response.konwa2Field}
@@ -2336,6 +2546,15 @@ const Lista_Precio = () => {
                                                             </th>
                                                             <th style={{ textAlign: "center" }}>
                                                                 {formatFecha(response.datbiField)}
+                                                            </th>
+                                                            {(cliente_desde != "") && (
+                                                                <th style={{ textAlign: "left" }}>
+                                                                    {(response.name1Field)}
+                                                                </th>
+                                                            )}
+
+                                                            <th style={{ textAlign: "center" }}>
+                                                                {(response.namepltypField)}
                                                             </th>
                                                             {/* <th
                                                             //onClick={() => verPedido(response.vbelnField)}

@@ -13,6 +13,7 @@ const InputFormKeyUp = ({ attribute, handleChange, onClick, onKeyUp }) => {
         disabled={attribute.disabled}
         checked={attribute.checked}
         maxLength={attribute.maxlength}
+        placeholder={attribute.placeholder}
         onChange={(e) => handleChange(e.target.name, e.target.value)}
         onKeyUp={(e) => onKeyUp(e)}
       />

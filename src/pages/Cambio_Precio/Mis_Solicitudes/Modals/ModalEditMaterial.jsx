@@ -386,6 +386,21 @@ const ModalEditMaterial = ({
     }
   };
 
+  let separador = document.getElementById('precio_sugerido');
+  // // const value1 = separador[0] || '';
+  // // console.log("OBTENER VALUE", value1)
+
+  if(separador){
+    separador.addEventListener('keyup', (e) => {
+      var entrada = e.target.value.split('.'),
+       parteEntera = entrada[0].replace(/\,/g, ''),
+        parteDecimal = entrada[1],
+        salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+ 
+      e.target.value = salida + (parteDecimal !== undefined ? '.' + parteDecimal : '');
+    }, false);
+  }
+
   return (
     <>
       {showModalEditMaterial ? (
@@ -457,6 +472,7 @@ const ModalEditMaterial = ({
                     <InputForm
                       attribute={{
                         name: "precio_sugerido",
+                        id: "precio_sugerido",
                         type: "search",
                         value: (material.suggested_price),
                         disabled: false,

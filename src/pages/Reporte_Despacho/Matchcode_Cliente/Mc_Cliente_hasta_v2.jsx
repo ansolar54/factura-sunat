@@ -87,7 +87,7 @@ const [spinner, setspinner] = useState(false);
       }
     } else {
       if (cliente_desde != "") {
-        setcliente([{ Sign: "I", Option: "EQ", Low: "", High: cliente_hasta }]);
+        setcliente([{ Sign: "I", Option: "EQ", Low: cliente_desde, High: "" }]);
       } else {
         setcliente([{ Sign: "", Option: "", Low: "", High: "" }]);
       }
@@ -289,7 +289,7 @@ const [spinner, setspinner] = useState(false);
 
                       {/* <th>Canal distrib.</th> */}
                       {/* <th>Sector</th> */}
-                      <th>USD Línea Cred. Disp</th>
+                      {/* <th>USD Línea Cred. Disp</th> */}
                       {/* <th>Tiene Doc. vencidos</th> */}
                     </tr>
                   </thead>
@@ -305,7 +305,7 @@ const [spinner, setspinner] = useState(false);
                           <th style={{textAlign:"center"}}>{response.stcd1Field}</th>
                           {/* <th style={{textAlign:"center"}}>{response.vtwegField}</th> */}
                           {/* <th style={{textAlign:"center"}}>{response.spartField}</th> */}
-                          <th style={{textAlign:"end"}}>{convertDecimal(response.klimkField)}</th>
+                          {/* <th style={{textAlign:"end"}}>{convertDecimal(response.klimkField)}</th> */}
                           {/* <th style={{textAlign:"center"}}>{response.docValField}</th> */}
                         </tr>
                       )

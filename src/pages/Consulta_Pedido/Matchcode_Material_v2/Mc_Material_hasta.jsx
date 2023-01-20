@@ -77,7 +77,7 @@ useEffect(() => {
     // SearchMaterial(1);
     //--------------------- para actualizar valor org_ventas
     if (material_hasta != "") {
-      if (material_hasta == "") {
+      if (material_desde == "") {
         setmaterial([
           { Sign: "I", Option: "EQ", Low: "", High: material_hasta },
         ]);
@@ -92,9 +92,9 @@ useEffect(() => {
         ]);
       }
     } else {
-      if (material_hasta != "") {
+      if (material_desde != "") {
         setmaterial([
-          { Sign: "I", Option: "EQ", Low: material_desde, High: "" },
+          { Sign: "I", Option: "EQ", Low: "", High: material_hasta },
         ]);
       } else {
         setmaterial([{ Sign: "", Option: "", Low: "", High: "" }]);

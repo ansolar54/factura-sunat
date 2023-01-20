@@ -25,6 +25,7 @@ import ModalDetailSolicitud from "./Modals/ModalDetailSolicitud";
 import McOrgVentas from "../Modals_General/McOrgVentas";
 import jwt from "jwt-decode";
 import ModalEditMaterial from "./Modals/ModalEditMaterial";
+import InputForm1 from "../../../components/InputForm1";
 
 const MisAprobaciones = () => {
   // PAGINATION
@@ -644,7 +645,7 @@ const MisAprobaciones = () => {
               <div className="col-sm-2 d-flex align-items-center">
                 <label>Estado : </label>
               </div>
-              <div className="input-box1">
+              <div className="input-box1" style={{ marginRight: "40px" }}>
                 <select name="id_state" onChange={(e) => selectedItem(e)}>
                   <option value="0">TODOS</option>
                   <option value="1">APROBADO</option>
@@ -661,7 +662,7 @@ const MisAprobaciones = () => {
               <div className="col-sm-2 d-flex align-items-center">
                 <label>Usuario : </label>
               </div>
-              <div className="input-box2">
+              <div className="input-box1" style={{ width: "230px" }}>
                 <select name="id_user" onChange={(e) => selectedItem(e)}>
                   <option value="0">Seleccione...</option>
                   {users.map((item) => (
@@ -677,8 +678,8 @@ const MisAprobaciones = () => {
               <div className="col-sm-2 d-flex align-items-center">
                 <label>Fecha (Desde) : </label>
               </div>
-              <div className="input-box1">
-                <input
+              <div className="input-box1" style={{ marginRight: "40px" }}>
+                <input 
                   className="inputcustom"
                   type="date"
                   name="created_at"
@@ -688,7 +689,7 @@ const MisAprobaciones = () => {
               <div className=" col-sm-2 d-flex align-items-center">
                 <label>Fecha (Hasta) : </label>
               </div>
-              <div className="input-box2">
+              <div className="input-box1" style={{ width: "230px" }}>
                 <input
                   className="inputcustom"
                   type="date"
@@ -701,8 +702,8 @@ const MisAprobaciones = () => {
               <div className="col-sm-2 d-flex align-items-center">
                 <label>Organización de ventas : </label>
               </div>
-              <div>
-                <InputForm
+              <div style={{ marginRight: "40px" }}>
+                <InputForm1
                   attribute={{
                     name: "org_ventas",
                     type: "text",
@@ -716,11 +717,11 @@ const MisAprobaciones = () => {
                   onClick={() => openMcOrgVentas()}
                 />
               </div>
-              {/* <div className="align-items-center">
+              <div className="align-items-center">
                 <label>{orgVentasValue != "" ? orgVentasName : ""}</label>
-              </div> */}
+              </div>
 
-              <div className="col-sm-2 d-flex align-items-center">
+              {/* <div className="col-sm-2 d-flex align-items-center">
                 <label>O. V. Descripción : </label>
               </div>
               <div className="input-box2">
@@ -733,15 +734,15 @@ const MisAprobaciones = () => {
                   placeholder="--"
                   onChange={(e) => handleChange(e)}
                 />
-              </div>
+              </div> */}
             </div>
             <div>
               {/* style={{ fontWeight: "bold" }} */}
               <div className="col-sm-2 d-flex align-items-center">
                 <label>N° Solicitud :</label>
               </div>
-              <div className="">
-                <InputForm
+              <div >
+                <InputForm1
                   attribute={{
                     name: "nroSolicitud",
                     type: "text",

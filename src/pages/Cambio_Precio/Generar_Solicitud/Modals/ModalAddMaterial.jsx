@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import BtnCancel from "../../../../components/BtnCancel";
 import BtnSave from "../../../../components/BtnSave";
 import InputForm from "../../../../components/InputForm";
+import InputFormKeyUp from "../../../../components/InputFormKeyUp";
 import McMaterial from "../../Modals_General/McMaterial";
 import toast, { Toaster } from "react-hot-toast";
 import { AprobMargen } from "../../../../Services/ServiceCambioPrecio";
@@ -136,18 +137,7 @@ const ModalAddMaterial = ({
   const guardar = () => {
     console.log(material.prec_sug, material.lim_inf);
     console.log(typeof material.prec_sug, typeof material.lim_inf);
-
-    if ((material.prec_sug) > material.lim_inf) {
-      toast.error("Precio sugerido debe ser menor a " + convertDecimal(material.lim_inf) + " " + material.moneda, {
-        position: "top-center",
-        autoClose: 5000,
-        style: {
-          backgroundColor: "#212121",
-          color: "#fff",
-        },
-      });
-    }
-    else if ((material.prec_sug) == "" && material.prec_act == "" && material.margen == "" && material.cod_mat == "") {
+    if (material.cod_mat == "") {
       toast.error("Debe seleccionar algún material.", {
         position: "top-center",
         autoClose: 5000,
@@ -157,6 +147,17 @@ const ModalAddMaterial = ({
         },
       });
     }
+    else if ((material.prec_sug) > material.lim_inf) {
+      toast.error("Precio sugerido debe ser menor a " + convertDecimal(material.lim_inf) + " " + material.moneda, {
+        position: "top-center",
+        autoClose: 5000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        },
+      });
+    }
+    
     else if ((material.prec_sug) == "" || (material.prec_sug) == 0.00) {
       toast.error("Debe ingresar un \"Precio sugerido\" mayor a 0.00 " + material.moneda, {
         position: "top-center",
@@ -262,71 +263,75 @@ const ModalAddMaterial = ({
   // }
 
 
+
+// PRUEBA ADDEVENTLISTENER /////////////
+
+  // let number1 = document.getElementById('precio_sugerido');
+  // if (number1) {
+  //   number1.addEventListener('keyup', (event) => {
+  //     //console.log(event);
+  //     let texto = event.target.value;
+  //     console.log(texto);
+
+  //     let mostrartexto = '';
+  //     if (texto !== '') {
+  //       mostrartexto = texto
+  //     }
+  //     else {
+  //       mostrartexto = 'Input vacio'
+  //     }
+  //     document.getElementById('label1').innerHTML = mostrartexto;
+  //   });
+  // }
+
   // PRIMERA VERSIÓN SEPARADOR COMA DE MILES
 
-   let number1 = document.getElementById('precio_sugerido');
-   const value1 = number1?.value || '';
-   console.log("OBTENER VALUE", value1)
+  // let number1 = document.getElementById('precio_sugerido');
+  // const value1 = number1?.value || '';
+  // console.log("OBTENER VALUE", value1)
 
-  function formatoComaDecimal(valor) {
-    
-      if (valor.toString().split(",").length == 3) {
-        // console.log( valor.toString().split(".")[0].replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") + "."+valor.toString().split(".")[1]);
-        return (          
-            // const exp = /(\d)(?=(\d{3})+(?!\d))/g;
-            // const rep = '$1,';
-            // let arr = valor.toString().split('.');
-            // arr[0] = arr[0].replace(exp, rep);
-          valor
-            .toString()
-            .split(".")[0]
-            .replace(/\D/g, "")
-            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") +
-          "." +
-          // valor.toString().split(".")[1].padStart(2, "0")
-          valor.toString().split(".")[1].padEnd(2, "0")
-        );
-      } else {
-        // console.log( valor.toString().split(".")[0].replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",") + ".00");
-        return (
-          valor
-            .toString()
-            .split(".")[0]
-            .replace(/\D/g, "")
-            .replace(/(\d)(?=(\d{3})+(?!\d))/g, ",") + ".00"
-        );
-      }
-    
+  // function formatoComaDecimal(e) {
+  //   let valor = e;
+  //   console.log("OBTENER VALUE", valor);
 
-    //console.log("ENTRA ONKEYUP")
-    // const value2 = (valor) => {
-    // const exp = /(\d)(?=(\d{3})+(?!\d))/g;
-    // const rep = '$1,';
-    // let arr = valor.toString().split('.');
-    // arr[0] = arr[0].replace(exp, rep);
-    // return arr[1] ? arr.join('.') : arr[0];
-    // }
-    // number1.value = value2(value1)
-    // return (value2(value1));
-  }
+  //   //console.log("ENTRA ONKEYUP")
+  //   // const value2 = (valor1) => {
+  //   //   const exp = /(\d)(?=(\d{3})+(?!\d))/g;
+  //   //   const rep = '$1,';
+  //   //   let arr = valor1.toString().split('.');
+  //   //   arr[0] = arr[0].replace(exp, rep);
+  //   //   return arr[1] ? arr.join('.') : arr[0];
+  //   // }
 
-  // let modal1 = formatoComaDecimal();
-  // console.log("SEPARADOR MILES", modal1)
+  //   // number1.value = value2(value1)
+  //   //  return (value2(valor));
+
+  // }
+
+  // console.log(formatoComaDecimal())
+
+  //  let modal1 = formatoComaDecimal();
+  //  console.log("SEPARADOR MILES", modal1)
 
 
   ///////////////////
-  // let separador = document.getElementsByName('precio_sugerido');
+
+   let separador = document.getElementById('precio_sugerido');
   // // const value1 = separador[0] || '';
   // // console.log("OBTENER VALUE", value1)
 
-  // separador.addEventListener('input', (e) => {
-  //   var entrada = e.target.value.split(','),
-  //     parteEntera = entrada[0].replace(/\./g, ''),
-  //     parteDecimal = entrada[1],
-  //     salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+  if(separador){
+    separador.addEventListener('keyup', (e) => {
+      var entrada = e.target.value.split('.'),
+       parteEntera = entrada[0].replace(/\,/g, ''),
+        parteDecimal = entrada[1],
+        salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+ 
+      e.target.value = salida + (parteDecimal !== undefined ? '.' + parteDecimal : '');
+    }, false);
+  }
 
-  //   e.target.value = salida + (parteDecimal !== undefined ? ',' + parteDecimal : '');
-  // }, false);
+   
 
 
 
@@ -452,6 +457,7 @@ const ModalAddMaterial = ({
                     <label>Precio sugerido : </label>
                   </div>
                   <div>
+
                     <InputForm
                       attribute={{
                         name: "precio_sugerido",
@@ -459,12 +465,12 @@ const ModalAddMaterial = ({
                         type: "text",
                         // value: comadecimal,
                         //value: (material.prec_sug),
-                        value: (material.prec_sug),
                         disabled: false,
                         checked: false,
-                        placeholder: "0.00",
+                        placeholder: "0.00"
                       }}
                       handleChange={handleChange}
+                    //onKeyUp={(e) => formatoComaDecimal(e.target.value)}
                     />
                   </div>
                 </div>

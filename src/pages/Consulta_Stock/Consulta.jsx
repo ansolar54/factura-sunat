@@ -25,6 +25,8 @@ import {
   getOficinaVentasSAP,
   RegistrarAuditoria,
 } from "../../Services/ServiceAuditoria";
+import toast, { Toaster } from "react-hot-toast";
+import InputFormKeyUp from "../../components/InputFormKeyUp";
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -270,7 +272,7 @@ const Consulta = () => {
       ItVkorg: BuscaOrganizVentas,
       ItWerks: BuscaCentro,
     };
-    // console.log(ind);
+    console.log("MODEL BUSCAR", model_consulta);
     setmodel_consStock(model_consulta);
     if (ind == 0) {
       Exportar();
@@ -355,18 +357,32 @@ const Consulta = () => {
       ItMatnr: BuscaMaterial,
       ItVkorg: BuscaOrganizVentas,
       ItWerks: BuscaCentro,
+      ItFilter: mostrar_filtro_fila == true ? [
+        {
+          Werks: f_werksField,
+          Matnr: f_matnrField,
+          Maktx: f_maktxField,
+          Labst: f_labstField,
+          Meins: f_meinsField,
+          Charg: f_chargField,
+          Clabs: f_clabsField,
+          Fvenc: f_fvencField,
+          Mtart: f_mtartField,
+        },
+      ] : [],
     };
     // ExportarConsultaStock(model_consulta).then((result)=>{
 
     // });
-    console.log("stock");
+    console.log("MODEL EXPORTAR", model_consulta_export);
     if (
       BuscaLote[0].Low.trim() != "" ||
       BuscaMaterial[0].Low.trim() != "" ||
       BuscaOrganizVentas[0].Low.trim() != "" ||
-      BuscaCentro[0].Low.trim() != ""
+      BuscaCentro[0].Low.trim() != "" ||
+      BuscaAlmacen[0].Low.trim() != ""
     ) {
-      ExportarConsultarStock(model_consulta_export).then((result) => {
+      ConsultarStockFiltro(model_consulta_export).then((result) => {
         setDataSet([
           {
             columns: [
@@ -536,6 +552,7 @@ const Consulta = () => {
   }
 
   function Clear() {
+    setmostrar_filtro_fila(false);
     setvaluepagination(false);
     setresponse_consulta({
       esRegtotField: "",
@@ -1166,10 +1183,10 @@ const Consulta = () => {
           Werks: f_werksField,
           Matnr: f_matnrField,
           Maktx: f_maktxField,
-          Labst: f_labstField,
+          Labst: f_labstField.replace(",", ''),
           Meins: f_meinsField,
           Charg: f_chargField,
-          Clabs: f_clabsField,
+          Clabs: f_clabsField.replace(",", ''),
           Fvenc: f_fvencField,
           Mtart: f_mtartField,
         },
@@ -1206,7 +1223,21 @@ const Consulta = () => {
   }
 
   function buscar_filtro_icono_btn() {
-    buscar_filtro_fila(1, "", "");
+    if ((f_werksField || f_matnrField || f_maktxField || f_labstField || f_meinsField ||
+      f_chargField || f_clabsField || f_fvencField || f_mtartField) != "") {
+      buscar_filtro_fila(1, "", "");
+      Exportar();
+    }
+    else {
+      toast.error("Debe seleccionar algún filtro por columna.", {
+        position: "top-center",
+        autoClose: 6000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        },
+      });
+    }
   }
 
   const getDateAct = () => {
@@ -1281,6 +1312,7 @@ const Consulta = () => {
               McLote={Lote}
               setMcBuscaLote={setBuscaLote}
             />
+            <Toaster />
             {/* <Mc_Sector showMcSector={ShowSector} setShowMcSector={setShowSector} setMcSector={setSector} McSector={Sector} />
                         <Mc_Tipo_Material showMcTipoMaterial={ShowTipoMaterial} setShowMcTipoMaterial={setShowTipoMaterial} setMcTipoMaterial={setTipoMaterial} McTipoMaterial={TipoMaterial} />
                         <Mc_Grupo_Articulo showMcGrupoArticulo={ShowGrupoArticulo} setShowMcGrupoArticulo={setShowGrupoArticulo} setMcGrupoArticulo={setGrupoArticulo} McGrupoArticulo={GrupoArticulo} /> */}
@@ -1312,7 +1344,7 @@ const Consulta = () => {
             <section>
               <div style={{ margin: "10px" }} className="row">
                 <div className="col-sm-3 d-flex align-items-center">
-                  <label>Centro</label>
+                  <label>Centro : </label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm
@@ -1331,7 +1363,7 @@ const Consulta = () => {
                 </div>
 
                 <div className="col-sm-3 d-flex align-items-center">
-                  <label>Organiz. ventas</label>
+                  <label>Organiz. ventas : </label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm
@@ -1346,11 +1378,12 @@ const Consulta = () => {
                     }}
                     handleChange={handleChange}
                     onClick={() => mcOrganizVentas()}
+                    
                   />
                 </div>
 
                 <div className="col-sm-3 d-flex align-items-center">
-                  <label>Material</label>
+                  <label>Material : </label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm
@@ -1369,7 +1402,7 @@ const Consulta = () => {
                 </div>
 
                 <div className="col-sm-3 d-flex align-items-center">
-                  <label>Lote</label>
+                  <label>Lote : </label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm
@@ -1388,7 +1421,7 @@ const Consulta = () => {
                 </div>
 
                 <div className="col-sm-3 d-flex align-items-center">
-                  <label>Almacén</label>
+                  <label>Almacén : </label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm
@@ -1723,14 +1756,14 @@ const Consulta = () => {
                         <tr>
                           <td>
                             <button
-                              className="btn_search_filter"
+                              className="btn_search_filter mt-0"
                               onClick={() => buscar_filtro_icono_btn()}
                             >
                               <i className="fas fa-filter"></i>
                             </button>
                           </td>
                           <td>
-                            <input
+                            <input style={{ width: "80px" }}
                               type="text"
                               name="f_werksField"
                               maxLength="4"
@@ -1744,7 +1777,7 @@ const Consulta = () => {
                             />
                           </td>
                           <td>
-                            <input
+                            <input style={{ width: "80px" }}
                               type="text"
                               name="f_matnrField"
                               maxLength="18"
@@ -1758,7 +1791,7 @@ const Consulta = () => {
                             />
                           </td>
                           <td>
-                            <input
+                            <input style={{ width: "230px" }}
                               type="text"
                               name="f_maktxField"
                               maxLength="40"
@@ -1772,21 +1805,40 @@ const Consulta = () => {
                             />
                           </td>
                           <td>
-                            <input
-                              type="text"
-                              name="f_labstField"
-                              maxLength="13"
-                              onChange={(e) =>
-                                handleChangeFiltro(
-                                  e.target.name,
-                                  e.target.value
-                                )
-                              }
-                              onKeyUp={(e) => buscar_filtro_enter(e)}
-                            />
+                            <div style={{ textAlign: "center" }}>
+                              <input style={{ width: "100px" }}
+                                type="text"
+                                name="f_labstField"
+                                maxLength="13"
+                                onChange={(e) =>
+                                  handleChangeFiltro(
+                                    e.target.name,
+                                    e.target.value
+                                  )
+                                }
+                                onKeyUp={(e) => buscar_filtro_enter(e)}
+                              />
+                            </div>
+
                           </td>
                           <td>
-                            <input
+                            <div style={{ textAlign: "center" }}>
+                              <input style={{ width: "85px" }}
+                                type="text"
+                                name="f_clabsField"
+                                maxLength="13"
+                                onChange={(e) =>
+                                  handleChangeFiltro(
+                                    e.target.name,
+                                    e.target.value
+                                  )
+                                }
+                                onKeyUp={(e) => buscar_filtro_enter(e)}
+                              />
+                            </div>
+                          </td>
+                          <td>
+                            <input style={{ width: "100px" }}
                               type="text"
                               name="f_meinsField"
                               maxLength="3"
@@ -1800,24 +1852,10 @@ const Consulta = () => {
                             />
                           </td>
                           <td>
-                            <input
+                            <input style={{ width: "60px" }}
                               type="text"
                               name="f_chargField"
                               maxLength="10"
-                              onChange={(e) =>
-                                handleChangeFiltro(
-                                  e.target.name,
-                                  e.target.value
-                                )
-                              }
-                              onKeyUp={(e) => buscar_filtro_enter(e)}
-                            />
-                          </td>
-                          <td>
-                            <input
-                              type="text"
-                              name="f_clabsField"
-                              maxLength="13"
                               onChange={(e) =>
                                 handleChangeFiltro(
                                   e.target.name,
@@ -1841,7 +1879,7 @@ const Consulta = () => {
                             />
                           </td>
                           <td>
-                            <input
+                            <input style={{ width: "85px" }}
                               type="text"
                               name="f_mtartField"
                               maxLength="4"
@@ -1933,7 +1971,7 @@ const Consulta = () => {
                     </tbody>
                   </table>
                 </div>
-                {response_consulta == 0 && spinner == false ? (
+                {valuepagination == false && spinner == false ? (
                   <div
                     style={{
                       margin: "10px",

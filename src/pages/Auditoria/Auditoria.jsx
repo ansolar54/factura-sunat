@@ -10,7 +10,7 @@ import "./Auditoria.css";
 import ExcelSheet from "react-data-export/dist/ExcelPlugin/elements/ExcelSheet";
 import { getRoleState } from "../../Services/ServiceRol";
 import { MultiSelect } from "react-multi-select-component";
-
+import BtnSearch from "../../components/BtnSearch";
 const Auditoria = () => {
 
   const [selected, setSelected] = useState([]);
@@ -88,6 +88,16 @@ const Auditoria = () => {
           style: { font: { sz: "18", bold: true } },
           width: { wpx: 125 },
         },
+        {
+          title: "OFI. VENTAS",
+          style: { font: { sz: "18", bold: true } },
+          width: { wpx: 125 },
+        },
+        {
+          title: "ORI. INGRESO",
+          style: { font: { sz: "18", bold: true } },
+          width: { wpx: 125 },
+        },
       ],
       data: [],
     },
@@ -140,7 +150,6 @@ const Auditoria = () => {
     });
   };
 
-  // meti esto a una función
 
   const filtroRolEvento = () => {
     let roles = []
@@ -157,12 +166,6 @@ const Auditoria = () => {
         })
       })
     }
-    //setFiltro({ ...filtro, "roles": roles });
-    //  console.log(
-    //   "HOLA ROLES",filtro.roles
-    // );
-
-    ////////////
 
     let events = []
     if (selected1.length == 0) {
@@ -176,27 +179,12 @@ const Auditoria = () => {
         })
       })
     }
-
-    //setFiltro({ ...filtro, "events": events });
     const modelAuditoria = {
       roles: roles,
       events: events
     }
-    // setModelAuditoria2(modelAuditoria);
 
     return modelAuditoria;
-
-    // esto es lo que no setea a tiempo y lo pasa con retraso
-    //ajá
-
-
-    
-    // console.log('MODEL', modelAuditoria)
-    // console.log('MODEL AUDITORIA', modelAuditoria2)
-
-    // console.log(
-    //   "HOLA EVENTOS",filtro.events
-    // );
   }
 
   //listar auditoría
@@ -227,7 +215,7 @@ const Auditoria = () => {
         0
       )
         .then((result) => {
-          console.log("DATA TABLA", result);
+          //console.log("DATA TABLA", result);
           setdataAuditoria(
             result.data.map((d) => {
               return {
@@ -337,9 +325,15 @@ const Auditoria = () => {
 
   const exportar = () => {
     //console.log("exportar")
+    // let hola;
     setDataSet([{ columns: [], data: [] }]);
     let model_auditoria = filtroRolEvento();
+    let model_auditoria1 = { events: [{ id_event: 0 }], roles: [{ id_role: 0 }] };
+    
+    
     ConsultarAuditoria(
+      // selected == [] && selected1 == []
+      // ? model_auditoria1 : model_auditoria,
       model_auditoria,
       filtro.search,
       filtro.created_at,
@@ -392,8 +386,30 @@ const Auditoria = () => {
                 style: { font: { sz: "18", bold: true } },
                 width: { wpx: 125 },
               },
+              {
+                title: "OFI. VENTAS",
+                style: { font: { sz: "18", bold: true } },
+                width: { wpx: 125 },
+              },
+              {
+                title: "ORI. INGRESO",
+                style: { font: { sz: "18", bold: true } },
+                width: { wpx: 125 },
+              },
             ],
             data: result.data.map((data) => {
+              //console.log("VER DATA QUE TRAE",data.sales_ofi)
+              if(data.sales_ofi === null || data.sales_ofi === ''){
+                data.sales_ofi = ''
+              }else{
+                data.sales_ofi = data.sales_ofi
+              }
+              if(data.indicator === null || data.indicator === ''){
+                data.indicator = ''
+              }else{
+                data.indicator = data.indicator
+              }
+              //console.log("VER DATA QUE TRAE 2.0 ",data.sales_ofi)
               return [
                 { value: data.name_user, style: { font: { sz: "14" } } },
                 {
@@ -418,6 +434,15 @@ const Auditoria = () => {
                   value: formatTime(data.created_at),
                   style: { font: { sz: "14" } },
                 },
+                
+                {
+                  value: data.sales_ofi,
+                  style: { font: { sz: "14" } },
+                },
+                {
+                  value: data.indicator,
+                  style: { font: { sz: "14" } },
+                },
               ];
             }),
           },
@@ -427,6 +452,16 @@ const Auditoria = () => {
   };
 
   function ordenamiento(d) {
+    if(d.sales_ofi === null || d.sales_ofi === ''){
+      d.sales_ofi = ''
+    }else{
+      d.sales_ofi = d.sales_ofi
+    }
+    if(d.indicator === null || d.indicator === ''){
+      d.indicator = ''
+    }else{
+      d.indicator = d.indicator
+    }
     arraycheckbox_export[0].data.push([
       {
         value: d.name_user,
@@ -472,6 +507,18 @@ const Auditoria = () => {
       },
       {
         value: formatTime(d.created_at),
+        style: {
+          font: { sz: "14" },
+        },
+      },
+      {
+        value: d.sales_ofi,
+        style: {
+          font: { sz: "14" },
+        },
+      },
+      {
+        value: d.indicator,
         style: {
           font: { sz: "14" },
         },
@@ -604,10 +651,155 @@ const Auditoria = () => {
       ? selected.map(({ label }) => "✔️ " + label)
       : "Seleccionar Rol(es)...";
   };
-  const customValueRendererEvento = (selected, _options) => {
-    return selected.length
-      ? selected.map(({ label }) => "✔️ " + label)
+  const customValueRendererEvento = (selected1, _options) => {
+    return selected1.length
+      ? selected1.map(({ label }) => "✔️ " + label)
       : "Seleccionar Evento(s)...";
+  };
+
+  function Clear() {
+      setFiltro({
+        search: '',
+        created_at: '',
+        created_up: '',
+      })
+      setSelected([]);
+      setSelected1([]);
+    
+    let model_auditoria = { events: [{ id_event: 0 }], roles: [{ id_role: 0 }] };
+    console.log("MODEL AUDTIROIA LIMPIAR", model_auditoria)
+    // EXPORTAR LO QUE SE MOSTRARÁ EN LA TABLA
+    ConsultarAuditoria(
+      model_auditoria,
+      '',
+      '',
+      '',
+      1,
+      Limit,
+      1)
+      .then((result)=>{
+        setDataSet([
+          {
+            columns: [
+              {
+                title: "NOMBRES",
+                style: { font: { sz: "18", bold: true } },
+                width: { wpx: 125 },
+              },
+              {
+                title: "APELLIDOS",
+                style: { font: { sz: "18", bold: true } },
+                width: { wpx: 150 },
+              },
+              {
+                title: "USUARIO",
+                style: { font: { sz: "18", bold: true } },
+                width: { wpx: 125 },
+              },
+              {
+                title: "CORREO",
+                style: { font: { sz: "18", bold: true } },
+                width: { wpx: 150 },
+              },
+              {
+                title: "ROL",
+                style: { font: { sz: "18", bold: true } },
+                width: { wpx: 130 },
+              },
+              {
+                title: "EVENTO",
+                style: { font: { sz: "18", bold: true } },
+                width: { wpx: 135 },
+              },
+              {
+                title: "FECHA",
+                style: { font: { sz: "18", bold: true } },
+                width: { wpx: 125 },
+              },
+              {
+                title: "HORA",
+                style: { font: { sz: "18", bold: true } },
+                width: { wpx: 125 },
+              },
+              {
+                title: "OFI. VENTAS",
+                style: { font: { sz: "18", bold: true } },
+                width: { wpx: 125 },
+              },
+              {
+                title: "ORI. INGRESO",
+                style: { font: { sz: "18", bold: true } },
+                width: { wpx: 125 },
+              },
+            ],
+            data: result.data.map((data) => {
+              //console.log("VER DATA QUE TRAE",data.sales_ofi)
+              if(data.sales_ofi === null || data.sales_ofi === ''){
+                data.sales_ofi = ''
+              }else{
+                data.sales_ofi = data.sales_ofi
+              }
+              if(data.indicator === null || data.indicator === ''){
+                data.indicator = ''
+              }else{
+                data.indicator = data.indicator
+              }
+              //console.log("VER DATA QUE TRAE 2.0 ",data.sales_ofi)
+              return [
+                { value: data.name_user, style: { font: { sz: "14" } } },
+                {
+                  value: data.ape_pat + " " + data.ape_mat,
+                  style: { font: { sz: "14" } },
+                },
+                {
+                  value: data.username,
+                  style: { font: { sz: "14" } },
+                },
+                { value: data.email, style: { font: { sz: "14" } } },
+                { value: data.name_role, style: { font: { sz: "14" } } },
+                {
+                  value: data.name_event,
+                  style: { font: { sz: "14" } },
+                },
+                {
+                  value: formatDate(data.created_at),
+                  style: { font: { sz: "14" } },
+                },
+                {
+                  value: formatTime(data.created_at),
+                  style: { font: { sz: "14" } },
+                },
+                
+                {
+                  value: data.sales_ofi,
+                  style: { font: { sz: "14" } },
+                },
+                {
+                  value: data.indicator,
+                  style: { font: { sz: "14" } },
+                },
+              ];
+            }),
+          },
+        ]);
+      })
+      // REINICIAR LA TABLA ESTADO INICIAL
+    ConsultarAuditoria(
+      model_auditoria,
+      '',
+      '',
+      '',
+      Limit,
+      1,
+      0
+    ).then((result) => {
+      setvaluepagination(true);
+      setdataAuditoria(result.data);
+      setTotalData(result.totalItems);
+      setspinner(false);
+    })
+    
+     .catch((err) => console.log(err));
   };
 
   return (
@@ -666,6 +858,7 @@ const Auditoria = () => {
               className="inputcustom"
               type="date"
               name="created_at"
+              value={filtro.created_at}
               onChange={(e) => handleChange(e)}
             />
           </div>
@@ -675,6 +868,7 @@ const Auditoria = () => {
               className="inputcustom"
               type="date"
               name="created_up"
+              value={filtro.created_up}
               onChange={(e) => handleChange(e)}
             />
           </div>
@@ -720,47 +914,60 @@ const Auditoria = () => {
               disableSearch="true"
             />
           </div>
-          <div className="col-md-6 p-1">
-            <BtnAcept
-              attribute={{ name: "Buscar", classNamebtn: "btn_signin" }}
-              onClick={onClickSearch}
-            />
-          </div>
-          <div className="col-sm-6 col-md-6 p-1">
-            {arraycheckbox_export[0].data.length > 0 ? (
-              <ExcelFile
-                filename="Data exportada"
-                element={
-                  <BtnExportar
-                    attribute={{
-                      name: "Exportar",
-                      classNamebtn: "btn_export",
-                      disabled: false,
-                    }}
-                  />
-                }
-              >
-                <ExcelSheet dataSet={arraycheckbox_export} name="exportacion" />
-              </ExcelFile>
-            ) : (
-              <ExcelFile
-                filename="Data exportada"
-                element={
-                  <BtnExportar
-                    attribute={{
-                      name: "Exportar",
-                      classNamebtn: "btn_export",
-                      disabled: false,
-                    }}
-                  />
-                }
-              >
-                <ExcelSheet dataSet={DataSet} name="exportacion" />
-              </ExcelFile>
-            )}
-          </div>
+
+
+
+
+
         </div>
         <section>
+          <section>
+            <div className="col-sm-12 col-md-2 p-1">
+              <BtnSearch
+                attribute={{ name: "Buscar", classNamebtn: "btn_signin" }}
+                onClick={onClickSearch}
+              />
+            </div>
+            <div className="col-sm-12 col-md-2 p-1">
+              <BtnSearch
+                attribute={{ name: "Limpiar Campos", classNamebtn: "btn_signin" }}
+                onClick={() => Clear()}
+              />
+            </div>
+            <div className="col-sm-12 col-md-2 p-1">
+              {arraycheckbox_export[0].data.length > 0 ? (
+                <ExcelFile
+                  filename="Data exportada"
+                  element={
+                    <BtnExportar
+                      attribute={{
+                        name: "Exportar",
+                        classNamebtn: "btn_export",
+                        disabled: false,
+                      }}
+                    />
+                  }
+                >
+                  <ExcelSheet dataSet={arraycheckbox_export} name="exportacion" />
+                </ExcelFile>
+              ) : (
+                <ExcelFile
+                  filename="Data exportada"
+                  element={
+                    <BtnExportar
+                      attribute={{
+                        name: "Exportar",
+                        classNamebtn: "btn_export",
+                        disabled: false,
+                      }}
+                    />
+                  }
+                >
+                  <ExcelSheet dataSet={DataSet} name="exportacion" />
+                </ExcelFile>
+              )}
+            </div>
+          </section>
           <div className="container-table">
             <div className="container-table-sm">
               <table className="content-table">

@@ -5,6 +5,7 @@ import Pagination from "../../../components/Pagination";
 import Spinner from "../../../components/Spinner";
 import jwt from "jwt-decode";
 import { MatchCliente } from "../../../Services/ServiceCambioPrecio";
+import { act } from "react-dom/test-utils";
 
 const McCliente = ({
   showMcCliente,
@@ -102,7 +103,7 @@ const McCliente = ({
       case "mc_deucli_razonsocial":
         setIsName1(value);
         break;
-      case "mc_deucli_ruc":
+      case "IsStcd1":
         setIsStcd1(value);
         break;
       default:
@@ -139,6 +140,24 @@ const McCliente = ({
     setShowMcCliente((prev) => !prev);
   }
 
+  ////////////////
+  
+//   const changenumber = (e) => {
+//     console.log("entrando a evento")
+//     const re = /^[0-9\b]+$/;
+
+//     // if value is not blank, then test the regex
+//     this.changenumber =  this.changenumber.bind(this)
+//     if (e.target.value === '' || re.test(e.target.value)) {
+      
+//        this.setState({value: e.target.value})
+//     }
+
+    
+// }
+
+
+
   return (
     <>
       {showMcCliente ? (
@@ -164,9 +183,10 @@ const McCliente = ({
                     disabled: false,
                     checked: false,
                     matchcode: false,
-                    maxlength: 10,
+                    maxlength: 10
                   }}
                   handleChange={handleChange}
+                  
                 />
               </div>
 
@@ -194,16 +214,20 @@ const McCliente = ({
               <div className="col-sm-9">
                 <InputForm
                   attribute={{
-                    name: "mc_deucli_ruc",
+                    name: "IsStcd1",
+                    id: "ruc",
                     type: "text",
                     value: IsStcd1,
                     disabled: false,
                     checked: false,
                     matchcode: false,
-                    maxlength: 16,
+                    maxlength: 11,
+                    //placeholder: "Ingresar RUC",
                   }}
                   handleChange={handleChange}
+                  //onKeyDown={(e) => changenumber(e)}
                 />
+
               </div>
             </section>
             <section className="col-md-12">

@@ -5,6 +5,7 @@ const InputForm = ({ attribute, handleChange, onClick}) => {
   return (
     <div className="content-inputform">
       <input
+      
         className="inputform"
         type={attribute.type}
         id={attribute.id}
@@ -13,10 +14,13 @@ const InputForm = ({ attribute, handleChange, onClick}) => {
         disabled={attribute.disabled}
         checked={attribute.checked}
         maxLength={attribute.maxlength}
+        max={attribute.max}
         onChange={(e) => handleChange(e.target.name, e.target.value)}
         min={attribute.min}
         placeholder={attribute.placeholder}
-        onKeyUp={attribute.onKeyUp}
+        pattern={attribute.pattern}
+        //onKeyDown={(e) => onKeyDown(e)}
+      
       />
       {
         attribute.matchcode && (
@@ -26,7 +30,6 @@ const InputForm = ({ attribute, handleChange, onClick}) => {
             <i
               className="far fa-clone icon-matchcode-1"
               onClick={() => onClick()}
-              //onKeyUp={() => onKeyUp()}
             ></i>
           </>
         )
