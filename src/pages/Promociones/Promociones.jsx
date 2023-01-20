@@ -18,6 +18,7 @@ import {
 } from "../../Services/ServiceAuditoria";
 import { ValidarRuta } from "../../Services/ServiceValidaUsuario";
 import InputFormKeyUp from "../../components/InputFormKeyUp";
+import toast, { Toaster } from "react-hot-toast";
 
 const Promociones = () => {
   var n = new Date();
@@ -96,6 +97,30 @@ const Promociones = () => {
   //INDICADOR SI YA VALIDO RUTA
   const [indicadorruta, setindicadorruta] = useState(false);
 
+  const [orgVentasCombo, setOrgVentasCombo] = useState([]);
+
+  useEffect(() => {
+    getOrgVentas();
+  }, []);
+
+  // COMBOBOX ORG VENTAS
+  const getOrgVentas = () => {
+    let model={
+      IsParametro:"VKORG",
+      PVkbur:"",
+      PVkorg:"",
+      IsUser:jwt(localStorage.getItem("_token")).username
+  }
+    MatchcodePromociones(model).then(
+      (result) => {
+        console.log("ORG. VENTAS", result);
+        setOrgVentasCombo(result.etOrgVentasField);
+      }
+    );
+  };
+
+  //console.log("ORG. VENTAS 1", orgVentasCombo);
+
   useEffect(() => {
     // if (indicadorruta == false) {
     //   setspinnerroute(true);
@@ -135,19 +160,19 @@ const Promociones = () => {
   //formateo de la fecha para enviar a SAP YYYYMMDD
   function formatDateSAP(value) {
 
-    if(value == ""){
+    if (value == "") {
       return ""
-    }else{
+    } else {
       var datePart = value.match(/\d+/g),
-      year = datePart[0],
-      month = datePart[1],
-      day = datePart[2];
+        year = datePart[0],
+        month = datePart[1],
+        day = datePart[2];
 
-    return year + "" + month + "" + day;
+      return year + "" + month + "" + day;
     }
 
 
-   
+
   }
 
   function handleChange(name, value) {
@@ -204,8 +229,8 @@ const Promociones = () => {
   };
 
   function Search(page, IsCampo, IsOrden) {
-    console.log("CAMPO SELECCIONADO",IsCampo);
-    console.log("ORDEN",IsOrden)
+    console.log("CAMPO SELECCIONADO", IsCampo);
+    console.log("ORDEN", IsOrden)
     setspinner(true);
     setindicadorfiltro(false);
     setTotalData(0);
@@ -284,7 +309,7 @@ const Promociones = () => {
       ItVtweg: filtroInicial.canal_distri,
     };
 
-    console.log("MODEL CONSULTA PROMOCIONES",model_consulta_promociones)
+    console.log("MODEL CONSULTA PROMOCIONES", model_consulta_promociones)
 
     ConsuPromocionesBuscar(model_consulta_promociones).then((result) => {
       setspinner(false);
@@ -296,12 +321,16 @@ const Promociones = () => {
 
   function Clear() {
     setvaluepagination(false);
+    setmostrar_filtro_fila(false);
     setFiltroInicial({
       org_ventas: [{ Sign: "I", Option: "EQ", Low: "", High: "" }],
       canal_distri: [{ Sign: "I", Option: "EQ", Low: "22", High: "" }],
       lista_precios: [{ Sign: "I", Option: "EQ", Low: "", High: "" }],
       ofi_ventas: [{ Sign: "I", Option: "EQ", Low: "", High: "" }],
-      valido_el: [{ Sign: "I", Option: "EQ", Low: "", High: "" }],
+      valido_el: [
+        { Sign: "I", Option: "EQ", Low: y + "-" + m + "-" + d, High: "" },
+      ],
+      // valido_el: [{ Sign: "I", Option: "EQ", Low: "", High: "" }],
     });
     setresultado_consulta_promociones([]);
     setDescFiltroInicial({
@@ -376,7 +405,7 @@ const Promociones = () => {
           Knrzm: f_knrzmField,
           Knrez: f_knrezField,
           Nrmaktxt: f_nrmaktxtField,
-          Datab:  formatDateSAP(f_databField),
+          Datab: formatDateSAP(f_databField),
           Datbi: formatDateSAP(f_datbiField),
         },
       ],
@@ -397,7 +426,7 @@ const Promociones = () => {
       ItVtweg: filtroInicial.canal_distri,
     };
 
-    console.log("FILTRO MODEL PROMOCIONES",model)
+    console.log("FILTRO MODEL PROMOCIONES", model)
 
     ConsuPromocionesBuscarFiltro(model).then((result) => {
       setspinner(false);
@@ -996,7 +1025,20 @@ const Promociones = () => {
   }
 
   function buscar_filtro_icono_btn() {
-    buscar_filtro_fila(1, "", "");
+    if ((f_matnrField || f_maktxField || f_knrmmField || f_knrnmField || f_knrmeField
+      || f_knrzmField || f_knrezField || f_vkorgField || f_knrmatField || f_nrmaktxtField || f_databField || f_datbiField) != "") {
+      buscar_filtro_fila(1, "", "");
+    } else {
+      toast.error("Debe seleccionar algún filtro por columna.", {
+        position: "top-center",
+        autoClose: 6000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        },
+      });
+    }
+
   }
 
   //para el filtro
@@ -1064,7 +1106,7 @@ const Promociones = () => {
 
   function onKeyUpOrgVentas(e) {
     var keycode = e.keyCode;
-    console.log(keycode);
+    console.log("KEYCODE ORG",keycode);
     let model = {
       IsParametro: "VKORG",
       PVkbur: "",
@@ -1155,6 +1197,7 @@ const Promociones = () => {
               setDescFiltroInicial={setDescFiltroInicial}
               descFiltroInicial={descFiltroInicial}
             />
+            <Toaster />
 
             <div className="title-section">
               <div>
@@ -1661,14 +1704,14 @@ const Promociones = () => {
                         <tr>
                           <th>
                             <button
-                              className="btn_search_filter"
+                              className="btn_search_filter mt-0"
                               onClick={() => buscar_filtro_icono_btn()}
                             >
                               <i className="fas fa-filter"></i>
                             </button>
                           </th>
                           <th style={{ textAlign: "center" }}>
-                            <select style={{ paddingTop: "2px", paddingBottom: "2px" }} className="px-1" name="f_vkorgField"
+                            <select style={{ paddingTop: "4px", paddingBottom: "3px" }} className="px-2" name="f_vkorgField"
                               onKeyUp={(e) => buscar_filtro_enter(e)}
                               //onChange={(e) => selectedFiltro(e)}
                               onChange={(e) =>
@@ -1679,26 +1722,15 @@ const Promociones = () => {
                               }
                             >
                               <option value="">TODOS</option>
-                              <option value="AGRO">AGRO</option>
-                              <option value="ESPE">ESPE</option>
-                              <option value="SALU">SALU</option>
-                              <option value="SEMI">SEMI</option>
+                              {orgVentasCombo.map((item) => (
+                                  <option key={item.vkorgField} value={item.vkorgField}>
+                                    {item.vkorgField}
+                                  </option>
+                                ))}
                             </select>
-                            {/* <input
-                              type="text"
-                              onKeyUp={(e) => buscar_filtro_enter(e)}
-                              name="f_vkorgField"
-                              maxLength="150"
-                              onChange={(e) =>
-                                handleChangeFiltro(
-                                  e.target.name,
-                                  e.target.value
-                                )
-                              }
-                            /> */}
                           </th>
                           <th>
-                            <input
+                            <input style={{ width: "100px" }}
                               type="text"
                               onKeyUp={(e) => buscar_filtro_enter(e)}
                               name="f_matnrField"
@@ -1712,7 +1744,7 @@ const Promociones = () => {
                             />
                           </th>
                           <th>
-                            <input
+                            <input style={{ width: "230px" }}
                               type="text"
                               onKeyUp={(e) => buscar_filtro_enter(e)}
                               name="f_maktxField"
@@ -1726,7 +1758,7 @@ const Promociones = () => {
                             />
                           </th>
                           <th>
-                            <input
+                            <input style={{ width: "70px" }}
                               type="text"
                               onKeyUp={(e) => buscar_filtro_enter(e)}
                               name="f_knrmmField"
@@ -1740,7 +1772,7 @@ const Promociones = () => {
                             />
                           </th>
                           <th>
-                            <input
+                            <input style={{ width: "70px" }}
                               type="text"
                               onKeyUp={(e) => buscar_filtro_enter(e)}
                               name="f_knrnmField"
@@ -1754,7 +1786,7 @@ const Promociones = () => {
                             />
                           </th>
                           <th>
-                            <input
+                            <input style={{ width: "70px" }}
                               type="text"
                               onKeyUp={(e) => buscar_filtro_enter(e)}
                               name="f_knrmeField"
@@ -1768,7 +1800,7 @@ const Promociones = () => {
                             />
                           </th>
                           <th>
-                            <input
+                            <input style={{ width: "100px" }}
                               type="text"
                               onKeyUp={(e) => buscar_filtro_enter(e)}
                               name="f_knrzmField"
@@ -1782,7 +1814,7 @@ const Promociones = () => {
                             />
                           </th>
                           <th>
-                            <input
+                            <input style={{ width: "75px" }}
                               type="text"
                               onKeyUp={(e) => buscar_filtro_enter(e)}
                               name="f_knrezField"
@@ -1796,7 +1828,7 @@ const Promociones = () => {
                             />
                           </th>
                           <th>
-                            <input
+                            <input style={{ width: "110px" }}
                               type="text"
                               onKeyUp={(e) => buscar_filtro_enter(e)}
                               name="f_knrmatField"
@@ -1810,7 +1842,7 @@ const Promociones = () => {
                             />
                           </th>
                           <th>
-                            <input
+                            <input style={{ width: "200px" }}
                               type="text"
                               onKeyUp={(e) => buscar_filtro_enter(e)}
                               name="f_nrmaktxtField"

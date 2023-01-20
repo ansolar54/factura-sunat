@@ -4,16 +4,12 @@ import McCliente from "../Modals_General/McCliente";
 import McOrgVentas from "../Modals_General/McOrgVentas";
 import BtnSearch from "../../../components/BtnSearch";
 import InputForm from "../../../components/InputForm";
+import InputForm1 from "../../../components/InputForm1";
 import Spinner from "../../../components/Spinner";
 import Pagination from "../../../components/Pagination";
 import jwt from "jwt-decode";
 import jwtDecode from "jwt-decode";
 import {
-    ListadoSolicitudes,
-    ModificarStateRequest,
-    GetDetalleSolicitud,
-    EnviarCorreoAprob,
-    UsuarioNotifi,
     ListadoReporteSolicitud,
 } from "../../../Services/ServiceCambioPrecio";
 import {
@@ -21,6 +17,7 @@ import {
     getUser,
     getUsers,
 } from "../../../Services/ServiceUser";
+import "./ReporteSolicitud.css"
 
 const ReporteSolicitud = () => {
     // ORG VENTAS
@@ -34,7 +31,6 @@ const ReporteSolicitud = () => {
     // USERS
     const [users, setUsers] = useState([]);
     const [usersG, setUsersG] = useState([]);
-    const [idUser, setIdUser] = useState(0);
 
     // CLIENTE
     //const [IsCliente, setIsCliente] = useState("");
@@ -69,11 +65,16 @@ const ReporteSolicitud = () => {
     const [idSolicitante, setIdSolicitante] = useState(0);
     const [orgVentas1, setOrgVentas1] = useState('');
     const [nroSolicitud, setNroSolicitud] = useState(0);
-    const [fechSolicitud, setFechaSolicitud] = useState('');
+    //const [fechSolicitud, setFechaSolicitud] = useState('');
     const [codiCliente, setCodiCliente] = useState('');
     const [estado1, setEstado1] = useState('');
     const [idAprobador, setIdAprobador] = useState(0);
-    const [fechAprob, setFechaAprob] = useState('');
+    //const [fechAprob, setFechaAprob] = useState('');
+
+    const [filtro, setFiltro] = useState({
+        fechSolicitud: "",
+        fechAprob: ""
+    });
 
     useEffect(() => {
         getUsers();
@@ -90,6 +91,8 @@ const ReporteSolicitud = () => {
         );
     };
 
+    console.log("PRUEBITA",users)
+
     const getUsersGerente = () => {
         getDistinctUser(jwtDecode(localStorage.getItem("_token")).nameid, 3).then(
             (result) => {
@@ -99,6 +102,8 @@ const ReporteSolicitud = () => {
         );
     };
 
+    console.log("PRUEBITA 2",usersG)
+
     const openMcOrgVentas = () => {
         setShowOrgVentas((prev) => !prev);
     };
@@ -107,32 +112,49 @@ const ReporteSolicitud = () => {
         setShowMcCliente((prev) => !prev);
     };
 
-    const selectedFiltro1 = (e) => {
-        // console.log(typeof e.target.value);
-        if (e.target.value == "0") {
-            // console.log("zero");
-            setEstado1.name("TODOS");
-        } else {
-            // console.log(e.target.value);
-            setEstado1(e.target.value);
-        }
-    };
-
-    function clear(e) {
-        setIdSolicitante(0);
+    function clear() {
+        setFiltro({
+            fechSolicitud: '',
+            fechAprob: ''
+        })
         setOrgVentas1("");
         setNroSolicitud(0);
-        setFechaSolicitud("");
+        //setFechaSolicitud("");
         setCodiCliente("");
-        
-        setIdAprobador(0);
-        setFechaAprob("");
+        //setFechaAprob("");
         setEstado1("")
+        document.hola = document.getElementById('id_estado').value = "0";
+        setIdSolicitante(0);
+        document.hola = document.getElementById('id_solicitante').value = "0";
+        setIdAprobador(0);
+        document.hola = document.getElementById('id_aprobador').value = '0';
+        document.getElementById('id_aprobador').disabled = false
+        document.getElementById('fechAprob').disabled = false
 
-        if (setEstado1 == ("")) {
-           document.getElementById('id_estado');
-        } 
-    
+        let model = {
+            id_solicitante: 0,
+            org_ventas: '',
+            nro_solicitud: 0,
+            fecha_solicitud: '',
+            codi_cliente: '',
+            estado: '',
+            id_aprobador: 0,
+            fecha_aprob: ''
+        };
+        // setspinner(true);
+        // console.log('MODEL LIMPIAR', model)
+        ListadoReporteSolicitud(
+            model,
+            limit,
+            1
+        ).then(result => {
+            console.log('RESULTADO', result);
+            setSolicitudes(result.data);
+            setTotalData(result.totalItems);
+            setspinner(false);
+            setvaluepagination(true);
+            // console.log("Filtrado Reporte", result);
+        })
     }
 
     const listadoReporteSolicitudes = (page) => {
@@ -141,11 +163,11 @@ const ReporteSolicitud = () => {
             id_solicitante: idSolicitante,
             org_ventas: orgVentas1,
             nro_solicitud: nroSolicitud,
-            fecha_solicitud: fechSolicitud,
+            fecha_solicitud: filtro.fechSolicitud,
             codi_cliente: codiCliente,
             estado: estado1,
             id_aprobador: idAprobador,
-            fecha_aprob: fechAprob
+            fecha_aprob: filtro.fechAprob
         };
         setspinner(true);
         console.log('MODEL', model)
@@ -170,23 +192,33 @@ const ReporteSolicitud = () => {
             // console.log("zero");
             setEstado1("");
             document.getElementById('id_aprobador').disabled = false
-            document.getElementById('fecha_aprob').disabled = false
-        }else if(e.target.value == "2"){
+            document.getElementById('fechAprob').disabled = false
+        } else if (e.target.value == "2") {
             document.getElementById('id_aprobador').disabled = true
-            document.getElementById('fecha_aprob').disabled = true
+            document.getElementById('fechAprob').disabled = true
+            document.hola = document.getElementById('id_aprobador').value = "0";
+            setIdAprobador(0);
+            setFiltro({
+                fechAprob: ''
+            })
             setEstado1(e.target.value);
-        }else if(e.target.value == "4"){
+        } else if (e.target.value == "4") {
             document.getElementById('id_aprobador').disabled = true
-            document.getElementById('fecha_aprob').disabled = true
+            document.getElementById('fechAprob').disabled = true
+            document.hola = document.getElementById('id_aprobador').value = "0";
+            setIdAprobador(0);
+            setFiltro({
+                fechAprob: ''
+            })
             setEstado1(e.target.value);
         }
-        else if(e.target.value != "2"){
+        else if (e.target.value != "2") {
             document.getElementById('id_aprobador').disabled = false
-            document.getElementById('fecha_aprob').disabled = false
+            document.getElementById('fechAprob').disabled = false
             setEstado1(e.target.value);
-        }else if(e.target.value != "4"){
+        } else if (e.target.value != "4") {
             document.getElementById('id_aprobador').disabled = false
-            document.getElementById('fecha_aprob').disabled = false
+            document.getElementById('fechAprob').disabled = false
             setEstado1(e.target.value);
         }
         else {
@@ -224,6 +256,10 @@ const ReporteSolicitud = () => {
         }
     };*/
 
+    const handleChange1 = (e) => {
+        setFiltro({ ...filtro, [e.target.name]: e.target.value });
+    };
+
     function handleChange(name, value) {
         console.log(name, value);
         switch (name) {
@@ -236,12 +272,12 @@ const ReporteSolicitud = () => {
             case "nroSolicitud":
                 setNroSolicitud(Number(value));
                 break;
-            case "fecha_solicitud":
-                setFechaSolicitud(value);
-                break;
-            case "fecha_aprob":
-                setFechaAprob(value);
-                break;
+            // case "fecha_solicitud":
+            //     setFechaSolicitud(value);
+            //     break;
+            // case "fecha_aprob":
+            //     setFechaAprob(value);
+            //     break;
             case "id_aprobador":
                 setIdAprobador(value);
                 break;
@@ -304,11 +340,10 @@ const ReporteSolicitud = () => {
         if (e.target.name == "id_solicitante") {
             if (e.target.value == "0") {
                 // console.log("zero");
-                // setIdUser(0);
                 setIdSolicitante(0);
             } else {
                 // console.log(e.target.value);
-                setIdUser(e.target.value);
+
                 setIdSolicitante(Number(e.target.value));
             }
         } else if (e.target.name == "id_aprobador") {
@@ -392,12 +427,50 @@ const ReporteSolicitud = () => {
                     <hr />
                 </div>
 
+                {/* MIS APROBACIONESSSSS */}
+
                 <div className="container-form2">
-                    <div className="container-form" style={{ width: "100%" }}>
-                        <div className="input-box col-md-4">
-                            <label className="label-input">Solicitante : </label>
-                            <div className="input-box2">
-                                <select name="id_solicitante" className="inputform" onChange={(e) => selectedItem(e)}>
+                    <div className="container-form1" style={{ width: "90%" }}>
+                        {/* 1RA FILA */}
+                        <div>
+                            <div className="col-sm-2 d-flex align-items-center">
+                                <label>N° Solicitud :</label>
+                            </div>
+                            <div style={{ marginRight: "40px" }}>
+                                <InputForm1
+                                    attribute={{
+                                        name: "nroSolicitud",
+                                        type: "text",
+                                        value: nroSolicitud,
+                                        disabled: false,
+                                        checked: false,
+                                        matchcode: false,
+                                    }}
+                                    handleChange={handleChange}
+                                    onChange={(e) => handleChange(e)}
+                                />
+                            </div>
+                            <div className="col-sm-2 d-flex align-items-center">
+                                <label>Estado : </label>
+                            </div>
+                            <div className="input-box1">
+                                <select id="id_estado" name="id_estado" className="inputform" onChange={(e) => selectedFiltro(e)}>
+                                    <option value="0" selected="selected">TODOS</option>
+                                    <option value="1">APROBADO</option>
+                                    <option value="2">PENDIENTE</option>
+                                    <option value="3">RECHAZADO</option>
+                                    <option value="4">ANULADO</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        {/* 2DA FILA */}
+                        <div >
+                            <div className="col-sm-2 d-flex align-items-center">
+                                <label>Solicitante : </label>
+                            </div>
+                            <div className="input-box1" style={{ marginRight: "45px" }}>
+                                <select id="id_solicitante" name="id_solicitante" className="inputform" onChange={(e) => selectedItem(e)}>
                                     <option value="0">Seleccione...</option>
                                     {users.map((item) => (
                                         <option key={item.id} value={item.id}>
@@ -406,11 +479,28 @@ const ReporteSolicitud = () => {
                                     ))}
                                 </select>
                             </div>
+
+                            <div className="col-sm-2 d-flex align-items-center">
+                                <label>Aprobador : </label>
+                            </div>
+                            <div className="input-box1">
+                                <select id="id_aprobador" className="inputform" name="id_aprobador" onChange={(e) => selectedItem(e)}>
+                                    <option value="0">Seleccione...</option>
+                                    {usersG.map((item) => (
+                                        <option key={item.id} value={item.id}>
+                                            {item.name + " " + item.ape_pat + " " + item.ape_mat}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
-                        <div className="input-box col-md-3">
-                            <label className="label-input">Organización de ventas :</label>
-                            <div>
-                                <InputForm
+                        {/* 3RA FILA */}
+                        <div>
+                            <div className="col-sm-2 d-flex align-items-center">
+                                <label>Org. de ventas : </label>
+                            </div>
+                            <div style={{ marginRight: "40px" }}>
+                                <InputForm1
                                     attribute={{
                                         name: "org_ventas",
                                         type: "text",
@@ -424,73 +514,17 @@ const ReporteSolicitud = () => {
                                     onClick={() => openMcOrgVentas()}
                                 />
                             </div>
-                        </div>
-                        <div className="input-box col-md-4">
-                            <label className="label-input">Org. Ventas - Descripción :</label>
-                            <div className="input-box2">
-                                <input
-                                    className="inputform"
-                                    type="search"
-                                    name="orgventasdesc"
-                                    value={orgVentas1 != "" ? orgVentasName : ""}
-                                    readOnly="disabled"
-                                    placeholder="--"
-
-
-                                    onChange={(e) => handleChange(e)}
-                                />
+                            <div className="align-items-center" >
+                                <label>{orgVentas1 != "" ? orgVentasName : ""}</label>
                             </div>
                         </div>
-                        <div className="input-box col-md-4">
-                            <label className="label-input">N° Solicitud :</label>
-                            <div className="input-box2">
-                                <InputForm
-                                    attribute={{
-                                        name: "nroSolicitud",
-                                        type: "text",
-                                        value: nroSolicitud,
-                                        disabled: false,
-                                        checked: false,
-
-                                    }}
-                                    handleChange={handleChange}
-                                    onChange={(e) => handleChange(e)}
-                                />
+                        {/* 4TA FILA */}
+                        <div>
+                            <div className="col-sm-2 d-flex align-items-center">
+                                <label>Cliente : </label>
                             </div>
-
-                        </div>
-                        <div className="input-box col-md-3 mt-1 pt-2">
-                            <label className="label-input">Aprobador : </label>
-                            <div className="">
-                                <select id="id_aprobador" className="inputform" name="id_aprobador" onChange={(e) => selectedItem(e)}>
-                                    <option value="0">Seleccione...</option>
-                                    {usersG.map((item) => (
-                                        <option key={item.id} value={item.id}>
-                                            {item.name + " " + item.ape_pat + " " + item.ape_mat}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
-                        <div className="input-box col-md-4">
-                            <label className="label-input">Fecha Solicitud : </label>
-                            <InputForm
-                                attribute={{
-                                    name: "fecha_solicitud",
-                                    type: "date",
-                                    value: fechSolicitud,
-                                    disabled: false,
-                                    checked: false,
-
-                                }}
-                                handleChange={handleChange}
-                                onChange={(e) => handleChange(e)}
-                            />
-                        </div>
-                        <div className="input-box col-md-4">
-                            <label className="label-input">Cliente : </label>
-                            <div className="">
-                                <InputForm
+                            <div style={{ marginRight: "40px" }}>
+                                <InputForm1
                                     attribute={{
                                         name: "cliente",
                                         type: "text",
@@ -504,85 +538,104 @@ const ReporteSolicitud = () => {
                                     onClick={() => openMcCliente()}
                                 />
                             </div>
-                        </div>
-                        <div className="input-box col-md-5">
-                            <label className="label-input">Cliente - Descripción :</label>
-                            <div className=""><InputForm
-                                attribute={{
-                                    name: "codigocliente",
-                                    type: "search",
-                                    value: codiCliente != "" ? isClientName : "",
-                                    disabled: true,
-                                    checked: false,
-                                    placeholder: "--"
-                                }}
-                                handleChange={handleChange}
-                                onClick={() => openMcCliente()}
-                            />
+                            <div className="align-items-center">
+                                <label>{codiCliente != "" ? isClientName : ""}</label>
                             </div>
                         </div>
-                        <div className="input-box col-md-2 mt-1 pt-2">
-                            <label className="label-input">Estado : </label>
-                            <div className="">
-                                <select id="id_estado" name="id_estado" className="inputform" onChange={(e) => selectedFiltro(e)}>
-                                    <option value="0" selected="selected">TODOS</option>
-                                    <option value="1">APROBADO</option>
-                                    <option value="2">PENDIENTE</option>
-                                    <option value="3">RECHAZADO</option>
-                                    <option value="4">ANULADO</option>
-
-                                </select>
+                        {/* 5TA FILA */}
+                        <div className="">
+                            <div className="col-sm-2 d-flex align-items-center">
+                                <label>Fecha Solicitud : </label>
                             </div>
-                        </div>
-                        
-                        <div className="input-box col-md-4">
-                            <label className="label-input">Fecha Aprob / Rechazo / Modi : </label>
-                            <InputForm
-                                attribute={{
-                                    id: "fecha_aprob",
-                                    name: "fecha_aprob",
-                                    type: "date",
-                                    value: fechAprob,
-                                    disabled: false,
-                                    checked: false,
+                            <div className="input-box1" style={{ marginRight: "40px" }}>
+                                <input style={{ width: "190px" }}
+                                    className="inputcustom"
+                                    type="date"
+                                    name="fechSolicitud"
+                                    value={filtro.fechSolicitud}
+                                    onChange={(e) => handleChange1(e)}
+                                />
+                            </div>
+                            {/* <div className="">
+                                <InputFormDate
+                                    attribute={{
+                                        name: "fechSolicitud",
+                                        type: "date",
+                                        value: filtro.fechSolicitud,
+                                        disabled: false,
+                                        checked: false,
+                                        matchcode: false,
 
-                                }}
-                                handleChange={handleChange}
-                                onChange={(e) => handleChange(e)}
-                            />
-                        </div>
-                        <div className="input-box2 mt-4 col-md-3"
-                            style={{
-                                flex: 1,
-                                alignSelf: "center",
-                            }}
-                        >
-                            <BtnSearch
-                                attribute={{
-                                    name: "Limpiar",
-                                    classNamebtn: "btn_search",
-                                }}
-                                onClick={(e) => clear(e)}
-                            />
-                        </div>
-                        <div className="input-box2 mt-4 col-md-3"
-                            style={{
-                                flex: 1,
-                                alignSelf: "center",
-                            }}
-                        >
-                            <BtnSearch
-                                attribute={{
-                                    name: "Buscar",
-                                    classNamebtn: "btn_search",
-                                }}
-                                onClick={() => listadoReporteSolicitudes(1)}
-                            />
-                        </div>
-                        
+                                    }}
+                                    handleChange={handleChange1}
+                                    onChange={(e) => handleChange1(e)}
+                                />
+                            </div> */}
 
+                            <div className="col-sm-2 d-flex align-items-center">
+                                <label>Fecha Aprob / Rech / Anu :</label>
+                            </div>
+                            <div className="input-box1">
+                                <input style={{ width: "190px" }}
+                                    className="inputcustom"
+                                    type="date"
+                                    id="fechAprob"
+                                    name="fechAprob"
+                                    value={filtro.fechAprob}
+                                    onChange={(e) => handleChange1(e)}
+                                />
+                            </div>
+                            {/* <div>
+                                <InputForm
+                                    attribute={{
+                                        id: "fecha_aprob",
+                                        name: "fecha_aprob",
+                                        type: "date",
+                                        value: fechAprob,
+                                        disabled: false,
+                                        checked: false,
+
+                                    }}
+                                    handleChange={handleChange}
+                                    //onChange={(e) => handleChange(e)}
+                                />
+                            </div> */}
+                        </div>
                     </div>
-
+                    <div className="my-5">
+                    <div 
+                    className="input-box1 mt-4 col-md-3"
+                        style={{
+                            flex: 1,
+                            alignSelf: "center",
+                        }}
+                    >
+                        <BtnSearch
+                            attribute={{
+                                name: "Buscar",
+                                classNamebtn: "btn_search",
+                            }}
+                            onClick={() => listadoReporteSolicitudes(1)}
+                        />
+                    </div>
+                    <div 
+                    className="input-box1 mt-4 col-md-3"
+                        style={{
+                            flex: 1,
+                            alignSelf: "center",
+                        }}
+                    >
+                        <BtnSearch
+                            attribute={{
+                                name: "Limpiar Campos",
+                                classNamebtn: "btn_search",
+                            }}
+                            onClick={() => clear()}
+                        />
+                    </div>
+                    </div>
+                    
+                    
                 </div>
 
                 <section>

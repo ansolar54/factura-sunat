@@ -2053,6 +2053,12 @@ const Info_Cliente = () => {
                             rowSpan="2"
                             style={{ border: "1px solid #91c848" }}
                           >
+                            Saldo a favor
+                          </th>
+                          <th
+                            rowSpan="2"
+                            style={{ border: "1px solid #91c848" }}
+                          >
                             Moneda
                           </th>
                         </tr>
@@ -2080,6 +2086,9 @@ const Info_Cliente = () => {
                               </th>
                               <th style={{ textAlign: "center" }}>
                                 {convertDecimal(response.klimdField)}
+                              </th>
+                              <th style={{ textAlign: "center" }}>
+                                {convertDecimal(response.sAfavorField)}
                               </th>
                               <th style={{ textAlign: "center" }}>
                                 {response.waerkField}
@@ -2113,6 +2122,18 @@ const Info_Cliente = () => {
                             style={{ border: "1px solid #91c848" }}
                           >
                             Vencido
+                          </th>
+                          <th
+                            rowSpan="2"
+                            style={{ border: "1px solid #91c848" }}
+                          >
+                            Saldo a favor
+                          </th>
+                          <th
+                            rowSpan="2"
+                            style={{ border: "1px solid #91c848" }}
+                          >
+                            Total
                           </th>
                           <th
                             rowSpan="2"
@@ -2187,6 +2208,20 @@ const Info_Cliente = () => {
                                 }
                               >
                                 {convertDecimal(response.deu91Field)}
+                              </th>
+                              <th
+                                style={
+                                    { textAlign: "center" }
+                                }
+                              >
+                                {convertDecimal(response.saldoAfavorField)}
+                              </th>
+                              <th
+                                style={
+                                     { textAlign: "center" }
+                                }
+                              >
+                                {convertDecimal(response.totalField)}
                               </th>
                               <th style={{ textAlign: "center" }}>
                                 {response.waersField}

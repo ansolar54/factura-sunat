@@ -1,6 +1,7 @@
 import React,{useRef,useEffect,useCallback,useState} from 'react';
 import { ConsultarStockOrgVentas } from '../../../Services/ServiceOrgVentas';
 import Spinner from '../../../components/Spinner';
+import jwt from "jwt-decode";
 
 const Mc_Organiz_Ventas_Mat = ({showMcOrganizVentasMat, setShowMcOrganizVentasMat, setMcOrganizVentasMat, McOrganizVentasMat }) => {
    
@@ -27,7 +28,10 @@ const Mc_Organiz_Ventas_Mat = ({showMcOrganizVentasMat, setShowMcOrganizVentasMa
         () => {
             if(showMcOrganizVentasMat==true){
                 setViewInfo(false);
-                ConsultarStockOrgVentas().then((result)=>{
+                var model={
+                    IsUser:jwt(localStorage.getItem("_token")).username
+                }
+                ConsultarStockOrgVentas(model).then((result)=>{
                     setresponseOrgVentas(result);
                     setViewInfo(true);
                 });

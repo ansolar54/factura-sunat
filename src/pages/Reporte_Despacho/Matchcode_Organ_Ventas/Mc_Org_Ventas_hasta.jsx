@@ -3,7 +3,9 @@ import { OrgVentas } from '../../../Services/ServiceOrgVentas';
 import Spinner from '../../../components/Spinner';
 import './Mc_Org_Ventas_hasta.css';
 
-const Mc_Org_Ventas_desde = ({showorgventa, setshoworgventa, setorg_ventas_hasta,org_ventas_hasta,org_ventas_desde,setorg_ventas}) => {
+const Mc_Org_Ventas_desde = ({showorgventa, setshoworgventa, 
+    setorg_ventas_hasta,org_ventas_hasta,
+    org_ventas_desde,setorg_ventas}) => {
 
     const [ViewInfo, setViewInfo] = useState(false);
     const [responseOrgVentas, setresponseOrgVentas] = useState({etOrgVentasField:[]});

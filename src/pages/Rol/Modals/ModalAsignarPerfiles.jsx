@@ -103,6 +103,8 @@ const ModalAsignarPerfiles = ({
         return "Estado de cuenta";
       case "R06":
         return "Reporte de despacho";
+      case "R07":
+        return "Lista de precios";
       case "ROL":
         return "Roles";
       default:
@@ -182,7 +184,7 @@ const ModalAsignarPerfiles = ({
               </div>
             </div>
             {/* {spinner && <Spinner />} */}
-            <div className="modal-footer" style={{alignContent: "center"}}>
+            <div className="modal-footer" style={{ alignContent: "center" }}>
               <BtnCancel
                 attribute={{
                   name: "btnCancelar",

@@ -6,6 +6,7 @@ import BtnSearch from "../../components/BtnSearch";
 import BtnExportar from "../../components/BtnExport";
 import {
   ConsultaPedido,
+  ConsultaPedidoFiltro,
   ExportarConsultaPedido,
 } from "../../Services/ServiceConsultaPedido";
 // import { ExportarConsPedido_DetalleCli } from '../../Services/ServiceCliente';
@@ -23,6 +24,8 @@ import Mc_Cliente_desde from "./Matchcode_Cliente/Mc_Cliente_desde";
 import Mc_Cliente_hasta from "./Matchcode_Cliente/Mc_Cliente_hasta";
 import Mc_Material_desde from "./Matchcode_Material_v2/Mc_Material_desde";
 import Mc_Material_hasta from "./Matchcode_Material_v2/Mc_Material_hasta";
+import Mc_Clase_Pedido_desde from "./Matchcode_Clase_Pedido/Mc_Clase_Pedido_desde";
+import Mc_Clase_Pedido_hasta from "./Matchcode_Clase_Pedido/Mc_Clase_Pedido_hasta";
 // import Mc_Material from "../Consulta_Stock/Matchcode_Material/Mc_Material";
 import jwt from "jwt-decode";
 
@@ -30,7 +33,6 @@ import "./Consulta.css";
 
 import BusquedaMult from "../../components/BusquedaMultiple/BusquedaMult";
 import FiltroConsultaPedido from "./FiltroConsultaPedido";
-import { ConsPedidoFiltro } from "../../Services/ServicePedidos";
 import ChangeStatusPassword from "../../components/ChangeStatusPassword/ChangeStatusPassword";
 import { getUser } from "../../Services/ServiceUser";
 import {
@@ -42,6 +44,11 @@ import Mc_Cliente_hasta_v2 from "./Matchcode_Cliente/Mc_Cliente_hasta_v2";
 import Mc_Comercial_desde from "./Matchcode_Comercial/Mc_Comercial_desde";
 import Mc_Comercial_hasta from "./Matchcode_Comercial/Mc_Comercial_hasta";
 import SelectFormMd from "../../components/SelectFormModal";
+import toast, { Toaster } from "react-hot-toast";
+
+import {ShowStatus} from "../../Services/ServiceEstadoOperacion";
+import {ClasePedido} from "../../Services/ServiceClasePedido";
+import {OrgVentas} from "../../Services/ServiceOrgVentas";
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -57,6 +64,7 @@ const Consulta = () => {
   const [text_btn_filtro, settext_btn_filtro] = useState("Filtrar");
 
   const [f_vbelnField, setf_vbelnField] = useState("");
+  const [f_auartField, setf_auartField] = useState("");
   const [f_vkorgField, setf_vkorgField] = useState("");
   const [f_erdatField, setf_erdatField] = useState("");
   const [f_kunnrField, setf_kunnrField] = useState("");
@@ -65,7 +73,6 @@ const Consulta = () => {
   const [f_waerkField, setf_waerkField] = useState("");
   const [f_text1Field, setf_text1Field] = useState("");
   const [f_statusField, setf_statusField] = useState("");
-  const [f_bezeiField, setf_bezeiField] = useState("");
 
   const [col_1, setcol_1] = useState(0);
   const [col_2, setcol_2] = useState(0);
@@ -143,6 +150,11 @@ const Consulta = () => {
     { Sign: "I", Option: "EQ", Low: "", High: "" },
   ]);
 
+  // rangos clase pedidos
+  const [rangos_clase_pedido, setrangos_clase_pedido] = useState([
+    { Sign: "I", Option: "EQ", Low: "", High: "" },
+  ]);
+
   //----------------------------------------------------------------------------------------------------------------------------------
   //INPUT Documento comercial
   const [docu_comercial, setdocu_comercial] = useState([
@@ -186,6 +198,7 @@ const Consulta = () => {
   ]);
   const [material_desde, setmaterial_desde] = useState("");
   const [material_hasta, setmaterial_hasta] = useState("");
+
   //INPUT Comercial
   const [comercial, setcomercial] = useState([
     { Sign: "I", Option: "EQ", Low: "", High: "" },
@@ -194,6 +207,13 @@ const Consulta = () => {
   const [comercial_hasta, setcomercial_hasta] = useState("");
   const [comercial_desde_value, setcomercial_desde_value] = useState("");
   const [comercial_hasta_value, setcomercial_hasta_value] = useState("");
+
+  //INPUT Clase Pedido
+  const [clase_pedido, setclase_pedido] = useState([
+    { Sign: "I", Option: "EQ", Low: "", High: "" },
+  ]);
+  const [clase_pedido_desde, setclase_pedido_desde] = useState("");
+  const [clase_pedido_hasta, setclase_pedido_hasta] = useState("");
 
   const [BuscaMaterial, setBuscaMaterial] = useState([
     { Sign: "", Option: "", Low: "", High: "" },
@@ -228,15 +248,59 @@ const Consulta = () => {
   //ACTIVAR MODAL MATCHCODE COMERCIAL
   const [showcomercial_desde, setshowcomercial_desde] = useState(false);
   const [showcomercial_hasta, setshowcomercial_hasta] = useState(false);
-
+  //ACTIVAR MODAL MATCHCODE CLASE DE PEDIDO
+  const [showclasepedido_desde, setshowclasepedido_desde] = useState(false);
+  const [showclasepedido_hasta, setshowclasepedido_hasta] = useState(false);
   const modalRef = useRef();
-
   const [ItemsNumberDates, setItemsNumberDates] = useState([
     { id: 10, name: 10 },
     { id: 20, name: 20 },
     { id: 50, name: 50 },
     { id: 100, name: 100 },
   ]);
+  const [statusOperation, setStatusOperation] = useState([]);
+  const [clasePedido, setClasePedido] = useState([]);
+  const [orgVentasCombo, setOrgVentasCombo] = useState([]);
+
+  useEffect(() => {
+    getStatus();
+    getClasePedido();
+    getOrgVentas();
+  }, []);
+
+  // COMBOBOX ESTADO DE OPERACIÓN
+  const getStatus = () => {
+    ShowStatus().then(
+      (result) => {
+        //console.log("ESTADO OPERACION", result);
+        setStatusOperation(result.etStatusField);
+      }
+    );
+  };
+
+  // COMBOBOX CLASE DE PEDIDO
+  const getClasePedido = () => {
+    ClasePedido().then(
+      (result) => {
+        //console.log("CLASE PEDIDO", result);
+        setClasePedido(result.etClasePedidoField);
+      }
+    );
+  };
+
+  // COMBOBOX ORG VENTAS
+  const getOrgVentas = () => {
+    OrgVentas().then(
+      (result) => {
+        //console.log("ORG. VENTAS", result);
+        setOrgVentasCombo(result.etOrgVentasField);
+      }
+    );
+  };
+
+  // console.log("STATUS", statusOperation);
+  // console.log("CLA. PEDIDO", clasePedido);
+  // console.log("ORG. VENTAS 1", orgVentasCombo);
 
   //PARA ACCESO A RUTA
   const [accesoruta, setaccesoruta] = useState(false);
@@ -253,7 +317,7 @@ const Consulta = () => {
           width: { wpx: 125 },
         },
         {
-          title: "Clase Pedido",
+          title: "Clase de Pedido",
           style: { font: { sz: "18", bold: true } },
           width: { wpx: 125 },
         },
@@ -302,6 +366,27 @@ const Consulta = () => {
           style: { font: { sz: "18", bold: true } },
           width: { wpx: 125 },
         },
+        //////////// AGREGADO - PRIORIDAD 6
+        {
+          title: "Oficina de Ventas",
+          style: { font: { sz: "18", bold: true } },
+          width: { wpx: 125 },
+        },
+        {
+          title: "Gpo. de Vendedores",
+          style: { font: { sz: "18", bold: true } },
+          width: { wpx: 125 },
+        },
+        {
+          title: "Vendedor Comercial",
+          style: { font: { sz: "18", bold: true } },
+          width: { wpx: 125 },
+        },
+        {
+          title: "N° Ped. Cliente",
+          style: { font: { sz: "18", bold: true } },
+          width: { wpx: 125 },
+        },
       ],
       data: [],
     },
@@ -310,6 +395,7 @@ const Consulta = () => {
   //PARA ALMACENAR LOS DATOS A EXPORTAR
   const [DataSet, setDataSet] = useState([{ columns: [], data: [] }]);
 
+  
   useEffect(() => {
     //valida para el nuevo cambio de contraseña
     getUser(jwt(localStorage.getItem("_token")).nameid).then((result) => {
@@ -394,6 +480,10 @@ const Consulta = () => {
       case 7:
         setrangos_comercial(rangos);
         RangosComercial();
+        break;
+      case 8:
+        setrangos_clase_pedido(rangos);
+        RangosClasePedido();
         break;
       default:
         break;
@@ -826,27 +916,28 @@ const Consulta = () => {
           }
         }
         break;
+      //CORREGIR - PRIORIDAD 6
       case 10:
         clearColumnsIcon(10);
         if (col_10 === 0) {
           setcol_10(col_10 + 1);
           // Search(1, 0, "STATUS", "0");
-          setIsCampo("BEZEI");
+          setIsCampo("AUART");
           setIsOrden("0");
           if (indicadorfiltro == true) {
-            buscar_filtro_fila(1, "BEZEI", "0");
+            buscar_filtro_fila(1, "AUART", "0");
           } else {
-            Search(1, 0, "BEZEI", "0");
+            Search(1, 0, "AUART", "0");
           }
         } else if (col_10 === 1) {
           setcol_10(col_10 + 1);
           // Search(1, 0, "STATUS", "1");
-          setIsCampo("BEZEI");
+          setIsCampo("AUART");
           setIsOrden("1");
           if (indicadorfiltro == true) {
-            buscar_filtro_fila(1, "BEZEI", "1");
+            buscar_filtro_fila(1, "AUART", "1");
           } else {
-            Search(1, 0, "BEZEI", "1");
+            Search(1, 0, "AUART", "1");
           }
         } else {
           setcol_10(0);
@@ -871,6 +962,9 @@ const Consulta = () => {
       case "f_vbelnField":
         setf_vbelnField(value);
         break;
+      case "f_auartField":
+        setf_auartField(value);
+        break;
       case "f_vkorgField":
         setf_vkorgField(value);
         break;
@@ -894,9 +988,6 @@ const Consulta = () => {
         break;
       case "f_statusField":
         setf_statusField(value);
-        break;
-      case "f_bezeiField":
-        setf_bezeiField(value);
         break;
       default:
         break;
@@ -1106,6 +1197,26 @@ const Consulta = () => {
     }
   }
 
+  // Funcion Material
+  function RangosClasePedido() {
+    if (rangos_clase_pedido.length === 1) {
+      if (
+        rangos_clase_pedido[0].Low.trim() === "" &&
+        rangos_clase_pedido[0].High.trim() === ""
+      ) {
+        return clase_pedido;
+      } else {
+        setclase_pedido_desde(rangos_clase_pedido[0].Low);
+        setclase_pedido_hasta(rangos_clase_pedido[0].High);
+        return rangos_clase_pedido;
+      }
+    } else {
+      setclase_pedido_desde(rangos_clase_pedido[0].Low);
+      setclase_pedido_hasta(rangos_clase_pedido[0].High);
+      return rangos_clase_pedido;
+    }
+  }
+
   function clear_icons_colum() {
     setcol_1(0);
     setcol_2(0);
@@ -1116,6 +1227,7 @@ const Consulta = () => {
     setcol_7(0);
     setcol_8(0);
     setcol_9(0);
+    setcol_10(0);
   }
 
   //BUSQUEDAA DE POPUP NUMERO DE DATOS
@@ -1148,6 +1260,9 @@ const Consulta = () => {
       ItVbeln: RangosDocuComercial(),
       ItVkbur: RangosOficinaVentas(),
       ItVkorg: RangosOrganizacionVentas(),
+      ItFilter: [],
+      ItAuart: (clase_pedido_desde || clase_pedido_hasta) !== "" ?
+        RangosClasePedido() : [],
     };
     setmodel_conspedido(model_consulta_pedido);
     if (ind == 0) {
@@ -1162,19 +1277,23 @@ const Consulta = () => {
           result.itConsultaPedidosField.map((d) => {
             return {
               select: false,
-              bezeiField: d.bezeiField,
-              bstdkField: d.bstdkField,
+              vbelnField: d.vbelnField,
+              auartField: d.auartField,
+              vkorgField: d.vkorgField,
               erdatField: d.erdatField,
               kunnrField: d.kunnrField,
-              motivoField: d.motivoField,
               name1Field: d.name1Field,
               netwrField: d.netwrField,
-              statusField: d.statusField,
-              text1Field: d.text1Field,
-              vbelnField: d.vbelnField,
-              vkorgField: d.vkorgField,
               waerkField: d.waerkField,
+              bstdkField: d.bstdkField,
               ztermField: d.ztermField,
+              text1Field: d.text1Field,
+              statusField: d.statusField,
+              motivoField: d.motivoField,
+              vkburField: d.vkburField,
+              vkgrpField: d.vkgrpField,
+              comercialField: d.comercialField,
+              bstnkField: d.bstnkField
             };
           })
         );
@@ -1192,19 +1311,23 @@ const Consulta = () => {
             result.itConsultaPedidosField.map((d) => {
               return {
                 select: true,
-                bezeiField: d.bezeiField,
-                bstdkField: d.bstdkField,
+                vbelnField: d.vbelnField,
+                auartField: d.auartField,
+                vkorgField: d.vkorgField,
                 erdatField: d.erdatField,
                 kunnrField: d.kunnrField,
-                motivoField: d.motivoField,
                 name1Field: d.name1Field,
                 netwrField: d.netwrField,
-                statusField: d.statusField,
-                text1Field: d.text1Field,
-                vbelnField: d.vbelnField,
-                vkorgField: d.vkorgField,
                 waerkField: d.waerkField,
+                bstdkField: d.bstdkField,
                 ztermField: d.ztermField,
+                text1Field: d.text1Field,
+                statusField: d.statusField,
+                motivoField: d.motivoField,
+                vkburField: d.vkburField,
+                vkgrpField: d.vkgrpField,
+                comercialField: d.comercialField,
+                bstnkField: d.bstnkField
               };
             })
           );
@@ -1219,19 +1342,23 @@ const Consulta = () => {
             result.itConsultaPedidosField.map((d) => {
               return {
                 select: false,
-                bezeiField: d.bezeiField,
-                bstdkField: d.bstdkField,
+                vbelnField: d.vbelnField,
+                auartField: d.auartField,
+                vkorgField: d.vkorgField,
                 erdatField: d.erdatField,
                 kunnrField: d.kunnrField,
-                motivoField: d.motivoField,
                 name1Field: d.name1Field,
                 netwrField: d.netwrField,
-                statusField: d.statusField,
-                text1Field: d.text1Field,
-                vbelnField: d.vbelnField,
-                vkorgField: d.vkorgField,
                 waerkField: d.waerkField,
+                bstdkField: d.bstdkField,
                 ztermField: d.ztermField,
+                text1Field: d.text1Field,
+                statusField: d.statusField,
+                motivoField: d.motivoField,
+                vkburField: d.vkburField,
+                vkgrpField: d.vkgrpField,
+                comercialField: d.comercialField,
+                bstnkField: d.bstnkField
               };
             })
           );
@@ -1295,6 +1422,9 @@ const Consulta = () => {
       ItVbeln: RangosDocuComercial(),
       ItVkbur: RangosOficinaVentas(),
       ItVkorg: RangosOrganizacionVentas(),
+      ItFilter: [],
+      ItAuart: (clase_pedido_desde || clase_pedido_hasta) !== "" ?
+        RangosClasePedido() : [],
     };
     setmodel_conspedido(model_consulta_pedido);
     if (ind == 0) {
@@ -1309,19 +1439,23 @@ const Consulta = () => {
           result.itConsultaPedidosField.map((d) => {
             return {
               select: false,
-              bezeiField: d.bezeiField,
-              bstdkField: d.bstdkField,
+              vbelnField: d.vbelnField,
+              auartField: d.auartField,
+              vkorgField: d.vkorgField,
               erdatField: d.erdatField,
               kunnrField: d.kunnrField,
-              motivoField: d.motivoField,
               name1Field: d.name1Field,
               netwrField: d.netwrField,
-              statusField: d.statusField,
-              text1Field: d.text1Field,
-              vbelnField: d.vbelnField,
-              vkorgField: d.vkorgField,
               waerkField: d.waerkField,
+              bstdkField: d.bstdkField,
               ztermField: d.ztermField,
+              text1Field: d.text1Field,
+              statusField: d.statusField,
+              motivoField: d.motivoField,
+              vkburField: d.vkburField,
+              vkgrpField: d.vkgrpField,
+              comercialField: d.comercialField,
+              bstnkField: d.bstnkField
             };
           })
         );
@@ -1339,19 +1473,23 @@ const Consulta = () => {
             result.itConsultaPedidosField.map((d) => {
               return {
                 select: true,
-                bezeiField: d.bezeiField,
-                bstdkField: d.bstdkField,
+                vbelnField: d.vbelnField,
+                auartField: d.auartField,
+                vkorgField: d.vkorgField,
                 erdatField: d.erdatField,
                 kunnrField: d.kunnrField,
-                motivoField: d.motivoField,
                 name1Field: d.name1Field,
                 netwrField: d.netwrField,
-                statusField: d.statusField,
-                text1Field: d.text1Field,
-                vbelnField: d.vbelnField,
-                vkorgField: d.vkorgField,
                 waerkField: d.waerkField,
+                bstdkField: d.bstdkField,
                 ztermField: d.ztermField,
+                text1Field: d.text1Field,
+                statusField: d.statusField,
+                motivoField: d.motivoField,
+                vkburField: d.vkburField,
+                vkgrpField: d.vkgrpField,
+                comercialField: d.comercialField,
+                bstnkField: d.bstnkField
               };
             })
           );
@@ -1366,19 +1504,23 @@ const Consulta = () => {
             result.itConsultaPedidosField.map((d) => {
               return {
                 select: false,
-                bezeiField: d.bezeiField,
-                bstdkField: d.bstdkField,
+                vbelnField: d.vbelnField,
+                auartField: d.auartField,
+                vkorgField: d.vkorgField,
                 erdatField: d.erdatField,
                 kunnrField: d.kunnrField,
-                motivoField: d.motivoField,
                 name1Field: d.name1Field,
                 netwrField: d.netwrField,
-                statusField: d.statusField,
-                text1Field: d.text1Field,
-                vbelnField: d.vbelnField,
-                vkorgField: d.vkorgField,
                 waerkField: d.waerkField,
+                bstdkField: d.bstdkField,
                 ztermField: d.ztermField,
+                text1Field: d.text1Field,
+                statusField: d.statusField,
+                motivoField: d.motivoField,
+                vkburField: d.vkburField,
+                vkgrpField: d.vkgrpField,
+                comercialField: d.comercialField,
+                bstnkField: d.bstnkField
               };
             })
           );
@@ -1449,6 +1591,25 @@ const Consulta = () => {
       ItVbeln: RangosDocuComercial(),
       ItVkbur: RangosOficinaVentas(),
       ItVkorg: RangosOrganizacionVentas(),
+      ItFilter: mostrar_filtro_fila == true ? [
+        {
+          Vbeln: f_vbelnField,
+          Auart: f_auartField,
+          Vkorg: f_vkorgField,
+          Erdat: f_erdatField,
+          Kunnr: f_kunnrField,
+          Name1: f_name1Field,
+          Netwr: f_netwrField.replace(/,/g, ""),
+          Waerk: f_waerkField,
+          Bstdk: "",
+          Zterm: "",
+          Text1: f_text1Field,
+          Status: f_statusField,
+          Motivo: "",
+        },
+      ] : [],  // CONDICIONAL
+      ItAuart: (clase_pedido_desde || clase_pedido_hasta) !== "" ?
+        RangosClasePedido() : [],
     };
 
     if (
@@ -1458,9 +1619,10 @@ const Consulta = () => {
       material[0].Low.trim() != "" ||
       docu_comercial[0].Low.trim() != "" ||
       ofi_ventas[0].Low.trim() != "" ||
-      org_ventas[0].Low.trim() != ""
+      org_ventas[0].Low.trim() != "" ||
+      clase_pedido[0].Low.trim() != ""
     ) {
-      ExportarConsultaPedido(model_consulta_pedido)
+      ConsultaPedidoFiltro(model_consulta_pedido)
         .then((result) => {
           setDataSet([
             {
@@ -1471,7 +1633,7 @@ const Consulta = () => {
                   width: { wpx: 125 },
                 },
                 {
-                  title: "Clase Pedido",
+                  title: "Clase de Pedido",
                   style: { font: { sz: "18", bold: true } },
                   width: { wpx: 125 },
                 },
@@ -1520,11 +1682,31 @@ const Consulta = () => {
                   style: { font: { sz: "18", bold: true } },
                   width: { wpx: 125 },
                 },
+                {
+                  title: "Oficina de Ventas",
+                  style: { font: { sz: "18", bold: true } },
+                  width: { wpx: 125 },
+                },
+                {
+                  title: "Gpo. de Vendedores",
+                  style: { font: { sz: "18", bold: true } },
+                  width: { wpx: 125 },
+                },
+                {
+                  title: "Vendedor Comercial",
+                  style: { font: { sz: "18", bold: true } },
+                  width: { wpx: 125 },
+                },
+                {
+                  title: "N° Ped. Cliente",
+                  style: { font: { sz: "18", bold: true } },
+                  width: { wpx: 125 },
+                },
               ],
               data: result.itConsultaPedidosField.map((data) => {
                 return [
                   { value: data.vbelnField, style: { font: { sz: "14" } } },
-                  { value: data.bezeiField, style: { font: { sz: "14" } } },
+                  { value: data.auartField, style: { font: { sz: "14" } } },
                   { value: data.vkorgField, style: { font: { sz: "14" } } },
                   {
                     value: formatDate(data.erdatField),
@@ -1540,6 +1722,10 @@ const Consulta = () => {
                   { value: data.text1Field, style: { font: { sz: "14" } } },
                   { value: data.statusField, style: { font: { sz: "14" } } },
                   { value: data.motivoField, style: { font: { sz: "14" } } },
+                  { value: data.vkburField, style: { font: { sz: "14" } } },
+                  { value: data.vkgrpField, style: { font: { sz: "14" } } },
+                  { value: data.comercialField, style: { font: { sz: "14" } } },
+                  { value: data.bstnkField, style: { font: { sz: "14" } } },
                 ];
               }),
             },
@@ -1586,6 +1772,14 @@ const Consulta = () => {
   }
   function mc_comercial_hasta() {
     setshowcomercial_hasta((prev) => !prev);
+  }
+
+  //INPUT clase de pedido
+  function mc_clase_pedido_desde() {
+    setshowclasepedido_desde((prev) => !prev);
+  }
+  function mc_clase_pedido_hasta() {
+    setshowclasepedido_hasta((prev) => !prev);
   }
 
   function handleChange(name, value) {
@@ -2021,6 +2215,61 @@ const Consulta = () => {
           }
         }
         break;
+
+      //clase pedido
+      case "clase_pedido":
+        setclase_pedido([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
+        break;
+      case "clase_pedido_desde":
+        setclase_pedido_desde(value);
+        if (value.trim() != "") {
+          if (clase_pedido_hasta == "") {
+            setclase_pedido([{ Sign: "I", Option: "EQ", Low: value, High: "" }]);
+          } else {
+            setclase_pedido([
+              {
+                Sign: "I",
+                Option: "BT",
+                Low: value,
+                High: clase_pedido_hasta,
+              },
+            ]);
+          }
+        } else {
+          if (clase_pedido_hasta != "") {
+            setclase_pedido([
+              { Sign: "I", Option: "EQ", Low: "", High: clase_pedido_hasta },
+            ]);
+          } else {
+            setclase_pedido([{ Sign: "", Option: "", Low: "", High: "" }]);
+          }
+        }
+        break;
+      case "clase_pedido_hasta":
+        setclase_pedido_hasta(value);
+        if (value.trim() != "") {
+          if (clase_pedido_desde == "") {
+            setclase_pedido([{ Sign: "I", Option: "EQ", Low: "", High: value }]);
+          } else {
+            setclase_pedido([
+              {
+                Sign: "I",
+                Option: "BT",
+                Low: clase_pedido_desde,
+                High: value,
+              },
+            ]);
+          }
+        } else {
+          if (clase_pedido_desde != "") {
+            setclase_pedido([
+              { Sign: "I", Option: "EQ", Low: clase_pedido_desde, High: "" },
+            ]);
+          } else {
+            setclase_pedido([{ Sign: "", Option: "", Low: "", High: "" }]);
+          }
+        }
+        break;
       //comercial
       case "comercial":
         setcomercial([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
@@ -2071,7 +2320,7 @@ const Consulta = () => {
               { Sign: "I", Option: "EQ", Low: comercial_desde, High: "" },
             ]);
           } else {
-            setmaterial([{ Sign: "", Option: "", Low: "", High: "" }]);
+            setcomercial([{ Sign: "", Option: "", Low: "", High: "" }]);
           }
         }
         break;
@@ -2227,6 +2476,13 @@ const Consulta = () => {
     setshowBusMult(true);
   };
 
+  const ChangeBusquedaMult_Clase_Pedido = () => {
+    setrangos(rangos_clase_pedido);
+    settype_input("text");
+    setind_rang({ num: 8, bool: true });
+    setshowBusMult(true);
+  };
+
   // function SearchFiltro() {
   //   setspinner(true);
   //   ConsPedidoFiltro(model_filtro).then((result) => {
@@ -2257,6 +2513,7 @@ const Consulta = () => {
 
   //Limpiar Campos
   function Clear() {
+    setmostrar_filtro_fila(false);
     setrangos_ofi_ventas([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
     setrangos_cliente([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
     setrangos_comercial([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
@@ -2265,6 +2522,7 @@ const Consulta = () => {
     setrangos_doccomercial([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
     setrangos_material([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
     setrangos_org_ventas([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
+    setrangos_clase_pedido([{ Sign: "I", Option: "EQ", Low: "", High: "" }])
 
     setvaluepagination(false);
     setresponse_consulta_pedido([]);
@@ -2291,6 +2549,10 @@ const Consulta = () => {
     handleChange("cliente", "");
     setcliente_desde("");
     setcliente_hasta("");
+
+    handleChange("clase_pedido", "");
+    setclase_pedido_desde("");
+    setclase_pedido_hasta("");
 
     handleChange("comercial", "");
     setcomercial_desde("");
@@ -2398,7 +2660,7 @@ const Consulta = () => {
         },
       },
       {
-        value: d.bezeiField,
+        value: d.auartField,
         style: {
           font: { sz: "14" },
         },
@@ -2457,6 +2719,31 @@ const Consulta = () => {
           font: { sz: "14" },
         },
       },
+      ////////// AGREGADOS PRIORIDAD 6
+      {
+        value: d.vkburField,
+        style: {
+          font: { sz: "14" },
+        },
+      },
+      {
+        value: d.vkgrpField,
+        style: {
+          font: { sz: "14" },
+        },
+      },
+      {
+        value: d.comercialField,
+        style: {
+          font: { sz: "14" },
+        },
+      },
+      {
+        value: d.bstnkField,
+        style: {
+          font: { sz: "14" },
+        },
+      },
     ]);
 
     arraycheckbox_export[0].data.sort(function (a, b) {
@@ -2465,6 +2752,7 @@ const Consulta = () => {
   }
   function clear_filtro_fila() {
     setf_vbelnField("");
+    setf_auartField("");
     setf_vkorgField("");
     setf_erdatField("");
     setf_kunnrField("");
@@ -2473,8 +2761,8 @@ const Consulta = () => {
     setf_waerkField("");
     setf_text1Field("");
     setf_statusField("");
-    setf_bezeiField("");
   }
+
   function buscar_filtro_fila(pageNumber, IsCampo, IsOrden) {
     setTotalData(0);
     if (pageNumber == 1) {
@@ -2492,7 +2780,7 @@ const Consulta = () => {
       IsOrden: IsOrden,
       IsNpag: pageNumber,
       IsRegxpag: IsRegxpag,
-      IsExport: " ",
+      IsExport: "",
       IsUser: jwt(localStorage.getItem("_token")).username,
       ItErdat: RangosCreadoEl(),
       ItErnam: RangosCreadoPor(),
@@ -2505,7 +2793,7 @@ const Consulta = () => {
       ItFilter: [
         {
           Vbeln: f_vbelnField,
-          Bezei: f_bezeiField,
+          Auart: f_auartField,
           Vkorg: f_vkorgField,
           Erdat: f_erdatField,
           Kunnr: f_kunnrField,
@@ -2519,33 +2807,39 @@ const Consulta = () => {
           Motivo: "",
         },
       ],
+      ItAuart: (clase_pedido[0].Low || clase_pedido[0].High) !== "" ?
+        RangosClasePedido() : [],
     };
 
-    console.log("FILTRO MODEL CONSULTAS",model)
+    console.log("FILTRO MODEL CONSULTAS", model)
     setmostrar_filtro_fila(false);
     arraycheckbox_export[0].data = [];
     setresponse_consulta_pedido([]);
     setspinner(true);
-    ConsPedidoFiltro(model)
+    ConsultaPedidoFiltro(model)
       .then((result) => {
         setspinner(false);
         setresponse_consulta_pedido(
           result.itConsultaPedidosField.map((d) => {
             return {
               select: false,
-              bezeiField: d.bezeiField,
-              bstdkField: d.bstdkField,
+              vbelnField: d.vbelnField,
+              auartField: d.auartField,
+              vkorgField: d.vkorgField,
               erdatField: d.erdatField,
               kunnrField: d.kunnrField,
-              motivoField: d.motivoField,
               name1Field: d.name1Field,
               netwrField: d.netwrField,
-              statusField: d.statusField,
-              text1Field: d.text1Field,
-              vbelnField: d.vbelnField,
-              vkorgField: d.vkorgField,
               waerkField: d.waerkField,
+              bstdkField: d.bstdkField,
               ztermField: d.ztermField,
+              text1Field: d.text1Field,
+              statusField: d.statusField,
+              motivoField: d.motivoField,
+              vkburField: d.vkburField,
+              vkgrpField: d.vkgrpField,
+              comercialField: d.comercialField,
+              bstnkField: d.bstnkField
             };
           })
         );
@@ -2564,7 +2858,20 @@ const Consulta = () => {
   }
 
   function buscar_filtro_icono_btn() {
-    buscar_filtro_fila(1, "", "");
+    if ((f_auartField || f_erdatField || f_kunnrField || f_name1Field || f_netwrField ||
+      f_statusField || f_text1Field || f_vbelnField || f_vkorgField || f_waerkField) != "") {
+      buscar_filtro_fila(1, "", "");
+      Exportar();
+    } else {
+      toast.error("Debe seleccionar algún filtro por columna.", {
+        position: "top-center",
+        autoClose: 6000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        },
+      });
+    }
   }
 
   const closeModal = (e) => {
@@ -2785,6 +3092,24 @@ const Consulta = () => {
               setcomercial={setcomercial}
               setcomercial_hasta_value={setcomercial_hasta_value}
             />
+            {/* MODAL MATCHCODE CLASE PEDIDO */}
+            <Mc_Clase_Pedido_desde
+              showclasepedido={showclasepedido_desde}
+              setshowclasepedido={setshowclasepedido_desde}
+              setclase_pedido_desde={setclase_pedido_desde}
+              clase_pedido_desde={clase_pedido_desde}
+              clase_pedido_hasta={clase_pedido_hasta}
+              setclase_pedido={setclase_pedido}
+            />
+            <Mc_Clase_Pedido_hasta
+              showclasepedido={showclasepedido_hasta}
+              setshowclasepedido={setshowclasepedido_hasta}
+              setclase_pedido_hasta={setclase_pedido_hasta}
+              clase_pedido_hasta={clase_pedido_hasta}
+              clase_pedido_desde={clase_pedido_desde}
+              setclase_pedido={setclase_pedido}
+            />
+            <Toaster />
             <div className="title-section">
               <div>
                 <label> Reportes / Consulta de Pedidos </label>
@@ -2812,7 +3137,7 @@ const Consulta = () => {
             <section>
               <div style={{ margin: "10px" }} className="row">
                 <div className="col-sm-4 d-flex align-items-center">
-                  <label>N° de Pedido</label>
+                  <label>N° de Pedido :</label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm
@@ -2850,7 +3175,7 @@ const Consulta = () => {
                 </div>
 
                 <div className="col-sm-4 d-flex align-items-center">
-                  <label>Oficina de ventas</label>
+                  <label>Oficina de ventas :</label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm
@@ -2890,7 +3215,7 @@ const Consulta = () => {
                 </div>
 
                 <div className="col-sm-4 d-flex align-items-center">
-                  <label>Creado el</label>
+                  <label>Creado el :</label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm
@@ -2926,7 +3251,7 @@ const Consulta = () => {
                 </div>
 
                 <div className="col-sm-4 d-flex align-items-center">
-                  <label>Material</label>
+                  <label>Material :</label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm
@@ -2966,7 +3291,7 @@ const Consulta = () => {
                 </div>
 
                 <div className="col-sm-4 d-flex align-items-center">
-                  <label>Organización ventas</label>
+                  <label>Organización ventas :</label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm
@@ -3006,7 +3331,7 @@ const Consulta = () => {
                 </div>
 
                 <div className="col-sm-4 d-flex align-items-center">
-                  <label>Cod. Cliente</label>
+                  <label>Cod. Cliente :</label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm
@@ -3046,7 +3371,7 @@ const Consulta = () => {
                 </div>
 
                 <div className="col-sm-4 d-flex align-items-center">
-                  <label>Comercial</label>
+                  <label>Comercial :</label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm
@@ -3082,6 +3407,48 @@ const Consulta = () => {
                   <i
                     className="fas fa-file-export icon-matchcode-2"
                     onClick={ChangeBusquedaMult_Comercial}
+                  ></i>
+                </div>
+
+                {/* //// PRIORIDAD 6 */}
+
+                <div className="col-sm-4 d-flex align-items-center">
+                  <label>Clase de Pedido :</label>
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "clase_pedido_desde",
+                      type: "text",
+                      value: clase_pedido_desde,
+                      disabled: false,
+                      checked: false,
+                      matchcode: true,
+                      maxlength: 10,
+                    }}
+                    handleChange={handleChange}
+                    onClick={() => mc_clase_pedido_desde()}
+                  />
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "clase_pedido_hasta",
+                      type: "text",
+                      value: clase_pedido_hasta,
+                      disabled: false,
+                      checked: false,
+                      matchcode: true,
+                      maxlength: 6,
+                    }}
+                    handleChange={handleChange}
+                    onClick={() => mc_clase_pedido_hasta()}
+                  />
+                </div>
+                <div className="col-sm-2 d-flex align-items-center">
+                  <i
+                    className="fas fa-file-export icon-matchcode-2"
+                    onClick={ChangeBusquedaMult_Clase_Pedido}
                   ></i>
                 </div>
               </div>
@@ -3194,6 +3561,30 @@ const Consulta = () => {
                               className="fas fa-sort-amount-down-alt"
                               style={{ cursor: "pointer" }}
                               onClick={() => handleChangeColumna(1)}
+                            ></i>
+                          ) : null}
+                        </th>
+                        <th>
+                          Clase de Pedido |{" "}
+                          {col_10 === 0 ? (
+                            <i
+                              className="fas fa-arrows-alt-v"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(10)}
+                            ></i>
+                          ) : null}
+                          {col_10 === 1 ? (
+                            <i
+                              className="fas fa-sort-amount-up"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(10)}
+                            ></i>
+                          ) : null}
+                          {col_10 === 2 ? (
+                            <i
+                              className="fas fa-sort-amount-down-alt"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleChangeColumna(10)}
                             ></i>
                           ) : null}
                         </th>
@@ -3316,7 +3707,7 @@ const Consulta = () => {
                             ></i>
                           ) : null}
                         </th>
-                        <th style={{ textAlign: "end" }}>
+                        <th style={{ textAlign: "center" }}>
                           Valor Neto |{" "}
                           {col_6 === 0 ? (
                             <i
@@ -3418,16 +3809,16 @@ const Consulta = () => {
                     <tbody>
                       {mostrar_filtro_fila == true ? (
                         <tr>
-                          <th>
+                          <th >
                             <button
-                              className="btn_search_filter"
+                              className="btn_search_filter mt-0"
                               onClick={() => buscar_filtro_icono_btn()}
                             >
                               <i className="fas fa-filter"></i>
                             </button>
                           </th>
                           <th>
-                            <input
+                            <input style={{ width: "100px" }}
                               type="text"
                               onKeyUp={(e) => buscar_filtro_enter(e)}
                               name="f_vbelnField"
@@ -3440,55 +3831,51 @@ const Consulta = () => {
                               }
                             />
                           </th>
-                          {/* <th>
-                              <input
-                                type="text"
+                          <th style={{ textAlign: "center" }}>
+                            <div>
+                              <select style={{ paddingTop: "4px", paddingBottom: "4px" }} className="px-1" name="f_auartField"
                                 onKeyUp={(e) => buscar_filtro_enter(e)}
-                                name="f_bezeiField"
-                                maxLength="10"
+                                //onChange={(e) => selectedFiltro(e)}
                                 onChange={(e) =>
                                   handleChangeFiltro(
                                     e.target.name,
                                     e.target.value
                                   )
                                 }
-                              />
-                            </th> */}
+                              >
+                                <option value="">TODOS</option>
+                                {clasePedido.map((item) => (
+                                  <option key={item.auartField} value={item.auartField + "-" + item.bezeiField}>
+                                    {item.auartField + "-" + item.bezeiField}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </th>
+
                           <th style={{ textAlign: "center" }}>
                             <div >
-                            <select style={{ paddingTop: "2px", paddingBottom: "2px" }} className="px-1" name="f_vkorgField"
-                              onKeyUp={(e) => buscar_filtro_enter(e)}
-                              //onChange={(e) => selectedFiltro(e)}
-                              onChange={(e) =>
-                                handleChangeFiltro(
-                                  e.target.name,
-                                  e.target.value
-                                )
-                              }
-                            >
-                              <option value="">TODOS</option>
-                              <option value="AGRO">AGRO</option>
-                              <option value="ESPE">ESPE</option>
-                              <option value="SALU">SALU</option>
-                              <option value="SEMI">SEMI</option>
-                            </select>
+                              <select style={{ paddingTop: "4px", paddingBottom: "4px" }} className="px-1" name="f_vkorgField"
+                                onKeyUp={(e) => buscar_filtro_enter(e)}
+                                //onChange={(e) => selectedFiltro(e)}
+                                onChange={(e) =>
+                                  handleChangeFiltro(
+                                    e.target.name,
+                                    e.target.value
+                                  )
+                                }
+                              >
+                                <option value="">TODOS</option>
+                                {orgVentasCombo.map((item) => (
+                                  <option key={item.vkorgField} value={item.vkorgField}>
+                                    {item.vkorgField}
+                                  </option>
+                                ))}
+                              </select>
                             </div>
-                            
-                            {/* <input
-                              type="text"
-                              onKeyUp={(e) => buscar_filtro_enter(e)}
-                              name="f_vkorgField"
-                              maxLength="4"
-                              onChange={(e) =>
-                                handleChangeFiltro(
-                                  e.target.name,
-                                  e.target.value
-                                )
-                              }
-                            /> */}
                           </th>
                           <th>
-                            <input
+                            <input style={{ paddingTop: "1px", paddingBottom: "1px" }} className="px-1"
                               type="date"
                               onKeyUp={(e) => buscar_filtro_enter(e)}
                               name="f_erdatField"
@@ -3501,7 +3888,7 @@ const Consulta = () => {
                             />
                           </th>
                           <th>
-                            <input
+                            <input style={{ width: "100px" }}
                               type="text"
                               onKeyUp={(e) => buscar_filtro_enter(e)}
                               name="f_kunnrField"
@@ -3515,11 +3902,11 @@ const Consulta = () => {
                             />
                           </th>
                           <th>
-                            <input
+                            <input style={{ width: "270px" }}
                               type="text"
                               onKeyUp={(e) => buscar_filtro_enter(e)}
                               name="f_name1Field"
-                              maxLength="30"
+                              maxLength="50"
                               onChange={(e) =>
                                 handleChangeFiltro(
                                   e.target.name,
@@ -3529,7 +3916,7 @@ const Consulta = () => {
                             />
                           </th>
                           <th>
-                            <input
+                            <input style={{ width: "100px" }}
                               type="text"
                               onKeyUp={(e) => buscar_filtro_enter(e)}
                               name="f_netwrField"
@@ -3543,7 +3930,7 @@ const Consulta = () => {
                             />
                           </th>
                           <th>
-                            <input
+                            <input style={{ width: "200px" }}
                               type="text"
                               onKeyUp={(e) => buscar_filtro_enter(e)}
                               name="f_waerkField"
@@ -3557,7 +3944,7 @@ const Consulta = () => {
                             />
                           </th>
                           <th>
-                            <input
+                            <input style={{ width: "150px" }}
                               type="text"
                               onKeyUp={(e) => buscar_filtro_enter(e)}
                               name="f_text1Field"
@@ -3570,19 +3957,26 @@ const Consulta = () => {
                               }
                             />
                           </th>
-                          <th>
-                            <input
-                              type="text"
-                              onKeyUp={(e) => buscar_filtro_enter(e)}
-                              name="f_statusField"
-                              maxLength="25"
-                              onChange={(e) =>
-                                handleChangeFiltro(
-                                  e.target.name,
-                                  e.target.value
-                                )
-                              }
-                            />
+                          <th style={{ textAlign: "center" }}>
+                            <div >
+                              <select style={{ paddingTop: "4px", paddingBottom: "4px" }} className="px-1" name="f_statusField"
+                                onKeyUp={(e) => buscar_filtro_enter(e)}
+                                //onChange={(e) => selectedFiltro(e)}
+                                onChange={(e) =>
+                                  handleChangeFiltro(
+                                    e.target.name,
+                                    e.target.value
+                                  )
+                                }
+                              >
+                                <option value="">TODOS</option>
+                                {statusOperation.map((item) => (
+                                  <option key={item.idField} value={item.statusField}>
+                                    {item.statusField}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
                           </th>
                           <th></th>
                         </tr>
@@ -3637,7 +4031,12 @@ const Consulta = () => {
                                                     font: { sz: "14" },
                                                   },
                                                 },
-                                                // { value: d.bezeiField, style: { font: { sz: "14" } } },
+                                                {
+                                                  value: d.auartField,
+                                                  style: {
+                                                    font: { sz: "14" },
+                                                  },
+                                                },
                                                 {
                                                   value: d.vkorgField,
                                                   style: {
@@ -3693,6 +4092,31 @@ const Consulta = () => {
                                                 },
                                                 {
                                                   value: d.motivoField,
+                                                  style: {
+                                                    font: { sz: "14" },
+                                                  },
+                                                },
+                                                /////////// AGREGADOS PRIORIDAD 6
+                                                {
+                                                  value: d.vkburField,
+                                                  style: {
+                                                    font: { sz: "14" },
+                                                  },
+                                                },
+                                                {
+                                                  value: d.vkgrpField,
+                                                  style: {
+                                                    font: { sz: "14" },
+                                                  },
+                                                },
+                                                {
+                                                  value: d.comercialField,
+                                                  style: {
+                                                    font: { sz: "14" },
+                                                  },
+                                                },
+                                                {
+                                                  value: d.bstnkField,
                                                   style: {
                                                     font: { sz: "14" },
                                                   },
@@ -3771,9 +4195,9 @@ const Consulta = () => {
                               <th style={{ textAlign: "center" }}>
                                 {response.vbelnField}
                               </th>
-                              {/* <th style={{ textAlign: "left" }}>
-                                    {response.bezeiField}
-                                  </th> */}
+                              <th style={{ textAlign: "left" }}>
+                                {response.auartField}
+                              </th>
                               <th style={{ textAlign: "center" }}>
                                 {response.vkorgField}
                               </th>
@@ -3790,8 +4214,8 @@ const Consulta = () => {
                                 {response.name1Field}
                               </th>
                               <th
-                                style={{ textAlign: "right" }}
-                                align={"right"}
+                                style={{ textAlign: "center" }}
+                                align={"center"}
                               >
                                 {convertDecimal(response.netwrField, 2)}
                               </th>

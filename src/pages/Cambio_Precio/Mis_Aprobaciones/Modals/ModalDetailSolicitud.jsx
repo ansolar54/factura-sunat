@@ -15,11 +15,12 @@ const ModalDetailSolicitud = ({
   orgVentasDesc,
   codi_client,
   org_ventas,
+  obtenerSolicitudesF,
   itMatAprob,
 }) => {
   // console.log("CODI CLIENT", codi_client);
   // console.log("ORG_VENTAS", org_ventas);
-  // console.log("ITMAT_APROB");
+   console.log("OBTENER SOLI 2",obtenerSolicitudesF);
   const modalRef = useRef();
   const closeModal = (e) => {
     if (modalRef.current === e.target) {
@@ -124,6 +125,7 @@ const ModalDetailSolicitud = ({
             orgVentasDesc={orgVentasDesc}
             codi_client={codi_client}
             org_ventas={org_ventas}
+            obtenerSolicitudesF={obtenerSolicitudesF}
             //itMatAprob={itMatAprob}
           />
           <div className="modal-wrapper modal-wrapper-bg">
