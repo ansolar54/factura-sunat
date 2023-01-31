@@ -193,7 +193,7 @@ const Rol = () => {
       />
 
       <div className="title-section">
-        <label> Mantenimiento / Rol </label>
+        <label> Administración / Rol </label>
         <hr />
       </div>
       <div>

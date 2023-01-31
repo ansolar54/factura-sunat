@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import BtnSearch from "../../../components/BtnSearch";
 import InputForm from "../../../components/InputForm";
 import McCliente from "../Modals_General/McCliente";
@@ -19,6 +19,12 @@ import jwt from "jwt-decode";
 import Dialog from "../Dialog";
 import { getMailGerents } from "../../../Services/ServiceUser";
 import InputForm1 from "../../../components/InputForm1";
+
+import {
+  getOficinaVentasSAP,
+  RegistrarAuditoria,
+} from "../../../Services/ServiceAuditoria";
+import SelectFormMd from "../../../components/SelectFormModal";
 
 const MisSolicitudes = () => {
   // ORG VENTAS
@@ -53,7 +59,8 @@ const MisSolicitudes = () => {
   const [state, setState] = useState("");
 
   // PAGINATION
-  const [limit, setLimit] = useState(5);
+  const [datosxpagina, setDatosxpagina] = useState(10); // para el input
+  const [limit, setLimit] = useState(10);
   const [offset, setOffset] = useState(1);
 
   // SOLICITUDES OBJECT
@@ -75,6 +82,7 @@ const MisSolicitudes = () => {
 
   useEffect(() => {
     obtenerSolicitudes(1);
+
   }, []);
 
   const openMcOrgVentas = () => {
@@ -84,6 +92,105 @@ const MisSolicitudes = () => {
   const openMcCliente = () => {
     setShowMcCliente((prev) => !prev);
   };
+
+  const Search = () => {
+    obtenerSolicitudes(1)
+    // OBTENER OFICINA DE VENTAS DE USUARIO DESDE SAP
+    let ofi_ventas = "";
+    getOficinaVentasSAP({
+      IsUser: jwt(localStorage.getItem("_token")).username,
+    }).then((result) => {
+      if (result.etOfiVentasField.length) {
+        ofi_ventas =
+          result.etOfiVentasField[0].codOfventaField +
+          " - " +
+          result.etOfiVentasField[0].descripcionField;
+        //REGISTRO DE AUDITORÍA
+        RegistrarAuditoria({
+          id_user: Number(jwt(localStorage.getItem("_token")).nameid),
+          id_event: 9,
+          sales_ofi: ofi_ventas,
+          indicator: "WEB",
+        });
+      }
+    });
+  }
+
+  function LimpiarCampos() {
+    setFiltroFechas({
+      created_at: '',
+      created_up: ''
+    })
+    setOrgVentasValue("");
+    setIsCliente("");
+    setState("");
+    document.hola = document.getElementById('id_estado').value = "0";
+    setNroSolicitud(0);
+    setspinner(true);
+    //////////////
+    ListadoSolicitudes(
+      jwt(localStorage.getItem("_token")).nameid,
+      '',
+      '',
+      '',
+      0,
+      '',
+      '',
+      10,
+      1,
+
+    ).then((result) => {
+      console.log("TABLA MIS SOLICITUDES", result);
+      setSolicitudes(result.data);
+      setTotalData(result.totalItems);
+      setspinner(false);
+      setvaluepagination(true);
+    });
+  }
+
+  const [showModalPagina, setshowModalPagina] = useState(false);
+  const modalRef = useRef();
+  const [ItemsNumberDates, setItemsNumberDates] = useState([
+    { id: 10, name: 10 },
+    { id: 20, name: 20 },
+    { id: 50, name: 50 },
+    { id: 100, name: 100 },
+  ]);
+
+  const closeModal = (e) => {
+    if (modalRef.current === e.target) {
+      setDatosxpagina(limit);
+      setshowModalPagina(false);
+    }
+  };
+
+  function openDatosPagina() {
+    // showModalPagina == true
+    setshowModalPagina((prev) => !prev);
+  }
+
+  function Search_02(page, numdatos){
+    setspinner(true);
+    ListadoSolicitudes(
+      jwt(localStorage.getItem("_token")).nameid,
+      orgVentasValue,
+      IsCliente,
+      state,
+      nroSolicitud,
+      filtroFechas.created_at,
+      filtroFechas.created_up,
+      numdatos,
+      page,
+      console.log(filtroFechas.created_up)
+    ).then((result) => {
+      console.log("TABLA MIS SOLICITUDES", result);
+      setSolicitudes(result.data);
+      setTotalData(result.totalItems);
+      setspinner(false);
+      setvaluepagination(true);
+    });
+  }
+
 
   const obtenerSolicitudes = (page) => {
     setspinner(true);
@@ -154,6 +261,14 @@ const MisSolicitudes = () => {
   function handleChange(name, value) {
     // console.log(value);
     switch (name) {
+      case "id_ndatos":
+        setLimit(value);
+        Search_02(1,value);
+        setshowModalPagina((prev) => !prev);
+        break;
+      case "num_datos_pagina":
+        setDatosxpagina(value);
+        break;
       case "org_ventas":
         setOrgVentasValue(value);
         break;
@@ -313,7 +428,7 @@ const MisSolicitudes = () => {
                 // provisional
                 let mails = {
                   email: "amendozac@farmex.com.pe",
-                  //email: "ansolar54@gmail.com",
+                  // email: "ansolar54@gmail.com",
                 };
 
                 // notificacion de correo - llamado a servicio
@@ -330,13 +445,33 @@ const MisSolicitudes = () => {
                 EnviarCorreoAprob(model_email_aprob).then((result) => {
                   console.log(result);
                   if (result.indicator == 1) {
-                    toast.success("Solicitud N° " +model_email_aprob.nro_solicitud + " anulada.", {
+                    toast.success("Solicitud N° " + model_email_aprob.nro_solicitud + " anulada.", {
                       position: "top-center",
                       autoClose: 6000,
                       style: {
                         backgroundColor: "#212121",
                         color: "#fff",
                       },
+                    });
+
+                    // OBTENER OFICINA DE VENTAS DE USUARIO DESDE SAP
+                    let ofi_ventas = "";
+                    getOficinaVentasSAP({
+                      IsUser: jwt(localStorage.getItem("_token")).username,
+                    }).then((result) => {
+                      if (result.etOfiVentasField.length) {
+                        ofi_ventas =
+                          result.etOfiVentasField[0].codOfventaField +
+                          " - " +
+                          result.etOfiVentasField[0].descripcionField;
+                        //REGISTRO DE AUDITORÍA
+                        RegistrarAuditoria({
+                          id_user: Number(jwt(localStorage.getItem("_token")).nameid),
+                          id_event: 9,
+                          sales_ofi: ofi_ventas,
+                          indicator: "WEB",
+                        });
+                      }
                     });
                     obtenerSolicitudes(offset);
                     setspinner(false);
@@ -378,6 +513,9 @@ const MisSolicitudes = () => {
     }
   };
 
+
+
+
   return (
     <React.Fragment>
       <div className="container-view">
@@ -410,6 +548,40 @@ const MisSolicitudes = () => {
           orgVentas={orgVentasForModal}
           orgVentasDesc={orgVentasDescForModal}
         />
+
+        {/* ///////FILAS POR PÁGINA////// */}
+
+        {showModalPagina ? (
+          <React.Fragment>
+            <div
+              className="container-modal-background"
+              onClick={closeModal}
+              ref={modalRef}
+            >
+              <div className="modal-wrapper modal-wrapper-paginate p-5">
+                <div className="col-sm-12 d-flex align-items-center">
+                  <label>Número de filas por página</label>
+                </div>
+                <div className="col-sm-12">
+                  <SelectFormMd
+                    attribute={{ name: "id_ndatos", disabled: false, default: 0 }}
+                    values={ItemsNumberDates}
+                    handleChange={handleChange}
+                  ></SelectFormMd>
+                </div>
+                <div
+                  className="close-modal-button"
+                  onClick={() => {
+                    setshowModalPagina((prev) => !prev);
+                    setDatosxpagina(limit);
+                  }}
+                >
+                  <i className="fas fa-times"></i>
+                </div>
+              </div>
+            </div>
+          </React.Fragment>
+        ) : null}
 
         <div className="title-section">
           <div>
@@ -481,7 +653,7 @@ const MisSolicitudes = () => {
                 />
               </div>
               <div className="align-items-center">
-                <label>{isClientName != "" ? isClientName : ""}</label>
+                <label>{IsCliente != "" ? isClientName : ""}</label>
               </div>
             </div>
             <div>
@@ -489,7 +661,7 @@ const MisSolicitudes = () => {
                 <label>Estado : </label>
               </div>
               <div className="input-box1" style={{ marginRight: "40px" }}>
-                <select name="id_state" onChange={(e) => selectedFiltro(e)}>
+                <select id="id_estado" name="id_state" onChange={(e) => selectedFiltro(e)}>
                   <option value="0">TODOS</option>
                   <option value="1">APROBADO</option>
                   <option value="2">PENDIENTE</option>
@@ -533,6 +705,7 @@ const MisSolicitudes = () => {
                 <input
                   className="inputcustom"
                   type="date"
+                  value={filtroFechas.created_at}
                   name="created_at"
                   onChange={(e) => handleChange1(e)}
                 />
@@ -543,6 +716,7 @@ const MisSolicitudes = () => {
               <div className="input-box1">
                 <input
                   className="inputcustom"
+                  value={filtroFechas.created_up}
                   type="date"
                   name="created_up"
                   onChange={(e) => handleChange1(e)}
@@ -553,20 +727,54 @@ const MisSolicitudes = () => {
 
 
           </div>
-          <div
-            style={{
-              flex: 1,
-              alignSelf: "center",
-            }}
-          >
-            <BtnSearch
-              attribute={{
-                name: "Buscar",
-                classNamebtn: "btn_search",
+          <div className="">
+            <div
+              className="input-box1 col-md-3"
+              style={{
+                flex: 1,
+                alignSelf: "center",
               }}
-              onClick={() => obtenerSolicitudes(1)}
-            />
+            >
+              <BtnSearch
+                attribute={{
+                  name: "Buscar",
+                  classNamebtn: "btn_search",
+                }}
+                onClick={() => Search()}
+              />
+            </div>
+            <div
+              className="input-box1 mt-4 col-md-3"
+              style={{
+                flex: 1,
+                alignSelf: "center",
+              }}
+            >
+              <BtnSearch
+                attribute={{
+                  name: "Limpiar Campos",
+                  classNamebtn: "btn_search",
+                }}
+                onClick={() => LimpiarCampos()}
+              />
+            </div>
+            <div
+              className="input-box1 mt-4 col-md-3"
+              style={{
+                flex: 1,
+                alignSelf: "center",
+              }}
+            >
+              <BtnSearch
+                attribute={{
+                  name: "Cantidad de Filas",
+                  classNamebtn: "btn_search",
+                }}
+                onClick={() => openDatosPagina()}
+              />
+            </div>
           </div>
+
         </div>
 
         <section>
@@ -668,13 +876,13 @@ const MisSolicitudes = () => {
             />
           )}
           {dialog.isLoading && (
-          <Dialog
-            //Update
-            nameProduct={dialog.nameProduct}
-            onDialog={areUSureDelete}
-            message={dialog.message}
-          />
-        )}
+            <Dialog
+              //Update
+              nameProduct={dialog.nameProduct}
+              onDialog={areUSureDelete}
+              message={dialog.message}
+            />
+          )}
         </div>
       </div>
       ;

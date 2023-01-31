@@ -315,7 +315,7 @@ const Usuario = () => {
               </div>
             </div>
           ) : (
-            <div className="access-route">NO TIENE ACCESO A ESTE REPORTE</div>
+            <div className="access-route">NO TIENE ACCESO Al MÓDULO DE USUARIOS</div>
           )}
         </>
       )}

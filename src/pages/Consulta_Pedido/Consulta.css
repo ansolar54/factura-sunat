@@ -8,5 +8,9 @@
     /* overflow-x: hidden; */
 }
 
+.content-table tbody tr:hover{
+    background: var(--alternative-color);
+    cursor: pointer;
+  }
 
 

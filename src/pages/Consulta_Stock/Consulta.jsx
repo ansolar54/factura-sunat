@@ -87,10 +87,7 @@ const Consulta = () => {
   const [GrupoArticulo, setGrupoArticulo] = useState("");
 
   //RESPONSE CONSULTA PEDIDO
-  const [response_consulta, setresponse_consulta] = useState({
-    esRegtotField: "",
-    etStockField: [],
-  });
+  const [response_consulta, setresponse_consulta] = useState([]);
   //CARGA DE SPINNER
   const [spinner, setspinner] = useState(false);
   //NUMERO TOTAL DE DATOS
@@ -554,10 +551,7 @@ const Consulta = () => {
   function Clear() {
     setmostrar_filtro_fila(false);
     setvaluepagination(false);
-    setresponse_consulta({
-      esRegtotField: "",
-      etStockField: [],
-    });
+    setresponse_consulta([]);
     setCentro("");
     setBuscaCentro([{ Sign: "", Option: "", Low: "", High: "" }]);
     setOrganizVentas("");
@@ -1496,7 +1490,9 @@ const Consulta = () => {
                       name="exportacion"
                     />
                   </ExcelFile>
-                ) : (
+                ) :
+                response_consulta.length != 0 ?  
+                (
                   <ExcelFile
                     filename="Consulta de Stock"
                     element={
@@ -1511,7 +1507,24 @@ const Consulta = () => {
                   >
                     <ExcelSheet dataSet={DataSet} name="exportacion" />
                   </ExcelFile>
-                )}
+                ) : 
+                (
+                  <ExcelFile
+                    filename="Consulta de Stock"
+                    element={
+                      <BtnExportar
+                        attribute={{
+                          name: "Descargar Excel",
+                          classNamebtn: "btn_export",
+                          disabled: true,
+                        }}
+                      />
+                    }
+                  >
+                    <ExcelSheet dataSet={DataSet} name="exportacion" />
+                  </ExcelFile>
+                )
+                }
               </div>
               {response_consulta.length ? (
                 <div className="col-sm-12 col-md-2 p-1">

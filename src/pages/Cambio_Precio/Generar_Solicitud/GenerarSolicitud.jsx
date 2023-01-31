@@ -1,7 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import InputForm from "../../../components/InputForm";
 import "./GenerarSolicitud.css";
 import BtnAddMaterial from "../../../components/BtnAddMaterial";
+import BtnSearch from "../../../components/BtnSearch";
 import ModalAddMaterial from "./Modals/ModalAddMaterial";
 import ModalEditMaterial from "./Modals/ModalEditMaterial";
 import McOrgVentas from "../Modals_General/McOrgVentas";
@@ -17,6 +18,11 @@ import {
 } from "../../../Services/ServiceCambioPrecio";
 import { getMailGerents } from "../../../Services/ServiceUser";
 import Spinner from "../../../components/Spinner";
+
+import {
+  getOficinaVentasSAP,
+  RegistrarAuditoria,
+} from "../../../Services/ServiceAuditoria";
 
 const GenerarSolicitud = () => {
   const [showModalMaterial, setShowModalMaterial] = useState(false);
@@ -49,11 +55,9 @@ const GenerarSolicitud = () => {
   //CARGA DE SPINNER
   const [spinner, setspinner] = useState(false);
 
-  console.log("DATA MATERIAL GENERAR SOLICITUD",dataMaterial);
+  console.log("DATA MATERIAL GENERAR SOLICITUD", dataMaterial);
 
-
-
-  const openEditMaterial = (id_material,precio_sugerido) => {
+  const openEditMaterial = (id_material, precio_sugerido) => {
     setIdMaterial(id_material);
     setprecioSugeridoMaterial(precio_sugerido);
     setShowModalEditMaterial((prev) => !prev);
@@ -182,6 +186,8 @@ const GenerarSolicitud = () => {
     }
   };
 
+
+
   function solounproducto() {
     const openAddMaterial = () => {
       setShowModalMaterial((prev) => !prev);
@@ -196,7 +202,7 @@ const GenerarSolicitud = () => {
         }
       })
     }
-    else if(IsCliente == "" && orgVentasValue == ""){
+    else if (IsCliente == "" && orgVentasValue == "") {
       toast.error("Debe seleccionar una \"Org. Ventas\" y un \"Cliente\".", {
         position: "top-center",
         autoClose: 1000,
@@ -206,7 +212,7 @@ const GenerarSolicitud = () => {
         }
       })
     }
-    else if(IsCliente == ""){
+    else if (IsCliente == "") {
       toast.error("Debe seleccionar un \"Cliente\".", {
         position: "top-center",
         autoClose: 1000,
@@ -216,7 +222,7 @@ const GenerarSolicitud = () => {
         }
       })
     }
-    else if(orgVentasValue == ""){
+    else if (orgVentasValue == "") {
       toast.error("Debe seleccionar una \"Org. Ventas\".", {
         position: "top-center",
         autoClose: 1000,
@@ -229,6 +235,11 @@ const GenerarSolicitud = () => {
     else {
       return openAddMaterial();
     }
+  }
+
+  function limpiarCampos() {
+    setIsCliente("");
+    setOrgVentasValue("");
   }
 
   const enviarSolicitud = () => {
@@ -292,14 +303,15 @@ const GenerarSolicitud = () => {
           // typeof element.prec_act == "String"
           //   ? element.prec_act
           //   : (element.prec_act.replaceAll(",", "")).toString,
-          fec_ini: formatFechaMysql(element.fec_ini),
-          fec_fin: formatFechaMysql(element.fec_fin),
+          // fec_ini: formatFechaMysql(element.fec_ini),
+          fec_ini: formatFecha(element.fec_ini),
+          fec_fin: formatFecha(element.fec_fin),
         };
 
         detalleCorreo.push(detalle);
       }
 
-     console.log("DATA DETAILS GENERAR SOLI",data_detail);
+      console.log("DATA DETALLE CORREO", detalleCorreo);
 
       let model_usua_notifi = {
         IsNotif: "1",
@@ -325,7 +337,7 @@ const GenerarSolicitud = () => {
           // provisional
           let mails = {
             email: "amendozac@farmex.com.pe",
-            //email: "ansolar54@gmail.com",
+            // email: "ansolar54@gmail.com",
           };
 
 
@@ -346,7 +358,7 @@ const GenerarSolicitud = () => {
           //console.log("generando solicitud",model);
           GuardarSolicitud(model).then((result) => {
             let mensajedialog = result;
-            console.log("DATOS GUARDAR SOLICITUD",result);
+            console.log("DATOS GUARDAR SOLICITUD", result);
             if (result.indicator == 1) {
               // OBTENER SOLICITUD CREADA - se necesita el id generado
               GetSolicitudLimit().then((result) => {
@@ -364,13 +376,33 @@ const GenerarSolicitud = () => {
                   EnviarCorreo(model_correo).then((result) => {
                     console.log(result);
                     if (result.indicator == 1) {
-                      toast.success(mensajedialog.message,{
+                      toast.success(mensajedialog.message, {
                         position: "top-center",
-                        autoClose: 3000,
+                        autoClose: 6000,
                         style: {
                           backgroundColor: "#212121",
-                          color: "#fff",
+                          color: "#FFF",
                         },
+                      });
+
+                      // OBTENER OFICINA DE VENTAS DE USUARIO DESDE SAP
+                      let ofi_ventas = "";
+                      getOficinaVentasSAP({
+                        IsUser: jwt(localStorage.getItem("_token")).username,
+                      }).then((result) => {
+                        if (result.etOfiVentasField.length) {
+                          ofi_ventas =
+                            result.etOfiVentasField[0].codOfventaField +
+                            " - " +
+                            result.etOfiVentasField[0].descripcionField;
+                          //REGISTRO DE AUDITORÍA
+                          RegistrarAuditoria({
+                            id_user: Number(jwt(localStorage.getItem("_token")).nameid),
+                            id_event: 9,
+                            sales_ofi: ofi_ventas,
+                            indicator: "WEB",
+                          });
+                        }
                       });
                       setDataMaterial([]);
                       setOrgVentasValue("");
@@ -390,10 +422,15 @@ const GenerarSolicitud = () => {
               toast.error(result.message, {
                 position: "top-center",
                 autoClose: 3000,
+                duration: 10000,
                 style: {
                   backgroundColor: "#212121",
-                  color: "#fff",
-                }
+                  color: "#FFF",
+                  display: "flex"
+                },
+                //className: "toastsize",
+
+
               });
               setspinner(false);
             }
@@ -583,26 +620,54 @@ const GenerarSolicitud = () => {
                 />
               </div>
               <div className="align-items-center">
-                <label>{isClientName != "" ? isClientName : ""}</label>
+                <label>{IsCliente != "" ? isClientName : ""}</label>
               </div>
             </div>
           </div>
-          <div
-            style={{
-              flex: 1,
-              marginBlock: 10,
-            }}
-          >
-            <BtnAddMaterial
-              attribute={{
-                name: "Agregar material",
-                classNamebtn: "btn_material",
-                //disabled: dataMaterial.length == 0,
+          <div className="">
+            <div
+              className="input-box1 col-md-3"
+              style={{
+                flex: 1,
+                marginTop: "0px",
+                alignSelf: "center",
+                // marginBlock: 10,
               }}
-              onClick={() => solounproducto()}
-            />
+            >
+              <BtnAddMaterial
+                attribute={{
+                  name: "Agregar Material",
+                  classNamebtn: "btn_search",
+                  //disabled: dataMaterial.length == 0,
+                }}
+                onClick={() => solounproducto()}
+              />
+            </div>
+
+            <div
+              className="input-box1 mt-4 col-md-3"
+              style={{
+                flex: 1,
+                alignSelf: "center",
+                // marginBlock: 10,
+              }}
+            >
+              <BtnSearch
+                attribute={{
+                  name: "Limpiar Campos",
+                  classNamebtn: "btn_search",
+                  //disabled: dataMaterial.length == 0,
+                }}
+                onClick={() => limpiarCampos()}
+              />
+            </div>
           </div>
+
+
         </div>
+
+
+
         <section>
           <div className="container-table">
             <div className="container-table-sm">
@@ -640,7 +705,7 @@ const GenerarSolicitud = () => {
                             style={{ cursor: "pointer", margin: "6px" }}
                             title="Editar material"
                             className="fas fa-edit fa-lg"
-                            onClick={() => openEditMaterial(item.cod_mat,convertDecimal(item.prec_sug))}
+                            onClick={() => openEditMaterial(item.cod_mat, convertDecimal(item.prec_sug))}
                           ></i>
                           <i
                             style={{ cursor: "pointer", margin: "6px" }}

@@ -27,9 +27,16 @@ import jwt from "jwt-decode";
 import ModalEditMaterial from "./Modals/ModalEditMaterial";
 import InputForm1 from "../../../components/InputForm1";
 
+import {
+  getOficinaVentasSAP,
+  RegistrarAuditoria,
+} from "../../../Services/ServiceAuditoria";
+import SelectFormMd from "../../../components/SelectFormModal";
+
 const MisAprobaciones = () => {
   // PAGINATION
-  const [limit, setLimit] = useState(5);
+  const [datosxpagina, setDatosxpagina] = useState(10); // para el input
+  const [limit, setLimit] = useState(10);
   const [offset, setOffset] = useState(1);
 
   // SOLICITUDES OBJECT
@@ -94,6 +101,103 @@ const MisAprobaciones = () => {
       }
     );
   };
+
+  function LimpiarCampos() {
+    setState("");
+    document.hola = document.getElementById('id_estado').value = "0";
+    setIdUser(0)
+    document.hola = document.getElementById('id_user').value = "0";
+    setFiltroFechas({
+      created_at: "",
+      created_up: ""
+    })
+    setNroSolicitud(0);
+    setOrgVentasValue("");
+    ///////////////
+    setspinner(true);
+    ListadoSolicitudesForAprob(
+      0,
+      "",
+      "",
+      // jwt(localStorage.getItem("_token")).sales_org,
+      0,
+      "",
+      "",
+      10,
+      1
+    ).then((result) => {
+      console.log(result);
+      setSolicitudes(result.data);
+      setTotalData(result.totalItems);
+      setspinner(false);
+      setvaluepagination(true);
+    });
+  }
+
+  const [showModalPagina, setshowModalPagina] = useState(false);
+  const modalRef = useRef();
+  const [ItemsNumberDates, setItemsNumberDates] = useState([
+    { id: 10, name: 10 },
+    { id: 20, name: 20 },
+    { id: 50, name: 50 },
+    { id: 100, name: 100 },
+  ]);
+
+  const closeModal = (e) => {
+    if (modalRef.current === e.target) {
+      setDatosxpagina(limit);
+      setshowModalPagina(false);
+    }
+  };
+
+  function openDatosPagina() {
+    // showModalPagina == true
+    setshowModalPagina((prev) => !prev);
+  }
+
+  function Search_02(page, numdatos) {
+    setspinner(true);
+    ListadoSolicitudesForAprob(
+      idUser,
+      state,
+      orgVentasValue,
+      // jwt(localStorage.getItem("_token")).sales_org,
+      nroSolicitud,
+      filtroFechas.created_at,
+      filtroFechas.created_up,
+      numdatos,
+      page
+    ).then((result) => {
+      console.log(result);
+      setSolicitudes(result.data);
+      setTotalData(result.totalItems);
+      setspinner(false);
+      setvaluepagination(true);
+    });
+  }
+
+  const Search = () => {
+    obtenerSolicitudes(1);
+    // OBTENER OFICINA DE VENTAS DE USUARIO DESDE SAP
+    let ofi_ventas = "";
+    getOficinaVentasSAP({
+      IsUser: jwt(localStorage.getItem("_token")).username,
+    }).then((result) => {
+      if (result.etOfiVentasField.length) {
+        ofi_ventas =
+          result.etOfiVentasField[0].codOfventaField +
+          " - " +
+          result.etOfiVentasField[0].descripcionField;
+        //REGISTRO DE AUDITORÍA
+        RegistrarAuditoria({
+          id_user: Number(jwt(localStorage.getItem("_token")).nameid),
+          id_event: 9,
+          sales_ofi: ofi_ventas,
+          indicator: "WEB",
+        });
+      }
+    });
+  }
 
   const obtenerSolicitudes = (page) => {
     setspinner(true);
@@ -318,7 +422,7 @@ const MisAprobaciones = () => {
                           // provisional
                           let mails = {
                             email: "gnieri@farmex.com.pe",
-                            //email: "ansolar54@gmail.com",
+                            // email: "ansolar54@gmail.com",
                           };
                           let model_email_aprob = {
                             state: state, // para identificar aprobacion o rechazo de solicitud en backend
@@ -335,7 +439,7 @@ const MisAprobaciones = () => {
                               console.log(result);
                               if (result.indicator == 1) {
                                 toast.success(
-                                  "Solicitud N° " + model_email_aprob.nro_solicitud +" aprobada correctamente.",
+                                  "Solicitud N° " + model_email_aprob.nro_solicitud + " aprobada correctamente.",
                                   {
                                     position: "top-center",
                                     autoClose: 6000,
@@ -345,6 +449,25 @@ const MisAprobaciones = () => {
                                     },
                                   }
                                 );
+                                // OBTENER OFICINA DE VENTAS DE USUARIO DESDE SAP
+                                let ofi_ventas = "";
+                                getOficinaVentasSAP({
+                                  IsUser: jwt(localStorage.getItem("_token")).username,
+                                }).then((result) => {
+                                  if (result.etOfiVentasField.length) {
+                                    ofi_ventas =
+                                      result.etOfiVentasField[0].codOfventaField +
+                                      " - " +
+                                      result.etOfiVentasField[0].descripcionField;
+                                    //REGISTRO DE AUDITORÍA
+                                    RegistrarAuditoria({
+                                      id_user: Number(jwt(localStorage.getItem("_token")).nameid),
+                                      id_event: 9,
+                                      sales_ofi: ofi_ventas,
+                                      indicator: "WEB",
+                                    });
+                                  }
+                                });
                                 obtenerSolicitudes(offset);
                                 setspinner(false);
                               } else {
@@ -401,7 +524,7 @@ const MisAprobaciones = () => {
                       // provisional
                       let mails = {
                         email: "gnieri@farmex.com.pe",
-                        //email: "ansolar54@gmail.com",
+                        // email: "ansolar54@gmail.com",
 
                       };
 
@@ -418,13 +541,32 @@ const MisAprobaciones = () => {
                       EnviarCorreoAprob(model_email_aprob).then((result) => {
                         console.log(result);
                         if (result.indicator == 1) {
-                          toast.success("Solicitud N° " + model_email_aprob.nro_solicitud +" rechazada.", {
+                          toast.success("Solicitud N° " + model_email_aprob.nro_solicitud + " rechazada.", {
                             position: "top-center",
                             autoClose: 6000,
                             style: {
                               backgroundColor: "#212121",
                               color: "#fff",
                             },
+                          });
+                          // OBTENER OFICINA DE VENTAS DE USUARIO DESDE SAP
+                          let ofi_ventas = "";
+                          getOficinaVentasSAP({
+                            IsUser: jwt(localStorage.getItem("_token")).username,
+                          }).then((result) => {
+                            if (result.etOfiVentasField.length) {
+                              ofi_ventas =
+                                result.etOfiVentasField[0].codOfventaField +
+                                " - " +
+                                result.etOfiVentasField[0].descripcionField;
+                              //REGISTRO DE AUDITORÍA
+                              RegistrarAuditoria({
+                                id_user: Number(jwt(localStorage.getItem("_token")).nameid),
+                                id_event: 9,
+                                sales_ofi: ofi_ventas,
+                                indicator: "WEB",
+                              });
+                            }
                           });
                           setspinner(false);
                           obtenerSolicitudes(offset);
@@ -483,6 +625,14 @@ const MisAprobaciones = () => {
   function handleChange(name, value) {
     // console.log(value);
     switch (name) {
+      case "id_ndatos":
+        setLimit(value);
+        Search_02(1, value);
+        setshowModalPagina((prev) => !prev);
+        break;
+      case "num_datos_pagina":
+        setDatosxpagina(value);
+        break;
       case "nroSolicitud":
         setNroSolicitud(Number(value));
         break;
@@ -605,7 +755,7 @@ const MisAprobaciones = () => {
           codi_client={codi_clientForModal}
           org_ventas={org_ventasForModal}
           itMatAprob={itMatAprobForModal}
-          obtenerSolicitudesF = {obtenerSolicitudes}
+          obtenerSolicitudesF={obtenerSolicitudes}
         />
         <McOrgVentas
           orgVentasValue={orgVentasValue}
@@ -615,6 +765,37 @@ const MisAprobaciones = () => {
           showOrgVentas={showOrgVentas}
           setOrgVentasName={setOrgVentasName}
         />
+        {showModalPagina ? (
+          <React.Fragment>
+            <div
+              className="container-modal-background"
+              onClick={closeModal}
+              ref={modalRef}
+            >
+              <div className="modal-wrapper modal-wrapper-paginate p-5">
+                <div className="col-sm-12 d-flex align-items-center">
+                  <label>Número de filas por página</label>
+                </div>
+                <div className="col-sm-12">
+                  <SelectFormMd
+                    attribute={{ name: "id_ndatos", disabled: false, default: 0 }}
+                    values={ItemsNumberDates}
+                    handleChange={handleChange}
+                  ></SelectFormMd>
+                </div>
+                <div
+                  className="close-modal-button"
+                  onClick={() => {
+                    setshowModalPagina((prev) => !prev);
+                    setDatosxpagina(limit);
+                  }}
+                >
+                  <i className="fas fa-times"></i>
+                </div>
+              </div>
+            </div>
+          </React.Fragment>
+        ) : null}
         <div className="title-section">
           <div>
             <label> Cambio Precio / Mis Aprobaciones </label>
@@ -646,7 +827,7 @@ const MisAprobaciones = () => {
                 <label>Estado : </label>
               </div>
               <div className="input-box1" style={{ marginRight: "40px" }}>
-                <select name="id_state" onChange={(e) => selectedItem(e)}>
+                <select id="id_estado" name="id_state" onChange={(e) => selectedItem(e)}>
                   <option value="0">TODOS</option>
                   <option value="1">APROBADO</option>
                   <option value="2">PENDIENTE</option>
@@ -663,7 +844,7 @@ const MisAprobaciones = () => {
                 <label>Usuario : </label>
               </div>
               <div className="input-box1" style={{ width: "230px" }}>
-                <select name="id_user" onChange={(e) => selectedItem(e)}>
+                <select id="id_user" name="id_user" onChange={(e) => selectedItem(e)}>
                   <option value="0">Seleccione...</option>
                   {users.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -679,9 +860,10 @@ const MisAprobaciones = () => {
                 <label>Fecha (Desde) : </label>
               </div>
               <div className="input-box1" style={{ marginRight: "40px" }}>
-                <input 
+                <input
                   className="inputcustom"
                   type="date"
+                  value={filtroFechas.created_at}
                   name="created_at"
                   onChange={(e) => handleChange1(e)}
                 />
@@ -693,6 +875,7 @@ const MisAprobaciones = () => {
                 <input
                   className="inputcustom"
                   type="date"
+                  value={filtroFechas.created_up}
                   name="created_up"
                   onChange={(e) => handleChange1(e)}
                 />
@@ -762,21 +945,57 @@ const MisAprobaciones = () => {
             </div>
 
           </div>
-          <div
-            style={{
-              flex: 1,
-              alignSelf: "center",
-              marginTop: "0px"
-            }}
-          >
-            <BtnSearch
-              attribute={{
-                name: "Buscar",
-                classNamebtn: "btn_search",
+          <div>
+            <div
+              className="input-box1 col-md-3"
+              style={{
+                flex: 1,
+                alignSelf: "center",
+                marginTop: "0px"
               }}
-              onClick={() => obtenerSolicitudes(1)}
-            />
+            >
+              <BtnSearch
+                attribute={{
+                  name: "Buscar",
+                  classNamebtn: "btn_search",
+                }}
+                onClick={() => Search()}
+              />
+            </div>
+            <div
+              className="input-box1 mt-4 col-md-3"
+              style={{
+                flex: 1,
+                alignSelf: "center",
+                marginTop: "0px"
+              }}
+            >
+              <BtnSearch
+                attribute={{
+                  name: "Limpiar Campos",
+                  classNamebtn: "btn_search",
+                }}
+                onClick={() => LimpiarCampos()}
+              />
+            </div>
+            <div
+              className="input-box1 mt-4 col-md-3"
+              style={{
+                flex: 1,
+                alignSelf: "center",
+                marginTop: "0px"
+              }}
+            >
+              <BtnSearch
+                attribute={{
+                  name: "Cantidad de Filas",
+                  classNamebtn: "btn_search",
+                }}
+                onClick={() => openDatosPagina()}
+              />
+            </div>
           </div>
+
 
         </div>
         <section>

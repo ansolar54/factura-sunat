@@ -148,7 +148,7 @@ const Mc_Comercial_hasta = ({
                 <section className="row"
                   style={{ margin: "auto", paddingTop: "50px" }}>
                   <div className="col-sm-4 d-flex align-items-center">
-                    <label>Código</label>
+                    <label>Código :</label>
                   </div>
                   <div className="col-sm-8">
                     <InputForm
@@ -166,7 +166,7 @@ const Mc_Comercial_hasta = ({
                   </div>
 
                   <div className="col-sm-4 d-flex align-items-center">
-                    <label>Descripción</label>
+                    <label>Comercial :</label>
                   </div>
                   <div className="col-sm-8">
                     <InputForm
@@ -197,7 +197,7 @@ const Mc_Comercial_hasta = ({
                             <thead>
                                 <tr>
                                     <th style={{ textAlign: "left" }}>Código</th>
-                                    <th style={{ textAlign: "left" }}>Denominación</th>
+                                    <th style={{ textAlign: "left" }}>Comercial</th>
                                 </tr>
                             </thead>
                             <tbody>

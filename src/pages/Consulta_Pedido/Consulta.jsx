@@ -20,8 +20,6 @@ import Mc_Org_Ventas_desde from "./Matchcode_Organ_Ventas/Mc_Org_Ventas_desde";
 import Mc_Org_Ventas_hasta from "./Matchcode_Organ_Ventas/Mc_Org_Ventas_hasta";
 import Mc_Ofi_Ventas_desde from "./Matchcode_Ofi_Ventas/Mc_Ofi_Ventas_desde";
 import Mc_Ofi_Ventas_hasta from "./Matchcode_Ofi_Ventas/Mc_Ofi_Ventas_hasta";
-import Mc_Cliente_desde from "./Matchcode_Cliente/Mc_Cliente_desde";
-import Mc_Cliente_hasta from "./Matchcode_Cliente/Mc_Cliente_hasta";
 import Mc_Material_desde from "./Matchcode_Material_v2/Mc_Material_desde";
 import Mc_Material_hasta from "./Matchcode_Material_v2/Mc_Material_hasta";
 import Mc_Clase_Pedido_desde from "./Matchcode_Clase_Pedido/Mc_Clase_Pedido_desde";
@@ -46,9 +44,9 @@ import Mc_Comercial_hasta from "./Matchcode_Comercial/Mc_Comercial_hasta";
 import SelectFormMd from "../../components/SelectFormModal";
 import toast, { Toaster } from "react-hot-toast";
 
-import {ShowStatus} from "../../Services/ServiceEstadoOperacion";
-import {ClasePedido} from "../../Services/ServiceClasePedido";
-import {OrgVentas} from "../../Services/ServiceOrgVentas";
+import { ShowStatus } from "../../Services/ServiceEstadoOperacion";
+import { ClasePedido } from "../../Services/ServiceClasePedido";
+import { OrgVentas } from "../../Services/ServiceOrgVentas";
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -395,7 +393,7 @@ const Consulta = () => {
   //PARA ALMACENAR LOS DATOS A EXPORTAR
   const [DataSet, setDataSet] = useState([{ columns: [], data: [] }]);
 
-  
+
   useEffect(() => {
     //valida para el nuevo cambio de contraseña
     getUser(jwt(localStorage.getItem("_token")).nameid).then((result) => {
@@ -1613,14 +1611,7 @@ const Consulta = () => {
     };
 
     if (
-      creado_el[0].Low.trim() != "" ||
-      creado_por[0].Low.trim() != "" ||
-      cliente[0].Low.trim() != "" ||
-      material[0].Low.trim() != "" ||
-      docu_comercial[0].Low.trim() != "" ||
-      ofi_ventas[0].Low.trim() != "" ||
-      org_ventas[0].Low.trim() != "" ||
-      clase_pedido[0].Low.trim() != ""
+      creado_el[0].Low.trim() != "" 
     ) {
       ConsultaPedidoFiltro(model_consulta_pedido)
         .then((result) => {
@@ -1754,10 +1745,38 @@ const Consulta = () => {
   }
   //INPUT cliente
   function mc_cliente_desde() {
-    setshowcliente_desde((prev) => !prev);
+    if ((org_ventas_desde == "") && (org_ventas_hasta == "")) {
+      toast.error("Debe seleccionar una \"Org. Ventas\" .", {
+        position: "top-center",
+        autoClose: 1000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        }
+      })
+    }
+    else {
+      setshowcliente_desde((prev) => !prev);
+      setcliente([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
+      setcliente_desde('');
+    }
   }
   function mc_cliente_hasta() {
-    setshowcliente_hasta((prev) => !prev);
+    if ((org_ventas_desde == "") && (org_ventas_hasta == "")) {
+      toast.error("Debe seleccionar una \"Org. Ventas\" .", {
+        position: "top-center",
+        autoClose: 1000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        }
+      })
+
+    }
+    else {
+      setshowcliente_hasta((prev) => !prev);
+    }
+
   }
   //INPUT material
   function mc_material_desde() {
@@ -2882,8 +2901,18 @@ const Consulta = () => {
   };
 
   function openDatosPagina() {
-    // showModalPagina == true
-    setshowModalPagina((prev) => !prev);
+    if ((creado_el_desde == "" && creado_el_hasta == "")) {
+      toast.error("Debe seleccionar el campo \"Creado el\"", {
+        position: "top-center",
+        autoClose: 6000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        },
+      });
+    } else {
+      setshowModalPagina((prev) => !prev);
+    }
   }
 
   function SaveNumberPage() {
@@ -2908,6 +2937,23 @@ const Consulta = () => {
     }
   };
 
+  const ValidacionSearch = () => {
+    if ((creado_el_desde == "" && creado_el_hasta == "")) {
+      toast.error("Debe seleccionar el campo \"Creado el\"", {
+        position: "top-center",
+        autoClose: 6000,
+        style: {
+          backgroundColor: "#212121",
+          color: "#fff",
+        },
+      });
+    }
+    else {
+      Search(1, 0, "", "")
+    }
+  }
+
+
   return (
     <React.Fragment>
       {showModalPagina ? (
@@ -2919,7 +2965,7 @@ const Consulta = () => {
           >
             <div className="modal-wrapper modal-wrapper-paginate p-5">
               <div className="col-sm-12 d-flex align-items-center">
-                <label>Número de datos por página</label>
+                <label>Número de filas por página</label>
               </div>
               <div className="col-sm-12">
                 {/* <InputForm
@@ -3048,6 +3094,8 @@ const Consulta = () => {
               cliente_desde={cliente_desde}
               cliente_hasta={cliente_hasta}
               setcliente={setcliente}
+              org_ventas_desde={org_ventas_desde}
+              org_ventas_hasta={org_ventas_hasta}
             />
             <Mc_Cliente_hasta_v2
               showcliente={showcliente_hasta}
@@ -3056,6 +3104,8 @@ const Consulta = () => {
               cliente_hasta={cliente_hasta}
               cliente_desde={cliente_desde}
               setcliente={setcliente}
+              org_ventas_desde={org_ventas_desde}
+              org_ventas_hasta={org_ventas_hasta}
             />
             {/* MODAL MATCHCODE MATERIAL */}
             <Mc_Material_desde
@@ -3137,6 +3187,48 @@ const Consulta = () => {
             <section>
               <div style={{ margin: "10px" }} className="row">
                 <div className="col-sm-4 d-flex align-items-center">
+                  <label>
+                    <label>Creado el : </label>{" "}
+                    <label style={{ color: "red" }}>(*)</label>
+                  </label>
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "creado_el_desde",
+                      type: "date",
+                      value: creado_el_desde,
+                      disabled: false,
+                      checked: false,
+                      matchcode: false,
+                    }}
+                    handleChange={handleChange}
+                  />
+                </div>
+                <div className="col-sm-3">
+                  <InputForm
+                    attribute={{
+                      name: "creado_el_hasta",
+                      type: "date",
+                      value: creado_el_hasta,
+                      disabled: false,
+                      checked: false,
+                      matchcode: false,
+                    }}
+                    handleChange={handleChange}
+                  />
+                </div>
+                <div className="col-sm-2 d-flex align-items-center">
+                  <i
+                    className="fas fa-file-export icon-matchcode-2"
+                    onClick={ChangeBusquedaMult_CreadoEl}
+                  ></i>
+                </div>
+
+
+
+
+                <div className="col-sm-4 d-flex align-items-center">
                   <label>N° de Pedido :</label>
                 </div>
                 <div className="col-sm-3">
@@ -3214,41 +3306,7 @@ const Consulta = () => {
                   ></i>
                 </div>
 
-                <div className="col-sm-4 d-flex align-items-center">
-                  <label>Creado el :</label>
-                </div>
-                <div className="col-sm-3">
-                  <InputForm
-                    attribute={{
-                      name: "creado_el_desde",
-                      type: "date",
-                      value: creado_el_desde,
-                      disabled: false,
-                      checked: false,
-                      matchcode: false,
-                    }}
-                    handleChange={handleChange}
-                  />
-                </div>
-                <div className="col-sm-3">
-                  <InputForm
-                    attribute={{
-                      name: "creado_el_hasta",
-                      type: "date",
-                      value: creado_el_hasta,
-                      disabled: false,
-                      checked: false,
-                      matchcode: false,
-                    }}
-                    handleChange={handleChange}
-                  />
-                </div>
-                <div className="col-sm-2 d-flex align-items-center">
-                  <i
-                    className="fas fa-file-export icon-matchcode-2"
-                    onClick={ChangeBusquedaMult_CreadoEl}
-                  ></i>
-                </div>
+
 
                 <div className="col-sm-4 d-flex align-items-center">
                   <label>Material :</label>
@@ -3457,7 +3515,7 @@ const Consulta = () => {
               <div className="col-sm-12 col-md-2 p-1">
                 <BtnSearch
                   attribute={{ name: "Buscar", classNamebtn: "btn_search" }}
-                  onClick={() => Search(1, 0, "", "")}
+                  onClick={() => ValidacionSearch()}
                 />
               </div>
               <div className="col-sm-12 col-md-2 p-1">
@@ -3488,27 +3546,46 @@ const Consulta = () => {
                       name="exportacion"
                     />
                   </ExcelFile>
-                ) : (
-                  <ExcelFile
-                    filename="Consulta de Pedidos"
-                    element={
-                      <BtnExportar
-                        attribute={{
-                          name: "Descargar Excel",
-                          classNamebtn: "btn_export",
-                          disabled: false,
-                        }}
-                      />
-                    }
-                  >
-                    <ExcelSheet dataSet={DataSet} name="exportacion" />
-                  </ExcelFile>
-                )}
+                ) :
+                  response_consulta_pedido.length != "" ?
+                    (
+                      <ExcelFile
+                        filename="Consulta de Pedidos"
+                        element={
+                          <BtnExportar
+                            attribute={{
+                              name: "Descargar Excel",
+                              classNamebtn: "btn_export",
+                              disabled: false,
+                            }}
+                          />
+                        }
+                      >
+                        <ExcelSheet dataSet={DataSet} name="exportacion" />
+                      </ExcelFile>
+                    ) : 
+                    (
+                      <ExcelFile
+                        filename="Consulta de Pedidos"
+                        element={
+                          <BtnExportar
+                            attribute={{
+                              name: "Descargar Excel",
+                              classNamebtn: "btn_export",
+                              disabled: true,
+                            }}
+                          />
+                        }
+                      >
+                        <ExcelSheet dataSet={DataSet} name="exportacion" />
+                      </ExcelFile>
+                    )
+              }
               </div>
               <div className="col-sm-12 col-md-2 p-1">
                 <BtnSearch
                   attribute={{
-                    name: "Cantidad de documentos",
+                    name: "Cantidad de Filas",
                     classNamebtn: "btn_search",
                   }}
                   onClick={() => openDatosPagina()}
@@ -3986,7 +4063,13 @@ const Consulta = () => {
                         response_consulta_pedido.length > 0
                         ? response_consulta_pedido.map((response, key) => {
                           return (
-                            <tr key={key}>
+                            <tr className="" key={key} style={{
+                              textAlign: "center",
+
+                              backgroundColor: response.statusField == "BLOQUEADO POR COBRANZAS" || response.statusField == "BLOQUEADO POR CREDITO" ? "#EAA99B" : "",
+
+                            }}>
+
                               <th>
                                 <input
                                   type="checkbox"
@@ -4167,6 +4250,7 @@ const Consulta = () => {
                                                 // console.log(arraycheckbox)
                                               }
                                             }
+
                                             for (
                                               let y = 0;
                                               y < DataSet[0].data.length;
@@ -4181,8 +4265,8 @@ const Consulta = () => {
                                                   [];
                                                 DataSet[0].data.splice(y, 1);
                                               }
-                                              // console.log(DataSet);
-                                              // console.log(arraycheckbox_export[0].data)
+                                              console.log("DataSet", DataSet);
+                                              console.log("arraycheckbox_export", arraycheckbox_export)
                                             }
                                           }
                                         }
@@ -4228,7 +4312,10 @@ const Consulta = () => {
                               >
                                 {response.text1Field}
                               </th>
-                              <th style={{ textAlign: "center" }}>
+                              <th style={{
+                                textAlign: "center",
+                                color: response.statusField == "BLOQUEADO POR COBRANZAS" || response.statusField == "BLOQUEADO POR CREDITO" ? "red" : "",
+                              }}>
                                 {response.statusField}
                               </th>
                               <th
@@ -4276,8 +4363,8 @@ const Consulta = () => {
             </div>
           </div>
           {/* ) : (
-            <div className="access-route">NO TIENE ACCESO A ESTE REPORTE</div>
-          )} */}
+            <div className="access-route">NO TIENE ACCESO AL MÓDULO DE CONSULTA DE PEDIDO</div>
+          )}  */}
         </React.Fragment>
       )}
     </React.Fragment>

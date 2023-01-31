@@ -19,6 +19,7 @@ const Dashboard = () => {
 
   // CONTROL DE ACCESO A ITEMS DE MENUS
   const [usuarios, setUsuarios] = useState(false);
+  const [eventos, setEventos] = useState(false);
   const [roles, setRoles] = useState(false);
   const [auditoria, setAuditoria] = useState(false);
   const [configuracion, setConfiguracion] = useState(false);
@@ -98,6 +99,14 @@ const Dashboard = () => {
                   element.activeField == "X"
                 ) {
                   setUsuarios(true);
+                  setModAdministracion(true);
+                }
+
+                if (
+                  element.idModuloField == "EVENT" &&
+                  element.activeField == "X"
+                ) {
+                  setEventos(true);
                   setModAdministracion(true);
                 }
               }
@@ -268,6 +277,18 @@ const Dashboard = () => {
                 <i className="far fa-address-card"></i>
               </div>
               <label>Roles</label>
+            </div>
+          </Link>
+        )}
+
+        {eventos && (
+          <Link to="evento" style={{ textDecoration: "none" }}>
+            <div className="dasboard-grid">
+              {/* Usuarios */}
+              <div className="row-fila">
+                <i className="fas fa-toggle-on"></i>
+              </div>
+              <label>Eventos</label>
             </div>
           </Link>
         )}

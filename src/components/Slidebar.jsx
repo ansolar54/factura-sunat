@@ -18,6 +18,7 @@ const Slidebar = () => {
 
   // CONTROL DE ACCESO A ITEMS DE MENUS
   const [usuarios, setUsuarios] = useState(false);
+  const [eventos, setEventos] = useState(false);
   const [roles, setRoles] = useState(false);
   const [auditoria, setAuditoria] = useState(false);
   const [configuracion, setConfiguracion] = useState(false);
@@ -124,6 +125,14 @@ const Slidebar = () => {
                   element.activeField == "X"
                 ) {
                   setUsuarios(true);
+                  setModAdministracion(true);
+                }
+
+                if (
+                  element.idModuloField == "EVENT" &&
+                  element.activeField == "X"
+                ) {
+                  setEventos(true);
                   setModAdministracion(true);
                 }
               }
@@ -321,6 +330,12 @@ const Slidebar = () => {
                     <Link to="roles">Roles</Link>
                   </li>
                 )}
+                {eventos && (
+                  <li className="slidebar-categories-child">
+                    <i className="fas fa-toggle-on"></i>
+                    <Link to="evento">Eventos</Link>
+                  </li>
+                )}
                 {auditoria && (
                   <li className="slidebar-categories-child">
                     <i className="fas fa-newspaper"></i>
@@ -330,9 +345,11 @@ const Slidebar = () => {
                 {configuracion && (
                   <li className="slidebar-categories-child">
                     <i className="fas fa-cog"></i>
+                    {/* <Link to="evento">Eventos</Link> */}
                     <Link to="configuracion">Configuración</Link>
                   </li>
                 )}
+                
               </ul>
             </div>
           </div>

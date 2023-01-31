@@ -19,6 +19,12 @@ import {
 } from "../../../Services/ServiceUser";
 import "./ReporteSolicitud.css"
 
+import {
+    getOficinaVentasSAP,
+    RegistrarAuditoria,
+} from "../../../Services/ServiceAuditoria";
+import SelectFormMd from "../../../components/SelectFormModal";
+
 const ReporteSolicitud = () => {
     // ORG VENTAS
     const [orgVentasValue, setOrgVentasValue] = useState("");
@@ -41,7 +47,8 @@ const ReporteSolicitud = () => {
     //const [estado, setState] = useState("");
 
     // PAGINATION
-    const [limit, setLimit] = useState(5);
+    const [datosxpagina, setDatosxpagina] = useState(10); // para el input
+    const [limit, setLimit] = useState(10);
     const [offset, setOffset] = useState(1);
 
     // SOLICITUDES OBJECT
@@ -91,7 +98,7 @@ const ReporteSolicitud = () => {
         );
     };
 
-    console.log("PRUEBITA",users)
+    //console.log("PRUEBITA", users)
 
     const getUsersGerente = () => {
         getDistinctUser(jwtDecode(localStorage.getItem("_token")).nameid, 3).then(
@@ -102,7 +109,7 @@ const ReporteSolicitud = () => {
         );
     };
 
-    console.log("PRUEBITA 2",usersG)
+    // console.log("PRUEBITA 2", usersG)
 
     const openMcOrgVentas = () => {
         setShowOrgVentas((prev) => !prev);
@@ -155,6 +162,78 @@ const ReporteSolicitud = () => {
             setvaluepagination(true);
             // console.log("Filtrado Reporte", result);
         })
+    }
+
+    const [showModalPagina, setshowModalPagina] = useState(false);
+    const modalRef = useRef();
+    const [ItemsNumberDates, setItemsNumberDates] = useState([
+        { id: 10, name: 10 },
+        { id: 20, name: 20 },
+        { id: 50, name: 50 },
+        { id: 100, name: 100 },
+    ]);
+
+    const closeModal = (e) => {
+        if (modalRef.current === e.target) {
+            setDatosxpagina(limit);
+            setshowModalPagina(false);
+        }
+    };
+
+    function openDatosPagina() {
+        // showModalPagina == true
+        setshowModalPagina((prev) => !prev);
+    }
+
+    function Search_02(page, numdatos) {
+        let model = {
+            id_solicitante: idSolicitante,
+            org_ventas: orgVentas1,
+            nro_solicitud: nroSolicitud,
+            fecha_solicitud: filtro.fechSolicitud,
+            codi_cliente: codiCliente,
+            estado: estado1,
+            id_aprobador: idAprobador,
+            fecha_aprob: filtro.fechAprob
+        };
+        setspinner(true);
+        console.log('MODEL', model)
+        console.log(limit, ' ', offset)
+        ListadoReporteSolicitud(
+            model,
+            numdatos,
+            page
+        ).then(result => {
+            console.log('RESULTADO', result);
+            setSolicitudes(result.data);
+            setTotalData(result.totalItems);
+            setspinner(false);
+            setvaluepagination(true);
+            // console.log("Filtrado Reporte", result);
+        })
+    }
+
+    const Search = () => {
+        listadoReporteSolicitudes(1);
+        // OBTENER OFICINA DE VENTAS DE USUARIO DESDE SAP
+        let ofi_ventas = "";
+        getOficinaVentasSAP({
+            IsUser: jwt(localStorage.getItem("_token")).username,
+        }).then((result) => {
+            if (result.etOfiVentasField.length) {
+                ofi_ventas =
+                    result.etOfiVentasField[0].codOfventaField +
+                    " - " +
+                    result.etOfiVentasField[0].descripcionField;
+                //REGISTRO DE AUDITORÍA
+                RegistrarAuditoria({
+                    id_user: Number(jwt(localStorage.getItem("_token")).nameid),
+                    id_event: 9,
+                    sales_ofi: ofi_ventas,
+                    indicator: "WEB",
+                });
+            }
+        });
     }
 
     const listadoReporteSolicitudes = (page) => {
@@ -263,6 +342,14 @@ const ReporteSolicitud = () => {
     function handleChange(name, value) {
         console.log(name, value);
         switch (name) {
+            case "id_ndatos":
+                setLimit(value);
+                Search_02(1, value);
+                setshowModalPagina((prev) => !prev);
+                break;
+            case "num_datos_pagina":
+                setDatosxpagina(value);
+                break;
             case "org_ventas":
                 setOrgVentasValue(value);
                 break;
@@ -399,7 +486,37 @@ const ReporteSolicitud = () => {
                     setOfiVentas={setOfiVentas}
                 />
 
-
+                {showModalPagina ? (
+                    <React.Fragment>
+                        <div
+                            className="container-modal-background"
+                            onClick={closeModal}
+                            ref={modalRef}
+                        >
+                            <div className="modal-wrapper modal-wrapper-paginate p-5">
+                                <div className="col-sm-12 d-flex align-items-center">
+                                    <label>Número de filas por página</label>
+                                </div>
+                                <div className="col-sm-12">
+                                    <SelectFormMd
+                                        attribute={{ name: "id_ndatos", disabled: false, default: 0 }}
+                                        values={ItemsNumberDates}
+                                        handleChange={handleChange}
+                                    ></SelectFormMd>
+                                </div>
+                                <div
+                                    className="close-modal-button"
+                                    onClick={() => {
+                                        setshowModalPagina((prev) => !prev);
+                                        setDatosxpagina(limit);
+                                    }}
+                                >
+                                    <i className="fas fa-times"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </React.Fragment>
+                ) : null}
                 <div className="title-section">
                     <div>
                         <label>Cambio Precio / Reporte de Solicitud </label>
@@ -573,7 +690,7 @@ const ReporteSolicitud = () => {
                             </div> */}
 
                             <div className="col-sm-2 d-flex align-items-center">
-                                <label>Fecha Aprob / Rech / Anu :</label>
+                                <label>Fecha Aprob / Rech :</label>
                             </div>
                             <div className="input-box1">
                                 <input style={{ width: "190px" }}
@@ -602,40 +719,55 @@ const ReporteSolicitud = () => {
                             </div> */}
                         </div>
                     </div>
-                    <div className="my-5">
-                    <div 
-                    className="input-box1 mt-4 col-md-3"
-                        style={{
-                            flex: 1,
-                            alignSelf: "center",
-                        }}
-                    >
-                        <BtnSearch
-                            attribute={{
-                                name: "Buscar",
-                                classNamebtn: "btn_search",
+                    <div className="mt-2">
+                        <div
+                            className="input-box1 mt-4 col-md-3"
+                            style={{
+                                flex: 1,
+                                alignSelf: "center",
                             }}
-                            onClick={() => listadoReporteSolicitudes(1)}
-                        />
-                    </div>
-                    <div 
-                    className="input-box1 mt-4 col-md-3"
-                        style={{
-                            flex: 1,
-                            alignSelf: "center",
-                        }}
-                    >
-                        <BtnSearch
-                            attribute={{
-                                name: "Limpiar Campos",
-                                classNamebtn: "btn_search",
+                        >
+                            <BtnSearch
+                                attribute={{
+                                    name: "Buscar",
+                                    classNamebtn: "btn_search",
+                                }}
+                                onClick={() => Search()}
+                            />
+                        </div>
+                        <div
+                            className="input-box1 mt-4 col-md-3"
+                            style={{
+                                flex: 1,
+                                alignSelf: "center",
                             }}
-                            onClick={() => clear()}
-                        />
+                        >
+                            <BtnSearch
+                                attribute={{
+                                    name: "Limpiar Campos",
+                                    classNamebtn: "btn_search",
+                                }}
+                                onClick={() => clear()}
+                            />
+                        </div>
+                        <div
+                            className="input-box1 mt-4 col-md-3"
+                            style={{
+                                flex: 1,
+                                alignSelf: "center",
+                            }}
+                        >
+                            <BtnSearch
+                                attribute={{
+                                    name: "Cantidad de Filas",
+                                    classNamebtn: "btn_search",
+                                }}
+                                onClick={() => openDatosPagina()}
+                            />
+                        </div>
                     </div>
-                    </div>
-                    
-                    
+
+
                 </div>
 
                 <section>
@@ -656,7 +788,7 @@ const ReporteSolicitud = () => {
                                         <th style={{ textAlign: "center" }}>MARGEN %</th>
                                         <th style={{ textAlign: "center" }}>ESTADO</th>
                                         <th style={{ textAlign: "center" }}>APROBADOR</th>
-                                        <th style={{ textAlign: "center" }}>FECHA (APROBACIÓN/RECHAZO/ANULACIÓN)</th>
+                                        <th style={{ textAlign: "center" }}>FECHA (APROBACIÓN/RECHAZO)</th>
                                         <th style={{ textAlign: "center" }}>FECHA (FIN)</th>
                                     </tr>
                                 </thead>

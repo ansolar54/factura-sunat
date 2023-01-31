@@ -24,6 +24,11 @@ import { MatchcodePromociones } from '../../Services/ServicePromociones';
 import Mc_Org_Ventas_desde from "./Matchcode_Organ_Ventas/Mc_Org_Ventas_desde"
 import Mc_Ofi_Ventas_desde from "./Matchcode_Ofi_Ventas/Mc_Ofi_Ventas_desde"
 
+///////////////////////
+
+import { TreeTable } from 'primereact/treetable';
+import { Column } from 'primereact/column';
+
 
 const Lista_Precio = () => {
     var n = new Date();
@@ -165,14 +170,6 @@ const Lista_Precio = () => {
     //const [showcliente_hasta, setshowcliente_hasta] = useState(false);
 
     useEffect(() => {
-
-
-
-
-
-
-
-
         //valida para el nuevo cambio de contraseña
         getUser(jwt(localStorage.getItem("_token")).nameid).then((result) => {
             if (result.data[0].status_password === "1") {
@@ -818,27 +815,46 @@ const Lista_Precio = () => {
         //arraycheckbox_export[0].data = [];
         //setresponse_lista_precios([]);
         ConsultaListaPrecios(model_lista_precios).then((result) => {
-            setresponse_lista_precios(
-                result.etListaDetailField.map((d) => {
-                    return {
-                        select: true,
-                        vkorgField: d.vkorgField,
-                        matnrField: d.matnrField,
-                        maktxField: d.maktxField,
-                        kbetrField: d.kbetrField,
-                        konwaField: d.konwaField,
-                        mxwrtField: d.mxwrtField,
-                        konwa2Field: d.konwa2Field,
-                        databField: d.databField,
-                        datbiField: d.datbiField,
-                        name1Field: d.name1Field,
-                        namepltypField: d.namepltypField
-                    };
-                })
-            );
-            setTotalData(result.esRegtotField);
-            setspinner(false);
-            setvaluepagination(true);
+            if (result.etMsgReturnField.length == 0) {
+                setresponse_lista_precios(
+                    result.etListaDetailField.map((d) => {
+                        return {
+                            select: true,
+                            vkorgField: d.vkorgField,
+                            matnrField: d.matnrField,
+                            maktxField: d.maktxField,
+                            kbetrField: d.kbetrField,
+                            konwaField: d.konwaField,
+                            mxwrtField: d.mxwrtField,
+                            konwa2Field: d.konwa2Field,
+                            databField: d.databField,
+                            datbiField: d.datbiField,
+                            name1Field: d.name1Field,
+                            namepltypField: d.namepltypField
+                        };
+                    })
+                );
+                setTotalData(result.esRegtotField);
+                setspinner(false);
+                setvaluepagination(true);
+            }
+            else {
+                toast.error(result.etMsgReturnField[0].messageField, {
+                    position: "top-center",
+                    autoClose: 3000,
+                    // duration: 10000,
+                    style: {
+                        backgroundColor: "#212121",
+                        color: "#FFF",
+                        display: "flex"
+                    },
+                    //className: "toastsize",
+
+
+                });
+                setspinner(false);
+            }
+
         });
 
         // COMENTAR CLEAR PARA QUE FUNCIONE ORDENAMIENTO
@@ -947,8 +963,6 @@ const Lista_Precio = () => {
 
 
     }
-
-    //ESCRIBIR EN MAYUSCULA
 
 
 
@@ -1850,6 +1864,13 @@ const Lista_Precio = () => {
                             ) : null}
                         </section>
                         <section>
+                            {/* <div className="content-table">
+                                <TreeTable  reorderableColumns>
+                                    <Column field="name" header="Name" expander></Column>
+                                    <Column field="size" header="Size"></Column>
+                                    <Column field="type" header="Type"></Column>
+                                </TreeTable>
+                            </div> */}
                             <div className="container-table">
                                 <div className="container-table-sm">
                                     <table className="content-table">

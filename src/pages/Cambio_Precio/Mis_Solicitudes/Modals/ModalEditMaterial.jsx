@@ -144,7 +144,7 @@ const ModalEditMaterial = ({
 
                   let mails = {
                     email: "amendozac@farmex.com.pe",
-                    //email: "ansolar54@gmail.com",
+                    // email: "ansolar54@gmail.com",
                   };
 
                   let model_email_aprob = {

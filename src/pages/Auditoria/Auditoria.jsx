@@ -113,7 +113,7 @@ const Auditoria = () => {
     getRoleState().then((res) => {
       setRoles(res.data);
 
-      // console.log("LISTAR ROLES", res.data);
+      console.log("LISTAR ROLES", res.data);
 
       let data = []
       res.data.map(e => {
@@ -125,8 +125,9 @@ const Auditoria = () => {
         )
       })
       setOptions2(data)
-      //console.log("OPTION 2",options2);
+      console.log("OPTION 2",options2);
     });
+    
   };
 
   const listarEventos = () => {

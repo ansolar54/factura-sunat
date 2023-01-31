@@ -31,6 +31,7 @@ import GenerarSolicitud from "./pages/Cambio_Precio/Generar_Solicitud/GenerarSol
 import MisSolicitudes from "./pages/Cambio_Precio/Mis_Solicitudes/MisSolicitudes";
 import MisAprobaciones from "./pages/Cambio_Precio/Mis_Aprobaciones/MisAprobaciones";
 import ReporteSolicitud from "./pages/Cambio_Precio/Reporte_Solicitud/ReporteSolicitud";
+import Evento from "./pages/Evento/Evento";
 
 const App = () => {
   const history = useHistory();
@@ -109,6 +110,10 @@ const App = () => {
               >
                 <Slidebar />
                 <Configuracion />
+              </Route>
+              <Route exact strict path="/evento" component={Evento}>
+                <Slidebar />
+                <Evento />
               </Route>
 
               {/* MODULO DE REPORTES */}

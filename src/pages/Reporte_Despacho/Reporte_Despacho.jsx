@@ -143,6 +143,7 @@ const Reporte_Despacho = () => {
     const [cliente, setcliente] = useState([
         { Sign: "I", Option: "EQ", Low: "", High: "" },
     ]);
+    console.log("PRUEBA CLIENTE", cliente)
     const [cliente_desde, setcliente_desde] = useState("");
     const [cliente_hasta, setcliente_hasta] = useState("");
     //INPUT Creado el
@@ -1449,8 +1450,11 @@ const Reporte_Despacho = () => {
             IsBukrs: IsBukrs,
             ItErdat: (creado_el_desde ||creado_el_hasta) !== "" ?
                 RangosCreadoEl() : [],
+            // ItKunnr: cliente[0].Low == "" ? (
+            // (cliente_desde || cliente_hasta) !== "" ?
+            //     RangosCliente() : []) : cliente,
             ItKunnr: (cliente_desde || cliente_hasta) !== "" ?
-                RangosCliente() : [],
+                RangosCliente() : [],    
             //ItVbeln: [],
             //RangosDocuComercial(), //NÚMERO DE PEDIDO
             ItVkorg: (org_ventas_desde || org_ventas_hasta) !== "" ?
@@ -1990,10 +1994,40 @@ const Reporte_Despacho = () => {
 
     //INPUT cliente
     function mc_cliente_desde() {
-        setshowcliente_desde((prev) => !prev);
+        if((org_ventas_desde == "") && (org_ventas_hasta == "")){
+            toast.error("Debe seleccionar una \"Org. Ventas\" .", {
+                position: "top-center",
+                autoClose: 1000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                }
+            })
+            
+        }
+        else if (org_ventas_desde != "" || org_ventas_hasta != ""){
+            setshowcliente_desde((prev) => !prev);
+            setcliente([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
+            setcliente_desde('');
+        }
+        
     }
     function mc_cliente_hasta() {
-        setshowcliente_hasta((prev) => !prev);
+        if((org_ventas_desde == "") && (org_ventas_hasta == "")){
+            toast.error("Debe seleccionar una \"Org. Ventas\" .", {
+                position: "top-center",
+                autoClose: 1000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                }
+            })
+            
+        }
+        else if (org_ventas_desde != "" || org_ventas_hasta != ""){
+            setshowcliente_hasta((prev) => !prev);
+        }
+        
     }
 
     // INPUT punto exp
@@ -2133,7 +2167,8 @@ const Reporte_Despacho = () => {
                         setcliente([
                             { Sign: "I", Option: "EQ", Low: "", High: cliente_hasta },
                         ]);
-                    } else {
+                    } 
+                    else {
                         setcliente([{ Sign: "", Option: "", Low: "", High: "" }]);
                     }
                 }
@@ -2158,7 +2193,8 @@ const Reporte_Despacho = () => {
                         setcliente([
                             { Sign: "I", Option: "EQ", Low: cliente_desde, High: "" },
                         ]);
-                    } else {
+                    } 
+                    else {
                         setcliente([{ Sign: "", Option: "", Low: "", High: "" }]);
                     }
                 }
@@ -2968,8 +3004,42 @@ const Reporte_Despacho = () => {
     };
 
     function openDatosPagina() {
+        if ((creado_el_desde == "" && creado_el_hasta == "") && (org_ventas_desde == "" && org_ventas_hasta == "")) {
+            toast.error("Debe seleccionar una \"Org. Ventas\" y \"Fecha Registro\"", {
+                position: "top-center",
+                autoClose: 6000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                },
+            });
+        }
+        else if (creado_el_desde == "" && creado_el_hasta == "") {
+            toast.error("Debe seleccionar una \"Fecha Registro\"", {
+                position: "top-center",
+                autoClose: 6000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                },
+            });
+        }
+        else if (org_ventas_desde == "" && org_ventas_hasta == "") {
+            toast.error("Debe seleccionar una \"Org. Ventas\"", {
+                position: "top-center",
+                autoClose: 6000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                },
+            });
+        }
+        else {
+            setshowModalPagina((prev) => !prev);
+
+        }
         // showModalPagina == true
-        setshowModalPagina((prev) => !prev);
+        
     }
 
     const getDateAct = () => {
@@ -2990,7 +3060,7 @@ const Reporte_Despacho = () => {
 
     const ValidacionSearch = () => {
         if ((creado_el_desde == "" && creado_el_hasta == "") && (org_ventas_desde == "" && org_ventas_hasta == "")) {
-            toast.error("Debe seleccionar una \"Fecha Registro\" y \"Org. Ventas\"", {
+            toast.error("Debe seleccionar una \"Org. Ventas\" y \"Fecha Registro\"", {
                 position: "top-center",
                 autoClose: 6000,
                 style: {
@@ -3105,6 +3175,8 @@ const Reporte_Despacho = () => {
                             cliente_desde={cliente_desde}
                             cliente_hasta={cliente_hasta}
                             setcliente={setcliente}
+                            org_ventas_desde={org_ventas_desde}
+                            org_ventas_hasta={org_ventas_hasta}
                         />
                         <Mc_Cliente_hasta_v2
                             showcliente={showcliente_hasta}
@@ -3113,6 +3185,8 @@ const Reporte_Despacho = () => {
                             cliente_hasta={cliente_hasta}
                             cliente_desde={cliente_desde}
                             setcliente={setcliente}
+                            org_ventas_desde={org_ventas_desde}
+                            org_ventas_hasta={org_ventas_hasta}
                         />
                         {/* MODAL MATCHCODE PUNTO EXP */}
                         <Mc_Punto_Exp_desde
@@ -3282,6 +3356,46 @@ const Reporte_Despacho = () => {
                                     ></i>
                                 </div>
 
+                                 {/* FECHA REGISTRO */}
+                                 <div className="col-sm-4 d-flex align-items-center">
+                                    <label>
+                                        <label>Fecha Registro :</label>{" "}
+                                        <label style={{ color: "red" }}>(*)</label>
+                                    </label>
+                                </div>
+                                <div className="col-sm-3">
+                                    <InputForm
+                                        attribute={{
+                                            name: "creado_el_desde",
+                                            type: "date",
+                                            value: creado_el_desde,
+                                            disabled: false,
+                                            checked: false,
+                                            matchcode: false,
+                                        }}
+                                        handleChange={handleChange}
+                                    />
+                                </div>
+                                <div className="col-sm-3">
+                                    <InputForm
+                                        attribute={{
+                                            name: "creado_el_hasta",
+                                            type: "date",
+                                            value: creado_el_hasta,
+                                            disabled: false,
+                                            checked: false,
+                                            matchcode: false,
+                                        }}
+                                        handleChange={handleChange}
+                                    />
+                                </div>
+                                <div className="col-sm-2 d-flex align-items-center">
+                                    <i
+                                        className="fas fa-file-export icon-matchcode-2"
+                                        onClick={ChangeBusquedaMult_CreadoEl}
+                                    ></i>
+                                </div>
+
                                 {/* PUNTO DE EXP */}
                                 {/* FALTA AJUSTAR PUNTO DE EXP */}
                                 <div className="col-sm-4 d-flex align-items-center">
@@ -3365,45 +3479,7 @@ const Reporte_Despacho = () => {
                                     ></i>
                                 </div>
 
-                                {/* FECHA REGISTRO */}
-                                <div className="col-sm-4 d-flex align-items-center">
-                                    <label>
-                                        <label>Fecha Registro :</label>{" "}
-                                        <label style={{ color: "red" }}>(*)</label>
-                                    </label>
-                                </div>
-                                <div className="col-sm-3">
-                                    <InputForm
-                                        attribute={{
-                                            name: "creado_el_desde",
-                                            type: "date",
-                                            value: creado_el_desde,
-                                            disabled: false,
-                                            checked: false,
-                                            matchcode: false,
-                                        }}
-                                        handleChange={handleChange}
-                                    />
-                                </div>
-                                <div className="col-sm-3">
-                                    <InputForm
-                                        attribute={{
-                                            name: "creado_el_hasta",
-                                            type: "date",
-                                            value: creado_el_hasta,
-                                            disabled: false,
-                                            checked: false,
-                                            matchcode: false,
-                                        }}
-                                        handleChange={handleChange}
-                                    />
-                                </div>
-                                <div className="col-sm-2 d-flex align-items-center">
-                                    <i
-                                        className="fas fa-file-export icon-matchcode-2"
-                                        onClick={ChangeBusquedaMult_CreadoEl}
-                                    ></i>
-                                </div>
+                               
 
 
 
@@ -3568,7 +3644,8 @@ const Reporte_Despacho = () => {
                                             name="exportacion"
                                         />
                                     </ExcelFile>
-                                ) : (
+                                ) : response_reporte_despacho.length != 0 ? 
+                                ( 
                                     <ExcelFile
                                         filename="Reporte de Despachos"
                                         element={
@@ -3583,12 +3660,29 @@ const Reporte_Despacho = () => {
                                     >
                                         <ExcelSheet dataSet={DataSet} name="exportacion" />
                                     </ExcelFile>
-                                )}
+                                ) : 
+                                ( 
+                                    <ExcelFile
+                                        filename="Reporte de Despachos"
+                                        element={
+                                            <BtnExportar
+                                                attribute={{
+                                                    name: "Descargar Excel",
+                                                    classNamebtn: "btn_export",
+                                                    disabled: true,
+                                                }}
+                                            />
+                                        }
+                                    >
+                                        <ExcelSheet dataSet={DataSet} name="exportacion" />
+                                    </ExcelFile>
+                                )
+                                }
                             </div>
                             <div className="col-sm-12 col-md-2 p-1">
                                 <BtnSearch
                                     attribute={{
-                                        name: "Cantidad de documentos",
+                                        name: "Cantidad de Filas",
                                         classNamebtn: "btn_search",
                                     }}
                                     onClick={() => openDatosPagina()}
@@ -4477,14 +4571,6 @@ const Reporte_Despacho = () => {
                                                             <th style={{ textAlign: "left" }}>
                                                                 {response.snameField}
                                                             </th>
-                                                            {/* <th
-                                                            //onClick={() => verPedido(response.vbelnField)}
-                                                            >
-                                                                <i
-                                                                    className="fas fa-clipboard-list"
-                                                                    title="Ver pedido"
-                                                                ></i>
-                                                            </th> */}
                                                         </tr>
                                                     );
                                                 })

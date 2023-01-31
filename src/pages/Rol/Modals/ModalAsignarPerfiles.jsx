@@ -107,6 +107,8 @@ const ModalAsignarPerfiles = ({
         return "Lista de precios";
       case "ROL":
         return "Roles";
+      case "EVENT":
+        return "Eventos";
       default:
         return "Usuario";
     }

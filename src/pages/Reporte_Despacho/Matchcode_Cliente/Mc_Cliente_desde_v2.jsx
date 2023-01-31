@@ -1,10 +1,12 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
-import { Mc_InfoCliente_Cliente } from "../../../Services/ServiceCliente";
+// import { Mc_InfoCliente_Cliente } from "../../../Services/ServiceCliente";
+import { MatchcodeClienteRDespacho } from "../../../Services/ServiceReporteDespacho";
 import Pagination from "../../../components/Pagination";
 import InputForm from "../../../components/InputForm";
 import BtnSearch from "../../../components/BtnSearch";
 import Spinner from "../../../components/Spinner";
 import jwt from "jwt-decode";
+import Mc_Cliente_desde_multi from "./Mc_Cliente_desde_multi";
 
 const Mc_Cliente_desde_v2 = ({
   showcliente,
@@ -13,14 +15,17 @@ const Mc_Cliente_desde_v2 = ({
   cliente_desde,
   cliente_hasta,
   setcliente,
+  org_ventas_desde,
+  org_ventas_hasta,
+
 }) => {
   const [IsRegxpag] = useState(15); // cantidad de datos por página
 
   const [PKunnr, setPKunnr] = useState("");
   const [IsName1, setIsName1] = useState("");
   const [IsStcd1, setIsStcd1] = useState("");
-//CARGA DE SPINNER
-const [spinner, setspinner] = useState(false);
+  //CARGA DE SPINNER
+  const [spinner, setspinner] = useState(false);
   const [responseCliente, setresponseCliente] = useState({
     esRegtotField: "",
     etClientesField: [],
@@ -29,6 +34,9 @@ const [spinner, setspinner] = useState(false);
   const [TotalData, setTotalData] = useState();
   //ACTIVAR SECCION DE PAGINADO
   const [valuepagination, setvaluepagination] = useState(false);
+
+  //ACTIVAR MODAL MATCHCODE CLIENTE MULTI SELECT
+  const [showcliente_desde_multi, setshowcliente_desde_multi] = useState(false);
 
   const modalRef = useRef();
 
@@ -41,15 +49,15 @@ const [spinner, setspinner] = useState(false);
     [setshowcliente, showcliente]
   );
 
-  useEffect(()=>{
-    if(showcliente==true){
-        setPKunnr("");
+  useEffect(() => {
+    if (showcliente == true) {
+      setPKunnr("");
       setIsName1("");
       setIsStcd1("");
-      setshowcliente({etClientesField:[]});
+      setshowcliente({ etClientesField: [] });
     }
-    
-  },[showcliente]);
+
+  }, [showcliente]);
 
   useEffect(() => {
     // setItKunnr([{ Sign: "", Option: "", Low: "", High: "" }]);
@@ -138,12 +146,18 @@ const [spinner, setspinner] = useState(false);
       IsRegxpag: IsRegxpag,
       IsStcd1: IsStcd1,
       IsUser: jwt(localStorage.getItem("_token")).username,
-      IsDuplicate:''
+      ItVkorg: org_ventas_desde != "" ? (org_ventas_hasta == "" ?
+        [{ Sign: "I", Option: "EQ", Low: org_ventas_desde, High: "" }] :
+        [{ Sign: "I", Option: "BT", Low: org_ventas_desde, High: org_ventas_hasta }]) :
+        [{ Sign: "I", Option: "EQ", Low: "", High: org_ventas_hasta }]
+
     };
 
-    Mc_InfoCliente_Cliente(modal_mc_infocliente_cliente).then((result) => {
-        setresponseCliente(result);
-    
+    //console.log("PRUEBA #01#",modal_mc_infocliente_cliente)
+
+    MatchcodeClienteRDespacho(modal_mc_infocliente_cliente).then((result) => {
+      setresponseCliente(result);
+
       setTotalData(result.esRegtotField);
       setspinner(false);
       setvaluepagination(true);
@@ -198,8 +212,25 @@ const [spinner, setspinner] = useState(false);
       }
     }
   }
+
+  function mc_cliente_desde_multi() {
+    setshowcliente((prev) => !prev);
+    setshowcliente_desde_multi((prev) => !prev);
+  }
   return (
-    <>
+    <React.Fragment>
+      {/* MODAL MATCHCODE CLIENTE MULTI SELECT*/}
+      <Mc_Cliente_desde_multi
+        showcliente={showcliente_desde_multi}
+        setshowcliente={setshowcliente_desde_multi}
+        setcliente_desde={setcliente_desde}
+        cliente_desde={cliente_desde}
+        cliente_hasta={cliente_hasta}
+        setcliente={setcliente}
+        org_ventas_desde={org_ventas_desde}
+        org_ventas_hasta={org_ventas_hasta}
+      />
+
       {showcliente ? (
         <div
           className="container-modal-background"
@@ -223,7 +254,7 @@ const [spinner, setspinner] = useState(false);
                     disabled: false,
                     checked: false,
                     matchcode: false,
-                    maxlength:10
+                    maxlength: 10
                   }}
                   handleChange={handleChange}
                 />
@@ -241,7 +272,7 @@ const [spinner, setspinner] = useState(false);
                     disabled: false,
                     checked: false,
                     matchcode: false,
-                    maxlength:35
+                    maxlength: 35
                   }}
                   handleChange={handleChange}
                 />
@@ -259,7 +290,7 @@ const [spinner, setspinner] = useState(false);
                     disabled: false,
                     checked: false,
                     matchcode: false,
-                    maxlength:16
+                    maxlength: 16
                   }}
                   handleChange={handleChange}
                 />
@@ -272,16 +303,23 @@ const [spinner, setspinner] = useState(false);
                   onClick={() => Search_mc_Cliente(1)}
                 />
               </div>
+
               <div style={{ margin: "10px" }}>
                 <BtnSearch
                   attribute={{ name: "Limpiar Campos", classNamebtn: "btn_search" }}
                   onClick={() => Clear()}
                 />
               </div>
+              <div style={{ margin: "10px" }}>
+                <BtnSearch
+                  attribute={{ name: "Selección Múltiple", classNamebtn: "btn_search" }}
+                  onClick={() => mc_cliente_desde_multi()}
+                />
+              </div>
             </section>
             <section className="section-table-modal">
               <div className="container-table responsive-table-all">
-              {spinner && <Spinner />}
+
                 <table className="content-table ">
                   <thead>
                     <tr>
@@ -298,25 +336,38 @@ const [spinner, setspinner] = useState(false);
                   </thead>
                   <tbody>
                     {
-                      responseCliente.etClientesField.length>=1 ?
-                      responseCliente.etClientesField.map(
-                      (response, key) => (
-                        <tr key={key} onClick={() => clickcelda(response)}>
-                          <th style={{textAlign:"center"}}>{response.kunnrField}</th>
-                          <th style={{textAlign:"center"}}>{response.name1Field}</th>
-                          <th style={{textAlign:"center"}}>{response.zonaField}</th>
-                          <th style={{textAlign:"center"}}>{response.stcd1Field}</th>
-                          {/* <th style={{textAlign:"center"}}>{response.vtwegField}</th> */}
-                          {/* <th style={{textAlign:"center"}}>{response.spartField}</th> */}
-                          {/* <th style={{textAlign:"end"}}>{convertDecimal(response.klimkField)}</th> */}
-                          {/* <th style={{textAlign:"center"}}>{response.docValField}</th> */}
-                        </tr>
-                      )
-                    ):null
+                      responseCliente.etClientesField.length >= 1 ?
+                        responseCliente.etClientesField.map(
+                          (response, key) => (
+                            <tr key={key} onClick={() => clickcelda(response)}>
+                              <th style={{ textAlign: "center" }}>{response.kunnrField}</th>
+                              <th style={{ textAlign: "center" }}>{response.name1Field}</th>
+                              <th style={{ textAlign: "center" }}>{response.zonaField}</th>
+                              <th style={{ textAlign: "center" }}>{response.stcd1Field}</th>
+                              {/* <th style={{textAlign:"center"}}>{response.vtwegField}</th> */}
+                              {/* <th style={{textAlign:"center"}}>{response.spartField}</th> */}
+                              {/* <th style={{textAlign:"end"}}>{convertDecimal(response.klimkField)}</th> */}
+                              {/* <th style={{textAlign:"center"}}>{response.docValField}</th> */}
+                            </tr>
+                          )
+                        ) : null
                     }
                   </tbody>
                 </table>
-               
+                {responseCliente.etClientesField.length == 0 && spinner == false ? (
+                  <div
+                    style={{
+                      margin: "10px",
+                      textAlign: "center",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    No se encontraron resultados.
+                  </div>
+                ) : null}
+                {spinner && <Spinner />}
               </div>
             </section>
 
@@ -341,7 +392,7 @@ const [spinner, setspinner] = useState(false);
           </div>
         </div>
       ) : null}
-    </>
+    </React.Fragment>
   );
 };
 

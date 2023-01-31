@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
-import { Mc_InfoCliente_Cliente } from "../../../Services/ServiceCliente";
+import { Cliente } from "../../../Services/ServiceCliente";
 import Pagination from "../../../components/Pagination";
 import InputForm from "../../../components/InputForm";
 import BtnSearch from "../../../components/BtnSearch";
@@ -13,6 +13,8 @@ const Mc_Cliente_hasta_v2 = ({
   cliente_hasta,
   cliente_desde,
   setcliente,
+  org_ventas_desde,
+  org_ventas_hasta,
 }) => {
   const [IsRegxpag] = useState(15); // cantidad de datos por página
 
@@ -135,10 +137,13 @@ const [spinner, setspinner] = useState(false);
       IsRegxpag: IsRegxpag,
       IsStcd1: IsStcd1,
       IsUser: jwt(localStorage.getItem("_token")).username,
-      IsDuplicate:''
+      ItVkorg: org_ventas_desde != "" ? (org_ventas_hasta == "" ?
+        [{ Sign: "I", Option: "EQ", Low: org_ventas_desde, High: "" }] :
+        [{ Sign: "I", Option: "BT", Low: org_ventas_desde, High: org_ventas_hasta }]) :
+        [{ Sign: "I", Option: "EQ", Low: "", High: org_ventas_hasta }]
     };
 
-    Mc_InfoCliente_Cliente(modal_mc_infocliente_cliente).then((result) => {
+    Cliente(modal_mc_infocliente_cliente).then((result) => {
       setresponseCliente(result);
     
       setTotalData(result.esRegtotField);
@@ -278,7 +283,6 @@ const [spinner, setspinner] = useState(false);
             </section>
             <section className="section-table-modal">
               <div className="container-table responsive-table-all">
-              {spinner && <Spinner />}
                 <table className="content-table ">
                   <thead>
                     <tr>
@@ -289,7 +293,7 @@ const [spinner, setspinner] = useState(false);
 
                       {/* <th>Canal distrib.</th> */}
                       {/* <th>Sector</th> */}
-                      <th>USD Línea Cred. Disp</th>
+                      {/* <th>USD Línea Cred. Disp</th> */}
                       {/* <th>Tiene Doc. vencidos</th> */}
                     </tr>
                   </thead>
@@ -305,7 +309,7 @@ const [spinner, setspinner] = useState(false);
                           <th style={{textAlign:"center"}}>{response.stcd1Field}</th>
                           {/* <th style={{textAlign:"center"}}>{response.vtwegField}</th> */}
                           {/* <th style={{textAlign:"center"}}>{response.spartField}</th> */}
-                          <th style={{textAlign:"end"}}>{convertDecimal(response.klimkField)}</th>
+                          {/* <th style={{textAlign:"end"}}>{convertDecimal(response.klimkField)}</th> */}
                           {/* <th style={{textAlign:"center"}}>{response.docValField}</th> */}
                         </tr>
                       )
@@ -313,7 +317,20 @@ const [spinner, setspinner] = useState(false);
                     }
                   </tbody>
                 </table>
-               
+                {responseCliente.etClientesField.length == 0 && spinner == false ? (
+                  <div
+                    style={{
+                      margin: "10px",
+                      textAlign: "center",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    No se encontraron resultados.
+                  </div>
+                ) : null}
+                {spinner && <Spinner />}
               </div>
             </section>
 

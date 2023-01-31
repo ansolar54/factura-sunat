@@ -5,6 +5,7 @@ import InputForm from "../../../components/InputForm";
 import BtnSearch from "../../../components/BtnSearch";
 import Spinner from "../../../components/Spinner";
 import jwt from "jwt-decode";
+import toast, { Toaster } from "react-hot-toast";
 const Mc_Cliente_desde_v2 = ({
   showcliente,
   setshowcliente,
@@ -13,11 +14,11 @@ const Mc_Cliente_desde_v2 = ({
   cliente_hasta,
   setcliente,
   org_ventas,
-   ofi_ventas,
-   lista_precio,
+  ofi_ventas,
+  lista_precio,
   setclienteName
 }) => {
-    console.log(org_ventas)
+  console.log(org_ventas)
   //  console.log(ofi_ventas)
   //  console.log(lista_precio)
   const [IsRegxpag] = useState(15); // cantidad de datos por página
@@ -81,10 +82,10 @@ const Mc_Cliente_desde_v2 = ({
     // SearchCliente(1);
     //--------------------- para actualizar valor org_ventas
 
-    if(cliente_desde != ''){
+    if (cliente_desde != '') {
       setcliente(cliente_desde);
     }
-    else{
+    else {
       setcliente(cliente_desde)
     }
     // if (cliente_desde != "") {
@@ -169,11 +170,28 @@ const Mc_Cliente_desde_v2 = ({
     console.log("MATCH CODE BUSCAR CLIENTE", modal_mc_infocliente_cliente)
 
     ClienteListaPrecio(modal_mc_infocliente_cliente).then((result) => {
-      setresponseCliente(result);
+      if (result.etMsgReturnField.length == 0) {
+        setresponseCliente(result);
 
-      setTotalData(result.esRegtotField);
-      setspinner(false);
-      setvaluepagination(true);
+        setTotalData(result.esRegtotField);
+        setspinner(false);
+        setvaluepagination(true);
+      }
+      else {
+        toast.error(result.etMsgReturnField[0].messageField, {
+          position: "top-center",
+          autoClose: 5000,
+          // duration: 10000,
+          style: {
+            backgroundColor: "#212121",
+            color: "#FFF",
+            display: "flex"
+          },
+        });
+        setspinner(false);
+      }
+
+
     });
   }
 
@@ -228,7 +246,7 @@ const Mc_Cliente_desde_v2 = ({
   }
   return (
     <>
-
+      <Toaster />
       {showcliente ? (
 
         <div
@@ -317,7 +335,7 @@ const Mc_Cliente_desde_v2 = ({
             </section>
             <section className="section-table-modal">
               <div className="container-table responsive-table-all">
-                {spinner && <Spinner />}
+
                 <table className="content-table ">
                   <thead>
                     <tr>
@@ -326,13 +344,14 @@ const Mc_Cliente_desde_v2 = ({
                       <th>Ciudad del Cliente</th>
                       <th>Identificación</th>
                       <th>Org. Ventas</th>
-                      <th>Centro</th>
+                      {/* <th>Centro</th> */}
                       <th>Oficina de Ventas</th>
+                      <th>Denom. Ofi. de Ventas</th>
                     </tr>
                   </thead>
                   <tbody>
                     {
-                       responseCliente.etClientesField.length >= 1 ?
+                      responseCliente.etClientesField.length >= 1 ?
                         responseCliente.etClientesField.map(
                           (response, key) => (
                             <tr key={key} onClick={() => clickcelda(response)}>
@@ -341,8 +360,9 @@ const Mc_Cliente_desde_v2 = ({
                               <th style={{ textAlign: "center" }}>{response.zonaField}</th>
                               <th style={{ textAlign: "center" }}>{response.stcd1Field}</th>
                               <th style={{ textAlign: "center" }}>{response.vkorgField}</th>
-                              <th style={{ textAlign: "center" }}>{response.spartField}</th>
+                              {/* <th style={{ textAlign: "center" }}>{response.spartField}</th> */}
                               <th style={{ textAlign: "center" }}>{response.vkburField}</th>
+                              <th style={{ textAlign: "center" }}>{response.bezeiField}</th>
                               {/* <th style={{textAlign:"center"}}>{response.vtwegField}</th> */}
                               {/* <th style={{textAlign:"center"}}>{response.spartField}</th> */}
                               {/* <th style={{ textAlign: "end" }}>{convertDecimal(response.klimkField)}</th> */}
@@ -353,7 +373,20 @@ const Mc_Cliente_desde_v2 = ({
                     }
                   </tbody>
                 </table>
-
+                {responseCliente.etClientesField.length == 0 && spinner == false ? (
+                  <div
+                    style={{
+                      margin: "10px",
+                      textAlign: "center",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    No se encontraron resultados.
+                  </div>
+                ) : null}
+                {spinner && <Spinner />}
               </div>
             </section>
 

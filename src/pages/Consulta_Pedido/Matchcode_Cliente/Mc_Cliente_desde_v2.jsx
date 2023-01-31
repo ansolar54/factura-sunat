@@ -1,10 +1,11 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
-import { Mc_InfoCliente_Cliente } from "../../../Services/ServiceCliente";
+import { Cliente } from "../../../Services/ServiceCliente";
 import Pagination from "../../../components/Pagination";
 import InputForm from "../../../components/InputForm";
 import BtnSearch from "../../../components/BtnSearch";
 import Spinner from "../../../components/Spinner";
 import jwt from "jwt-decode";
+import Mc_Cliente_desde_multi from "./Mc_Cliente_desde_multi";
 
 const Mc_Cliente_desde_v2 = ({
   showcliente,
@@ -13,6 +14,8 @@ const Mc_Cliente_desde_v2 = ({
   cliente_desde,
   cliente_hasta,
   setcliente,
+  org_ventas_desde,
+  org_ventas_hasta,
 }) => {
   const [IsRegxpag] = useState(15); // cantidad de datos por página
 
@@ -31,6 +34,9 @@ const [spinner, setspinner] = useState(false);
   const [valuepagination, setvaluepagination] = useState(false);
 
   const modalRef = useRef();
+
+  //ACTIVAR MODAL MATCHCODE CLIENTE MULTI SELECT
+  const [showcliente_desde_multi, setshowcliente_desde_multi] = useState(false);
 
   const keyPress = useCallback(
     (e) => {
@@ -138,10 +144,13 @@ const [spinner, setspinner] = useState(false);
       IsRegxpag: IsRegxpag,
       IsStcd1: IsStcd1,
       IsUser: jwt(localStorage.getItem("_token")).username,
-      IsDuplicate:''
+      ItVkorg: org_ventas_desde != "" ? (org_ventas_hasta == "" ?
+      [{ Sign: "I", Option: "EQ", Low: org_ventas_desde, High: "" }] :
+      [{ Sign: "I", Option: "BT", Low: org_ventas_desde, High: org_ventas_hasta }]) :
+      [{ Sign: "I", Option: "EQ", Low: "", High: org_ventas_hasta }]
     };
 
-    Mc_InfoCliente_Cliente(modal_mc_infocliente_cliente).then((result) => {
+    Cliente(modal_mc_infocliente_cliente).then((result) => {
         setresponseCliente(result);
     
       setTotalData(result.esRegtotField);
@@ -198,8 +207,23 @@ const [spinner, setspinner] = useState(false);
       }
     }
   }
+
+  function mc_cliente_desde_multi() {
+    setshowcliente((prev) => !prev);
+    setshowcliente_desde_multi((prev) => !prev);
+  }
   return (
-    <>
+    <React.Fragment>
+    <Mc_Cliente_desde_multi
+        showcliente={showcliente_desde_multi}
+        setshowcliente={setshowcliente_desde_multi}
+        setcliente_desde={setcliente_desde}
+        cliente_desde={cliente_desde}
+        cliente_hasta={cliente_hasta}
+        setcliente={setcliente}
+        org_ventas_desde={org_ventas_desde}
+        org_ventas_hasta={org_ventas_hasta}
+      />
       {showcliente ? (
         <div
           className="container-modal-background"
@@ -278,10 +302,16 @@ const [spinner, setspinner] = useState(false);
                   onClick={() => Clear()}
                 />
               </div>
+              <div style={{ margin: "10px" }}>
+                <BtnSearch
+                  attribute={{ name: "Selección Múltiple", classNamebtn: "btn_search" }}
+                onClick={() => mc_cliente_desde_multi()}
+                />
+              </div>
             </section>
             <section className="section-table-modal">
               <div className="container-table responsive-table-all">
-              {spinner && <Spinner />}
+             
                 <table className="content-table ">
                   <thead>
                     <tr>
@@ -292,7 +322,7 @@ const [spinner, setspinner] = useState(false);
 
                       {/* <th>Canal distrib.</th> */}
                       {/* <th>Sector</th> */}
-                      <th>USD Línea Cred. Disp</th>
+                      {/* <th>USD Línea Cred. Disp</th> */}
                       {/* <th>Tiene Doc. vencidos</th> */}
                     </tr>
                   </thead>
@@ -308,7 +338,7 @@ const [spinner, setspinner] = useState(false);
                           <th style={{textAlign:"center"}}>{response.stcd1Field}</th>
                           {/* <th style={{textAlign:"center"}}>{response.vtwegField}</th> */}
                           {/* <th style={{textAlign:"center"}}>{response.spartField}</th> */}
-                          <th style={{textAlign:"end"}}>{convertDecimal(response.klimkField)}</th>
+                          {/* <th style={{textAlign:"end"}}>{convertDecimal(response.klimkField)}</th> */}
                           {/* <th style={{textAlign:"center"}}>{response.docValField}</th> */}
                         </tr>
                       )
@@ -316,7 +346,20 @@ const [spinner, setspinner] = useState(false);
                     }
                   </tbody>
                 </table>
-               
+                {responseCliente.etClientesField.length == 0 && spinner == false ? (
+                  <div
+                    style={{
+                      margin: "10px",
+                      textAlign: "center",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    No se encontraron resultados.
+                  </div>
+                ) : null}
+                {spinner && <Spinner />}
               </div>
             </section>
 
@@ -341,7 +384,7 @@ const [spinner, setspinner] = useState(false);
           </div>
         </div>
       ) : null}
-    </>
+    </React.Fragment>
   );
 };
 
