@@ -306,7 +306,7 @@ const Slidebar = () => {
           )}
         </div>
 
-        {modAdministracion && (
+        {/* {modAdministracion && (
           <div className="slidebar-categories">
             <div
               className="slidebar-categories-header"
@@ -345,7 +345,6 @@ const Slidebar = () => {
                 {configuracion && (
                   <li className="slidebar-categories-child">
                     <i className="fas fa-cog"></i>
-                    {/* <Link to="evento">Eventos</Link> */}
                     <Link to="configuracion">Configuración</Link>
                   </li>
                 )}
@@ -353,10 +352,10 @@ const Slidebar = () => {
               </ul>
             </div>
           </div>
-        )}
+        )} */}
 
         {/* REPORTES */}
-        {modReportes && (
+        {/* {modReportes && (
           <div className="slidebar-categories">
             <div
               className="slidebar-categories-header"
@@ -400,7 +399,7 @@ const Slidebar = () => {
                   <li className="slidebar-categories-child">
                     <i className="fas fa-digital-tachograph"></i>
                     <Link to="estado_cuenta">Estado de Cuenta</Link>
-                    {/* <Link to="lista_precio">Lista de Precios</Link> */}
+                    
                   </li>
                 )}
 
@@ -420,7 +419,7 @@ const Slidebar = () => {
               </ul>
             </div>
           </div>
-        )}
+        )} */}
 
         {/* CAMBIO PRECIO */}
         {modCambioPrecio && (
@@ -443,7 +442,7 @@ const Slidebar = () => {
                   </li>
                 )}
 
-                {misSolicitudes && (
+                {/* {misSolicitudes && (
                   <li className="slidebar-categories-child">
                     <i className="fa fa-credit-card"></i>
                     <Link to="mis_solicitudes">Mis solicitudes</Link>
@@ -452,7 +451,6 @@ const Slidebar = () => {
                 {misAprobaciones && (
                   <li className="slidebar-categories-child">
                     <i className="fa fa-fax"></i>
-                    {/* <Link to="reporte_solicitud">Reporte de Solicitud</Link> */}
                     <Link to="mis_aprobaciones">Mis aprobaciones</Link>
                   </li>
                 )}
@@ -461,7 +459,7 @@ const Slidebar = () => {
                     <i className="fa fa-file"></i>
                     <Link to="reporte_solicitud">Reporte de Solicitud</Link>
                   </li>
-                )}
+                )} */}
 
               </ul>
             </div>
