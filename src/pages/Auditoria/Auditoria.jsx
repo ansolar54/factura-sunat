@@ -11,6 +11,10 @@ import ExcelSheet from "react-data-export/dist/ExcelPlugin/elements/ExcelSheet";
 import { getRoleState } from "../../Services/ServiceRol";
 import { MultiSelect } from "react-multi-select-component";
 import BtnSearch from "../../components/BtnSearch";
+
+import toast, { Toaster } from "react-hot-toast";
+
+import ModalNameFile from "./Modal/ModalNameFile";
 const Auditoria = () => {
 
   const [selected, setSelected] = useState([]);
@@ -125,9 +129,9 @@ const Auditoria = () => {
         )
       })
       setOptions2(data)
-      console.log("OPTION 2",options2);
+      console.log("OPTION 2", options2);
     });
-    
+
   };
 
   const listarEventos = () => {
@@ -330,8 +334,8 @@ const Auditoria = () => {
     setDataSet([{ columns: [], data: [] }]);
     let model_auditoria = filtroRolEvento();
     let model_auditoria1 = { events: [{ id_event: 0 }], roles: [{ id_role: 0 }] };
-    
-    
+
+
     ConsultarAuditoria(
       // selected == [] && selected1 == []
       // ? model_auditoria1 : model_auditoria,
@@ -400,14 +404,14 @@ const Auditoria = () => {
             ],
             data: result.data.map((data) => {
               //console.log("VER DATA QUE TRAE",data.sales_ofi)
-              if(data.sales_ofi === null || data.sales_ofi === ''){
+              if (data.sales_ofi === null || data.sales_ofi === '') {
                 data.sales_ofi = ''
-              }else{
+              } else {
                 data.sales_ofi = data.sales_ofi
               }
-              if(data.indicator === null || data.indicator === ''){
+              if (data.indicator === null || data.indicator === '') {
                 data.indicator = ''
-              }else{
+              } else {
                 data.indicator = data.indicator
               }
               //console.log("VER DATA QUE TRAE 2.0 ",data.sales_ofi)
@@ -435,7 +439,7 @@ const Auditoria = () => {
                   value: formatTime(data.created_at),
                   style: { font: { sz: "14" } },
                 },
-                
+
                 {
                   value: data.sales_ofi,
                   style: { font: { sz: "14" } },
@@ -453,14 +457,14 @@ const Auditoria = () => {
   };
 
   function ordenamiento(d) {
-    if(d.sales_ofi === null || d.sales_ofi === ''){
+    if (d.sales_ofi === null || d.sales_ofi === '') {
       d.sales_ofi = ''
-    }else{
+    } else {
       d.sales_ofi = d.sales_ofi
     }
-    if(d.indicator === null || d.indicator === ''){
+    if (d.indicator === null || d.indicator === '') {
       d.indicator = ''
-    }else{
+    } else {
       d.indicator = d.indicator
     }
     arraycheckbox_export[0].data.push([
@@ -659,16 +663,17 @@ const Auditoria = () => {
   };
 
   function Clear() {
-      setFiltro({
-        search: '',
-        created_at: '',
-        created_up: '',
-      })
-      setSelected([]);
-      setSelected1([]);
-    
+    setFiltro({
+      search: '',
+      created_at: '',
+      created_up: '',
+    })
+    setSelected([]);
+    setSelected1([]);
+
     let model_auditoria = { events: [{ id_event: 0 }], roles: [{ id_role: 0 }] };
     console.log("MODEL AUDTIROIA LIMPIAR", model_auditoria)
+
     // EXPORTAR LO QUE SE MOSTRARÁ EN LA TABLA
     ConsultarAuditoria(
       model_auditoria,
@@ -678,7 +683,7 @@ const Auditoria = () => {
       1,
       Limit,
       1)
-      .then((result)=>{
+      .then((result) => {
         setDataSet([
           {
             columns: [
@@ -735,14 +740,14 @@ const Auditoria = () => {
             ],
             data: result.data.map((data) => {
               //console.log("VER DATA QUE TRAE",data.sales_ofi)
-              if(data.sales_ofi === null || data.sales_ofi === ''){
+              if (data.sales_ofi === null || data.sales_ofi === '') {
                 data.sales_ofi = ''
-              }else{
+              } else {
                 data.sales_ofi = data.sales_ofi
               }
-              if(data.indicator === null || data.indicator === ''){
+              if (data.indicator === null || data.indicator === '') {
                 data.indicator = ''
-              }else{
+              } else {
                 data.indicator = data.indicator
               }
               //console.log("VER DATA QUE TRAE 2.0 ",data.sales_ofi)
@@ -770,7 +775,7 @@ const Auditoria = () => {
                   value: formatTime(data.created_at),
                   style: { font: { sz: "14" } },
                 },
-                
+
                 {
                   value: data.sales_ofi,
                   style: { font: { sz: "14" } },
@@ -784,7 +789,8 @@ const Auditoria = () => {
           },
         ]);
       })
-      // REINICIAR LA TABLA ESTADO INICIAL
+
+    // REINICIAR LA TABLA ESTADO INICIAL
     ConsultarAuditoria(
       model_auditoria,
       '',
@@ -799,12 +805,103 @@ const Auditoria = () => {
       setTotalData(result.totalItems);
       setspinner(false);
     })
-    
-     .catch((err) => console.log(err));
+
+      .catch((err) => console.log(err));
+
+    // DESCARMAR LOS CHECK SELECCIONADOS
+
+    setarraycheckbox_export([{
+      columns: [
+      {
+        title: "NOMBRES",
+        style: { font: { sz: "18", bold: true } },
+        width: { wpx: 125 },
+      },
+      {
+        title: "APELLIDOS",
+        style: { font: { sz: "18", bold: true } },
+        width: { wpx: 125 },
+      },
+      {
+        title: "USUARIO",
+        style: { font: { sz: "18", bold: true } },
+        width: { wpx: 125 },
+      },
+      {
+        title: "CORREO",
+        style: { font: { sz: "18", bold: true } },
+        width: { wpx: 125 },
+      },
+      {
+        title: "ROL",
+        style: { font: { sz: "18", bold: true } },
+        width: { wpx: 125 },
+      },
+      {
+        title: "EVENTO",
+        style: { font: { sz: "18", bold: true } },
+        width: { wpx: 125 },
+      },
+      {
+        title: "FECHA",
+        style: { font: { sz: "18", bold: true } },
+        width: { wpx: 125 },
+      },
+      {
+        title: "HORA",
+        style: { font: { sz: "18", bold: true } },
+        width: { wpx: 125 },
+      },
+      {
+        title: "OFI. VENTAS",
+        style: { font: { sz: "18", bold: true } },
+        width: { wpx: 125 },
+      },
+      {
+        title: "ORI. INGRESO",
+        style: { font: { sz: "18", bold: true } },
+        width: { wpx: 125 },
+      },
+    ], data:[]
+  }])
+
+    ConsultarAuditoria(
+      model_auditoria,
+      '',
+      '',
+      '',
+      Limit,
+      1,
+      0
+    ).then((result) => {
+      for (let i = 0; i < result.data.length; i++) {
+        document.getElementById(
+          "checkbox-body-" + result.data[i].id
+        ).checked = false;
+      }
+    })
+
+      .catch((err) => console.log(err));
+  };
+
+  const [ShowName, setShowName] = useState(false);
+
+  const NameFile = () => {
+    setShowName((prev) => !prev);
   };
 
   return (
     <React.Fragment>
+
+      <ModalNameFile
+        showMdRol={ShowName}
+        setShowMdRol={setShowName}
+        arraycheckbox_export={arraycheckbox_export}
+        DataSet={DataSet}
+      />
+
+      <Toaster />
+
       <div className="container-view">
         <div className="title-section">
           <label> Administración / Auditoría </label>
@@ -812,7 +909,7 @@ const Auditoria = () => {
         </div>
         <div className="container-form">
           <div className="input-box col-md-4">
-            <label className="label-input">Buscar</label>
+            <label className="label-input">Buscar :</label>
             <input
               className="inputcustom"
               type="search"
@@ -854,7 +951,7 @@ const Auditoria = () => {
           </div> */}
 
           <div className="input-box col-md-3">
-            <label className="label-input">Fecha (Desde)</label>
+            <label className="label-input">Fecha (Desde) :</label>
             <input
               className="inputcustom"
               type="date"
@@ -864,7 +961,7 @@ const Auditoria = () => {
             />
           </div>
           <div className="input-box col-md-3">
-            <label className="label-input">Fecha (Hasta)</label>
+            <label className="label-input">Fecha (Hasta) :</label>
             <input
               className="inputcustom"
               type="date"
@@ -876,7 +973,7 @@ const Auditoria = () => {
 
           <div className="input-box col-md-5">
             {/* <pre>{JSON.stringify(selected)}</pre> */}
-            <label className="label-input">Rol</label>
+            <label className="label-input">Rol :</label>
             <MultiSelect
               options={options2}
               value={selected}
@@ -897,7 +994,7 @@ const Auditoria = () => {
 
           <div className="input-box col-md-5">
             {/* <pre>{JSON.stringify(selected1)}</pre> */}
-            <label className="label-input">Evento</label>
+            <label className="label-input">Evento :</label>
             <MultiSelect
               options={options3}
               value={selected1}
@@ -935,7 +1032,35 @@ const Auditoria = () => {
                 onClick={() => Clear()}
               />
             </div>
+
             <div className="col-sm-12 col-md-2 p-1">
+              {dataAuditoria.length != 0 ?
+                (
+                  <BtnSearch
+                    attribute={{
+                      name: "Descargar Excel",
+                      classNamebtn: "btn_search",
+                      disabled: false
+                    }}
+                    onClick={() => NameFile()}
+                  />
+                ) :
+                (
+                  <BtnSearch
+                    attribute={{
+                      name: "Descargar Excel",
+                      classNamebtn: "btn_search",
+                      disabled: true
+                    }}
+                    onClick={() => NameFile()}
+                  />
+                )
+              }
+
+            </div>
+
+
+            {/* <div className="col-sm-12 col-md-2 p-1">
               {arraycheckbox_export[0].data.length > 0 ? (
                 <ExcelFile
                   filename="Data exportada"
@@ -967,7 +1092,7 @@ const Auditoria = () => {
                   <ExcelSheet dataSet={DataSet} name="exportacion" />
                 </ExcelFile>
               )}
-            </div>
+            </div> */}
           </section>
           <div className="container-table">
             <div className="container-table-sm">

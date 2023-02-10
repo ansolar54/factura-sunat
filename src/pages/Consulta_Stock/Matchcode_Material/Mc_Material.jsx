@@ -203,7 +203,7 @@ const Mc_Organiz_Ventas = ({
                       disabled: false,
                       checked: false,
                       matchcode: false,
-                      maxlength: 18,
+                      maxlength: 30,
                     }}
                     handleChange={handleChange}
                   />
@@ -221,7 +221,7 @@ const Mc_Organiz_Ventas = ({
                       disabled: false,
                       checked: false,
                       matchcode: false,
-                      maxlength: 15,
+                      maxlength: 40,
                     }}
                     handleChange={handleChange}
                   />

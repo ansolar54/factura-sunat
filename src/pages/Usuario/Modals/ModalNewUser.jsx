@@ -160,7 +160,7 @@ const ModalNewUser = ({showMdUser, setShowMdUser, MdItemsRoles}) => {
             {
                 showMdUser ? (
                     <div className='container-modal-background' onClick={closeModal} ref={modalRef} >
-                        <div className='modal-wrapper modal-wrapper-sm' >
+                        <div className='modal-wrapper modal-wrapper-sm-1' >
                             <div className='modal-header'>
                                 <div className='modal-title'>
                                     <h5>Nuevo Usuario</h5>
@@ -175,31 +175,31 @@ const ModalNewUser = ({showMdUser, setShowMdUser, MdItemsRoles}) => {
                                 </div>
                                 <div className="row-md">
                                     <div className="col-md col-md-12">
-                                        <label htmlFor="">Nombres:</label>
+                                        <label style={{fontSize: "15px"}} htmlFor="">Nombres:</label>
                                         <InputForm attribute={{type:'text', name:'name', value:Name, className:'inputModal', disabled:false, cheched:false}} handleChange={handleChange}></InputForm>
                                         <span className="errorInput">{Messages.msgName}</span>
                                     </div>
                                 </div>
                                 <div className="row-md">
                                     <div className="col-md col-md-6">
-                                        <label htmlFor="">Apellido Paterno:</label>
+                                        <label style={{fontSize: "15px"}} htmlFor="">Apellido Paterno:</label>
                                         <InputForm attribute={{type:'text', name:'ape_pat', value:Ape_pat, className:'inputModal', disabled:false, cheched:false}} handleChange={handleChange}></InputForm>
                                         <span className="errorInput">{Messages.msgApe_pat}</span>
                                     </div>
                                     <div className="col-md col-md-6">
-                                        <label htmlFor="">Apellido Materno:</label>
+                                        <label style={{fontSize: "15px"}} htmlFor="">Apellido Materno:</label>
                                         <InputForm attribute={{type:'text', name:'ape_mat', value:Ape_mat, className:'inputModal', disabled:false, cheched:false}} handleChange={handleChange}></InputForm>
                                         <span className="errorInput">{Messages.msgApe_mat}</span>
                                     </div>
                                 </div>
                                 <div className="row-md">
                                     <div className="col-md col-md-6">
-                                        <label htmlFor="">Correo electronico:</label>
+                                        <label style={{fontSize: "15px"}} htmlFor="">Correo electronico:</label>
                                         <InputForm attribute={{type:'email', name:'email', value:Email, className:'inputModal', disabled:false, cheched:false}} handleChange={handleChange}></InputForm>
                                         <span className="errorInput">{Messages.msgEmail}</span>
                                     </div>
                                     <div className="col-md col-md-6">
-                                        <label htmlFor="">Usuario:</label>
+                                        <label style={{fontSize: "15px"}} htmlFor="">Usuario:</label>
                                         <InputForm attribute={{type:'text', name:'username', value:Username, className:'inputModal', disabled:false, cheched:false}} handleChange={handleChange}></InputForm>
                                         <span className="errorInput">{Messages.msgUsername}</span>
                                     </div>
@@ -207,18 +207,18 @@ const ModalNewUser = ({showMdUser, setShowMdUser, MdItemsRoles}) => {
                                 
                                 <div className="row-md">
                                     <div className="col-md col-md-6">
-                                        <label htmlFor="">Contraseña:</label>
+                                        <label style={{fontSize: "15px"}} htmlFor="">Contraseña:</label>
                                         <InputForm attribute={{type:'password', name:'password', value:Password, className:'inputModal', disabled:false, cheched:false}} handleChange={handleChange}></InputForm>
                                         <span className="errorInput">{Messages.msgPassword}</span>
                                     </div>
                                     <div className="col-md col-md-6">
-                                        <label htmlFor="">Confirmar Contraseña:</label>
+                                        <label style={{fontSize: "15px"}} htmlFor="">Confirmar Contraseña:</label>
                                         <InputForm attribute={{type:'password', name:'confirm_password', value:Confirm_password, className:'inputModal', disabled:false, cheched:false}} handleChange={handleChange}></InputForm>
                                     </div>
                                 </div>
                                 <div className="row-md">
                                     <div className="col-md col-md-6">
-                                        <label htmlFor="">Role:</label>
+                                        <label style={{fontSize: "15px"}} htmlFor="">Role:</label>
                                         <SelectFormMd attribute={{name:'id_role', disabled:false, default:0}} values={MdItemsRoles} handleChange={handleChange}></SelectFormMd>
                                         <span className="errorInput">{Messages.msgId_role}</span>
                                     </div>

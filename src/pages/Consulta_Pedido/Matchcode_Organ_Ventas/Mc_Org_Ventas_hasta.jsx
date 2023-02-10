@@ -78,16 +78,16 @@ const Mc_Org_Ventas_desde = ({showorgventa, setshoworgventa, setorg_ventas_hasta
                                                 <table className="content-table ">
                                                     <thead>
                                                         <tr>
-                                                            <th>Organiz. ventas</th>
-                                                            <th>Denominación</th>
+                                                            <th style={{textAlign: 'center'}}>Organiz. ventas</th>
+                                                            <th style={{textAlign: 'center'}}>Denominación</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         {
                                                             responseOrgVentas.etOrgVentasField.map((response,key)=>(
                                                                 <tr key={key} onClick={()=>clickcelda(response.vkorgField)}>
-                                                                    <th>{response.vkorgField}</th>
-                                                                    <th>{response.vtextField}</th>
+                                                                    <th style={{textAlign: 'center'}}>{response.vkorgField}</th>
+                                                                    <th style={{textAlign: 'center'}}>{response.vtextField}</th>
                                                                 </tr>
                                                             ))   
                                                         }

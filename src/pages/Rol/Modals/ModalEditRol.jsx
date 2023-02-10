@@ -45,7 +45,7 @@ const ModalEditRol = ({ShowMdEditRol, setShowMdEditRol, MdItemEdit}) => {
     const handleChange = (name, value) => {
         switch (name) {
             case 'name':
-                setName(value)
+                setName(value.toUpperCase())
                 break;
             default:
                 break;
@@ -107,8 +107,8 @@ const ModalEditRol = ({ShowMdEditRol, setShowMdEditRol, MdItemEdit}) => {
                                 </div>
                                 <div className="row-md">
                                     <div className="col-md col-md-12">
-                                        <label htmlFor="">Nombres:</label>
-                                        <InputFormMd attribute={{type:'text', name:'name', value:Name, className:'inputModal', disabled:false, cheched:false}} handleChange={handleChange}></InputFormMd>
+                                        <label style={{fontSize: "15px"}} htmlFor="">Nombre:</label>
+                                        <InputFormMd attribute={{maxLength: 40, type:'text', name:'name', value:Name, className:'inputModal', disabled:false, cheched:false}} handleChange={handleChange}></InputFormMd>
                                         <span className="errorInput">{Messages.msgName}</span>
                                     </div>
                                 </div>

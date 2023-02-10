@@ -5,6 +5,7 @@ import InputForm from "../../../components/InputForm";
 import BtnSearch from "../../../components/BtnSearch";
 import Spinner from "../../../components/Spinner";
 import jwt from "jwt-decode";
+import "./Mc_Cliente_desde_multi.css"
 
 import toast, { Toaster } from "react-hot-toast";
 
@@ -560,6 +561,7 @@ const Mc_Cliente_desde_v2 = ({
                           <tr key={key}>
                             <th style={{ textAlign: "center" }}>
                               <input
+                                className="input-check"
                                 type="checkbox"
                                 id={`checkbox-body-` + response.kunnrField}
                                 onChange={(e) => {

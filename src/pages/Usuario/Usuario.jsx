@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import InputSearch from "../../components/InputSearch";
 import BtnNew from "../../components/BtnNew";
 import {
@@ -17,6 +17,7 @@ import { ValidarRuta } from "../../Services/ServiceValidaUsuario";
 // import './Usuario.css'
 import jwt from "jwt-decode";
 import ChangeStatusPassword from "../../components/ChangeStatusPassword/ChangeStatusPassword";
+import Dialog from "../Cambio_Precio/Dialog";
 
 const Usuario = () => {
   //@MC
@@ -47,7 +48,7 @@ const Usuario = () => {
   //INDICADOR SI YA VALIDO RUTA
   const [indicadorruta, setindicadorruta] = useState(false);
   useEffect(() => {
-      //valida para el nuevo cambio de contraseña
+    //valida para el nuevo cambio de contraseña
     // getUser(jwt(localStorage.getItem("_token")).nameid).then((result) => {
     //     if (result.data[0].status_password === "1") {
     //       setshow_status_password(true);
@@ -55,7 +56,7 @@ const Usuario = () => {
     //       setshow_status_password(false);
     //     }
     //   });
-      //valida acceso a ruta
+    //valida acceso a ruta
     if (indicadorruta == false) {
       setspinnerroute(true);
       ValidarRuta("01").then((result) => {
@@ -142,6 +143,44 @@ const Usuario = () => {
     });
   };
 
+  ///////////////
+
+  const [dialog, setDialog] = useState({
+    message: "",
+    isLoading: false,
+    //Update
+    nameProduct: "",
+  });
+  const itemRef = useRef();
+  const handleDialog = (message, isLoading, nameProduct) => {
+    setDialog({
+      message,
+      isLoading,
+      //Update
+      nameProduct,
+    });
+  };
+  const handleDelete = (item) => {
+    //Update
+    // const index = data.findIndex((p) => p.id === id);
+
+    handleDialog("¿Seguro de eliminar el usuario?", true, "");
+    itemRef.current = item;
+  };
+  const areUSureDelete = (choose) => {
+    console.log(choose);
+    if (choose) {
+      deleteUser(itemRef.current).then((result) => {
+        listar(1);
+      });
+      // updateStateRequest(3, itemRef.current)
+      //anularSolicitud(4, itemRef.current)
+      handleDialog("", false);
+    } else {
+      handleDialog("", false);
+    }
+  };
+
   return (
     <>
       {/* {show_status_password ? (
@@ -211,13 +250,13 @@ const Usuario = () => {
                     <table className="content-table">
                       <thead>
                         <tr>
-                          <th style={{textAlign:"left"}}>ID</th>
-                          <th style={{textAlign:"left"}}>NOMBRES</th>
-                          <th style={{textAlign:"left"}}>USER</th>
-                          <th style={{textAlign:"left"}}>ROLE</th>
-                          <th style={{textAlign:"left"}}>EMAIL</th>
-                          <th style={{textAlign:"left"}}>ESTADO</th>
-                          <th style={{textAlign:"left"}}>ACCION</th>
+                          <th style={{ textAlign: "left" }}>ID</th>
+                          <th style={{ textAlign: "left" }}>NOMBRES</th>
+                          <th style={{ textAlign: "left" }}>USER</th>
+                          <th style={{ textAlign: "left" }}>ROLE</th>
+                          <th style={{ textAlign: "left" }}>EMAIL</th>
+                          <th style={{ textAlign: "left" }}>ESTADO</th>
+                          <th style={{ textAlign: "left" }}>ACCION</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -237,7 +276,7 @@ const Usuario = () => {
                             {item.state == 1 ? (
                               <td>
                                 {jwt(localStorage.getItem("_token")).nameid !==
-                                item.id.toString() ? (
+                                  item.id.toString() ? (
                                   <label className="switch">
                                     <input
                                       type="checkbox"
@@ -274,23 +313,24 @@ const Usuario = () => {
                             )}
                             <td>
                               <i
-                                style={{ cursor: "pointer", margin: "2px" }}
+                                style={{ cursor: "pointer", margin: "6px" }}
                                 title="Editar usuario"
-                                className="fas fa-edit"
+                                className="fas fa-edit fa-lg"
                                 onClick={() => editar(item.id)}
                               ></i>
                               <i
-                                style={{ cursor: "pointer", margin: "2px" }}
+                                style={{ cursor: "pointer", margin: "6px" }}
                                 title="Cambiar contraseña"
-                                className="fas fa-unlock-alt"
+                                className="fas fa-unlock-alt fa-lg"
                                 onClick={() => cambiarPassword(item.id)}
                               ></i>
                               {jwt(localStorage.getItem("_token")).nameid !==
-                              item.id.toString() ? (
+                                item.id.toString() ? (
                                 <i
-                                  style={{ cursor: "pointer", margin: "2px" }}
-                                  className="fas fa-trash-alt"
-                                  onClick={() => EliminarUsuario(item.id)}
+                                  style={{ cursor: "pointer", margin: "6px" }}
+                                  className="fas fa-trash-alt fa-lg"
+                                  // onClick={() => EliminarUsuario(item.id)}
+                                  onClick={() => handleDelete(item.id)}
                                 ></i>
                               ) : null}
                             </td>
@@ -310,6 +350,14 @@ const Usuario = () => {
                     changePage={changePage}
                     prevPage={prevPage}
                     nextPage={nextPage}
+                  />
+                )}
+                {dialog.isLoading && (
+                  <Dialog
+                    //Update
+                    nameProduct={dialog.nameProduct}
+                    onDialog={areUSureDelete}
+                    message={dialog.message}
                   />
                 )}
               </div>

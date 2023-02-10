@@ -23,6 +23,8 @@ import {
   getOficinaVentasSAP,
   RegistrarAuditoria,
 } from "../../../Services/ServiceAuditoria";
+import { EnviarNotificacion, ObtenerTokenDevices } from "../../../Services/ServiceNotiPush";
+import InputForm1 from "../../../components/InputForm1";
 
 const GenerarSolicitud = () => {
   const [showModalMaterial, setShowModalMaterial] = useState(false);
@@ -54,6 +56,9 @@ const GenerarSolicitud = () => {
 
   //CARGA DE SPINNER
   const [spinner, setspinner] = useState(false);
+
+  // LISTA DE TOKENS
+  // const [response_lista_tokens, setresponse_lista_tokens] = useState();
 
   console.log("DATA MATERIAL GENERAR SOLICITUD", dataMaterial);
 
@@ -340,8 +345,6 @@ const GenerarSolicitud = () => {
             // email: "ansolar54@gmail.com",
           };
 
-
-
           // correos = result.data; // se pasa lista de correo de gerentes
           // se debe de enviar canal de Distribución (Canal de Venta)
           let model = {
@@ -384,6 +387,43 @@ const GenerarSolicitud = () => {
                           color: "#FFF",
                         },
                       });
+
+                      // OBTENER TOKEN
+                      let modal_obtener_token = {
+                        mails: [mails]
+                      }
+
+                      // console.log("ARMAR MODAL OBTENER TOKEN",modal_obtener_token)
+
+                      ObtenerTokenDevices(modal_obtener_token).then((result) => {
+                        let tokens_list = [];
+                        console.log("OBTENER TOKEN", result)
+                        if (result.indicator == 1) {
+                          for (let i = 0; i < result.data.length; i++) {
+                            const element = result.data[i];
+                            let token_1 = {
+                              token_device: element.token_device,
+                            };
+                            tokens_list.push(token_1); // se pasa lista de tokens
+                          }
+                        }
+
+                        let modal_enviar_noti = {
+                          tokens: tokens_list,
+                          notification: {
+                            title: "CAMBIO PRECIO",
+                            body: "Solicitud de cambio de precio N° " + model_correo.nro_solicitud
+                          }
+                        }
+
+                        console.log("ARMAR MODAL ENVIAR NOTIFY", modal_enviar_noti)
+
+                        EnviarNotificacion(modal_enviar_noti).then((result) => {
+                          console.log("ENVIAR NOTIFI", result)
+
+                        })
+                      })
+
 
                       // OBTENER OFICINA DE VENTAS DE USUARIO DESDE SAP
                       let ofi_ventas = "";
@@ -580,8 +620,8 @@ const GenerarSolicitud = () => {
               <div className="col-sm-2 d-flex align-items-center">
                 <label>Organización de ventas : </label>
               </div>
-              <div>
-                <InputForm
+              <div style={{ marginRight: "35px" }}>
+                <InputForm1
                   attribute={{
                     name: "org_ventas",
                     type: "text",
@@ -604,8 +644,8 @@ const GenerarSolicitud = () => {
               <div className="col-sm-2 d-flex align-items-center">
                 <label>Cliente : </label>
               </div>
-              <div>
-                <InputForm
+              <div style={{ marginRight: "35px" }}>
+                <InputForm1
                   attribute={{
                     name: "cliente",
                     type: "text",

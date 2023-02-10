@@ -1,6 +1,6 @@
 import React,{useRef,useEffect,useCallback,useState} from 'react';
 import Spinner from '../../../components/Spinner';
-import InputFormMd from '../../../components/InputFormModal'
+import InputForm from '../../../components/InputForm';
 import SelectFormMd from '../../../components/SelectFormModal'
 import BtnSave from '../../../components/BtnSave'
 import BtnCancel from '../../../components/BtnCancel'
@@ -108,7 +108,7 @@ const ModalEditPassUser = ({ShowMdEditPassUser, setShowMdEditPassUser, MdItemEdi
             {
                 ShowMdEditPassUser ? (
                     <div className='container-modal-background' onClick={closeModal} ref={modalRef} >
-                        <div className='modal-wrapper modal-wrapper-sm' >
+                        <div className='modal-wrapper modal-wrapper-sm-3' >
                             <div className='modal-header'>
                                 <div className='modal-title'>
                                     <h5>Cambiar Contraseña</h5>
@@ -123,23 +123,23 @@ const ModalEditPassUser = ({ShowMdEditPassUser, setShowMdEditPassUser, MdItemEdi
                                 </div>
                                 <div className="row-md">
                                     <div className="col-md col-md-6">
-                                        <label htmlFor="">Nombres:</label>
-                                        <InputFormMd attribute={{type:'text', name:'name', value:Name, className:'inputModal', disabled:true, cheched:false}} handleChange={handleChange}></InputFormMd>
+                                        <label style={{fontSize: "15px"}} htmlFor="">Nombres:</label>
+                                        <InputForm attribute={{type:'text', name:'name', value:Name, className:'inputModal', disabled:true, cheched:false}} handleChange={handleChange}></InputForm>
                                     </div>
                                     <div className="col-md col-md-6">
-                                        <label htmlFor="">Usuario:</label>
-                                        <InputFormMd attribute={{type:'text', name:'username', value:Username, className:'inputModal', disabled:true, cheched:false}} handleChange={handleChange}></InputFormMd>
+                                        <label style={{fontSize: "15px"}} htmlFor="">Usuario:</label>
+                                        <InputForm attribute={{type:'text', name:'username', value:Username, className:'inputModal', disabled:true, cheched:false}} handleChange={handleChange}></InputForm>
                                     </div>
                                 </div>                              
                                 <div className="row-md">
                                     <div className="col-md col-md-6">
-                                        <label htmlFor="">Contraseña:</label>
-                                        <InputFormMd attribute={{type:'password', name:'password', value:Password, className:'inputModal', disabled:false, cheched:false}} handleChange={handleChange}></InputFormMd>
+                                        <label style={{fontSize: "15px"}} htmlFor="">Contraseña:</label>
+                                        <InputForm attribute={{type:'password', name:'password', value:Password, className:'inputModal', disabled:false, cheched:false}} handleChange={handleChange}></InputForm>
                                         <span className="errorInput">{Messages.msgPassword}</span>
                                     </div>
                                     <div className="col-md col-md-6">
-                                        <label htmlFor="">Confirmar Contraseña:</label>
-                                        <InputFormMd attribute={{type:'password', name:'confirm_password', value:Confirm_password, className:'inputModal', disabled:false, cheched:false}} handleChange={handleChange}></InputFormMd>
+                                        <label style={{fontSize: "15px"}} htmlFor="">Confirmar Contraseña:</label>
+                                        <InputForm attribute={{type:'password', name:'confirm_password', value:Confirm_password, className:'inputModal', disabled:false, cheched:false}} handleChange={handleChange}></InputForm>
                                     </div>
                                 </div>
                             </div>

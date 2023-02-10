@@ -192,7 +192,7 @@ const Mc_Punto_Exp_hasta = ({
                               onClick={() => clickcelda(response.vstelField)}
                             >
                               <th style={{ textAlign: "center" }}>{response.vstelField}</th>
-                              <th style={{ textAlign: "left" }}>{response.vtextField}</th>
+                              <th style={{ textAlign: "center" }}>{response.vtextField}</th>
                             </tr>
                           )
                         )}

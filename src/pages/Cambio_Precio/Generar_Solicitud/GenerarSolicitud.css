@@ -46,10 +46,10 @@
 }
 
 .go3958317564{
- max-width: 550px  
+ max-width: 550px !important 
 }
 .go2072408551{
-    max-width:inherit;
+    max-width:inherit !important; 
     /* display: inherit;  */
 }
 

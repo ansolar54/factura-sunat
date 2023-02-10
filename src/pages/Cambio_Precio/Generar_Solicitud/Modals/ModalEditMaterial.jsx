@@ -285,7 +285,7 @@ const ModalEditMaterial = ({
             showMcMaterial={showMcMaterial}
             setShowMcMaterial={setShowMcMaterial}
           />
-          <div className="modal-wrapper modal-wrapper-sm">
+          <div className="modal-wrapper modal-wrapper-sm-1">
             <div className="modal-header">
               <div className="modal-title">
                 <h5>Editar Material</h5>

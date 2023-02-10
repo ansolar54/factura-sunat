@@ -257,7 +257,7 @@ useEffect(() => {
                         disabled: false,
                         checked: false,
                         matchcode: false,
-                        maxlength:15
+                        maxlength:40
                       }}
                       handleChange={handleChange}
                     />
@@ -282,8 +282,8 @@ useEffect(() => {
                     <table className="content-table ">
                       <thead>
                         <tr>
-                          <th>Cod. Producto</th>
-                          <th>Nombre de Producto</th>
+                          <th style={{textAlign: 'left'}}>Código de Producto</th>
+                          <th style={{textAlign: 'left'}}>Nombre de Producto</th>
                           {/* <th>Organiz. ventas</th> */}
                         </tr>
                       </thead>

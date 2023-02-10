@@ -16,6 +16,8 @@ import {
 import Spinner from "../../../../components/Spinner";
 import { getUser } from "../../../../Services/ServiceUser";
 import jwt from "jwt-decode";
+import { EnviarNotificacion, ObtenerTokenDevices } from "../../../../Services/ServiceNotiPush";
+import { getOficinaVentasSAP, RegistrarAuditoria } from "../../../../Services/ServiceAuditoria";
 
 const ModalEditMaterial = ({
   showModalEditMaterial,
@@ -25,7 +27,7 @@ const ModalEditMaterial = ({
   orgVentas,
   orgVentasDesc,
 }) => {
-   console.log("MATERIAL EDITAR MIS SOLICITUDES", dataMaterial);
+  console.log("MATERIAL EDITAR MIS SOLICITUDES", dataMaterial);
   //console.log("ORGA. VENTAS",orgVentasDesc);
 
   const [showMcMaterial, setShowMcMaterial] = useState(false);
@@ -101,7 +103,7 @@ const ModalEditMaterial = ({
       ModificarRequestDetail(model).then((result) => {
         console.log(result);
         GetDetalleSolicitud(dataMaterial.id_request).then((result) => {
-           //console.log("RESULTADO MODIFICACION", result);
+          //console.log("RESULTADO MODIFICACION", result);
           setDetalle(result.data);
           // detalle_mat = result.data;
           for (let i = 0; i < result.data.length; i++) {
@@ -124,7 +126,7 @@ const ModalEditMaterial = ({
             if (result.indicator == 1) {
               let client = result.data[0].client_name;
               let nro_solicitud = result.data[0].id.toString();
-               //console.log(result.data[0].id_user);
+              //console.log(result.data[0].id_user);
               let model_usua_notifi = {
                 IsNotif: "1",
                 IsUser: "",
@@ -163,12 +165,12 @@ const ModalEditMaterial = ({
                       id: Number(nro_solicitud),
                       state: "2",
                     };
-                    console.log("impr. model",model);
+                    console.log("impr. model", model);
                     if (result.indicator == 1) {
                       ModificarStateRequest(model).then((result) => {
-                        console.log("estado - modificado",result);
+                        console.log("estado - modificado", result);
                       });
-                      toast.success("Solicitud N° " + model_email_aprob.nro_solicitud+ " modificada correctamente.", {
+                      toast.success("Solicitud N° " + model_email_aprob.nro_solicitud + " modificada correctamente.", {
                         position: "top-center",
                         autoClose: 6000,
                         style: {
@@ -176,6 +178,60 @@ const ModalEditMaterial = ({
                           color: "#fff",
                         },
                       });
+
+                      // OBTENER TOKEN
+                      let modal_obtener_token = {
+                        mails: [mails]
+                      }
+
+                      console.log("ARMAR MODAL OBTENER TOKEN", modal_obtener_token)
+
+                      ObtenerTokenDevices(modal_obtener_token).then((result) => {
+                        let tokens_list = [];
+                        console.log("OBTENER TOKEN", result)
+                        if (result.indicator == 1) {
+                          for (let i = 0; i < result.data.length; i++) {
+                            const element = result.data[i];
+                            let token_1 = {
+                              token_device: element.token_device,
+                            };
+                            tokens_list.push(token_1); // se pasa lista de tokens
+                          }
+                        }
+                        let modal_enviar_noti = {
+                          tokens: tokens_list,
+                          notification: {
+                            title: "MODIFICACIÓN DE SOLICITUD",
+                            body: "Solicitud N° " + model_email_aprob.nro_solicitud + " modificada."
+                          }
+                        }
+                        console.log("ARMAR MODAL ENVIAR NOTIFY", modal_enviar_noti)
+                        EnviarNotificacion(modal_enviar_noti).then((result) => {
+                          console.log("ENVIAR NOTIFI", result)
+
+                        })
+                      })
+
+                      // OBTENER OFICINA DE VENTAS DE USUARIO DESDE SAP
+                      let ofi_ventas = "";
+                      getOficinaVentasSAP({
+                        IsUser: jwt(localStorage.getItem("_token")).username,
+                      }).then((result) => {
+                        if (result.etOfiVentasField.length) {
+                          ofi_ventas =
+                            result.etOfiVentasField[0].codOfventaField +
+                            " - " +
+                            result.etOfiVentasField[0].descripcionField;
+                          //REGISTRO DE AUDITORÍA
+                          RegistrarAuditoria({
+                            id_user: Number(jwt(localStorage.getItem("_token")).nameid),
+                            id_event: 9,
+                            sales_ofi: ofi_ventas,
+                            indicator: "WEB",
+                          });
+                        }
+                      });
+
                       setShowModalEditMaterial(false);
                       setIndicator(false);
                       setspinner(false);
@@ -251,7 +307,7 @@ const ModalEditMaterial = ({
   const guardar = () => {
     console.log("guardar", material.suggested_price, material.lower_limit);
     if (Number(material.suggested_price.replaceAll(",", "")) > material.lower_limit) {
-      toast.error("Precio sugerido debe ser menor a " + convertDecimal(material.lower_limit) + " "+ material.currency, {
+      toast.error("Precio sugerido debe ser menor a " + convertDecimal(material.lower_limit) + " " + material.currency, {
         position: "top-center",
         autoClose: 5000,
         style: {
@@ -279,7 +335,7 @@ const ModalEditMaterial = ({
           color: "#fff",
         },
       });
-    } 
+    }
     else {
       calcularMargen();
     }
@@ -390,13 +446,13 @@ const ModalEditMaterial = ({
   // // const value1 = separador[0] || '';
   // // console.log("OBTENER VALUE", value1)
 
-  if(separador){
+  if (separador) {
     separador.addEventListener('keyup', (e) => {
       var entrada = e.target.value.split('.'),
-       parteEntera = entrada[0].replace(/\,/g, ''),
+        parteEntera = entrada[0].replace(/\,/g, ''),
         parteDecimal = entrada[1],
         salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
- 
+
       e.target.value = salida + (parteDecimal !== undefined ? '.' + parteDecimal : '');
     }, false);
   }
@@ -550,7 +606,7 @@ const ModalEditMaterial = ({
                       checked: false,
                     }}
                     handleChange={handleChange}
-                    onClick={() => {}}
+                    onClick={() => { }}
                   />
                 </div>
               </div>
@@ -569,7 +625,7 @@ const ModalEditMaterial = ({
                       min: extraeFecha(material.start_date),
                     }}
                     handleChange={handleChange}
-                    onClick={() => {}}
+                    onClick={() => { }}
                   />
                 </div>
               </div>
@@ -596,7 +652,7 @@ const ModalEditMaterial = ({
                 }}
                 onClick={() => cancelar()}
               />
-                <BtnSave
+              <BtnSave
                 attribute={{
                   name: "btnGuardar",
                   value: "Guardar",

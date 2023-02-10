@@ -19,7 +19,6 @@ import {
     RegistrarAuditoria,
 } from "../../Services/ServiceAuditoria";
 import InputFormKeyUp from "../../components/InputFormKeyUp";
-import InputFormKeyUp1 from "../../components/InputFormKeyUp1";
 import { MatchcodePromociones } from '../../Services/ServicePromociones';
 import Mc_Org_Ventas_desde from "./Matchcode_Organ_Ventas/Mc_Org_Ventas_desde"
 import Mc_Ofi_Ventas_desde from "./Matchcode_Ofi_Ventas/Mc_Ofi_Ventas_desde"
@@ -864,10 +863,33 @@ const Lista_Precio = () => {
 
     //INPUT material
     function mc_material_desde() {
-        setshowmaterial_desde((prev) => !prev);
+        if (org_ventas_desde == "") {
+            toast.error("Debe seleccionar una Org. Ventas.", {
+                position: "top-center",
+                autoClose: 1000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                }
+            })
+        }else{
+            setshowmaterial_desde((prev) => !prev);
+        }
+        
     }
     function mc_material_hasta() {
+        if (org_ventas_desde == "") {
+            toast.error("Debe seleccionar una Org. Ventas.", {
+                position: "top-center",
+                autoClose: 1000,
+                style: {
+                    backgroundColor: "#212121",
+                    color: "#fff",
+                }
+            })
+        }else{
         setshowmaterial_hasta((prev) => !prev);
+        }
     }
 
     //INPUT organización de ventas
@@ -971,7 +993,7 @@ const Lista_Precio = () => {
         switch (name) {
             //org. ventas
             case "org_ventas_desde":
-                setorg_ventas_desde(value);
+                setorg_ventas_desde(value.toUpperCase());
                 // setFiltroInicial({
                 //     org_ventas: value
                 // })
@@ -1569,6 +1591,7 @@ const Lista_Precio = () => {
                             material_desde={material_desde}
                             material_hasta={material_hasta}
                             setmaterial={setmaterial}
+                            orgVentas={org_ventas_desde}
                         />
                         <Mc_Material_hasta
                             showmaterial={showmaterial_hasta}
@@ -1577,6 +1600,7 @@ const Lista_Precio = () => {
                             material_hasta={material_hasta}
                             material_desde={material_desde}
                             setmaterial={setmaterial}
+                            orgVentas={org_ventas_desde}
                         />
 
                         {/* MODAL MATCHCODE CLIENTE */}
@@ -1629,7 +1653,7 @@ const Lista_Precio = () => {
                                     </label>
                                 </div>
                                 <div className="col-sm-3">
-                                    <InputFormKeyUp1
+                                    <InputFormKeyUp
                                         attribute={{
                                             name: "org_ventas_desde",
                                             id: "org_ventas_desde",
@@ -2298,6 +2322,7 @@ const Lista_Precio = () => {
                                                             }
                                                         />
                                                     </th>
+                                                    {(cliente_desde != "") && (
                                                     <th>
                                                         <input style={{ width: "300px" }}
                                                             type="text"
@@ -2312,6 +2337,7 @@ const Lista_Precio = () => {
                                                             }
                                                         />
                                                     </th>
+                                                    )}
                                                     <th>
                                                         <input
                                                             type="text"

@@ -664,8 +664,8 @@ const ReporteSolicitud = () => {
                             <div className="col-sm-2 d-flex align-items-center">
                                 <label>Fecha Solicitud : </label>
                             </div>
-                            <div className="input-box1" style={{ marginRight: "40px" }}>
-                                <input style={{ width: "190px" }}
+                            <div className="input-box1" style={{ marginRight: "48px" }}>
+                                <input style={{ width: "200px" }}
                                     className="inputcustom"
                                     type="date"
                                     name="fechSolicitud"
@@ -693,7 +693,7 @@ const ReporteSolicitud = () => {
                                 <label>Fecha Aprob / Rech :</label>
                             </div>
                             <div className="input-box1">
-                                <input style={{ width: "190px" }}
+                                <input style={{ width: "215px" }}
                                     className="inputcustom"
                                     type="date"
                                     id="fechAprob"
@@ -796,7 +796,7 @@ const ReporteSolicitud = () => {
                                     {solicitudes.length >= 1
                                         ? solicitudes.map((item, key) => (
                                             <tr key={key}>
-                                                <th style={{ textAlign: "center" }}>{item.solicitante}</th>
+                                                <th style={{ textAlign: "left" }}>{item.solicitante}</th>
                                                 <th style={{ textAlign: "center" }}>
                                                     {item.org_ventas}
                                                 </th>
@@ -809,10 +809,10 @@ const ReporteSolicitud = () => {
                                                 <th style={{ textAlign: "center" }}>
                                                     {item.canal_ventas}
                                                 </th>
-                                                <th style={{ textAlign: "center" }}>
+                                                <th style={{ textAlign: "left" }}>
                                                     {item.cliente}
                                                 </th>
-                                                <th style={{ textAlign: "center" }}>
+                                                <th style={{ textAlign: "left" }}>
                                                     {item.producto}
                                                 </th>
                                                 <th style={{ textAlign: "center" }}>
@@ -824,10 +824,10 @@ const ReporteSolicitud = () => {
                                                 <th style={{ textAlign: "center" }}>
                                                     {(item.margen) * 100} %
                                                 </th>
-                                                <th style={{ textAlign: "center" }}>
+                                                <th style={{ textAlign: "center", color: item.estado == "ANULADO" ? "red" : "", }}>
                                                     {item.estado}
                                                 </th>
-                                                <th style={{ textAlign: "center" }}>
+                                                <th style={{ textAlign: "left" }}>
                                                     {item.aprobador}
                                                 </th>
                                                 <th style={{ textAlign: "center" }}>

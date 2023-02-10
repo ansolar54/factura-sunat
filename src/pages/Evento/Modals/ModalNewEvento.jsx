@@ -48,7 +48,7 @@ const ModalNewEvento = ({showMdRol, setShowMdRol}) => {
     const handleChange = (name, value) => {
         switch (name) {
             case 'name':
-                setName(value)
+                setName(value.toUpperCase())
                 break;
             default:
                 break;
@@ -111,8 +111,8 @@ const ModalNewEvento = ({showMdRol, setShowMdRol}) => {
                                 </div>
                                 <div className="row-md">
                                     <div className="col-md col-md-12">
-                                        <label htmlFor="">Nombre:</label>
-                                        <InputFormMd attribute={{type:'text', name:'name', value:Name, className:'inputModal', disabled:false, cheched:false}} handleChange={handleChange}></InputFormMd>
+                                        <label style={{fontSize: "15px"}} htmlFor="">Nombre:</label>
+                                        <InputFormMd attribute={{maxLength: 40, type:'text', name:'name', value:Name, className:'inputModal', disabled:false, cheched:false}} handleChange={handleChange}></InputFormMd>
                                         <span className="errorInput">{Messages.msgName}</span>
                                     </div>
                                 </div>

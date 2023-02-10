@@ -13,6 +13,8 @@ import { getsOperations } from "../../Services/ServiceOperation";
 import ModalAsignarPerfiles from "./Modals/ModalAsignarPerfiles";
 import { ConfiPerfiles } from "../../Services/ServiceCambioPrecio";
 
+import toast, { Toaster } from "react-hot-toast";
+
 // import './Usuario.css'
 
 const Rol = () => {
@@ -156,6 +158,16 @@ const Rol = () => {
         setPerfiles(data);
         setShowModalAsignarPerfil((prev) => !prev);
       }
+      else {
+        toast.error("Falta agregar rol en SAP.", {
+          position: "top-center",
+          autoClose: 1000,
+          style: {
+            backgroundColor: "#212121",
+            color: "#fff",
+          }
+        })
+      }
     });
     // setShowModalAsignarPerfil((prev) => !prev);
   };
@@ -191,6 +203,8 @@ const Rol = () => {
         perfiles={perfiles}
         idRol={idRol}
       />
+
+      <Toaster />
 
       <div className="title-section">
         <label> Administración / Rol </label>
@@ -268,14 +282,14 @@ const Rol = () => {
                     <i
                       style={{ cursor: "pointer" }}
                       title="Editar rol"
-                      className="fas fa-edit"
+                      className="fas fa-edit fa-lg"
                       onClick={() => editar(item.id)}
                     ></i>
                     {/* <i style={{ cursor: "pointer", margin: "2px" }} title="Eliminar rol"  className="fas fa-trash-alt" onClick={() => eliminar(item.id)}></i> */}
                     <i
                       style={{ cursor: "pointer", marginLeft: "10px" }}
                       title="Asignar perfiles"
-                      className="fas fa-bacon"
+                      className="fas fa-bacon fa-lg"
                       onClick={() => openModalPerfiles(item)}
                     ></i>
                   </td>

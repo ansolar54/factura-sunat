@@ -5,7 +5,7 @@ const InputForm1 = ({ attribute, handleChange, onClick }) => {
   return (
     <div className="content-inputform">
       <input
-        style={{ width: "190px" }}
+       
         className="inputform1"
         type={attribute.type}
         id={attribute.id}

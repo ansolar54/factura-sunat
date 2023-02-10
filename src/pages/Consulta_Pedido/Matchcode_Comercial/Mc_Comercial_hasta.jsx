@@ -177,7 +177,7 @@ const Mc_Comercial_hasta = ({
                         disabled: false,
                         checked: false,
                         matchcode: false,
-                        maxlength:10
+                        maxlength:30
                       }}
                       handleChange={handleChange}
                     />

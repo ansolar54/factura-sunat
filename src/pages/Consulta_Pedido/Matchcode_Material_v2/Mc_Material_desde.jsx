@@ -416,7 +416,7 @@ const Mc_Material_desde = ({
                         disabled: false,
                         checked: false,
                         matchcode: false,
-                        maxlength:15
+                        maxlength:40
                       }}
                       handleChange={handleChange}
                     />
@@ -446,8 +446,8 @@ const Mc_Material_desde = ({
                           <th>Tipo Material</th>
                           <th>Grupo Artículo</th>
                           <th>Centro</th> */}
-                          <th>Cod. Producto</th>
-                          <th>Nombre de Producto</th>
+                          <th style={{textAlign: 'left'}}>Código de Producto</th>
+                          <th style={{textAlign: 'left'}}>Nombre de Producto</th>
                           {/* <th>Organiz. ventas</th> */}
                         </tr>
                       </thead>

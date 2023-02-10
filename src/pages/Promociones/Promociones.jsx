@@ -1226,7 +1226,7 @@ const Promociones = () => {
             <section>
               <div style={{ margin: "10px" }} className="row">
                 <div className="col-sm-2 d-flex align-items-center">
-                  <label>Organización de ventas:</label>
+                  <label>Organización de ventas :</label>
                 </div>
                 <div className="col-sm-2">
                   <InputFormKeyUp
@@ -1258,7 +1258,7 @@ const Promociones = () => {
                   {/* <label>{nameOrgVentas}</label> */}
                 </div>
                 <div className="col-sm-2 d-flex align-items-center">
-                  <label>Canal distribuidor:</label>
+                  <label>Canal distribuidor :</label>
                 </div>
                 <div className="col-sm-2">
                   <InputForm
@@ -1314,7 +1314,7 @@ const Promociones = () => {
                   </div> */}
 
                 <div className="col-sm-2 d-flex align-items-center">
-                  <label>Válido el:</label>
+                  <label>Válido el :</label>
                 </div>
                 <div className="col-sm-2">
                   <InputForm
@@ -1343,7 +1343,7 @@ const Promociones = () => {
                 </div>
 
                 <div className="col-sm-2 d-flex align-items-center">
-                  <label>Oficina de ventas:</label>
+                  <label>Oficina de ventas :</label>
                 </div>
                 <div className="col-sm-2">
                   <InputFormKeyUp
@@ -1391,7 +1391,7 @@ const Promociones = () => {
                 />
               </div>
               {resultado_consulta_promociones.length ? (
-                <div className="col-sm-12 col-md-12 m-1">
+                <div className="col-sm-12 col-md-12 p-1">
                   <BtnSearch
                     attribute={{
                       name: text_btn_filtro,

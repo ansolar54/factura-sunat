@@ -455,7 +455,7 @@ const Mc_Cliente_desde_v2 = ({
               style={{ margin: "auto", paddingTop: "50px" }}
             >
               <div className="col-sm-4 d-flex align-items-center">
-                <label>Cod. Cliente</label>
+                <label>Cod. Cliente :</label>
               </div>
               <div className="col-sm-8">
                 <InputForm
@@ -473,7 +473,7 @@ const Mc_Cliente_desde_v2 = ({
               </div>
 
               <div className="col-sm-4 d-flex align-items-center">
-                <label>Nombre Cliente</label>
+                <label>Nombre Cliente :</label>
               </div>
               <div className="col-sm-8">
                 <InputForm
@@ -491,7 +491,7 @@ const Mc_Cliente_desde_v2 = ({
               </div>
 
               <div className="col-sm-4 d-flex align-items-center">
-                <label>RUC</label>
+                <label>RUC :</label>
               </div>
               <div className="col-sm-8">
                 <InputForm
@@ -543,7 +543,7 @@ const Mc_Cliente_desde_v2 = ({
                         />
                       </th>
                       <th>Cod. Cliente</th>
-                      <th>Nombre Cliente</th>
+                      <th style={{textAlign:"center"}}>Nombre Cliente</th>
                       <th>Zona del Cliente</th>
                       <th>RUC</th>
 

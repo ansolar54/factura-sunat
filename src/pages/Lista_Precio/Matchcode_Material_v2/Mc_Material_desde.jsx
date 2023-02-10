@@ -7,6 +7,7 @@ import BtnSearch from "../../../components/BtnSearch";
 import "./Mc_Material_desde.css";
 import Mc_Organiz_Ventas_Mat from "../../Consulta_Stock/Matchcode_Organiz_Ventas/Mc_Organiz_Ventas_Mat";
 import jwt from "jwt-decode";
+import { MatchMaterial } from "../../../Services/ServiceCambioPrecio";
 
 const Mc_Material_desde = ({
   showmaterial,
@@ -15,6 +16,7 @@ const Mc_Material_desde = ({
   material_desde,
   material_hasta,
   setmaterial,
+  orgVentas
 }) => {
   const [IsRegxpag] = useState(15); // cantidad de datos por página
 
@@ -148,13 +150,13 @@ const Mc_Material_desde = ({
     let model_material = {
       IsNpag: nro_pag,
       IsRegxpag: IsRegxpag,
-      IsNameProduct: NomProductoMat,
-      IsOrgventas: OrganizVentasMat,
-      IsProduct: CodProductoMat,
+      IsNameMatnr: NomProductoMat,
+      IsVkorg: orgVentas,
+      IsMatnr: CodProductoMat,
       IsUser: jwt(localStorage.getItem("_token")).username,
     };
 
-    ConsStockMaterial(model_material).then((result) => {
+    MatchMaterial(model_material).then((result) => {
       setresponseMaterial(result);
       setTotalData(result.esRegtotField);
       setViewInfo(true);
@@ -367,7 +369,7 @@ const Mc_Material_desde = ({
                         <InputForm attribute={{name:'mc_ItMaktx_hasta',type:'text',value:ItMaktx_hasta,disabled:false,checked:false,matchcode:false}} handleChange={handleChange} />
                     </div> */}
 
-                  <div className="col-sm-4 d-flex align-items-center">
+                  {/* <div className="col-sm-4 d-flex align-items-center">
                     <label>Organiz. ventas</label>
                   </div>
                   <div className="col-sm-8">
@@ -384,10 +386,10 @@ const Mc_Material_desde = ({
                       handleChange={handleChange}
                       onClick={() => mcOrganizVentasMat()}
                     />
-                  </div>
+                  </div> */}
 
                   <div className="col-sm-4 d-flex align-items-center">
-                    <label>Código Producto</label>
+                    <label>Código Producto :</label>
                   </div>
                   <div className="col-sm-8">
                     <InputForm
@@ -398,14 +400,14 @@ const Mc_Material_desde = ({
                         disabled: false,
                         checked: false,
                         matchcode: false,
-                        maxlength:18
+                        maxlength:20
                       }}
                       handleChange={handleChange}
                     />
                   </div>
 
                   <div className="col-sm-4 d-flex align-items-center">
-                    <label>Nombre Producto</label>
+                    <label>Nombre Producto : </label>
                   </div>
                   <div className="col-sm-8">
                     <InputForm
@@ -416,7 +418,7 @@ const Mc_Material_desde = ({
                         disabled: false,
                         checked: false,
                         matchcode: false,
-                        maxlength:15
+                        maxlength:40
                       }}
                       handleChange={handleChange}
                     />
@@ -446,8 +448,8 @@ const Mc_Material_desde = ({
                           <th>Tipo Material</th>
                           <th>Grupo Artículo</th>
                           <th>Centro</th> */}
-                          <th>Cod. Producto</th>
-                          <th>Nombre de Producto</th>
+                          <th style={{textAlign:"left"}}>Cod. Producto</th>
+                          <th style={{textAlign:"left"}}>Nombre de Producto</th>
                           {/* <th>Organiz. ventas</th> */}
                         </tr>
                       </thead>

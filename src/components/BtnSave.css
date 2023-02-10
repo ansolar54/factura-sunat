@@ -1,6 +1,7 @@
 /* PARA BOTON DE BUSCAR*/
 .btn_save{
     margin: 2%;
+    padding-top: 10px;
     background: var(--primary-color);
     border: none;
     outline: none;

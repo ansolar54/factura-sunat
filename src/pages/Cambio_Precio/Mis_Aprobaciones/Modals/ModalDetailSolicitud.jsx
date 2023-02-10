@@ -20,7 +20,7 @@ const ModalDetailSolicitud = ({
 }) => {
   // console.log("CODI CLIENT", codi_client);
   // console.log("ORG_VENTAS", org_ventas);
-   console.log("OBTENER SOLI 2",obtenerSolicitudesF);
+  //  console.log("OBTENER SOLI 2",obtenerSolicitudesF);
   const modalRef = useRef();
   const closeModal = (e) => {
     if (modalRef.current === e.target) {

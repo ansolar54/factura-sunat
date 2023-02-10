@@ -7,6 +7,7 @@ import BtnSearch from "../../../components/BtnSearch";
 import "./Mc_Material_desde.css";
 import Mc_Organiz_Ventas_Mat from "../../Consulta_Stock/Matchcode_Organiz_Ventas/Mc_Organiz_Ventas_Mat";
 import jwt from "jwt-decode";
+import { MatchMaterial } from "../../../Services/ServiceCambioPrecio";
 
 const Mc_Material_desde = ({
   showmaterial,
@@ -15,6 +16,7 @@ const Mc_Material_desde = ({
   material_hasta,
   material_desde,
   setmaterial,
+  orgVentas
 }) => {
   const [IsRegxpag] = useState(15); // cantidad de datos por página
 
@@ -124,13 +126,13 @@ useEffect(() => {
     let model_material = {
       IsNpag: nro_pag,
       IsRegxpag: IsRegxpag,
-      IsNameProduct: NomProductoMat,
-      IsOrgventas: OrganizVentasMat,
-      IsProduct: CodProductoMat,
+      IsNameMatnr: NomProductoMat,
+      IsVkorg: orgVentas,
+      IsMatnr: CodProductoMat,
       IsUser: jwt(localStorage.getItem("_token")).username,
     };
 
-    ConsStockMaterial(model_material).then((result) => {
+    MatchMaterial(model_material).then((result) => {
       setresponseMaterial(result);
       setTotalData(result.esRegtotField);
       setViewInfo(true);
@@ -208,7 +210,7 @@ useEffect(() => {
                   className="row"
                   style={{ margin: "auto", paddingTop: "50px" }}
                 >
-                  <div className="col-sm-4 d-flex align-items-center">
+                  {/* <div className="col-sm-4 d-flex align-items-center">
                     <label>Organiz. ventas</label>
                   </div>
                   <div className="col-sm-8">
@@ -225,10 +227,10 @@ useEffect(() => {
                       handleChange={handleChange}
                       onClick={() => mcOrganizVentasMat()}
                     />
-                  </div>
+                  </div> */}
 
                   <div className="col-sm-4 d-flex align-items-center">
-                    <label>Código Producto</label>
+                    <label>Código Producto :</label>
                   </div>
                   <div className="col-sm-8">
                     <InputForm
@@ -246,7 +248,7 @@ useEffect(() => {
                   </div>
 
                   <div className="col-sm-4 d-flex align-items-center">
-                    <label>Nombre Producto</label>
+                    <label>Nombre Producto : </label>
                   </div>
                   <div className="col-sm-8">
                     <InputForm
@@ -282,8 +284,8 @@ useEffect(() => {
                     <table className="content-table ">
                       <thead>
                         <tr>
-                          <th>Cod. Producto</th>
-                          <th>Nombre de Producto</th>
+                          <th style={{textAlign:"left"}}>Cod. Producto</th>
+                          <th style={{textAlign:"left"}}>Nombre de Producto</th>
                           {/* <th>Organiz. ventas</th> */}
                         </tr>
                       </thead>

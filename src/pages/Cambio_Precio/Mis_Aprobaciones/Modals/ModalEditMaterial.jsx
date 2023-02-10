@@ -15,11 +15,13 @@ import {
   ModificarStateRequest,
   AprobSolicitud,
   UpdateDetailRequestLastAprobRequest,
-  
+
 } from "../../../../Services/ServiceCambioPrecio";
 import Spinner from "../../../../components/Spinner";
 import { getUser } from "../../../../Services/ServiceUser";
 import jwt from "jwt-decode";
+import { EnviarNotificacion, ObtenerTokenDevices } from "../../../../Services/ServiceNotiPush";
+import { getOficinaVentasSAP, RegistrarAuditoria } from "../../../../Services/ServiceAuditoria";
 
 const ModalEditMaterial = ({
   showModalEditMaterial,
@@ -148,8 +150,8 @@ const ModalEditMaterial = ({
 
             let material = {
               id: element.id,
-              suggested_price: element.actual_price,
-              lower_limit: element.suggested_price,
+              suggested_price: Number(element.actual_price),
+              lower_limit: Number(element.suggested_price),
             };
             detailMaterial.push(material);
 
@@ -221,7 +223,7 @@ const ModalEditMaterial = ({
                           };
                           console.log('MODEL APROB ', model_aprob);
                           AprobSolicitud(model_aprob).then((result) => {
-                            console.log("MODIFICADA Y APROBADA",result);
+                            console.log("MODIFICADA Y APROBADA", result);
                             if (result.etMsgReturnField[0].successField == "X") {
                               // let email_solicitante = "";
                               // modificacion de detalle de solicitud en base de datos
@@ -232,7 +234,7 @@ const ModalEditMaterial = ({
                                 console.log("result modify detail", result);
                                 setIndicator(false);
                                 //setIsLoading(false)
-                                toast.success("Solicitud N° " + model_email_aprob.nro_solicitud+" modificada y aprobada correctamente.", {
+                                toast.success("Solicitud N° " + model_email_aprob.nro_solicitud + " modificada y aprobada correctamente.", {
                                   position: "top-center",
                                   autoClose: 6000,
                                   style: {
@@ -240,6 +242,63 @@ const ModalEditMaterial = ({
                                     color: "#fff",
                                   },
                                 });
+
+                                // OBTENER TOKEN
+                                let modal_obtener_token = {
+                                  mails: [mails]
+                                }
+
+                                console.log("ARMAR MODAL OBTENER TOKEN", modal_obtener_token)
+
+                                ObtenerTokenDevices(modal_obtener_token).then((result) => {
+                                  let tokens_list = [];
+                                  console.log("OBTENER TOKEN", result)
+                                  if (result.indicator == 1) {
+                                    for (let i = 0; i < result.data.length; i++) {
+                                      const element = result.data[i];
+                                      let token_1 = {
+                                        token_device: element.token_device,
+                                      };
+                                      tokens_list.push(token_1); // se pasa lista de tokens
+                                    }
+                                  }
+
+                                  let modal_enviar_noti = {
+                                    tokens: tokens_list,
+                                    notification: {
+                                      title: "APROBACIÓN DE SOLICITUD",
+                                      body: "Solicitud N° " + model_email_aprob.nro_solicitud + " modificada y aprobada correctamente."
+                                    }
+                                  }
+
+                                  console.log("ARMAR MODAL ENVIAR NOTIFY", modal_enviar_noti)
+
+                                  EnviarNotificacion(modal_enviar_noti).then((result) => {
+                                    console.log("ENVIAR NOTIFI", result)
+
+                                  })
+                                })
+
+                                // OBTENER OFICINA DE VENTAS DE USUARIO DESDE SAP
+                                let ofi_ventas = "";
+                                getOficinaVentasSAP({
+                                  IsUser: jwt(localStorage.getItem("_token")).username,
+                                }).then((result) => {
+                                  if (result.etOfiVentasField.length) {
+                                    ofi_ventas =
+                                      result.etOfiVentasField[0].codOfventaField +
+                                      " - " +
+                                      result.etOfiVentasField[0].descripcionField;
+                                    //REGISTRO DE AUDITORÍA
+                                    RegistrarAuditoria({
+                                      id_user: Number(jwt(localStorage.getItem("_token")).nameid),
+                                      id_event: 9,
+                                      sales_ofi: ofi_ventas,
+                                      indicator: "WEB",
+                                    });
+                                  }
+                                });
+
                                 setShowModalEditMaterial(false);
                                 setspinner(false);
                                 obtenerSolicitudesF(1);

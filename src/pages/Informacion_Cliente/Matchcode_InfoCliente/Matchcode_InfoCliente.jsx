@@ -221,7 +221,7 @@ const [spinner, setspinner] = useState(false);
             </section>
             <section className="section-table-modal">
               <div className="container-table responsive-table-all">
-              {spinner && <Spinner />}
+              
                 <table className="content-table ">
                   <thead>
                     <tr>
@@ -256,7 +256,7 @@ const [spinner, setspinner] = useState(false);
                     }
                   </tbody>
                 </table>
-               
+                {spinner && <Spinner />}
               </div>
             </section>
 

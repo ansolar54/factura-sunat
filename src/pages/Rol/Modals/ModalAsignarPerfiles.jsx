@@ -122,7 +122,7 @@ const ModalAsignarPerfiles = ({
           onClick={closeModal}
           ref={modalRef}
         >
-          <div className="modal-wrapper modal-wrapper-35-40">
+          <div className="modal-wrapper modal-wrapper-35-45" style={{fontSize: "18px"}}>
             <div className="modal-header">
               <div className="modal-title">
                 <h5>Asignar Perfil</h5>

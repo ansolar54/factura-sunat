@@ -1695,7 +1695,7 @@ const Info_Cliente = () => {
             <section>
               <div style={{ margin: "10px" }} className="row">
                 <div className="col-sm-3 d-flex align-items-center">
-                  <label>Cod. Cliente</label>
+                  <label>Cod. Cliente : </label>
                 </div>
                 <div className="col-sm-9">
                   <InputForm
@@ -1743,7 +1743,7 @@ const Info_Cliente = () => {
                 </div>
 
                 <div className="col-sm-3 d-flex align-items-center">
-                  <label>Nombre Cliente</label>
+                  <label>Nombre Cliente :</label>
                 </div>
                 <div className="col-sm-9">
                   <InputForm
@@ -1786,7 +1786,7 @@ const Info_Cliente = () => {
                 </div>
 
                 <div className="col-sm-3 d-flex align-items-center">
-                  <label>Canal distrib.</label>
+                  <label>Canal distrib. :</label>
                 </div>
                 <div className="col-sm-9" style={{ marginBottom: "20px" }}>
                   <InputForm
@@ -1806,7 +1806,7 @@ const Info_Cliente = () => {
                 </div>
 
                 <div className="col-sm-3 d-flex align-items-center">
-                  <label>Creado el:</label>
+                  <label>Creado el :</label>
                 </div>
                 <div className="col-sm-9" style={{ marginBottom: "20px" }}>
                   <InputForm
@@ -1828,7 +1828,7 @@ const Info_Cliente = () => {
                 {ctaCreditoField != "" ? (
                   <react.Fragment>
                     <div className="col-sm-3 d-flex align-items-center">
-                      <label>Relacionado a:</label>
+                      <label>Relacionado a :</label>
                     </div>
 
                     <div className="col-sm-9" style={{ marginBottom: "20px" }}>
@@ -1848,7 +1848,7 @@ const Info_Cliente = () => {
                 ) : null}
 
                 <div className="col-sm-3 d-flex align-items-center">
-                  <label>Condición AGRO</label>
+                  <label>Condición AGRO :</label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm
@@ -1865,7 +1865,7 @@ const Info_Cliente = () => {
                 </div>
 
                 <div className="col-sm-3 d-flex align-items-center">
-                  <label>Lista precios</label>
+                  <label>Lista precios :</label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm
@@ -1885,7 +1885,7 @@ const Info_Cliente = () => {
                 </div>
 
                 <div className="col-sm-3 d-flex align-items-center">
-                  <label>Condición ESPE</label>
+                  <label>Condición ESPE :</label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm
@@ -1902,7 +1902,7 @@ const Info_Cliente = () => {
                 </div>
 
                 <div className="col-sm-3 d-flex align-items-center">
-                  <label>Lista precios</label>
+                  <label>Lista precios :</label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm
@@ -1922,7 +1922,7 @@ const Info_Cliente = () => {
                 </div>
 
                 <div className="col-sm-3 d-flex align-items-center">
-                  <label>Condición SEMI</label>
+                  <label>Condición SEMI :</label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm
@@ -1939,7 +1939,7 @@ const Info_Cliente = () => {
                 </div>
 
                 <div className="col-sm-3 d-flex align-items-center">
-                  <label>Lista precios</label>
+                  <label>Lista precios :</label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm
@@ -1959,7 +1959,7 @@ const Info_Cliente = () => {
                 </div>
 
                 <div className="col-sm-3 d-flex align-items-center">
-                  <label>Condición SALU</label>
+                  <label>Condición SALU :</label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm
@@ -1976,7 +1976,7 @@ const Info_Cliente = () => {
                 </div>
 
                 <div className="col-sm-3 d-flex align-items-center">
-                  <label>Lista precios</label>
+                  <label>Lista precios :</label>
                 </div>
                 <div className="col-sm-3">
                   <InputForm

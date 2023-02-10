@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import InputForm from "../../../components/InputForm";
+import InputFormValidate from "../../../components/InputFormValidate";
 import BtnSearch from "../../../components/BtnSearch";
 import Pagination from "../../../components/Pagination";
 import Spinner from "../../../components/Spinner";
 import jwt from "jwt-decode";
 import { MatchCliente } from "../../../Services/ServiceCambioPrecio";
 import { act } from "react-dom/test-utils";
+import { computeHeadingLevel } from "@testing-library/react";
+import toast, { Toaster } from "react-hot-toast";
 
 const McCliente = ({
   showMcCliente,
@@ -101,10 +104,55 @@ const McCliente = ({
         setIsCliente(value);
         break;
       case "mc_deucli_razonsocial":
-        setIsName1(value);
+        setIsName1(value.toUpperCase());
         break;
       case "IsStcd1":
         setIsStcd1(value);
+        break;
+      default:
+        break;
+    }
+  }
+
+  function handleChange1(e) {
+    switch (e.target.name) {
+      case "mc_deucli_cliente":
+        console.log("TECLADO NUMERICO",e.keyCode)
+        if ((e.keyCode < '48' || e.keyCode > '57') && (e.keyCode < '96' || e.keyCode > '105') && (e.keyCode != '8')) {
+          console.log('HOLA CODIGO')
+          
+          toast.error("Solo debe ingresar números.", {
+            position: "top-center",
+            autoClose: 1000,
+            style: {
+              backgroundColor: "#212121",
+              color: "#fff",
+            }
+          })
+          
+        }
+
+        break;
+      // case "mc_deucli_razonsocial":
+      //   setIsName1(value.toUpperCase());
+      //   break;
+      case "IsStcd1":
+        console.log("TECLADO NUMERICO",e.keyCode)
+        if ((e.keyCode < '48' || e.keyCode > '57') && (e.keyCode < '96' || e.keyCode > '105') && (e.keyCode < '37' || e.keyCode > '40')
+        && (e.keyCode != '8') && (e.keyCode != '9') && (e.keyCode != '13') && (e.keyCode != '17') && (e.keyCode != '18') && (e.keyCode != '32')  ) {
+          console.log('HOLA RUC')
+          toast.error("Solo debe ingresar números.", {
+            position: "top-center",
+            autoClose: 800,
+            style: {
+              backgroundColor: "#212121",
+              color: "#fff",
+            }
+          })
+          
+        }
+       
+
         break;
       default:
         break;
@@ -141,25 +189,26 @@ const McCliente = ({
   }
 
   ////////////////
-  
-//   const changenumber = (e) => {
-//     console.log("entrando a evento")
-//     const re = /^[0-9\b]+$/;
 
-//     // if value is not blank, then test the regex
-//     this.changenumber =  this.changenumber.bind(this)
-//     if (e.target.value === '' || re.test(e.target.value)) {
-      
-//        this.setState({value: e.target.value})
-//     }
+  //   const changenumber = (e) => {
+  //     console.log("entrando a evento")
+  //     const re = /^[0-9\b]+$/;
 
-    
-// }
+  //     // if value is not blank, then test the regex
+  //     this.changenumber =  this.changenumber.bind(this)
+  //     if (e.target.value === '' || re.test(e.target.value)) {
+
+  //        this.setState({value: e.target.value})
+  //     }
+
+
+  // }
 
 
 
   return (
     <>
+    <Toaster />
       {showMcCliente ? (
         <div
           className="container-modal-background"
@@ -172,10 +221,10 @@ const McCliente = ({
               style={{ margin: "auto", paddingTop: "50px" }}
             >
               <div className="col-sm-3 d-flex align-items-center">
-                <label>Cod. Cliente</label>
+                <label>Cod. Cliente :</label>
               </div>
               <div className="col-sm-9">
-                <InputForm
+                <InputFormValidate
                   attribute={{
                     name: "mc_deucli_cliente",
                     type: "text",
@@ -186,12 +235,14 @@ const McCliente = ({
                     maxlength: 10
                   }}
                   handleChange={handleChange}
-                  
+                  onKeyDown={(e) => handleChange1(e)}
+
                 />
+
               </div>
 
               <div className="col-sm-3 d-flex align-items-center">
-                <label>Nombre Cliente</label>
+                <label>Nombre Cliente :</label>
               </div>
               <div className="col-sm-9">
                 <InputForm
@@ -209,23 +260,25 @@ const McCliente = ({
               </div>
 
               <div className="col-sm-3 d-flex align-items-center">
-                <label>RUC</label>
+                <label>RUC :</label>
               </div>
               <div className="col-sm-9">
-                <InputForm
+                <InputFormValidate
+
                   attribute={{
                     name: "IsStcd1",
                     id: "ruc",
-                    type: "text",
+                    type: "number",
                     value: IsStcd1,
                     disabled: false,
                     checked: false,
                     matchcode: false,
-                    maxlength: 11,
-                    //placeholder: "Ingresar RUC",
+                    // maxlength: 11,
+                    max:11,
+                    // placeholder: "Ingresar RUC",
                   }}
                   handleChange={handleChange}
-                  //onKeyDown={(e) => changenumber(e)}
+                  onKeyDown={(e) => handleChange1(e)}
                 />
 
               </div>

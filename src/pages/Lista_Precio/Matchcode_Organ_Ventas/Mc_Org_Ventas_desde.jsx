@@ -91,8 +91,8 @@ const Mc_Org_Ventas_desde = ({showorgventa, setshoworgventa, setorg_ventas_desde
                                                         {
                                                             responseOrgVentas.etOrgVentasField.map((response,key)=>(
                                                                 <tr key={key} onClick={()=>clickcelda(response)}>
-                                                                    <th>{response.vkorgField}</th>
-                                                                    <th>{response.vtextField}</th>
+                                                                    <th style={{textAlign:"center"}}>{response.vkorgField}</th>
+                                                                    <th style={{textAlign:"center"}}>{response.vtextField}</th>
                                                                 </tr>
                                                             ))   
                                                         }

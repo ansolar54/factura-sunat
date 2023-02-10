@@ -2,6 +2,11 @@
 *{
   margin: 0;
   font-family: 'Roboto', sans-serif;
+  zoom: 0.975
+}
+
+input[type=checkbox]{
+  transform: scale(1.4);
 }
 
 :root{
@@ -17,6 +22,7 @@
   --text-color-white:#ffffff;
   --dddddd-color : #dddddd;
   --f3f3f3-color: #f3f3f3;
+  
 }
  body-dark {
   background:#333333;
@@ -86,7 +92,7 @@ input[type='radio']:checked:after {
 
 .container-view{
   padding: 25px;
-  margin-left: 340px;
+  margin-left: 300px;
   margin-right: 40px;
   margin-top: 40px;
   margin-bottom: 40PX;
@@ -153,7 +159,7 @@ input[type='radio']:checked:after {
 .content-table{
   border-collapse: collapse;
   margin: 15px 0;
-  font-size: 0.9em;
+  font-size: 0.97em;
   min-width: 400px;
   border-radius: 5px 5px 5px 5px;
   overflow: scroll;
@@ -265,6 +271,18 @@ input[type='radio']:checked:after {
   width: 50%;
   height: 95%;
 }
+.modal-wrapper-sm-1{
+  width: 50%;
+  height: 80%;
+}
+.modal-wrapper-sm-2{
+  width: 50%;
+  height: 70%;
+}
+.modal-wrapper-sm-3{
+  width: 50%;
+  height: 50%;
+}
 .modal-wrapper-30{
   width: 45%;
   height: 95%;
@@ -276,6 +294,10 @@ input[type='radio']:checked:after {
 .modal-wrapper-35-40{
   width: 40%;
   height: 85%;
+}
+.modal-wrapper-35-45{
+  width: 30%;
+  height: 90%;
 }
 .modal-wrapper-role{
   width: 30%;
@@ -296,6 +318,7 @@ input[type='radio']:checked:after {
   z-index: 10;
   border-radius: 10px;
   overflow: auto;
+  /* font-size: 17px; */
 }
 .modal-wrapper-rangos{
   box-shadow: 0 5px 16px rgba(0, 0, 0, 0.2);

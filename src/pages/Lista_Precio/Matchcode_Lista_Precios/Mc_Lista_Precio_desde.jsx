@@ -94,8 +94,8 @@ const Mc_Lista_Precio_desde = ({showlistaprecio, setshowlistaprecio, setlista_pr
                                                         {
                                                             responseListaPrecio.etListaPreciosField.map((response,key)=>(
                                                                 <tr key={key} onClick={()=>clickcelda(response)}>
-                                                                    <th>{response.pltypField}</th>
-                                                                    <th>{response.ptextField}</th>
+                                                                    <th style={{textAlign:"center"}}>{response.pltypField}</th>
+                                                                    <th style={{textAlign:"center"}}>{response.ptextField}</th>
                                                                 </tr>
                                                             ))   
                                                         }

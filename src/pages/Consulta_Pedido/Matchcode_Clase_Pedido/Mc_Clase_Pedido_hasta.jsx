@@ -74,16 +74,16 @@ const Mc_Clase_Pedido_hasta = ({showclasepedido, setshowclasepedido,
                                                 <table className="content-table ">
                                                     <thead>
                                                         <tr>
-                                                            <th>Clase de Pedido</th>
-                                                            <th>Descripción</th>
+                                                            <th style={{textAlign: 'center'}}>Clase de Pedido</th>
+                                                            <th style={{textAlign: 'center'}}>Descripción</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         {
                                                             responseClasePedido.etClasePedidoField.map((response,key)=>(
                                                                 <tr key={key} onClick={()=>clickcelda(response.auartField)}>
-                                                                    <th>{response.auartField}</th>
-                                                                    <th>{response.bezeiField}</th>
+                                                                    <th style={{textAlign: 'center'}}>{response.auartField}</th>
+                                                                    <th style={{textAlign: 'center'}}>{response.bezeiField}</th>
                                                                 </tr>
                                                             ))   
                                                         }

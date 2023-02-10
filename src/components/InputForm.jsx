@@ -1,7 +1,7 @@
 import React from "react";
 import "./InputForm.css";
 
-const InputForm = ({ attribute, handleChange, onClick}) => {
+const InputForm = ({ attribute, handleChange,onClick}) => {
   return (
     <div className="content-inputform">
       <input
@@ -19,7 +19,6 @@ const InputForm = ({ attribute, handleChange, onClick}) => {
         min={attribute.min}
         placeholder={attribute.placeholder}
         pattern={attribute.pattern}
-        //onKeyDown={(e) => onKeyDown(e)}
       
       />
       {

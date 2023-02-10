@@ -757,7 +757,7 @@ const Deuda_Cliente = () => {
             <section>
               <div style={{ margin: "10px" }} className="row">
                 <div className="col-sm-2 d-flex align-items-center">
-                  <label>Cod. Cliente</label>
+                  <label>Cod. Cliente :</label>
                 </div>
                 <div className="col-sm-10">
                   <InputForm
@@ -807,7 +807,7 @@ const Deuda_Cliente = () => {
             <section>
               <div style={{ margin: "10px" }} className="row">
                 <div className="col-sm-2 d-flex align-items-center">
-                  <label>Nombre Cliente</label>
+                  <label>Nombre Cliente :</label>
                 </div>
                 <div className="col-sm-10">
                   <InputForm
@@ -858,7 +858,7 @@ const Deuda_Cliente = () => {
             <section style={{ marginBottom: "47px" }}>
               <div style={{ margin: "10px" }} className="row">
                 <div className="col-sm-2 d-flex align-items-center">
-                  <label>RUC</label>
+                  <label>RUC :</label>
                 </div>
                 <div className="col-sm-10">
                   <InputForm
@@ -875,7 +875,7 @@ const Deuda_Cliente = () => {
                 </div>
 
                 <div className="col-sm-2 d-flex align-items-center">
-                  <label>Dirección</label>
+                  <label>Dirección :</label>
                 </div>
                 <div className="col-sm-10">
                   <InputForm

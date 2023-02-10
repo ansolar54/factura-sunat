@@ -80,8 +80,8 @@ const McOrgVentas = ({
                                 key={key}
                                 onClick={() => clickcelda(response)}
                               >
-                                <th>{response.vkorgField}</th>
-                                <th>{response.vtextField}</th>
+                                <th style={{textAlign:"center"}}>{response.vkorgField}</th>
+                                <th style={{textAlign:"center"}}>{response.vtextField}</th>
                               </tr>
                             )
                           )}

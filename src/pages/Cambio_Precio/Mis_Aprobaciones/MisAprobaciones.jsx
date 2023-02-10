@@ -32,6 +32,7 @@ import {
   RegistrarAuditoria,
 } from "../../../Services/ServiceAuditoria";
 import SelectFormMd from "../../../components/SelectFormModal";
+import { EnviarNotificacion, ObtenerTokenDevices } from "../../../Services/ServiceNotiPush";
 
 const MisAprobaciones = () => {
   // PAGINATION
@@ -365,7 +366,8 @@ const MisAprobaciones = () => {
               let material = {
                 id: element.id,
                 suggested_price: Number(element.actual_price),
-                lower_limit: element.suggested_price,
+                lower_limit: Number(element.suggested_price),
+
               };
               detailMaterial.push(material);
             }
@@ -449,6 +451,43 @@ const MisAprobaciones = () => {
                                     },
                                   }
                                 );
+
+                                // OBTENER TOKEN
+                                let modal_obtener_token = {
+                                  mails: [mails]
+                                }
+
+                                console.log("ARMAR MODAL OBTENER TOKEN", modal_obtener_token)
+
+                                ObtenerTokenDevices(modal_obtener_token).then((result) => {
+                                  let tokens_list = [];
+                                  console.log("OBTENER TOKEN", result)
+                                  if (result.indicator == 1) {
+                                    for (let i = 0; i < result.data.length; i++) {
+                                      const element = result.data[i];
+                                      let token_1 = {
+                                        token_device: element.token_device,
+                                      };
+                                      tokens_list.push(token_1); // se pasa lista de tokens
+                                    }
+                                  }
+
+                                  let modal_enviar_noti = {
+                                    tokens: tokens_list,
+                                    notification: {
+                                      title: "APROBACIÓN DE SOLICITUD",
+                                      body: "Solicitud N° " + model_email_aprob.nro_solicitud + " aprobada correctamente."
+                                    }
+                                  }
+
+                                  console.log("ARMAR MODAL ENVIAR NOTIFY", modal_enviar_noti)
+
+                                  EnviarNotificacion(modal_enviar_noti).then((result) => {
+                                    console.log("ENVIAR NOTIFI", result)
+
+                                  })
+                                })
+
                                 // OBTENER OFICINA DE VENTAS DE USUARIO DESDE SAP
                                 let ofi_ventas = "";
                                 getOficinaVentasSAP({
@@ -549,6 +588,45 @@ const MisAprobaciones = () => {
                               color: "#fff",
                             },
                           });
+
+                          // OBTENER TOKEN
+                          let modal_obtener_token = {
+                            mails: [mails]
+                          }
+
+                          console.log("ARMAR MODAL OBTENER TOKEN", modal_obtener_token)
+
+                          ObtenerTokenDevices(modal_obtener_token).then((result) => {
+                            let tokens_list = [];
+                            console.log("OBTENER TOKEN", result)
+                            if (result.indicator == 1) {
+                              for (let i = 0; i < result.data.length; i++) {
+                                const element = result.data[i];
+                                let token_1 = {
+                                  token_device: element.token_device,
+                                };
+                                tokens_list.push(token_1); // se pasa lista de tokens
+                              }
+                            }
+
+                            let modal_enviar_noti = {
+                              tokens: tokens_list,
+                              notification: {
+                                title: "RECHAZO DE SOLICITUD",
+                                body: "Solicitud N° " + model_email_aprob.nro_solicitud + " rechazada."
+                              }
+                            }
+
+                            console.log("ARMAR MODAL ENVIAR NOTIFY", modal_enviar_noti)
+
+                            EnviarNotificacion(modal_enviar_noti).then((result) => {
+                              console.log("ENVIAR NOTIFI", result)
+
+                            })
+                          })
+
+
+
                           // OBTENER OFICINA DE VENTAS DE USUARIO DESDE SAP
                           let ofi_ventas = "";
                           getOficinaVentasSAP({

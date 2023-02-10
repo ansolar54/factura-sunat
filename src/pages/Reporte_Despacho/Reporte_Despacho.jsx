@@ -28,6 +28,7 @@ import {
     ConsultaReporteDespacho,
 } from "../../Services/ServiceReporteDespacho";
 import toast, { Toaster } from "react-hot-toast";
+import ModalNameFile from "./Modal/ModalNameFile";
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -180,7 +181,6 @@ const Reporte_Despacho = () => {
     const [comercial_hasta_value, setcomercial_hasta_value] = useState("");
 
     //RESPONSE CONSULTA PEDIDO
-    const [response_consulta_pedido, setresponse_consulta_pedido] = useState([]);
     const [response_reporte_despacho, setresponse_reporte_despacho] = useState([]);
     //CARGA DE SPINNER
     const [spinner, setspinner] = useState(false);
@@ -315,7 +315,7 @@ const Reporte_Despacho = () => {
                     title: "Vendedor",
                     style: { font: { sz: "18", bold: true } },
                     width: { wpx: 125 },
-                },                
+                },
             ],
             data: [],
         },
@@ -1448,13 +1448,13 @@ const Reporte_Despacho = () => {
             IsExport: "",
             // IsUser: jwt(localStorage.getItem("_token")).username,
             IsBukrs: IsBukrs,
-            ItErdat: (creado_el_desde ||creado_el_hasta) !== "" ?
+            ItErdat: (creado_el_desde || creado_el_hasta) !== "" ?
                 RangosCreadoEl() : [],
             // ItKunnr: cliente[0].Low == "" ? (
             // (cliente_desde || cliente_hasta) !== "" ?
             //     RangosCliente() : []) : cliente,
             ItKunnr: (cliente_desde || cliente_hasta) !== "" ?
-                RangosCliente() : [],    
+                RangosCliente() : [],
             //ItVbeln: [],
             //RangosDocuComercial(), //NÚMERO DE PEDIDO
             ItVkorg: (org_ventas_desde || org_ventas_hasta) !== "" ?
@@ -1467,7 +1467,7 @@ const Reporte_Despacho = () => {
             ItVkbur: (ofi_ventas_desde || ofi_ventas_hasta) !== "" ?
                 RangosOficinaVentas() : [],
             ItPernr: (comercial_desde_value || comercial_hasta_value) !== "" ?
-            RangosComercial() : [],
+                RangosComercial() : [],
             IsUser: jwt(localStorage.getItem("_token")).username,
         };
         console.log("PRUEBITA", model_repor_despacho)
@@ -1519,6 +1519,7 @@ const Reporte_Despacho = () => {
                 if (stateChecboxHeader === true) {
                     setresponse_reporte_despacho(
                         result.etPedidosField.map((d) => {
+                            
                             return {
                                 select: true,
                                 kunnrField: d.kunnrField,
@@ -1576,17 +1577,20 @@ const Reporte_Despacho = () => {
                                 vkgrpField: d.vkgrpField,
                                 vkgrpbezeiField: d.vkgrpbezeiField,
                                 snameField: d.snameField,
+
+                               
                             };
+                            
                         })
                     );
 
                     // CORREGIR vbelnField
 
-                    // for (let i = 0; i < result.etPedidosField.length; i++) {
-                    //     document.getElementById(
-                    //         "checkbox-body-" + result.etPedidosField[i].name1Field
-                    //     ).checked = false;
-                    // }
+                    for (let i = 0; i < result.etPedidosField.length; i++) {
+                        document.getElementById(
+                            "checkbox-body-" + result.etPedidosField[i].name1Field
+                        ).checked = false;
+                    }
                 }
 
                 for (let y = 0; y < result.etPedidosField.length; y++) {
@@ -1634,7 +1638,7 @@ const Reporte_Despacho = () => {
             IsExport: "",
             // IsUser: jwt(localStorage.getItem("_token")).username,
             IsBukrs: IsBukrs,
-            ItErdat: (creado_el_desde ||creado_el_hasta) !== "" ?
+            ItErdat: (creado_el_desde || creado_el_hasta) !== "" ?
                 RangosCreadoEl() : [],
             ItKunnr: (cliente_desde || cliente_hasta) !== "" ?
                 RangosCliente() : [],
@@ -1650,7 +1654,7 @@ const Reporte_Despacho = () => {
             ItVkbur: (ofi_ventas_desde || ofi_ventas_hasta) !== "" ?
                 RangosOficinaVentas() : [],
             ItPernr: (comercial_desde_value || comercial_hasta_value) !== "" ?
-            RangosComercial() : [],
+                RangosComercial() : [],
             IsUser: jwt(localStorage.getItem("_token")).username,
         };
         console.log(model_repor_despacho)
@@ -1827,8 +1831,8 @@ const Reporte_Despacho = () => {
                     Arktx: f_arktxField,
                     Werks: f_werksField,
                     Charg: f_chargField,
-                    Lfimg: f_lfimgField !== "" ? 
-                    Number(f_lfimgField).toFixed(1) : 0,
+                    Lfimg: f_lfimgField !== "" ?
+                        Number(f_lfimgField).toFixed(1) : 0,
                     Vkbur: "",
                     Vkburbezei: f_vkburbezeiField,
                     Vkgrp: "",
@@ -1841,7 +1845,7 @@ const Reporte_Despacho = () => {
             ItVkbur: (ofi_ventas_desde || ofi_ventas_hasta) !== "" ?
                 RangosOficinaVentas() : [],
             ItPernr: (comercial_desde_value || comercial_hasta_value) !== "" ?
-            RangosComercial() : [],
+                RangosComercial() : [],
             IsUser: jwt(localStorage.getItem("_token")).username,
         };
         console.log("MODEL REPORTE EXPORTAR", model_reporte_exportar);
@@ -1950,7 +1954,7 @@ const Reporte_Despacho = () => {
                                     title: "Vendedor",
                                     style: { font: { sz: "18", bold: true } },
                                     width: { wpx: 125 },
-                                },    
+                                },
                             ],
                             data: result.etPedidosField.map((data) => {
                                 return [
@@ -1960,7 +1964,7 @@ const Reporte_Despacho = () => {
                                     { value: data.aubelField, style: { font: { sz: "14" } } },
                                     { value: formatFecha(data.erdatField), style: { font: { sz: "14" } } },
                                     { value: data.arktxField, style: { font: { sz: "14" } } },
-                                    { value: Number(data.lfimgField).toFixed(1), style: { font: { sz: "14" } } },
+                                    { value: data.lfimgField, style: { font: { sz: "14" } } },
                                     { value: data.chargField, style: { font: { sz: "14" } } },
                                     { value: data.xblnrField, style: { font: { sz: "14" } } },
                                     { value: data.ctransField, style: { font: { sz: "14" } } },
@@ -1994,7 +1998,7 @@ const Reporte_Despacho = () => {
 
     //INPUT cliente
     function mc_cliente_desde() {
-        if((org_ventas_desde == "") && (org_ventas_hasta == "")){
+        if ((org_ventas_desde == "") && (org_ventas_hasta == "")) {
             toast.error("Debe seleccionar una \"Org. Ventas\" .", {
                 position: "top-center",
                 autoClose: 1000,
@@ -2003,17 +2007,17 @@ const Reporte_Despacho = () => {
                     color: "#fff",
                 }
             })
-            
+
         }
-        else if (org_ventas_desde != "" || org_ventas_hasta != ""){
+        else if (org_ventas_desde != "" || org_ventas_hasta != "") {
             setshowcliente_desde((prev) => !prev);
             setcliente([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
             setcliente_desde('');
         }
-        
+
     }
     function mc_cliente_hasta() {
-        if((org_ventas_desde == "") && (org_ventas_hasta == "")){
+        if ((org_ventas_desde == "") && (org_ventas_hasta == "")) {
             toast.error("Debe seleccionar una \"Org. Ventas\" .", {
                 position: "top-center",
                 autoClose: 1000,
@@ -2022,12 +2026,12 @@ const Reporte_Despacho = () => {
                     color: "#fff",
                 }
             })
-            
+
         }
-        else if (org_ventas_desde != "" || org_ventas_hasta != ""){
+        else if (org_ventas_desde != "" || org_ventas_hasta != "") {
             setshowcliente_hasta((prev) => !prev);
         }
-        
+
     }
 
     // INPUT punto exp
@@ -2076,13 +2080,13 @@ const Reporte_Despacho = () => {
             case "org_ventas_desde":
                 setorg_ventas_desde(value);
                 if (value.trim() != "") {
-                    setorg_ventas_desde(value);
+                    setorg_ventas_desde(value.toUpperCase());
                     if (org_ventas_hasta == "") {
                         setorg_ventas([
                             {
                                 Sign: "I",
                                 Option: "EQ",
-                                Low: value,
+                                Low: value.toUpperCase(),
                                 High: "",
                             },
                         ]);
@@ -2091,13 +2095,13 @@ const Reporte_Despacho = () => {
                             {
                                 Sign: "I",
                                 Option: "BT",
-                                Low: value,
+                                Low: value.toUpperCase(),
                                 High: org_ventas_hasta,
                             },
                         ]);
                     }
                 } else {
-                    setorg_ventas_desde(value);
+                    setorg_ventas_desde(value.toUpperCase());
                     if (org_ventas_hasta != "") {
                         setorg_ventas([
                             { Sign: "I", Option: "EQ", Low: "", High: org_ventas_hasta },
@@ -2109,7 +2113,7 @@ const Reporte_Despacho = () => {
                 }
                 break;
             case "org_ventas_hasta":
-                setorg_ventas_hasta(value);
+                setorg_ventas_hasta(value.toUpperCase());
                 if (value.trim() != "") {
                     if (org_ventas_desde == "") {
                         setorg_ventas([
@@ -2117,7 +2121,7 @@ const Reporte_Despacho = () => {
                                 Sign: "I",
                                 Option: "EQ",
                                 Low: "",
-                                High: value,
+                                High: value.toUpperCase(),
                             },
                         ]);
                     } else {
@@ -2126,7 +2130,7 @@ const Reporte_Despacho = () => {
                                 Sign: "I",
                                 Option: "BT",
                                 Low: org_ventas_desde,
-                                High: value,
+                                High: value.toUpperCase(),
                             },
                         ]);
                     }
@@ -2167,7 +2171,7 @@ const Reporte_Despacho = () => {
                         setcliente([
                             { Sign: "I", Option: "EQ", Low: "", High: cliente_hasta },
                         ]);
-                    } 
+                    }
                     else {
                         setcliente([{ Sign: "", Option: "", Low: "", High: "" }]);
                     }
@@ -2193,7 +2197,7 @@ const Reporte_Despacho = () => {
                         setcliente([
                             { Sign: "I", Option: "EQ", Low: cliente_desde, High: "" },
                         ]);
-                    } 
+                    }
                     else {
                         setcliente([{ Sign: "", Option: "", Low: "", High: "" }]);
                     }
@@ -2708,142 +2712,148 @@ const Reporte_Despacho = () => {
         console.log("check");
         setstateChecboxHeader(e.target.checked);
         if (e.target.checked === true) {
+            
             for (let i = 0; i < response_reporte_despacho.length; i++) {
+               
                 document.getElementById(
                     "checkbox-body-" + response_reporte_despacho[i].name1Field
                 ).checked = true;
-                arraycheckbox_export[0].data = [];
+                arraycheckbox_export[0].data = []
             }
+                
+           
         } else {
+            // response_reporte_despacho.map((response,key) => {
             for (let i = 0; i < response_reporte_despacho.length; i++) {
                 document.getElementById(
                     "checkbox-body-" + response_reporte_despacho[i].name1Field
                 ).checked = false;
             }
+        // })
         }
     }
 
-    // function ordenamiento(d) {
-    //     arraycheckbox_export[0].data.push([
-    //         {
-    //             value: d.kunnrField,
-    //             style: {
-    //                 font: { sz: "14" },
-    //             },
-    //         },
-    //         {
-    //             value: d.name1Field,
-    //             style: {
-    //                 font: { sz: "14" },
-    //             },
-    //         },
-    //         {
-    //             value: d.bstkdField,
-    //             style: {
-    //                 font: { sz: "14" },
-    //             },
-    //         },
-    //         {
-    //             value: formatFecha(d.erdatField),
-    //             style: {
-    //                 font: { sz: "14" },
-    //             },
-    //         },
-    //         {
-    //             value: d.aubelField,
-    //             style: {
-    //                 font: { sz: "14" },
-    //             },
-    //         },
-    //         {
-    //             value: d.xblnrField,
-    //             style: {
-    //                 font: { sz: "14" },
-    //             },
-    //         },
-    //         {
-    //             value: d.xblnr1Field,
-    //             style: {
-    //                 font: { sz: "14" },
-    //             },
-    //         },
-    //         {
-    //             value: d.ctransField,
-    //             style: {
-    //                 font: { sz: "14" },
-    //             },
-    //         },
-    //         {
-    //             value: d.ntransField,
-    //             style: {
-    //                 font: { sz: "14" },
-    //             },
-    //         },
-    //         {
-    //             value: d.vkorgField,
-    //             style: {
-    //                 font: { sz: "14" },
-    //             },
-    //         },
-    //         {
-    //             value: d.arktxField,
-    //             style: {
-    //                 font: { sz: "14" },
-    //             },
-    //         },
-    //         {
-    //             value: d.werksField,
-    //             style: {
-    //                 font: { sz: "14" },
-    //             },
-    //         },
-    //         {
-    //             value: d.chargField,
-    //             style: {
-    //                 font: { sz: "14" },
-    //             },
-    //         },
-    //         {
-    //             value: convertDecimal(d.lfimgField, 2),
-    //             style: {
-    //                 font: { sz: "14" },
-    //             },
-    //         },
-    //         {
-    //             value: d.vkburField,
-    //             style: {
-    //                 font: { sz: "14" },
-    //             },
-    //         },
-    //         {
-    //             value: d.vkburbezeiField,
-    //             style: {
-    //                 font: { sz: "14" },
-    //             },
-    //         },
-    //         {
-    //             value: d.vkgrpField,
-    //             style: {
-    //                 font: { sz: "14" },
-    //             },
-    //         },
-    //         {
-    //             value: d.vkgrpbezeiField,
-    //             style: {
-    //                 font: { sz: "14" },
-    //             },
-    //         },
-    //         {
-    //             value: d.snameField,
-    //             style: {
-    //                 font: { sz: "14" },
-    //             },
-    //         },
-    //     ]);
-    //     arraycheckbox_export[0].data.sort(function (a, b) {
-    //         return a[0].value - b[0].value;
-    //     });
-    // }
+    function ordenamiento(d) {
+        arraycheckbox_export[0].data.push([
+            {
+                value: d.kunnrField,
+                style: {
+                    font: { sz: "14" },
+                },
+            },
+            {
+                value: d.name1Field,
+                style: {
+                    font: { sz: "14" },
+                },
+            },
+            {
+                value: d.bstkdField,
+                style: {
+                    font: { sz: "14" },
+                },
+            },
+            {
+                value: formatFecha(d.erdatField),
+                style: {
+                    font: { sz: "14" },
+                },
+            },
+            {
+                value: d.aubelField,
+                style: {
+                    font: { sz: "14" },
+                },
+            },
+            {
+                value: d.xblnrField,
+                style: {
+                    font: { sz: "14" },
+                },
+            },
+            {
+                value: d.xblnr1Field,
+                style: {
+                    font: { sz: "14" },
+                },
+            },
+            {
+                value: d.ctransField,
+                style: {
+                    font: { sz: "14" },
+                },
+            },
+            {
+                value: d.ntransField,
+                style: {
+                    font: { sz: "14" },
+                },
+            },
+            {
+                value: d.vkorgField,
+                style: {
+                    font: { sz: "14" },
+                },
+            },
+            {
+                value: d.arktxField,
+                style: {
+                    font: { sz: "14" },
+                },
+            },
+            {
+                value: d.werksField,
+                style: {
+                    font: { sz: "14" },
+                },
+            },
+            {
+                value: d.chargField,
+                style: {
+                    font: { sz: "14" },
+                },
+            },
+            {
+                value: convertDecimal(d.lfimgField, 2),
+                style: {
+                    font: { sz: "14" },
+                },
+            },
+            {
+                value: d.vkburField,
+                style: {
+                    font: { sz: "14" },
+                },
+            },
+            {
+                value: d.vkburbezeiField,
+                style: {
+                    font: { sz: "14" },
+                },
+            },
+            {
+                value: d.vkgrpField,
+                style: {
+                    font: { sz: "14" },
+                },
+            },
+            {
+                value: d.vkgrpbezeiField,
+                style: {
+                    font: { sz: "14" },
+                },
+            },
+            {
+                value: d.snameField,
+                style: {
+                    font: { sz: "14" },
+                },
+            },
+        ]);
+        arraycheckbox_export[0].data.sort(function (a, b) {
+            return a[0].value - b[0].value;
+        });
+    }
 
     function clear_filtro_fila() {
         setf_name1Field("");
@@ -2909,8 +2919,8 @@ const Reporte_Despacho = () => {
                     Arktx: f_arktxField,
                     Werks: f_werksField,
                     Charg: f_chargField,
-                    Lfimg: f_lfimgField !== "" ? 
-                    Number(f_lfimgField).toFixed(1) : 0,
+                    Lfimg: f_lfimgField !== "" ?
+                        Number(f_lfimgField).toFixed(1) : 0,
                     Vkbur: "",
                     Vkburbezei: f_vkburbezeiField,
                     Vkgrp: "",
@@ -2923,7 +2933,7 @@ const Reporte_Despacho = () => {
             ItVkbur: (ofi_ventas_desde || ofi_ventas_hasta) !== "" ?
                 RangosOficinaVentas() : [],
             ItPernr: (comercial_desde_value || comercial_hasta_value) !== "" ?
-            RangosComercial() : [],
+                RangosComercial() : [],
             IsUser: jwt(localStorage.getItem("_token")).username,
         };
         console.log("FILTRO MODEL REPORTE", model_repor_despacho_filtro);
@@ -3039,7 +3049,7 @@ const Reporte_Despacho = () => {
 
         }
         // showModalPagina == true
-        
+
     }
 
     const getDateAct = () => {
@@ -3094,6 +3104,13 @@ const Reporte_Despacho = () => {
 
         }
     }
+
+   
+    const [ShowName, setShowName] = useState(false);
+
+    const NameFile = () => {
+        setShowName((prev) => !prev);
+    };
 
     return (
         <React.Fragment>
@@ -3243,6 +3260,13 @@ const Reporte_Despacho = () => {
                         />
                         <Toaster />
 
+                        <ModalNameFile 
+                        showMdRol={ShowName} 
+                        setShowMdRol={setShowName} 
+                        arraycheckbox_export={arraycheckbox_export}
+                        DataSet={DataSet}
+                        />
+
                         <div className="title-section">
                             <div>
                                 <label> Reportes / Reporte de Despacho </label>
@@ -3356,8 +3380,8 @@ const Reporte_Despacho = () => {
                                     ></i>
                                 </div>
 
-                                 {/* FECHA REGISTRO */}
-                                 <div className="col-sm-4 d-flex align-items-center">
+                                {/* FECHA REGISTRO */}
+                                <div className="col-sm-4 d-flex align-items-center">
                                     <label>
                                         <label>Fecha Registro :</label>{" "}
                                         <label style={{ color: "red" }}>(*)</label>
@@ -3479,7 +3503,7 @@ const Reporte_Despacho = () => {
                                     ></i>
                                 </div>
 
-                               
+
 
 
 
@@ -3625,7 +3649,34 @@ const Reporte_Despacho = () => {
                                     onClick={() => Clear()}
                                 />
                             </div>
+                            {/* /////// */}
                             <div className="col-sm-12 col-md-2 p-1">
+                                {response_reporte_despacho.length != 0 ?
+                                    (
+                                        <BtnSearch
+                                            attribute={{
+                                                name: "Descargar Excel",
+                                                classNamebtn: "btn_search",
+                                                disabled: false
+                                            }}
+                                            onClick={() => NameFile()}
+                                        />
+                                    ) : 
+                                    (
+                                        <BtnSearch
+                                            attribute={{
+                                                name: "Descargar Excel",
+                                                classNamebtn: "btn_search",
+                                                disabled: true
+                                            }}
+                                            onClick={() => NameFile()}
+                                        />
+                                    )
+                                    }
+
+                            </div>
+                            {/* ////////////// */}
+                            {/* <div className="col-sm-12 col-md-2 p-1">
                                 {arraycheckbox_export[0].data.length > 0 ? (
                                     <ExcelFile
                                         filename="Reporte de Despachos"
@@ -3644,41 +3695,42 @@ const Reporte_Despacho = () => {
                                             name="exportacion"
                                         />
                                     </ExcelFile>
-                                ) : response_reporte_despacho.length != 0 ? 
-                                ( 
-                                    <ExcelFile
-                                        filename="Reporte de Despachos"
-                                        element={
-                                            <BtnExportar
-                                                attribute={{
-                                                    name: "Descargar Excel",
-                                                    classNamebtn: "btn_export",
-                                                    disabled: false,
-                                                }}
-                                            />
-                                        }
-                                    >
-                                        <ExcelSheet dataSet={DataSet} name="exportacion" />
-                                    </ExcelFile>
-                                ) : 
-                                ( 
-                                    <ExcelFile
-                                        filename="Reporte de Despachos"
-                                        element={
-                                            <BtnExportar
-                                                attribute={{
-                                                    name: "Descargar Excel",
-                                                    classNamebtn: "btn_export",
-                                                    disabled: true,
-                                                }}
-                                            />
-                                        }
-                                    >
-                                        <ExcelSheet dataSet={DataSet} name="exportacion" />
-                                    </ExcelFile>
-                                )
+                                ) : response_reporte_despacho.length != 0 ?
+                                    (
+                                        <ExcelFile
+                                            // filename={NombreFile}
+                                            element={
+                                                <BtnExportar
+                                                    attribute={{
+                                                        name: "Descargar Excel",
+                                                        classNamebtn: "btn_export",
+                                                        disabled: false,
+                                                    }}
+                                                    onClick={() => NameFile()}
+                                                />
+                                            }
+                                        >
+                                            <ExcelSheet dataSet={DataSet} name="exportacion" />
+                                        </ExcelFile>
+                                    ) :
+                                    (
+                                        <ExcelFile
+                                            filename="Reporte de Despachos"
+                                            element={
+                                                <BtnExportar
+                                                    attribute={{
+                                                        name: "Descargar Excel",
+                                                        classNamebtn: "btn_export",
+                                                        disabled: true,
+                                                    }}
+                                                />
+                                            }
+                                        >
+                                            <ExcelSheet dataSet={DataSet} name="exportacion" />
+                                        </ExcelFile>
+                                    )
                                 }
-                            </div>
+                            </div> */}
                             <div className="col-sm-12 col-md-2 p-1">
                                 <BtnSearch
                                     attribute={{
@@ -3706,15 +3758,15 @@ const Reporte_Despacho = () => {
                                     <table className="content-table">
                                         <thead>
                                             <tr>
-                                                {/* <th>
+                                                <th>
                                                     <input
                                                         type="checkbox"
                                                         onClick={(e) => {
                                                             onClickHeaderCheckbox(e);
                                                         }}
                                                     />
-                                                </th> */}
-                                                <th></th>
+                                                </th>
+                                                {/* <th></th> */}
                                                 <th>
                                                     Cliente |{" "}
                                                     {col_1 === 0 ? (
@@ -4091,7 +4143,7 @@ const Reporte_Despacho = () => {
                                                         </button>
                                                     </th>
                                                     <th>
-                                                        <input style={{width: "220px"}}
+                                                        <input style={{ width: "220px" }}
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             id="f_name1Field"
@@ -4126,7 +4178,7 @@ const Reporte_Despacho = () => {
                                                         </div>
                                                     </th>
                                                     <th>
-                                                        <input style={{width: "100px"}}
+                                                        <input style={{ width: "100px" }}
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_aubelField"
@@ -4154,7 +4206,7 @@ const Reporte_Despacho = () => {
                                                         />
                                                     </th>
                                                     <th>
-                                                        <input style={{width: "250px"}}
+                                                        <input style={{ width: "250px" }}
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_arktxField"
@@ -4168,7 +4220,7 @@ const Reporte_Despacho = () => {
                                                         />
                                                     </th>
                                                     <th>
-                                                        <input style={{width: "70px"}}
+                                                        <input style={{ width: "70px" }}
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_lfimgField"
@@ -4182,7 +4234,7 @@ const Reporte_Despacho = () => {
                                                         />
                                                     </th>
                                                     <th>
-                                                        <input style={{width: "150px"}}
+                                                        <input style={{ width: "150px" }}
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_chargField"
@@ -4196,7 +4248,7 @@ const Reporte_Despacho = () => {
                                                         />
                                                     </th>
                                                     <th>
-                                                        <input style={{width: "150px"}}
+                                                        <input style={{ width: "150px" }}
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_xblnrField"
@@ -4210,7 +4262,7 @@ const Reporte_Despacho = () => {
                                                         />
                                                     </th>
                                                     <th>
-                                                        <input style={{width: "300px"}}
+                                                        <input style={{ width: "300px" }}
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_ntransField"
@@ -4224,7 +4276,7 @@ const Reporte_Despacho = () => {
                                                         />
                                                     </th>
                                                     <th>
-                                                        <input style={{width: "150px"}}
+                                                        <input style={{ width: "150px" }}
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_xblnr1Field"
@@ -4238,7 +4290,7 @@ const Reporte_Despacho = () => {
                                                         />
                                                     </th>
                                                     <th>
-                                                        <input style={{width: "150px"}}
+                                                        <input style={{ width: "150px" }}
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_bstkdField"
@@ -4252,7 +4304,7 @@ const Reporte_Despacho = () => {
                                                         />
                                                     </th>
                                                     <th>
-                                                        <input style={{width: "70px"}}
+                                                        <input style={{ width: "70px" }}
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_werksField"
@@ -4266,7 +4318,7 @@ const Reporte_Despacho = () => {
                                                         />
                                                     </th>
                                                     <th>
-                                                        <input style={{width: "150px"}}
+                                                        <input style={{ width: "150px" }}
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_vkburbezeiField"
@@ -4280,7 +4332,7 @@ const Reporte_Despacho = () => {
                                                         />
                                                     </th>
                                                     <th>
-                                                        <input style={{width: "130px"}}
+                                                        <input style={{ width: "130px" }}
                                                             type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_vkgrpbezeiField"
@@ -4294,8 +4346,8 @@ const Reporte_Despacho = () => {
                                                         />
                                                     </th>
                                                     <th>
-                                                        <input style={{width: "260px"}}
-                                                            type="text" 
+                                                        <input style={{ width: "260px" }}
+                                                            type="text"
                                                             onKeyUp={(e) => buscar_filtro_enter(e)}
                                                             name="f_snameField"
                                                             maxLength="40"
@@ -4313,9 +4365,12 @@ const Reporte_Despacho = () => {
                                             {response_reporte_despacho != null &&
                                                 response_reporte_despacho.length > 0
                                                 ? response_reporte_despacho.map((response, key) => {
+                                                    console.log("keyyyyyyy",key)
                                                     return (
+                                                        
                                                         <tr key={key}>
-                                                            {/* <th>
+                                                            
+                                                            <th>
                                                                  <input
                                                                     type="checkbox"
                                                                     id={`checkbox-body-` + response.name1Field}
@@ -4519,8 +4574,8 @@ const Reporte_Despacho = () => {
                                                                         );
                                                                     }}
                                                                 /> 
-                                                            </th> */}
-                                                            <th></th>
+                                                            </th>
+                                                            {/* <th></th> */}
                                                             {/* AQUIIIIIIIIIII */}
                                                             <th style={{ textAlign: "left" }}>
                                                                 {response.name1Field}

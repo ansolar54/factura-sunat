@@ -27,6 +27,7 @@ import {
 } from "../../Services/ServiceAuditoria";
 import toast, { Toaster } from "react-hot-toast";
 import InputFormKeyUp from "../../components/InputFormKeyUp";
+import ModalNameFile from "./Modal/ModalNameFile";
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -1250,6 +1251,13 @@ const Consulta = () => {
     }
   };
 
+
+  const [ShowName, setShowName] = useState(false);
+
+  const NameFile = () => {
+    setShowName((prev) => !prev);
+  };
+
   return (
     <>
       {/* <FiltroConsultaStock
@@ -1307,6 +1315,14 @@ const Consulta = () => {
               setMcBuscaLote={setBuscaLote}
             />
             <Toaster />
+
+            <ModalNameFile
+              showMdRol={ShowName}
+              setShowMdRol={setShowName}
+              arraycheckbox_export={arraycheckbox_export}
+              DataSet={DataSet}
+            />
+
             {/* <Mc_Sector showMcSector={ShowSector} setShowMcSector={setShowSector} setMcSector={setSector} McSector={Sector} />
                         <Mc_Tipo_Material showMcTipoMaterial={ShowTipoMaterial} setShowMcTipoMaterial={setShowTipoMaterial} setMcTipoMaterial={setTipoMaterial} McTipoMaterial={TipoMaterial} />
                         <Mc_Grupo_Articulo showMcGrupoArticulo={ShowGrupoArticulo} setShowMcGrupoArticulo={setShowGrupoArticulo} setMcGrupoArticulo={setGrupoArticulo} McGrupoArticulo={GrupoArticulo} /> */}
@@ -1372,7 +1388,7 @@ const Consulta = () => {
                     }}
                     handleChange={handleChange}
                     onClick={() => mcOrganizVentas()}
-                    
+
                   />
                 </div>
 
@@ -1468,10 +1484,34 @@ const Consulta = () => {
                   onClick={() => Clear()}
                 />
               </div>
-              {/* <div>
-                                <BtnSearch attribute={{name:'Exportar', classNamebtn:'btn_export'}} onClick={()=>Exportar()}/>
-                            </div> */}
+
               <div className="col-sm-12 col-md-2 p-1">
+                {response_consulta.length != 0 ?
+                  (
+                    <BtnSearch
+                      attribute={{
+                        name: "Descargar Excel",
+                        classNamebtn: "btn_search",
+                        disabled: false
+                      }}
+                      onClick={() => NameFile()}
+                    />
+                  ) :
+                  (
+                    <BtnSearch
+                      attribute={{
+                        name: "Descargar Excel",
+                        classNamebtn: "btn_search",
+                        disabled: true
+                      }}
+                      onClick={() => NameFile()}
+                    />
+                  )
+                }
+
+              </div>
+
+              {/* <div className="col-sm-12 col-md-2 p-1">
                 {arraycheckbox_export[0].data.length > 0 ? (
                   <ExcelFile
                     filename="Consulta de Stock"
@@ -1491,41 +1531,41 @@ const Consulta = () => {
                     />
                   </ExcelFile>
                 ) :
-                response_consulta.length != 0 ?  
-                (
-                  <ExcelFile
-                    filename="Consulta de Stock"
-                    element={
-                      <BtnExportar
-                        attribute={{
-                          name: "Descargar Excel",
-                          classNamebtn: "btn_export",
-                          disabled: false,
-                        }}
-                      />
-                    }
-                  >
-                    <ExcelSheet dataSet={DataSet} name="exportacion" />
-                  </ExcelFile>
-                ) : 
-                (
-                  <ExcelFile
-                    filename="Consulta de Stock"
-                    element={
-                      <BtnExportar
-                        attribute={{
-                          name: "Descargar Excel",
-                          classNamebtn: "btn_export",
-                          disabled: true,
-                        }}
-                      />
-                    }
-                  >
-                    <ExcelSheet dataSet={DataSet} name="exportacion" />
-                  </ExcelFile>
-                )
+                  response_consulta.length != 0 ?
+                    (
+                      <ExcelFile
+                        filename="Consulta de Stock"
+                        element={
+                          <BtnExportar
+                            attribute={{
+                              name: "Descargar Excel",
+                              classNamebtn: "btn_export",
+                              disabled: false,
+                            }}
+                          />
+                        }
+                      >
+                        <ExcelSheet dataSet={DataSet} name="exportacion" />
+                      </ExcelFile>
+                    ) :
+                    (
+                      <ExcelFile
+                        filename="Consulta de Stock"
+                        element={
+                          <BtnExportar
+                            attribute={{
+                              name: "Descargar Excel",
+                              classNamebtn: "btn_export",
+                              disabled: true,
+                            }}
+                          />
+                        }
+                      >
+                        <ExcelSheet dataSet={DataSet} name="exportacion" />
+                      </ExcelFile>
+                    )
                 }
-              </div>
+              </div> */}
               {response_consulta.length ? (
                 <div className="col-sm-12 col-md-2 p-1">
                   <BtnSearch

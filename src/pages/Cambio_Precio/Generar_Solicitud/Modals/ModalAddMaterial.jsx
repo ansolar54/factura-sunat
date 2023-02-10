@@ -401,7 +401,7 @@ const ModalAddMaterial = ({
             cliente={cliente}
             canalDistValue={canalDistValue}
           />
-          <div className="modal-wrapper modal-wrapper-sm">
+          <div className="modal-wrapper modal-wrapper-sm-1">
             <div className="modal-header">
               <div className="modal-title">
                 <h5>Agregar Material</h5>

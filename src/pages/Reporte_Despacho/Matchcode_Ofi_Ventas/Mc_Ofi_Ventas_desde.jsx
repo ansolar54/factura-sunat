@@ -77,7 +77,7 @@ const Mc_Org_Ventas_desde = ({showofiventa, setshowofiventa, setofi_ventas_desde
                                                 <table className="content-table ">
                                                     <thead>
                                                         <tr>
-                                                            <th>Organiz. ventas</th>
+                                                            <th>Oficina de ventas</th>
                                                             <th>Denominación</th>
                                                         </tr>
                                                     </thead>
@@ -85,8 +85,8 @@ const Mc_Org_Ventas_desde = ({showofiventa, setshowofiventa, setofi_ventas_desde
                                                         {
                                                             responseOfiVentas.etOfiVentasField.map((response,key)=>(
                                                                 <tr key={key} onClick={()=>clickcelda(response.vkburField)}>
-                                                                    <th>{response.vkburField}</th>
-                                                                    <th>{response.bezeiField}</th>
+                                                                    <th style={{textAlign: 'center'}}>{response.vkburField}</th>
+                                                                    <th style={{textAlign: 'center'}}>{response.bezeiField}</th>
                                                                 </tr>
                                                             ))   
                                                         }

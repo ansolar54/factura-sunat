@@ -209,11 +209,12 @@ const Evento = () => {
                                             </label>
                                         </td>
                                     )}
-                                    <td>
+                                    <td style={{ paddingLeft: "30px" }}>
                                         <i
-                                            style={{ cursor: "pointer" }}
+                                            style={{cursor: "pointer"}}
+                                           
                                             title="Editar rol"
-                                            className="fas fa-edit"
+                                            className="fas fa-edit fa-lg"
                                             onClick={() => editar(item)}
                                         ></i>
                                     </td>

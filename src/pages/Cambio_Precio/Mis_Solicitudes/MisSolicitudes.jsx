@@ -25,6 +25,7 @@ import {
   RegistrarAuditoria,
 } from "../../../Services/ServiceAuditoria";
 import SelectFormMd from "../../../components/SelectFormModal";
+import { EnviarNotificacion, ObtenerTokenDevices } from "../../../Services/ServiceNotiPush";
 
 const MisSolicitudes = () => {
   // ORG VENTAS
@@ -454,6 +455,44 @@ const MisSolicitudes = () => {
                       },
                     });
 
+                    // OBTENER TOKEN
+                    let modal_obtener_token = {
+                      mails: [mails]
+                    }
+
+                    console.log("ARMAR MODAL OBTENER TOKEN",modal_obtener_token)
+
+                    ObtenerTokenDevices(modal_obtener_token).then((result) => {
+                      let tokens_list = [];
+                      console.log("OBTENER TOKEN", result)
+                      if (result.indicator == 1) {
+                        for (let i = 0; i < result.data.length; i++) {
+                          const element = result.data[i];
+                          let token_1 = {
+                            token_device: element.token_device,
+                          };
+                          tokens_list.push(token_1); // se pasa lista de tokens
+                        }
+                      }
+
+                      let modal_enviar_noti = {
+                        tokens: tokens_list,
+                        notification: {
+                          title: "ANULACIÓN DE SOLICITUD",
+                          body: "Solicitud N° " + model_email_aprob.nro_solicitud + " anulada."
+                        }
+                      }
+
+                      console.log("ARMAR MODAL ENVIAR NOTIFY", modal_enviar_noti)
+
+                      EnviarNotificacion(modal_enviar_noti).then((result) => {
+                        console.log("ENVIAR NOTIFI", result)
+
+                      })
+                    })
+
+
+
                     // OBTENER OFICINA DE VENTAS DE USUARIO DESDE SAP
                     let ofi_ventas = "";
                     getOficinaVentasSAP({
@@ -613,7 +652,7 @@ const MisSolicitudes = () => {
               <div className="col-sm-2 d-flex align-items-center">
                 <label>Organización de ventas : </label>
               </div>
-              <div style={{ marginRight: "40px" }}>
+              <div style={{ marginRight: "34px" }}>
                 <InputForm1
                   attribute={{
                     name: "org_ventas",
@@ -637,7 +676,7 @@ const MisSolicitudes = () => {
               <div className="col-sm-2 d-flex align-items-center">
                 <label>Cliente : </label>
               </div>
-              <div style={{ marginRight: "40px" }}>
+              <div style={{ marginRight: "34px" }}>
                 <InputForm1
                   attribute={{
                     name: "cliente",
@@ -674,13 +713,13 @@ const MisSolicitudes = () => {
                   ))} */}
                 </select>
               </div>
-              <div className="col-md-6">
+             
                 {/* style={{ fontWeight: "bold" }} */}
-                <div className="col-sm-4 d-flex align-items-center">
+                <div className="col-sm-2 d-flex align-items-center">
                   <label>N° Solicitud :</label>
                 </div>
 
-                <div className="">
+                <div>
                   <InputForm1
                     attribute={{
                       name: "nroSolicitud",
@@ -688,6 +727,7 @@ const MisSolicitudes = () => {
                       value: nroSolicitud,
                       disabled: false,
                       checked: false,
+                      matchcode: false,
 
                     }}
                     handleChange={handleChange}
@@ -695,7 +735,7 @@ const MisSolicitudes = () => {
                   />
                 </div>
 
-              </div>
+             
             </div>
             <div >
               <div className="col-sm-2 d-flex align-items-center">

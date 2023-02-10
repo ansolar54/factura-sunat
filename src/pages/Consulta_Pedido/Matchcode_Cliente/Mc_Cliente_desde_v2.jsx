@@ -316,7 +316,7 @@ const [spinner, setspinner] = useState(false);
                   <thead>
                     <tr>
                       <th>Cod. Cliente</th>
-                      <th>Nombre Cliente</th>
+                      <th style={{textAlign:"center"}}>Nombre Cliente</th>
                       <th>Zona del Cliente</th>
                       <th>RUC</th>
 

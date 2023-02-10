@@ -47,6 +47,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { ShowStatus } from "../../Services/ServiceEstadoOperacion";
 import { ClasePedido } from "../../Services/ServiceClasePedido";
 import { OrgVentas } from "../../Services/ServiceOrgVentas";
+import ModalNameFile from "./Modal/ModalNameFile";
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -371,12 +372,27 @@ const Consulta = () => {
           width: { wpx: 125 },
         },
         {
+          title: "Desc. Oficina de Ventas",
+          style: { font: { sz: "18", bold: true } },
+          width: { wpx: 125 },
+        },
+        {
           title: "Gpo. de Vendedores",
           style: { font: { sz: "18", bold: true } },
           width: { wpx: 125 },
         },
         {
+          title: "Desc. Gpo. de Vendedores",
+          style: { font: { sz: "18", bold: true } },
+          width: { wpx: 125 },
+        },
+        {
           title: "Vendedor Comercial",
+          style: { font: { sz: "18", bold: true } },
+          width: { wpx: 125 },
+        },
+        {
+          title: "Desc. Vendedor Comercial",
           style: { font: { sz: "18", bold: true } },
           width: { wpx: 125 },
         },
@@ -1289,8 +1305,11 @@ const Consulta = () => {
               statusField: d.statusField,
               motivoField: d.motivoField,
               vkburField: d.vkburField,
+              txtvkburField: d.txtvkburField,
               vkgrpField: d.vkgrpField,
+              txtvkgrpField: d.txtvkgrpField,
               comercialField: d.comercialField,
+              txtcomercialField: d.txtcomercialField,
               bstnkField: d.bstnkField
             };
           })
@@ -1323,8 +1342,11 @@ const Consulta = () => {
                 statusField: d.statusField,
                 motivoField: d.motivoField,
                 vkburField: d.vkburField,
+                txtvkburField: d.txtvkburField,
                 vkgrpField: d.vkgrpField,
+                txtvkgrpField: d.txtvkgrpField,
                 comercialField: d.comercialField,
+                txtcomercialField: d.txtcomercialField,
                 bstnkField: d.bstnkField
               };
             })
@@ -1354,8 +1376,11 @@ const Consulta = () => {
                 statusField: d.statusField,
                 motivoField: d.motivoField,
                 vkburField: d.vkburField,
+                txtvkburField: d.txtvkburField,
                 vkgrpField: d.vkgrpField,
+                txtvkgrpField: d.txtvkgrpField,
                 comercialField: d.comercialField,
+                txtcomercialField: d.txtcomercialField,
                 bstnkField: d.bstnkField
               };
             })
@@ -1451,8 +1476,11 @@ const Consulta = () => {
               statusField: d.statusField,
               motivoField: d.motivoField,
               vkburField: d.vkburField,
+              txtvkburField: d.txtvkburField,
               vkgrpField: d.vkgrpField,
+              txtvkgrpField: d.txtvkgrpField,
               comercialField: d.comercialField,
+              txtcomercialField: d.txtcomercialField,
               bstnkField: d.bstnkField
             };
           })
@@ -1485,8 +1513,11 @@ const Consulta = () => {
                 statusField: d.statusField,
                 motivoField: d.motivoField,
                 vkburField: d.vkburField,
+                txtvkburField: d.txtvkburField,
                 vkgrpField: d.vkgrpField,
+                txtvkgrpField: d.txtvkgrpField,
                 comercialField: d.comercialField,
+                txtcomercialField: d.txtcomercialField,
                 bstnkField: d.bstnkField
               };
             })
@@ -1516,8 +1547,11 @@ const Consulta = () => {
                 statusField: d.statusField,
                 motivoField: d.motivoField,
                 vkburField: d.vkburField,
+                txtvkburField: d.txtvkburField,
                 vkgrpField: d.vkgrpField,
+                txtvkgrpField: d.txtvkgrpField,
                 comercialField: d.comercialField,
+                txtcomercialField: d.txtcomercialField,
                 bstnkField: d.bstnkField
               };
             })
@@ -1611,9 +1645,9 @@ const Consulta = () => {
     };
 
     if (
-      creado_el[0].Low.trim() != "" 
+      creado_el[0].Low.trim() != ""
     ) {
-      ConsultaPedidoFiltro(model_consulta_pedido)
+      ConsultaPedido(model_consulta_pedido)
         .then((result) => {
           setDataSet([
             {
@@ -1679,12 +1713,27 @@ const Consulta = () => {
                   width: { wpx: 125 },
                 },
                 {
+                  title: "Desc. Oficina de Ventas",
+                  style: { font: { sz: "18", bold: true } },
+                  width: { wpx: 125 },
+                },
+                {
                   title: "Gpo. de Vendedores",
                   style: { font: { sz: "18", bold: true } },
                   width: { wpx: 125 },
                 },
                 {
+                  title: "Desc. Gpo. de Vendedores",
+                  style: { font: { sz: "18", bold: true } },
+                  width: { wpx: 125 },
+                },
+                {
                   title: "Vendedor Comercial",
+                  style: { font: { sz: "18", bold: true } },
+                  width: { wpx: 125 },
+                },
+                {
+                  title: "Desc. Vendedor Comercial",
                   style: { font: { sz: "18", bold: true } },
                   width: { wpx: 125 },
                 },
@@ -1714,8 +1763,11 @@ const Consulta = () => {
                   { value: data.statusField, style: { font: { sz: "14" } } },
                   { value: data.motivoField, style: { font: { sz: "14" } } },
                   { value: data.vkburField, style: { font: { sz: "14" } } },
+                  { value: data.txtvkburField, style: { font: { sz: "14" } } },
                   { value: data.vkgrpField, style: { font: { sz: "14" } } },
+                  { value: data.txtvkgrpField, style: { font: { sz: "14" } } },
                   { value: data.comercialField, style: { font: { sz: "14" } } },
+                  { value: data.txtcomercialField, style: { font: { sz: "14" } } },
                   { value: data.bstnkField, style: { font: { sz: "14" } } },
                 ];
               }),
@@ -2532,6 +2584,13 @@ const Consulta = () => {
 
   //Limpiar Campos
   function Clear() {
+
+    setstateChecboxHeader(false);
+    document.getElementById(
+      "checkbox-header-"
+    ).checked = false;
+    // setstateChecboxHeader(e.target.checked == false);
+
     setmostrar_filtro_fila(false);
     setrangos_ofi_ventas([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
     setrangos_cliente([{ Sign: "I", Option: "EQ", Low: "", High: "" }]);
@@ -2746,13 +2805,31 @@ const Consulta = () => {
         },
       },
       {
+        value: d.txtvkburField,
+        style: {
+          font: { sz: "14" },
+        },
+      },
+      {
         value: d.vkgrpField,
         style: {
           font: { sz: "14" },
         },
       },
       {
+        value: d.txtvkgrpField,
+        style: {
+          font: { sz: "14" },
+        },
+      },
+      {
         value: d.comercialField,
+        style: {
+          font: { sz: "14" },
+        },
+      },
+      {
+        value: d.txtcomercialField,
         style: {
           font: { sz: "14" },
         },
@@ -2952,6 +3029,12 @@ const Consulta = () => {
       Search(1, 0, "", "")
     }
   }
+
+  const [ShowName, setShowName] = useState(false);
+
+  const NameFile = () => {
+    setShowName((prev) => !prev);
+  };
 
 
   return (
@@ -3160,6 +3243,14 @@ const Consulta = () => {
               setclase_pedido={setclase_pedido}
             />
             <Toaster />
+            <ModalNameFile
+              showMdRol={ShowName}
+              setShowMdRol={setShowName}
+              arraycheckbox_export={arraycheckbox_export}
+              DataSet={DataSet}
+            />
+
+
             <div className="title-section">
               <div>
                 <label> Reportes / Consulta de Pedidos </label>
@@ -3527,7 +3618,39 @@ const Consulta = () => {
                   onClick={() => Clear()}
                 />
               </div>
+
               <div className="col-sm-12 col-md-2 p-1">
+                {response_consulta_pedido.length != 0 ?
+                  (
+                    <BtnSearch
+                      attribute={{
+                        name: "Descargar Excel",
+                        classNamebtn: "btn_search",
+                        disabled: false
+                      }}
+                      onClick={() => NameFile()}
+                    />
+                  ) :
+                  (
+                    <BtnSearch
+                      attribute={{
+                        name: "Descargar Excel",
+                        classNamebtn: "btn_search",
+                        disabled: true
+                      }}
+                      onClick={() => NameFile()}
+                    />
+                  )
+                }
+
+              </div>
+
+
+
+
+
+
+              {/* <div className="col-sm-12 col-md-2 p-1">
                 {arraycheckbox_export[0].data.length > 0 ? (
                   <ExcelFile
                     filename="Consulta de Pedidos"
@@ -3563,7 +3686,7 @@ const Consulta = () => {
                       >
                         <ExcelSheet dataSet={DataSet} name="exportacion" />
                       </ExcelFile>
-                    ) : 
+                    ) :
                     (
                       <ExcelFile
                         filename="Consulta de Pedidos"
@@ -3580,8 +3703,9 @@ const Consulta = () => {
                         <ExcelSheet dataSet={DataSet} name="exportacion" />
                       </ExcelFile>
                     )
-              }
-              </div>
+                }
+              </div> */}
+
               <div className="col-sm-12 col-md-2 p-1">
                 <BtnSearch
                   attribute={{
@@ -3612,6 +3736,7 @@ const Consulta = () => {
                         <th>
                           <input
                             type="checkbox"
+                            id="checkbox-header-"
                             onClick={(e) => {
                               onClickHeaderCheckbox(e);
                             }}
@@ -4187,13 +4312,31 @@ const Consulta = () => {
                                                   },
                                                 },
                                                 {
+                                                  value: d.txtvkburField,
+                                                  style: {
+                                                    font: { sz: "14" },
+                                                  },
+                                                },
+                                                {
                                                   value: d.vkgrpField,
                                                   style: {
                                                     font: { sz: "14" },
                                                   },
                                                 },
                                                 {
+                                                  value: d.txtvkgrpField,
+                                                  style: {
+                                                    font: { sz: "14" },
+                                                  },
+                                                },
+                                                {
                                                   value: d.comercialField,
+                                                  style: {
+                                                    font: { sz: "14" },
+                                                  },
+                                                },
+                                                {
+                                                  value: d.txtcomercialField,
                                                   style: {
                                                     font: { sz: "14" },
                                                   },
