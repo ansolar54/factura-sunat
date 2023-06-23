@@ -3,19 +3,20 @@ import BtnCancel from "../../../../components/BtnCancel";
 import BtnSave from "../../../../components/BtnSave";
 import InputForm from "../../../../components/InputForm";
 import InputFormKeyUp from "../../../../components/InputFormKeyUp";
-import McMaterial from "../../Modals_General/McMaterial";
+// import McMaterial from "../../Modals_General/McMaterial";
 import toast, { Toaster } from "react-hot-toast";
-import { AprobMargen } from "../../../../Services/ServiceCambioPrecio";
+// import { AprobMargen } from "../../../../Services/ServiceCambioPrecio";
 import Spinner from "../../../../components/Spinner";
+import { InputText } from 'primereact/inputtext';
 
 const ModalAddMaterial = ({
   showModalMaterial,
   setShowModalMaterial,
   dataMaterial,
-  orgVentas,
-  cliente,
-  canalDistValue,
+  SUM_IMPORTE_TOTAL,
 }) => {
+
+  // console.log("dasdasdasdasdasdasd", SUM_IMPORTE_TOTAL)
 
   const [showMcMaterial, setShowMcMaterial] = useState(false);
 
@@ -27,17 +28,12 @@ const ModalAddMaterial = ({
 
   // DATA MATERIAL
   const [material, setMaterial] = useState({
-    cod_mat: "",
-    name_mat: "",
-    centro: "",
-    moneda: "",
-    prec_act: 0.0,
-    prec_sug: 0.0,
-    fec_ini: "",
-    fec_fin: "",
-    lim_inf: 0.0,
-    lim_sup: 0.0,
-    margen: 0.0,
+    codigoProducto: "",
+    descripcion: "",
+    cantidad: "",
+    unidadMedida: "UND",
+    precioUnitario: "",
+    importe: "",
   });
 
   const modalRef = useRef();
@@ -58,12 +54,12 @@ const ModalAddMaterial = ({
   );
 
   useEffect(() => {
-    // console.log("cambio", material);
     if (indicator) {
       dataMaterial.push(material);
       setShowModalMaterial(false);
       limpiarControles();
       setIndicator(false);
+
     }
   }, [indicator]);
 
@@ -74,19 +70,12 @@ const ModalAddMaterial = ({
 
   const limpiarControles = () => {
     setMaterial({
-      cod_mat: "",
-      name_mat: "",
-      centro: "",
-      moneda: "",
-      prec_act: 0.0,
-      prec_sug: 0.0,
-      fec_ini: "",
-      fec_fin: "",
-      lim_inf: 0.0,
-      lim_sup: 0.0,
-      margen: 0.0,
-      uni_med: "",
-      cant_base: 0.0,
+      codigoProducto: "",
+      descripcion: "",
+      cantidad: "",
+      unidadMedida: "UND",
+      precioUnitario: "",
+      importe: "",
     });
   };
 
@@ -101,75 +90,32 @@ const ModalAddMaterial = ({
   };
 
   const calcularMargen = () => {
-    setspinner(true);
-    let model = {
-      itAprobmargen: [
-        {
-          Matnr: material.cod_mat,
-          Werks: material.centro,
-          //LimInfer: material.lim_inf,
-          PreSuge: material.prec_sug,
-          Margen: 0.0,
-        },
-      ],
-    };
 
-    AprobMargen(model).then((result) => {
-      console.log("MARGEN", result.etAprobmargenField[0].margenField);
-      // setMaterial((prevState) => ({
-      //   ...prevState,
-      //   margen: result.etAprobmargenField[0].margenField,
-      // }));
 
-      setMaterial({
-        ...material,
-        margen: result.etAprobmargenField[0].margenField,
-      });
-      // setActivateButton(false);
-      setspinner(false);
-      setIndicator(true);
+    setMaterial({
+      ...material,
+
     });
+    setMaterial((prevState) => ({
+      ...prevState,
 
+
+    }));
+    setActivateButton(false);
+    setspinner(false);
+    setIndicator(true);
+
+    console.log("IMPORTE ADD", material.importe)
   };
 
   // console.log(material);
 
   const guardar = () => {
-    console.log(material.prec_sug, material.lim_inf);
-    console.log(typeof material.prec_sug, typeof material.lim_inf);
-    if (material.cod_mat == "") {
-      toast.error("Debe seleccionar algún material.", {
-        position: "top-center",
-        autoClose: 5000,
-        style: {
-          backgroundColor: "#212121",
-          color: "#fff",
-        },
-      });
-    }
-    else if ((material.prec_sug) > material.lim_inf) {
-      toast.error("Precio sugerido debe ser menor a " + convertDecimal(material.lim_inf) + " " + material.moneda, {
-        position: "top-center",
-        autoClose: 5000,
-        style: {
-          backgroundColor: "#212121",
-          color: "#fff",
-        },
-      });
-    }
-    
-    else if ((material.prec_sug) == "" || (material.prec_sug) == 0.00) {
-      toast.error("Debe ingresar un \"Precio sugerido\" mayor a 0.00 " + material.moneda, {
-        position: "top-center",
-        autoClose: 5000,
-        style: {
-          backgroundColor: "#212121",
-          color: "#fff",
-        },
-      });
-    }
-    else if (material.fec_fin == "" || material.fec_fin == "dd/mm/aaaa") {
-      toast.error("Debe ingresar una \"Fecha fin\" válida", {
+    // console.log(material.prec_sug, material.lim_inf);
+    console.log(typeof material.codigoProducto, typeof material.descripcion, typeof material.cantidad);
+    console.log(material.codigoProducto, material.descripcion, material.cantidad)
+    if (material.codigoProducto === "" || material.descripcion === "" || material.cantidad === "" || material.precioUnitario === "") {
+      toast.error("Debe rellenar los campos obligatorios.", {
         position: "top-center",
         autoClose: 5000,
         style: {
@@ -179,163 +125,70 @@ const ModalAddMaterial = ({
       });
     }
     else {
-      // obtener margen
       calcularMargen();
-      //convertDecimal(material.prec_sug);
 
-      // -------------------
-      // setActivateButton(false);
-      //  dataMaterial = [...dataMaterial];
-      // console.log(dataMaterial);
     }
   };
 
   // console.log(material);
 
   function handleChange(name, value) {
-    // console.log(name, " : ", value);
+    //  console.log(name, " : ", value);
     switch (name) {
-      case "material":
+      case "codigo_Producto":
         setMaterial((prevState) => ({
           ...prevState,
-          cod_mat: value,
+          codigoProducto: value,
         }));
         break;
-      case "precio_actual":
+      case "descripcion":
         setMaterial((prevState) => ({
           ...prevState,
-          prec_act: value,
+          descripcion: value.toUpperCase(),
         }));
         break;
-      case "precio_sugerido":
+      case "cantidad":
         setMaterial((prevState) => ({
           ...prevState,
-          prec_sug: value,
+          cantidad: value,
         }));
         // setActivateButton(true); // activar boton calcular margen
         break;
-      case "limite_inferior":
+      case "unidadMedida":
         setMaterial((prevState) => ({
           ...prevState,
-          lim_inf: value,
+          unidadMedida: value.toUpperCase(),
         }));
         break;
-      case "limite_superior":
+      case "precioUnitario":
         setMaterial((prevState) => ({
           ...prevState,
-          lim_sup: value,
+          precioUnitario: value,
         }));
         break;
-      case "fecha_inicio":
+      case "importe":
         setMaterial((prevState) => ({
           ...prevState,
-          fec_ini: value,
+          importe: value,
         }));
         break;
       default:
-        setMaterial((prevState) => ({
-          ...prevState,
-          fec_fin: value,
-        }));
         break;
     }
   }
 
-  // 2da VERSION SEPARADOR DE MILES
+  // let separador = document.getElementById('precio_sugerido');
 
-  // const [comadecimal, setComaDecimal] = useState('');
+  // if (separador) {
+  //   separador.addEventListener('keyup', (e) => {
+  //     var entrada = e.target.value.split('.'),
+  //       parteEntera = entrada[0].replace(/\,/g, ''),
+  //       parteDecimal = entrada[1],
+  //       salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 
-  // function formatoComaDecimal2(name, value) {
-  //   switch (name) {
-  //     case "precio_sugerido":
-  //       setComaDecimal(value);
-  //       const value2 = (valor) => {
-  //         valor = comadecimal;
-  //         const exp = /(\d)(?=(\d{3})+(?!\d))/g;
-  //         const rep = '$1,';
-  //         let arr = valor.toString().split('.');
-  //         arr[0] = arr[0].replace(exp, rep);
-  //         return arr[1] ? arr.join('.') : arr[0];
-  //       }
-  //       break;
-  //   }
-  //   console.log("COMA DE MILESSSS",comadecimal)
+  //     e.target.value = salida + (parteDecimal !== undefined ? '.' + parteDecimal : '');
+  //   }, false);
   // }
-
-
-
-// PRUEBA ADDEVENTLISTENER /////////////
-
-  // let number1 = document.getElementById('precio_sugerido');
-  // if (number1) {
-  //   number1.addEventListener('keyup', (event) => {
-  //     //console.log(event);
-  //     let texto = event.target.value;
-  //     console.log(texto);
-
-  //     let mostrartexto = '';
-  //     if (texto !== '') {
-  //       mostrartexto = texto
-  //     }
-  //     else {
-  //       mostrartexto = 'Input vacio'
-  //     }
-  //     document.getElementById('label1').innerHTML = mostrartexto;
-  //   });
-  // }
-
-  // PRIMERA VERSIÓN SEPARADOR COMA DE MILES
-
-  // let number1 = document.getElementById('precio_sugerido');
-  // const value1 = number1?.value || '';
-  // console.log("OBTENER VALUE", value1)
-
-  // function formatoComaDecimal(e) {
-  //   let valor = e;
-  //   console.log("OBTENER VALUE", valor);
-
-  //   //console.log("ENTRA ONKEYUP")
-  //   // const value2 = (valor1) => {
-  //   //   const exp = /(\d)(?=(\d{3})+(?!\d))/g;
-  //   //   const rep = '$1,';
-  //   //   let arr = valor1.toString().split('.');
-  //   //   arr[0] = arr[0].replace(exp, rep);
-  //   //   return arr[1] ? arr.join('.') : arr[0];
-  //   // }
-
-  //   // number1.value = value2(value1)
-  //   //  return (value2(valor));
-
-  // }
-
-  // console.log(formatoComaDecimal())
-
-  //  let modal1 = formatoComaDecimal();
-  //  console.log("SEPARADOR MILES", modal1)
-
-
-  ///////////////////
-
-   let separador = document.getElementById('precio_sugerido');
-  // // const value1 = separador[0] || '';
-  // // console.log("OBTENER VALUE", value1)
-
-  if(separador){
-    separador.addEventListener('keyup', (e) => {
-      var entrada = e.target.value.split('.'),
-       parteEntera = entrada[0].replace(/\,/g, ''),
-        parteDecimal = entrada[1],
-        salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
- 
-      e.target.value = salida + (parteDecimal !== undefined ? '.' + parteDecimal : '');
-    }, false);
-  }
-
-   
-
-
-
-
 
   function convertDecimal(num) {
     // return num.toFixed(Math.max(((num+'').split(".")[1]||"").length, 2));
@@ -393,18 +246,10 @@ const ModalAddMaterial = ({
           ref={modalRef}
         >
           <Toaster />
-          <McMaterial
-            showMcMaterial={showMcMaterial}
-            setShowMcMaterial={setShowMcMaterial}
-            setMaterial={setMaterial}
-            orgVentas={orgVentas}
-            cliente={cliente}
-            canalDistValue={canalDistValue}
-          />
           <div className="modal-wrapper modal-wrapper-sm-1">
             <div className="modal-header">
               <div className="modal-title">
-                <h5>Agregar Material</h5>
+                <h5>Agregar Producto</h5>
               </div>
               <div
                 className="close-modal-button"
@@ -415,156 +260,201 @@ const ModalAddMaterial = ({
             </div>
             <div className="modal-body">
               <div className="row-md">
-                <div className="col-sm-2 d-flex align-items-center">
-                  <label>Material : </label>
+                <div className="col-sm-3 d-flex align-items-center">
+                  <label>
+                    <label>Códidgo Producto : </label>{" "}
+                    <label style={{ color: "red" }}>(*)</label>
+                  </label>
                 </div>
                 <div>
-                  <InputForm
+                  {/* <InputForm
                     attribute={{
-                      name: "material",
-                      type: "text",
-                      value: material.cod_mat,
-                      disabled: true,
+                      name: "codigo_Producto",
+                      id: "codigo_Producto",
+                      type: "number",
+                      value: material.codigoProducto,
+                      disabled: false,
                       checked: false,
-                      matchcode: true,
+                      matchcode: false,
                     }}
                     handleChange={handleChange}
-                    onClick={() => setShowMcMaterial((prev) => !prev)}
+                  // onClick={() => setShowMcMaterial((prev) => !prev)}
+                  /> */}
+
+                  <InputText
+                    style={{ width: "785px" }}
+                    keyfilter="int"
+                    // placeholder="RUC"
+                    value={material.codigoProducto}
+                    name="codigo_Producto"
+                    onChange={(e) => handleChange(e.target.name, e.target.value)}
+                    maxLength={10}
+                  />
+
+                </div>
+              </div>
+              <div className="row-md">
+                <div className="col-sm-2 d-flex align-items-center">
+                  <label>
+                    <label>Descripción : </label>{" "}
+                    <label style={{ color: "red" }}>(*)</label>
+                  </label>
+                  {/* <label>Descripción : </label> */}
+                </div>
+                <div>
+                  {/* <InputForm
+                    attribute={{
+                      name: "descripcion",
+                      type: "text",
+                      value: material.descripcion,
+                      disabled: false,
+                      checked: false,
+                      matchcode: false,
+                      maxlength: 200
+                    }}
+                    handleChange={handleChange}
+                  // onClick={() => setShowMcMaterial((prev) => !prev)}
+                  /> */}
+                  <InputText
+                    style={{ width: "785px" }}
+                    // keyfilter="int"
+                    // placeholder="RUC"
+                    type="text"
+                    value={material.descripcion}
+                    name="descripcion"
+                    onChange={(e) => handleChange(e.target.name, e.target.value)}
+                    maxLength={200}
                   />
                 </div>
               </div>
               <div className="row-md">
                 <div className="col-md col-md-6">
                   <div>
-                    <label>Precio actual : </label>
+                    <label>
+                      <label>Cantidad : </label>{" "}
+                      <label style={{ color: "red" }}>(*)</label>
+                    </label>
+                    {/* <label>Cantidad : </label> */}
                   </div>
                   <div>
-
-                    <InputForm
+                    {/* <InputForm
                       attribute={{
-                        name: "precio_actual",
-                        type: "text",
-                        value: convertDecimal(material.prec_act),
-                        disabled: true,
+                        name: "cantidad",
+                        type: "number",
+                        value: (material.cantidad),
+                        disabled: false,
                         checked: false,
+                        placeholder: "0"
                       }}
                       handleChange={handleChange}
+                    /> */}
+                    <InputText
+                      style={{ width: "400px" }}
+                      // keyfilter="int"
+                      placeholder="0"
+                      type="number"
+                      value={material.cantidad}
+                      name="cantidad"
+                      onChange={(e) => handleChange(e.target.name, e.target.value)}
+                      // maxLength={200}
                     />
                   </div>
                 </div>
                 <div className="col-md col-md-6">
                   <div>
-                    <label>Precio sugerido : </label>
+                    <label>Unidad de Medida : </label>
                   </div>
                   <div>
 
-                    <InputForm
+                    {/* <InputForm
                       attribute={{
-                        name: "precio_sugerido",
-                        id: "precio_sugerido",
+                        name: "unidadMedida",
                         type: "text",
-                        // value: comadecimal,
-                        //value: (material.prec_sug),
+                        value: (material.unidadMedida),
+                        disabled: false,
+                        checked: false,
+                        maxlength: "3"
+                      }}
+                      handleChange={handleChange}
+                    //onKeyUp={(e) => formatoComaDecimal(e.target.value)}
+                    /> */}
+                    <InputText
+                      style={{ width: "400px" }}
+                      // keyfilter="int"
+                      // placeholder="0"
+                      type="text"
+                      value={material.unidadMedida}
+                      name="unidadMedida"
+                      onChange={(e) => handleChange(e.target.name, e.target.value)}
+                      maxLength={3}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="row-md">
+                <div className="col-md col-md-6">
+                  <div>
+                    <label>
+                      <label>Precio Unitario : </label>{" "}
+                      <label style={{ color: "red" }}>(*)</label>
+                    </label>
+                    {/* <label>Precio Unitario : </label> */}
+                  </div>
+                  <div>
+                    {/* <InputForm
+                      attribute={{
+                        name: "precioUnitario",
+                        type: "number",
+                        value: (material.precioUnitario),
                         disabled: false,
                         checked: false,
                         placeholder: "0.00"
                       }}
                       handleChange={handleChange}
-                    //onKeyUp={(e) => formatoComaDecimal(e.target.value)}
+                    /> */}
+                    <InputText
+                      style={{ width: "400px" }}
+                      // keyfilter="int"
+                      placeholder="0.00"
+                      type="number"
+                      value={material.precioUnitario}
+                      name="precioUnitario"
+                      onChange={(e) => handleChange(e.target.name, e.target.value)}
+                      // maxLength={200}
                     />
                   </div>
                 </div>
-              </div>
-              <div className="row-md">
                 <div className="col-md col-md-6">
                   <div>
-                    <label>Límite inferior : </label>
+                    <label>Importe : </label>
                   </div>
                   <div>
-                    <InputForm
+                    {/* <InputForm
                       attribute={{
-                        name: "limite_inferior",
+                        name: "importe",
                         type: "text",
-                        value: convertDecimal(material.lim_inf),
+                        value: material.importe = convertDecimal(material.cantidad * material.precioUnitario),
                         disabled: true,
                         checked: false,
+                        placeholder: "0.00"
                       }}
                       handleChange={handleChange}
-                    />
-                  </div>
-                </div>
-                {/* <div className="col-md col-md-6">
-                  <div>
-                    <label>Límite superior : </label>
-                  </div>
-                  <div>
-                    <InputForm
-                      attribute={{
-                        name: "limite_superior",
-                        type: "text",
-                        value: convertDecimal(material.lim_sup),
-                        disabled: false,
-                        checked: false,
-                      }}
-                      handleChange={handleChange}
-                    />
-                  </div>
-                </div> */}
-                <div className="col-md col-md-6">
-                  <div>
-                    <label>Moneda : </label>
-                  </div>
-                  <div>
-                    <InputForm
-                      attribute={{
-                        name: "moneda",
-                        type: "text",
-                        value: material.moneda,
-                        disabled: true,
-                        checked: false,
-                      }}
-                      handleChange={handleChange}
+                    /> */}
+                    <InputText
+                      style={{ width: "400px" }}
+                      // keyfilter="int"
+                      placeholder="0.00"
+                      readOnly
+                      type="text"
+                      value= {material.importe = convertDecimal(material.cantidad * material.precioUnitario)}
+                      name="importe"
+                      onChange={(e) => handleChange(e.target.name, e.target.value)}
+                      // maxLength={200}
                     />
                   </div>
                 </div>
               </div>
-              <div className="row-md">
-                <div className="col-sm-2 d-flex align-items-center">
-                  <label>Fecha inicio : </label>
-                </div>
-                <div>
-                  <InputForm
-                    attribute={{
-                      name: "fecha_inicio",
-                      type: "date",
-                      value: formatFecha(material.fec_ini),
-                      disabled: true,
-                      checked: false,
-                    }}
-                    handleChange={handleChange}
-                    onClick={() => { }}
-                  />
-                </div>
-              </div>
-              <div className="row-md">
-                <div className="col-sm-2 d-flex align-items-center">
-                  <label>Fecha fin : </label>
-                </div>
-                <div>
-                  <InputForm
-                    attribute={{
-                      name: "fecha_fin",
-                      type: "date",
-                      value: formatFecha(material.fec_fin),
-                      disabled: false,
-                      checked: false,
-                      min: formatFecha(material.fec_ini),
-                    }}
-                    handleChange={handleChange}
-                    onClick={() => { }}
-                  />
-                </div>
-              </div>
+
               {spinner && <Spinner />}
               {activateButton && (
                 <div className="row-md">

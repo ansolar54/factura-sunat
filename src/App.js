@@ -8,30 +8,30 @@ import {
 
 import "./App.css";
 import Slidebar from "./components/Slidebar";
-import Dashboard from "./pages/Dashboard";
-import Consulta from "./pages/Consulta_Pedido/Consulta";
-import ConsultaStock from "./pages/Consulta_Stock/Consulta";
-import Info_Cliente from "./pages/Informacion_Cliente/Info_Cliente";
-import Deuda_Cliente from "./pages/Deuda_Cliente/Deuda_Cliente";
-import Usuario from "./pages/Usuario/Usuario";
-import NotFound from "./pages/NotFound/NotFound";
+// import Dashboard from "./pages/Dashboard";
+// import Consulta from "./pages/Consulta_Pedido/Consulta";
+// import ConsultaStock from "./pages/Consulta_Stock/Consulta";
+// import Info_Cliente from "./pages/Informacion_Cliente/Info_Cliente";
+// import Deuda_Cliente from "./pages/Deuda_Cliente/Deuda_Cliente";
+// import Usuario from "./pages/Usuario/Usuario";
+// import NotFound from "./pages/NotFound/NotFound";
 
-import SignIn from "./pages/SignIn";
-import Auditoria from "./pages/Auditoria/Auditoria";
-import Configuracion from "./pages/Configuracion/Configuracion";
-import ChangeStatusPassword from "./components/ChangeStatusPassword/ChangeStatusPassword";
-import jwt from "jwt-decode";
-import { getUser } from "./Services/ServiceUser";
-import Promociones from "./pages/Promociones/Promociones";
-import Reporte_Despacho from "./pages/Reporte_Despacho/Reporte_Despacho";
-import Lista_Precio from "./pages/Lista_Precio/Lista_Precio"
-import { ActualizarPasswordStatus } from "./Services/ServiceConfiguracion";
-import Rol from "./pages/Rol/Rol";
+// import SignIn from "./pages/SignIn";
+// import Auditoria from "./pages/Auditoria/Auditoria";
+// import Configuracion from "./pages/Configuracion/Configuracion";
+// import ChangeStatusPassword from "./components/ChangeStatusPassword/ChangeStatusPassword";
+// import jwt from "jwt-decode";
+// import { getUser } from "./Services/ServiceUser";
+// import Promociones from "./pages/Promociones/Promociones";
+// import Reporte_Despacho from "./pages/Reporte_Despacho/Reporte_Despacho";
+// import Lista_Precio from "./pages/Lista_Precio/Lista_Precio"
+// import { ActualizarPasswordStatus } from "./Services/ServiceConfiguracion";
+// import Rol from "./pages/Rol/Rol";
 import GenerarSolicitud from "./pages/Cambio_Precio/Generar_Solicitud/GenerarSolicitud";
-import MisSolicitudes from "./pages/Cambio_Precio/Mis_Solicitudes/MisSolicitudes";
-import MisAprobaciones from "./pages/Cambio_Precio/Mis_Aprobaciones/MisAprobaciones";
-import ReporteSolicitud from "./pages/Cambio_Precio/Reporte_Solicitud/ReporteSolicitud";
-import Evento from "./pages/Evento/Evento";
+// import MisSolicitudes from "./pages/Cambio_Precio/Mis_Solicitudes/MisSolicitudes";
+// import MisAprobaciones from "./pages/Cambio_Precio/Mis_Aprobaciones/MisAprobaciones";
+// import ReporteSolicitud from "./pages/Cambio_Precio/Reporte_Solicitud/ReporteSolicitud";
+// import Evento from "./pages/Evento/Evento";
 
 const App = () => {
   // const history = useHistory();
@@ -79,18 +79,32 @@ const App = () => {
       <Router>
         <div className="App">
           <Switch>
-            <Route exact strict path="/signin" component={SignIn}>
+            {/* <Route exact strict path="/signin" component={SignIn}>
               <SignIn />
+            </Route> */}
+            <Route exact strict path="/" component={GenerarSolicitud}>
+              <Slidebar />
+              <GenerarSolicitud />
             </Route>
-            <Route exact strict path="/" component={Dashboard}>
+            {/* MODULO: cambio precio */}
+            <Route
+              exact
+              strict
+              path="/generar_solicitud"
+              component={GenerarSolicitud}
+            >
+              <Slidebar />
+              <GenerarSolicitud />
+            </Route>
+            {/* <Route exact strict path="/" component={Dashboard}>
               <Slidebar />
               <Dashboard />
-            </Route>
-            <Route exact strict path="/dashboard" component={Dashboard}>
+            </Route> */}
+            {/* <Route exact strict path="/dashboard" component={Dashboard}>
               <Slidebar />
               <Dashboard />
-            </Route>
-            <Route exact strict path="/users" component={Usuario}>
+            </Route> */}
+            {/* <Route exact strict path="/users" component={Usuario}>
               <Slidebar />
               <Usuario />
             </Route>
@@ -102,7 +116,7 @@ const App = () => {
               <Slidebar />
               <Auditoria />
             </Route>
-            <Route
+             <Route
               exact
               strict
               path="/configuracion"
@@ -114,11 +128,11 @@ const App = () => {
             <Route exact strict path="/evento" component={Evento}>
               <Slidebar />
               <Evento />
-            </Route>
+            </Route> */}
 
             {/* MODULO DE REPORTES */}
 
-            <Route exact strict path="/consulta_pedido" component={Consulta}>
+            {/* <Route exact strict path="/consulta_pedido" component={Consulta}>
               <Slidebar />
               <Consulta />
             </Route>
@@ -176,9 +190,9 @@ const App = () => {
             <Route exact strict path="/promociones" component={Promociones}>
               <Slidebar />
               <Promociones />
-            </Route>
+            </Route> */}
 
-            {/* MODULO: cambio precio */}
+            {/* MODULO: cambio precio
             <Route
               exact
               strict
@@ -187,8 +201,8 @@ const App = () => {
             >
               <Slidebar />
               <GenerarSolicitud />
-            </Route>
-            <Route
+            </Route> */}
+            {/* <Route
               exact
               strict
               path="/mis_solicitudes"
@@ -217,7 +231,7 @@ const App = () => {
             </Route>
             <Route path="*">
               <NotFound />
-            </Route>
+            </Route> */}
           </Switch>
         </div>
       </Router>

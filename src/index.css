@@ -10,9 +10,9 @@ input[type=checkbox]{
 }
 
 :root{
-  --primary-color:#03BF68;
+  --primary-color:#3471c2b7;
   --second-color:#f0f0f0;
-  --alternative-color:#91c848;
+  --alternative-color:#00ccffe0;
   --title-color: #666;
   --cancel-color: #999;
   --cancel-hover-color: #666;

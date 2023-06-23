@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./Slidebar.css";
 import { Link, useHistory } from "react-router-dom";
-import { ValidarUsuarioSAP } from "../Services/ServiceValidaUsuario";
-import { getUser } from "../Services/ServiceUser";
 import Spinner from "./Spinner";
 import jwt from "jwt-decode";
 import logo_farmex from "../assets/logo-farmex-white.png";
-import { ConfiPerfiles } from "../Services/ServiceCambioPrecio";
 
 const Slidebar = () => {
   //CARGA DE SPINNER
@@ -16,30 +13,30 @@ const Slidebar = () => {
   const [estado_switch, setestado_switch] = useState(1);
   const [nameuser, setnameuser] = useState("");
 
-  // CONTROL DE ACCESO A ITEMS DE MENUS
-  const [usuarios, setUsuarios] = useState(false);
-  const [eventos, setEventos] = useState(false);
-  const [roles, setRoles] = useState(false);
-  const [auditoria, setAuditoria] = useState(false);
-  const [configuracion, setConfiguracion] = useState(false);
-  const [consPedidos, setConsPedidos] = useState(false);
-  const [consStock, setConsStock] = useState(false);
-  const [promociones, setPromociones] = useState(false);
-  const [infoCliente, setInfoCliente] = useState(false);
-  const [estadoCuenta, setEstadoCuenta] = useState(false);
-  const [reporteDespacho, setReporteDespacho] = useState(false);
-  const [listaPrecio, setListaPrecio] = useState(false);
+  // // CONTROL DE ACCESO A ITEMS DE MENUS
+  // const [usuarios, setUsuarios] = useState(false);
+  // const [eventos, setEventos] = useState(false);
+  // const [roles, setRoles] = useState(false);
+  // const [auditoria, setAuditoria] = useState(false);
+  // const [configuracion, setConfiguracion] = useState(false);
+  // const [consPedidos, setConsPedidos] = useState(false);
+  // const [consStock, setConsStock] = useState(false);
+  // const [promociones, setPromociones] = useState(false);
+  // const [infoCliente, setInfoCliente] = useState(false);
+  // const [estadoCuenta, setEstadoCuenta] = useState(false);
+  // const [reporteDespacho, setReporteDespacho] = useState(false);
+  // const [listaPrecio, setListaPrecio] = useState(false);
 
 
-  const [generarSolicitud, setGenerarSolicitud] = useState(false);
-  const [misSolicitudes, setMisSolicitudes] = useState(false);
-  const [misAprobaciones, setMisAprobaciones] = useState(false);
-  const [reporteSolicitud, setReporteSolicitud] = useState(false);
+  // const [generarSolicitud, setGenerarSolicitud] = useState(false);
+  // const [misSolicitudes, setMisSolicitudes] = useState(false);
+  // const [misAprobaciones, setMisAprobaciones] = useState(false);
+  // const [reporteSolicitud, setReporteSolicitud] = useState(false);
 
 
-  const [modAdministracion, setModAdministracion] = useState(false);
-  const [modReportes, setModReportes] = useState(false);
-  const [modCambioPrecio, setModCambioPrecio] = useState(false);
+  // const [modAdministracion, setModAdministracion] = useState(false);
+  // const [modReportes, setModReportes] = useState(false);
+  // const [modCambioPrecio, setModCambioPrecio] = useState(false);
 
   function HandleCategory(id_html) {
     switch (id_html) {
@@ -57,15 +54,15 @@ const Slidebar = () => {
     }
   }
   function ClickCloseSession() {
-    history.push("/signin");
-    localStorage.clear();
+    // history.push("/signin");
+    // localStorage.clear();
   }
 
   useEffect(() => {
     setspinner(true);
     if (sessionStorage.getItem("darkmode") == 0) {
-      document.body.style.setProperty("--primary-color", "#03BF68");
-      document.body.style.backgroundColor = "#fff";
+      document.body.style.setProperty("--primary-color", "#3471c2b7");
+      document.body.style.backgroundColor = "#cccccc";
       setestado_switch(1);
     }
     // si estado llega como  0 es porque esta en modo normal
@@ -76,164 +73,164 @@ const Slidebar = () => {
     }
 
     //redireccionamiento a login si no se encuentra logueado
-    if (!localStorage.getItem("_token")) {
-      history.push("/signin");
-    } else {
-      getUser(jwt(localStorage.getItem("_token")).nameid).then((result) => {
-        setnameuser(jwt(localStorage.getItem("_token")).username);
-        // rol 1 -- adminsitrador
-        // rol 2 -- supervisor
-        // rol 3 -- gerente
-        let model_perfil = {
-          IsOpcion: "L",
-          IsRol: result.data[0].id_role.toString(),
-          IsUser: "",
-          ItPerfil: [],
-        };
-        ConfiPerfiles(model_perfil).then((result) => {
-          console.log(result);
-          if (result.etPerfilField.length > 0) {
-            for (let i = 0; i < result.etPerfilField.length; i++) {
-              const element = result.etPerfilField[i];
-              if (element.grupoField == "1") {
-                if (
-                  element.idModuloField == "AUD" &&
-                  element.activeField == "X"
-                ) {
-                  setAuditoria(true);
-                  setModAdministracion(true);
-                }
+    // if (!localStorage.getItem("_token")) {
+    //   // history.push("/signin");
+    // } else {
+    //   getUser(jwt(localStorage.getItem("_token")).nameid).then((result) => {
+    //     setnameuser(jwt(localStorage.getItem("_token")).username);
+    //     // rol 1 -- adminsitrador
+    //     // rol 2 -- supervisor
+    //     // rol 3 -- gerente
+    //     let model_perfil = {
+    //       IsOpcion: "L",
+    //       IsRol: result.data[0].id_role.toString(),
+    //       IsUser: "",
+    //       ItPerfil: [],
+    //     };
+    //     ConfiPerfiles(model_perfil).then((result) => {
+    //       console.log(result);
+    //       if (result.etPerfilField.length > 0) {
+    //         for (let i = 0; i < result.etPerfilField.length; i++) {
+    //           const element = result.etPerfilField[i];
+    //           if (element.grupoField == "1") {
+    //             if (
+    //               element.idModuloField == "AUD" &&
+    //               element.activeField == "X"
+    //             ) {
+    //               setAuditoria(true);
+    //               setModAdministracion(true);
+    //             }
 
-                if (
-                  element.idModuloField == "CONF" &&
-                  element.activeField == "X"
-                ) {
-                  setConfiguracion(true);
-                  setModAdministracion(true);
-                }
+    //             if (
+    //               element.idModuloField == "CONF" &&
+    //               element.activeField == "X"
+    //             ) {
+    //               setConfiguracion(true);
+    //               setModAdministracion(true);
+    //             }
 
-                if (
-                  element.idModuloField == "ROL" &&
-                  element.activeField == "X"
-                ) {
-                  setRoles(true);
-                  setModAdministracion(true);
-                }
+    //             if (
+    //               element.idModuloField == "ROL" &&
+    //               element.activeField == "X"
+    //             ) {
+    //               setRoles(true);
+    //               setModAdministracion(true);
+    //             }
 
-                if (
-                  element.idModuloField == "USU" &&
-                  element.activeField == "X"
-                ) {
-                  setUsuarios(true);
-                  setModAdministracion(true);
-                }
+    //             if (
+    //               element.idModuloField == "USU" &&
+    //               element.activeField == "X"
+    //             ) {
+    //               setUsuarios(true);
+    //               setModAdministracion(true);
+    //             }
 
-                if (
-                  element.idModuloField == "EVENT" &&
-                  element.activeField == "X"
-                ) {
-                  setEventos(true);
-                  setModAdministracion(true);
-                }
-              }
+    //             if (
+    //               element.idModuloField == "EVENT" &&
+    //               element.activeField == "X"
+    //             ) {
+    //               setEventos(true);
+    //               setModAdministracion(true);
+    //             }
+    //           }
 
-              if (element.grupoField == "2") {
-                if (
-                  element.idModuloField == "R01" &&
-                  element.activeField == "X"
-                ) {
-                  setConsPedidos(true);
-                  setModReportes(true);
-                }
+    //           if (element.grupoField == "2") {
+    //             if (
+    //               element.idModuloField == "R01" &&
+    //               element.activeField == "X"
+    //             ) {
+    //               setConsPedidos(true);
+    //               setModReportes(true);
+    //             }
 
-                if (
-                  element.idModuloField == "R02" &&
-                  element.activeField == "X"
-                ) {
-                  setConsStock(true);
-                  setModReportes(true);
-                }
+    //             if (
+    //               element.idModuloField == "R02" &&
+    //               element.activeField == "X"
+    //             ) {
+    //               setConsStock(true);
+    //               setModReportes(true);
+    //             }
 
-                if (
-                  element.idModuloField == "R03" &&
-                  element.activeField == "X"
-                ) {
-                  setPromociones(true);
-                  setModReportes(true);
-                }
+    //             if (
+    //               element.idModuloField == "R03" &&
+    //               element.activeField == "X"
+    //             ) {
+    //               setPromociones(true);
+    //               setModReportes(true);
+    //             }
 
-                if (
-                  element.idModuloField == "R04" &&
-                  element.activeField == "X"
-                ) {
-                  setInfoCliente(true);
-                  setModReportes(true);
-                }
+    //             if (
+    //               element.idModuloField == "R04" &&
+    //               element.activeField == "X"
+    //             ) {
+    //               setInfoCliente(true);
+    //               setModReportes(true);
+    //             }
 
-                if (
-                  element.idModuloField == "R05" &&
-                  element.activeField == "X"
-                ) {
-                  setEstadoCuenta(true);
-                  setModReportes(true);
-                }
+    //             if (
+    //               element.idModuloField == "R05" &&
+    //               element.activeField == "X"
+    //             ) {
+    //               setEstadoCuenta(true);
+    //               setModReportes(true);
+    //             }
 
-                if (
-                  element.idModuloField == "R06" &&
-                  element.activeField == "X"
-                ) {
-                  setReporteDespacho(true);
-                  setModReportes(true);
-                }
-                if (
-                  element.idModuloField == "R07" &&
-                  element.activeField == "X"
-                ) {
-                  setListaPrecio(true);
-                  setModReportes(true);
-                }
-              }
+    //             if (
+    //               element.idModuloField == "R06" &&
+    //               element.activeField == "X"
+    //             ) {
+    //               setReporteDespacho(true);
+    //               setModReportes(true);
+    //             }
+    //             if (
+    //               element.idModuloField == "R07" &&
+    //               element.activeField == "X"
+    //             ) {
+    //               setListaPrecio(true);
+    //               setModReportes(true);
+    //             }
+    //           }
 
-              if (element.grupoField == "3") {
-                if (
-                  element.idModuloField == "CP01" &&
-                  element.activeField == "X"
-                ) {
-                  setGenerarSolicitud(true);
-                  setModCambioPrecio(true);
-                }
+    //           if (element.grupoField == "3") {
+    //             if (
+    //               element.idModuloField == "CP01" &&
+    //               element.activeField == "X"
+    //             ) {
+    //               setGenerarSolicitud(true);
+    //               setModCambioPrecio(true);
+    //             }
 
-                if (
-                  element.idModuloField == "CP02" &&
-                  element.activeField == "X"
-                ) {
-                  setMisSolicitudes(true);
-                  setModCambioPrecio(true);
-                }
+    //             if (
+    //               element.idModuloField == "CP02" &&
+    //               element.activeField == "X"
+    //             ) {
+    //               setMisSolicitudes(true);
+    //               setModCambioPrecio(true);
+    //             }
 
-                if (
-                  element.idModuloField == "CP03" &&
-                  element.activeField == "X"
-                ) {
-                  setMisAprobaciones(true);
-                  setModCambioPrecio(true);
-                }
-                if (
-                  element.idModuloField == "CP04" &&
-                  element.activeField == "X"
-                ) {
-                  setReporteSolicitud(true);
-                  setModCambioPrecio(true);
-                }
-              }
-            }
-            console.log("mensajito", result);
-          }
+    //             if (
+    //               element.idModuloField == "CP03" &&
+    //               element.activeField == "X"
+    //             ) {
+    //               setMisAprobaciones(true);
+    //               setModCambioPrecio(true);
+    //             }
+    //             if (
+    //               element.idModuloField == "CP04" &&
+    //               element.activeField == "X"
+    //             ) {
+    //               setReporteSolicitud(true);
+    //               setModCambioPrecio(true);
+    //             }
+    //           }
+    //         }
+    //         console.log("mensajito", result);
+    //       }
 
-          setspinner(false);
-        });
-      });
-    }
+    //       setspinner(false);
+    //     });
+    //   });
+    // }
   }, []);
 
 
@@ -265,27 +262,28 @@ const Slidebar = () => {
 
   return (
     <div>
-      <div className="navbar-container">
+      {/* <div className="navbar-container">
         <i className="fas fa-bars" onClick={() => activeSlide()}></i>
-      </div>
+      </div> */}
 
       <div className="slidebar-container scroll pb-4" id="slidebar">
         <div className="slidebar-header-user">
-          <div className="close-slidebar">
+          {/* <div className="close-slidebar">
             <i
               className="fas fa-angle-double-left"
               onClick={() => notactiveSlide()}
             ></i>
-          </div>
+          </div> */}
           <div>
-            <img
+            {/* <img
               src={logo_farmex}
               style={{ width: "50%", padding: "8px", marginBottom: "5px" }}
-            />
+            /> */}
           </div>
-          <Link to="dashboard">Bienvenido {nameuser}</Link>
+          {/* <Link to="dashboard">Bienvenido {nameuser}</Link> */}
+          {/* <span>Bienvenido</span> */}
         </div>
-        <div className="switch-container">
+        {/* <div className="switch-container">
           {sessionStorage.getItem("darkmode") == 0 ? (
             <label className="switch-darkmode">
               <input
@@ -304,7 +302,7 @@ const Slidebar = () => {
               <span className="slider-darkmode round"></span>
             </label>
           )}
-        </div>
+        </div> */}
 
         {/* {modAdministracion && (
           <div className="slidebar-categories">
@@ -422,70 +420,28 @@ const Slidebar = () => {
         )} */}
 
         {/* CAMBIO PRECIO */}
-        {modCambioPrecio && (
-          <div className="slidebar-categories">
+        <div className="slidebar-categories">
             <div
               className="slidebar-categories-header"
               onClick={() => HandleCategory("icon-close-03")}
             >
               <i className="fas fa-box-open"></i>
-              <a>Cambio precio</a>
+              <a>Facturas</a>
               <i className="fas fa-angle-down slider-down-icon"></i>
             </div>
             <div className="slidebar-subcategories" id="subcat-03">
-              {spinner && <Spinner />}
+              {/* {spinner && <Spinner />} */}
               <ul>
-                {generarSolicitud && (
+               
                   <li className="slidebar-categories-child">
                     <i className="fa fa-book"></i>
-                    <Link to="generar_solicitud">Generar solicitud</Link>
+                    <Link to="generar_solicitud">Registrar Factura</Link>
                   </li>
-                )}
-
-                {/* {misSolicitudes && (
-                  <li className="slidebar-categories-child">
-                    <i className="fa fa-credit-card"></i>
-                    <Link to="mis_solicitudes">Mis solicitudes</Link>
-                  </li>
-                )}
-                {misAprobaciones && (
-                  <li className="slidebar-categories-child">
-                    <i className="fa fa-fax"></i>
-                    <Link to="mis_aprobaciones">Mis aprobaciones</Link>
-                  </li>
-                )}
-                {reporteSolicitud && (
-                  <li className="slidebar-categories-child">
-                    <i className="fa fa-file"></i>
-                    <Link to="reporte_solicitud">Reporte de Solicitud</Link>
-                  </li>
-                )} */}
-
               </ul>
             </div>
           </div>
-        )}
 
         {/* <div className="slidebar-categories">
-          <div
-            className="slidebar-categories-header"
-            onClick={() => HandleCategory("icon-close-03")}
-          >
-            <i class="fas fa-cogs"></i>
-            <a>Configuración</a>
-            <i className="fas fa-angle-down slider-down-icon"></i>
-          </div>
-          <div className="slidebar-subcategories" id="subcat-03">
-            <ul>
-                <li className="slidebar-categories-child">
-                  <i className="fas fa-dice-d6"></i>
-                  <a>Cambiar contraseña</a>
-                </li> 
-            </ul>
-          </div>
-        </div> */}
-
-        <div className="slidebar-categories">
           <li className="slidebar-categories-child">
             <i className="fas fa-link"></i>
             <a
@@ -495,16 +451,16 @@ const Slidebar = () => {
               Acceso a NEXO
             </a>
           </li>
-        </div>
+        </div> */}
 
-        <div className="slidebar-categories">
+        {/* <div className="slidebar-categories">
           <button
             className="btn_closesession"
             onClick={() => ClickCloseSession()}
           >
             Cerrar Sesión
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
