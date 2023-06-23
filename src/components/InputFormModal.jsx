@@ -14,6 +14,7 @@ const InputFormMd = ({ attribute, handleChange }) => {
         disabled={attribute.disabled}
         checked={attribute.cheched}
         onChange={(e) => handleChange(e.target.name, e.target.value)}
+        maxLength={attribute.maxLength}
       />
     </>
   );

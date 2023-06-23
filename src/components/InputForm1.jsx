@@ -5,7 +5,6 @@ const InputForm1 = ({ attribute, handleChange, onClick }) => {
   return (
     <div className="content-inputform">
       <input
-        style={{ width: "190px" }}
         className="inputform1"
         type={attribute.type}
         id={attribute.id}
@@ -16,7 +15,9 @@ const InputForm1 = ({ attribute, handleChange, onClick }) => {
         maxLength={attribute.maxlength}
         onChange={(e) => handleChange(e.target.name, e.target.value)}
         min={attribute.min}
+        max={attribute.max}
         placeholder={attribute.placeholder}
+        mask={attribute.mask}
       />
       {
         attribute.matchcode && (

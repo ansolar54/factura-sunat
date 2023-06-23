@@ -36,3 +36,8 @@
     /* background: var(--alternative-color ); */
     transition: .2s;
 }
+
+.btn_search:disabled{
+    background: rgb(146, 146, 146);
+    cursor: auto;
+}

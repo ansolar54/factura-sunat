@@ -1,0 +1,41 @@
+/* PARA BOTON DE BUSCAR*/
+.btn_export1{
+    margin-top: -24px;
+    margin-right: 2%;
+    background: var(--primary-color);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color:#fff;
+    font-weight: normal;
+    border-radius: 5px;
+    font-size: 18.5px;
+    width: 20%;
+    height: 47px;
+    padding-top: 11px;
+    transition: .2s;
+    position: absolute;
+    right: 2%;
+}
+.btn_export2{
+    margin-top: -23px;
+    margin-right: 2%;
+    background: var(--primary-color);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color:#fff;
+    font-weight: normal;
+    border-radius: 5px;
+    font-size: 18.5px;
+    width: 20%;
+    height: 46px;
+    /* padding-top: 11px; */
+    transition: .2s;
+    position: absolute;
+    right: 2%;
+}
+.btn_export1:hover{
+    background: var(--alternative-color );
+    transition: .2s;
+}
